@@ -1,0 +1,43 @@
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+*.file
+
+# Packages #
+############
+*.7z
+*.dmg
+*.gz
+*.gz
+*.jar
+*.rar
+*.tar
+*.zip
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+
+# Python Cache #
+################
+*.pyc
+
+# sh files #
+############
+*.sh
+
+# Intellij's project specific settings files #
+##############################################
+.idea
+
+# Other #
+#########
+venv
+*.psd

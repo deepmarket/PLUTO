@@ -5,6 +5,7 @@
 import os
 import re
 import datetime
+from functools import partial
 
 import matplotlib
 # matplotlib.use('Qt5Agg')

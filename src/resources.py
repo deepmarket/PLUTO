@@ -20,7 +20,6 @@
         self.current_row = 0        # param number
 """
 
-from functools import partial
 from src.mainview import MainView
 from src.uix.util import *
 from src.uix.popup import Question
@@ -274,13 +273,15 @@ class ResourcesList(QFrame):
             self.current_row += 1
         else:
             row = self.table.rowCount()
-            data.append("x")
 
             self.table.insertRow(row)
             for i in range(column):
                 self.table.setItem(row, i, QTableWidgetItem(data[i]))
                 self.table.item(row, i).setTextAlignment(Qt.AlignCenter)
                 self.table.item(row, i).setFont(QFont("Helvetica Neue", 12, QFont.Light))
+
+            button = add_button(self.table, "x", name="Page_table_button")
+            self.table.setCellWidget(row, column, button)
 
     def remove_data(self, row):
 

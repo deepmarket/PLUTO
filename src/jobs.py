@@ -226,8 +226,8 @@ class JobsList(QFrame):
         self.table = QTableWidget(self)
         self.table.setObjectName("Page_table")
 
-        table_headers = ["Job ID", "Workers #", "Cores", "Memory", "Status", "Logs"]
-        table_headers_width = [150, 100, 100, 100, 120, 1]
+        table_headers = ["Job ID", "Workers #", "Cores", "Memory", "Status", "Logs", ""]
+        table_headers_width = [150, 100, 100, 100, 120, 300, 1]
 
         self.table.setColumnCount(len(table_headers))
         self.table.setHorizontalHeaderLabels(table_headers)
@@ -262,13 +262,19 @@ class JobsList(QFrame):
 
     # data format: [job_id, workers, cores, memory, status, logs]
     def add_data(self, data):
-        column = self.table.columnCount()
+        column = self.table.columnCount()-1
 
         if self.current_row <= 9:
             for i in range(column):
                 self.table.setItem(self.current_row, i, QTableWidgetItem(data[i]))
                 self.table.item(self.current_row, i).setTextAlignment(Qt.AlignCenter)
                 self.table.item(self.current_row, i).setFont(QFont("Helvetica Neue", 12, QFont.Light))
+
+            button = add_button(self.table, "x", name="Page_table_button")
+            self.table.setCellWidget(self.current_row, column, button)
+
+            button.clicked.connect(partial(self.remove_data, self.current_row))
+
             self.current_row += 1
         else:
             row = self.table.rowCount()
@@ -278,3 +284,13 @@ class JobsList(QFrame):
                 self.table.setItem(row, i, QTableWidgetItem(data[i]))
                 self.table.item(row, i).setTextAlignment(Qt.AlignCenter)
                 self.table.item(row, i).setFont(QFont("Helvetica Neue", 12, QFont.Light))
+
+            button = add_button(self.table, "x", name="Page_table_button")
+            self.table.setCellWidget(row, column, button)
+
+            button.clicked.connect(partial(self.remove_data, self.current_row))
+
+    def remove_data(self, row):
+
+        # confirm_removal = Question("Are you sure you want to remove this?")
+        self.table.removeRow(row)

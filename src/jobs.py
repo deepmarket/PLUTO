@@ -22,6 +22,7 @@
 
 from src.mainview import MainView
 from src.uix.util import *
+from src.uix.popup import Question
 
 
 class Jobs(MainView):
@@ -35,8 +36,6 @@ class Jobs(MainView):
 
         self._init_ui()
         self.setStyleSheet(page_style)
-
-        self.clean()
 
     def _init_ui(self):
         section_layout = add_layout(self, VERTICAL)
@@ -52,10 +51,13 @@ class Jobs(MainView):
 
         # connect function
         self.jobs_workspace.submit_button.clicked.connect(self.on_submit_clicked)
+        self.jobs_workspace.refresh_button.clicked.connect(self.on_refresh_clicked)
+        self.jobs_workspace.remove_button.clicked.connect(self.on_remove_clicked)
 
+    # input data format: [job_id, workers, cores, memory, price, status, logs]
     def on_submit_clicked(self):
 
-        # TODO: job_id generating strategy
+        # job_id generating strategy
         from random import randint
         job_id = "A01085" + str(randint(10, 99))
 
@@ -63,8 +65,10 @@ class Jobs(MainView):
         cores = self.jobs_workspace.cores.text()
         memory = self.jobs_workspace.memory.text()
 
-        # TODO: check if submission is success
+        # TODO: evaluate price here
+        price = "15 credits / hr"
 
+        # TODO: check if submission is success
         status = "Submitting"
 
         # TODO: what and where to present in this column
@@ -72,20 +76,46 @@ class Jobs(MainView):
         logs = "Logs"
 
         # testing
-        # self.jobs_list.add_data(["AC1827320", "3", "4", "2", "running", "No log shows"])
-        # self.jobs_list.add_data(["DC1672343", "4", "3", "1", "running", "No log shows"])
-        # self.jobs_list.add_data(["AC1456462", "2", "2", "1", "running", "No log shows"])
+        # self.jobs_list.add_data(["AC1827320", "3", "4", "2", "15 credits / hr", "running", "No log shows"])
+        # self.jobs_list.add_data(["DC1672343", "4", "3", "1", "15 credits / hr", "running", "No log shows"])
+        # self.jobs_list.add_data(["AC1456462", "2", "2", "1", "15 credits / hr", "running", "No log shows"])
 
         self.jobs_workspace.hint.setText("Submission success!")
-        self.jobs_list.add_data([job_id, workers, cores, memory, status, logs])
+        self.jobs_list.add_data([job_id, workers, cores, memory, price, status, logs])
 
-    def clean(self):
-        self.jobs_workspace.workers.setText("")
-        self.jobs_workspace.cores.setText("")
-        self.jobs_workspace.memory.setText("")
-        self.jobs_workspace.source_file.setText("")
-        self.jobs_workspace.input_file.setText("")
+    def on_refresh_clicked(self):
+        self.jobs_workspace.hint.setText("Refresh is clicked")
+
+    def on_remove_clicked(self):
+        # clean hint
         self.jobs_workspace.hint.setText("")
+
+        model = self.jobs_list.table.selectionModel()
+
+        # check if table has selected row
+        if not model.hasSelection():
+            pass
+        else:
+            row = model.selectedRows()[0].row()
+            column = self.jobs_list.table.columnCount()
+
+            # check if row has value
+            if self.jobs_list.table.item(row, column - 2).text() is not "":
+
+                # ask if user want to delete rows
+                confirm_removal = Question(self)
+                answer = confirm_removal.ask("Are you sure you want to remove this?")
+
+                if answer:
+                    self.jobs_list.table.removeRow(row)
+
+                    if row <= 9:
+                        self.jobs_list.current_row -= 1
+
+                        row = self.jobs_list.table.rowCount()
+                        self.jobs_list.table.insertRow(row)
+                        for c in range(column):
+                            self.jobs_list.table.setItem(row, c, QTableWidgetItem(""))
 
 
 # pure UI unit
@@ -104,7 +134,8 @@ class JobsWorkspace(QFrame):
 
         self.submit_button = None       # button
         self.refresh_button = None      # button
-        self.hint = None                # button
+        self.remove_button = None       # button
+        self.hint = None                # string
 
         self._init_ui()
         self.setStyleSheet(page_style)
@@ -131,7 +162,7 @@ class JobsWorkspace(QFrame):
         input_frame.setObjectName("Page_input_frame")
         input_frame.setFixedHeight(165)
 
-        input_layout = add_layout(input_frame, VERTICAL, l_m=30, r_m=30, space=20)
+        input_layout = add_layout(input_frame, VERTICAL, l_m=30, r_m=30)
 
         # line_01 frame
         line_01_frame = QFrame(input_frame)
@@ -155,7 +186,7 @@ class JobsWorkspace(QFrame):
 
         # left frame
         left_frame = QFrame(line_02_frame)
-        left_layout = add_layout(left_frame, VERTICAL, space=20)
+        left_layout = add_layout(left_frame, VERTICAL, t_m=20, space=20)
 
         box, self.source_file = add_input_box_02(left_frame, "Source file:", fix_length=False)
         left_layout.addWidget(box)
@@ -169,7 +200,7 @@ class JobsWorkspace(QFrame):
         # right frame
         right_frame = QFrame(line_02_frame)
         right_frame.setFixedWidth(286)
-        right_layout = add_layout(right_frame, VERTICAL, l_m=74, b_m=25, space=15)
+        right_layout = add_layout(right_frame, VERTICAL, l_m=74, b_m=25, space=10)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
         right_layout.addItem(spacer)
@@ -179,16 +210,26 @@ class JobsWorkspace(QFrame):
         right_layout.addWidget(self.hint)
 
         # button frame
-        button_frame = QFrame(right_frame)
-        button_layout = add_layout(button_frame, HORIZONTAL, space=15)
+        button_frame_01 = QFrame(right_frame)
+        button_layout = add_layout(button_frame_01, HORIZONTAL, space=15)
 
-        self.submit_button = add_button(right_frame, text="SUBMIT", name="Page_button_large")
+        self.submit_button = add_button(right_frame, text="SUBMIT", name="Page_button_small")
         button_layout.addWidget(self.submit_button)
 
-        self.refresh_button = add_button(right_frame, text="REFRESH", name="Page_button_large")
+        self.refresh_button = add_button(right_frame, text="REFRESH", name="Page_button_small")
         button_layout.addWidget(self.refresh_button)
 
-        right_layout.addWidget(button_frame)
+        button_frame_02 = QFrame(right_frame)
+        button_layout = add_layout(button_frame_02, HORIZONTAL, space=15)
+
+        self.remove_button = add_button(right_frame, text="REMOVE", name="Page_button_small")
+        button_layout.addWidget(self.remove_button)
+
+        spacer = QSpacerItem(113, 0, QSizePolicy.Fixed, QSizePolicy.Minimum)
+        button_layout.addItem(spacer)
+
+        right_layout.addWidget(button_frame_01)
+        right_layout.addWidget(button_frame_02)
 
         spacer = QSpacerItem(34, 0, QSizePolicy.Fixed, QSizePolicy.Minimum)
 
@@ -226,8 +267,8 @@ class JobsList(QFrame):
         self.table = QTableWidget(self)
         self.table.setObjectName("Page_table")
 
-        table_headers = ["Job ID", "Workers #", "Cores", "Memory", "Status", "Logs", ""]
-        table_headers_width = [150, 100, 100, 100, 120, 300, 1]
+        table_headers = ["Job ID", "Workers #", "Cores", "Memory", "Price", "Status", "Logs"]
+        table_headers_width = [150, 100, 100, 100, 120, 120, 1]
 
         self.table.setColumnCount(len(table_headers))
         self.table.setHorizontalHeaderLabels(table_headers)
@@ -244,7 +285,7 @@ class JobsList(QFrame):
         # alternating coloring,
         # hide gird line
         # set default row height
-        self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        # self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.table.setSelectionMode(QAbstractItemView.SingleSelection)
         self.table.setAlternatingRowColors(True)
@@ -260,20 +301,16 @@ class JobsList(QFrame):
 
         section_layout.addWidget(self.table)
 
-    # data format: [job_id, workers, cores, memory, status, logs]
+    # data format: [job_id, workers, cores, memory, price, status, logs]
     def add_data(self, data):
-        column = self.table.columnCount()-1
+        column = self.table.columnCount()
 
         if self.current_row <= 9:
             for i in range(column):
                 self.table.setItem(self.current_row, i, QTableWidgetItem(data[i]))
-                self.table.item(self.current_row, i).setTextAlignment(Qt.AlignCenter)
-                self.table.item(self.current_row, i).setFont(QFont("Helvetica Neue", 12, QFont.Light))
-
-            button = add_button(self.table, "x", name="Page_table_button")
-            self.table.setCellWidget(self.current_row, column, button)
-
-            button.clicked.connect(partial(self.remove_data, self.current_row))
+                if self.table.item(self.current_row, i) is not None:
+                    self.table.item(self.current_row, i).setTextAlignment(Qt.AlignCenter)
+                    self.table.item(self.current_row, i).setFont(QFont("Helvetica Neue", 12, QFont.Light))
 
             self.current_row += 1
         else:
@@ -282,15 +319,6 @@ class JobsList(QFrame):
             self.table.insertRow(row)
             for i in range(column):
                 self.table.setItem(row, i, QTableWidgetItem(data[i]))
-                self.table.item(row, i).setTextAlignment(Qt.AlignCenter)
-                self.table.item(row, i).setFont(QFont("Helvetica Neue", 12, QFont.Light))
-
-            button = add_button(self.table, "x", name="Page_table_button")
-            self.table.setCellWidget(row, column, button)
-
-            button.clicked.connect(partial(self.remove_data, self.current_row))
-
-    def remove_data(self, row):
-
-        # confirm_removal = Question("Are you sure you want to remove this?")
-        self.table.removeRow(row)
+                if self.table.item(row, i) is not None:
+                    self.table.item(row, i).setTextAlignment(Qt.AlignCenter)
+                    self.table.item(row, i).setFont(QFont("Helvetica Neue", 12, QFont.Light))

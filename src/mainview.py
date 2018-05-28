@@ -6,10 +6,6 @@ class MainView(QFrame):
     def __init__(self, parent: QFrame=None, *args, **kwargs):
         super(MainView, self).__init__(parent, *args, **kwargs)
 
-        self.setWindowTitle("Share Resources")
-        self.setMinimumWidth(600)
-        self.setMinimumHeight(400)
-
         self.NUM_TABLE_ROWS = 0  # Legacy support?
         self.NUM_TABLE_COLUMNS = 6
 

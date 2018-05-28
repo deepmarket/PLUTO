@@ -367,18 +367,6 @@ page_style = """
         color: white;
     }
     
-    #Page_button_large {
-        border: None;
-        border-radius: 3px;
-        background-color: #6C7E8E;
-        height: 30px;
-        width: 90px;
-        font-family: "Helvetica Neue";
-        font-size: 11px;
-        font-weight: 500;
-        color: white;
-    }
-    
     #Page_table {
         border: none;
         background-color: white;

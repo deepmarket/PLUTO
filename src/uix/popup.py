@@ -5,10 +5,11 @@ from src.uix.util import *
 
 class Question(QMessageBox):
 
-    def __init__(self, question, *args, **kwargs):
+    def __init__(self, parent=None, *args, **kwargs):
         super(QMessageBox, self).__init__(*args, **kwargs)
 
-        self.question = question
+        if parent:
+            self.parent = parent
 
         self._init_geometry()
         self._init_ui()
@@ -20,8 +21,8 @@ class Question(QMessageBox):
     def _init_ui(self):
         pass
 
-    def ask(self, widget, confirmation="Confirm"):
-        confirm = self.question(widget, confirmation, self.question,
+    def ask(self, question, confirmation="Confirm"):
+        confirm = self.question(self.parent, confirmation, question,
                                 QMessageBox.Yes | QMessageBox.Cancel, QMessageBox.Cancel)
         return confirm == QMessageBox.Yes
 

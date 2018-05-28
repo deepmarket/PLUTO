@@ -63,7 +63,7 @@ class App(QMainWindow):
         self.setStyleSheet(app_style)
         self.show()
 
-        self.on_dashboard_clicked()
+        self.on_jobs_clicked()
 
     def _init_geometry(self):
         # window size
@@ -130,8 +130,13 @@ class App(QMainWindow):
         self.sidebar.resources.setStyleSheet(app_sidebar_button)
         self.sidebar.jobs.setStyleSheet(app_sidebar_button)
 
-        # pop corresponding page
-        self.main_window.stack.setCurrentIndex(0)
+        # deallocate current widget if they exist
+        if self.main_window.stack.count():
+            self.main_window.stack.currentWidget().setParent(None)
+
+        # allocate dashboard object
+        self.main_window.stack_widget = Dashboard()
+        self.main_window.stack.addWidget(self.main_window.stack_widget)
 
     # switch tab to resources
     def on_resources_clicked(self):
@@ -139,8 +144,13 @@ class App(QMainWindow):
         self.sidebar.resources.setStyleSheet(app_sidebar_button_active)
         self.sidebar.jobs.setStyleSheet(app_sidebar_button)
 
-        # pop corresponding page
-        self.main_window.stack.setCurrentIndex(1)
+        # deallocate current widget if they exist
+        if self.main_window.stack.count():
+            self.main_window.stack.currentWidget().setParent(None)
+
+        # allocate resources object
+        self.main_window.stack_widget = Resources()
+        self.main_window.stack.addWidget(self.main_window.stack_widget)
 
     # switch tab to jobs
     def on_jobs_clicked(self):
@@ -148,8 +158,12 @@ class App(QMainWindow):
         self.sidebar.resources.setStyleSheet(app_sidebar_button)
         self.sidebar.jobs.setStyleSheet(app_sidebar_button_active)
 
-        # pop corresponding page
-        self.main_window.stack.setCurrentIndex(2)
+        # deallocate current widget if they exist
+        if self.main_window.stack.count():
+            self.main_window.stack.currentWidget().setParent(None)
+
+        self.main_window.stack_widget = Jobs()
+        self.main_window.stack.addWidget(self.main_window.stack_widget)
 
     # open menu
     def on_menu_clicked(self):
@@ -281,9 +295,7 @@ class MainWindow(QFrame):
 
         # variable
         self.stack = None               # stack layout
-        self.dashboard = None           # section
-        self.resources = None           # section
-        self.jobs = None                # section
+        self.stack_widget = None        # current widget
 
         self._init_ui()
         self.setStyleSheet(app_style)
@@ -292,14 +304,6 @@ class MainWindow(QFrame):
         self.setObjectName("App_main_window")
 
         self.stack = add_layout(self, STACK)
-
-        self.dashboard = Dashboard(self)
-        self.resources = Resources()
-        self.jobs = Jobs()
-
-        self.stack.addWidget(self.dashboard)
-        self.stack.addWidget(self.resources)
-        self.stack.addWidget(self.jobs)
 
 
 # Pure UI class, no functionality

@@ -13,6 +13,7 @@
         self.hint = None                # label string
         self.test_button = None         # button
         self.add_button = None          # button
+        self.remove_button = None       # button
 
     class ResourcesList:
 
@@ -40,8 +41,6 @@ class Resources(MainView):
         self._init_ui()
         self.setStyleSheet(page_style)
 
-        self.clean()
-
     def _init_ui(self):
         section_layout = add_layout(self, VERTICAL)
 
@@ -57,6 +56,7 @@ class Resources(MainView):
         # connect function
         self.resources_workspace.test_button.clicked.connect(self.on_test_clicked)
         self.resources_workspace.add_button.clicked.connect(self.on_add_clicked)
+        self.resources_workspace.remove_button.clicked.connect(self.on_remove_clicked)
 
     def on_test_clicked(self):
         # TODO: evaluate price here
@@ -67,8 +67,14 @@ class Resources(MainView):
         self.resources_workspace.hint.setText("TEST PASS. Be able to add.")
         self.if_test = True
 
+    # input data format: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
     def on_add_clicked(self):
         if not self.if_test:
+            # testing
+            # self.resources_list.add_data(["Martin-Mac", "100.10.2.1", "4", "2", "4", "$30/hr", "running"])
+            # self.resources_list.add_data(["Martin-Window", "180.10.2.1", "3", "1", "2", "$15/hr", "running"])
+            # self.resources_list.add_data(["Martin-Linux", "120.10.2.1", "1", "1", "1", "$8.5/hr", "finished"])
+
             self.resources_workspace.hint.setText("The resource must be tested before add.")
         else:
             # resource information
@@ -81,22 +87,35 @@ class Resources(MainView):
             # first status would be 'Submitting'
             status = "Submitting"
 
-            # testing
-            # self.resources_list.add_data(["Martin-Mac", "100.10.2.1", "4", "2", "4", "$30/hr", "running"])
-            # self.resources_list.add_data(["Martin-Window", "180.10.2.1", "3", "1", "2", "$15/hr", "running"])
-            # self.resources_list.add_data(["Martin-Linux", "120.10.2.1", "1", "1", "1", "$8.5/hr", "finished"])
-
             self.resources_list.add_data([machine_name, ip_address, cpu_gpu, cores, ram, self.price, status])
 
-    def clean(self):
-        self.resources_workspace.machine_name.setText("")
-        self.resources_workspace.ip_address.setText("")
-        self.resources_workspace.cpu_gpu.setText("")
-        self.resources_workspace.cores.setText("")
-        self.resources_workspace.ram.setText("")
-        self.resources_workspace.hint.setText("")
+    def on_remove_clicked(self):
+        model = self.resources_list.table.selectionModel()
 
-        self.if_test = False
+        # check if table has selected row
+        if not model.hasSelection():
+            pass
+        else:
+            row = model.selectedRows()[0].row()
+            column = self.resources_list.table.columnCount()
+
+            # check if row has value
+            if self.resources_list.table.item(row, column-1).text() is not "":
+
+                # ask if user want to delete rows
+                confirm_removal = Question(self)
+                answer = confirm_removal.ask("Are you sure you want to remove this?")
+
+                if answer:
+                    self.resources_list.table.removeRow(row)
+
+                    if row <= 9:
+                        self.resources_list.current_row -= 1
+
+                        row = self.resources_list.table.rowCount()
+                        self.resources_list.table.insertRow(row)
+                        for c in range(column):
+                            self.resources_list.table.setItem(row, c, QTableWidgetItem(""))
 
 
 # pure UI unit
@@ -116,6 +135,7 @@ class ResourcesWorkspace(QFrame):
         self.hint = None                # label string
         self.test_button = None         # button
         self.add_button = None          # button
+        self.remove_button = None       # button
 
         self._init_ui()
         self.setStyleSheet(page_style)
@@ -186,6 +206,9 @@ class ResourcesWorkspace(QFrame):
         self.add_button = add_button(line_03_frame, text="ADD", name="Page_button_small")
         line_03_layout.addWidget(self.add_button)
 
+        self.remove_button = add_button(line_03_frame, text="REMOVE", name="Page_button_small")
+        line_03_layout.addWidget(self.remove_button)
+
         spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         input_layout.addWidget(line_01_frame)
@@ -220,8 +243,8 @@ class ResourcesList(QFrame):
         self.table = QTableWidget(self)
         self.table.setObjectName("Page_table")
 
-        table_headers = ["Machine Name", "IP Address", "CPUs/GPUs", "Cores", "Ram (Gb.)", "Price", "Status", ""]
-        table_headers_width = [150, 150, 100, 100, 100, 120, 150, 1]
+        table_headers = ["Machine Name", "IP Address", "CPUs/GPUs", "Cores", "Ram (Gb.)", "Price", "Status"]
+        table_headers_width = [150, 150, 100, 100, 100, 120, 150]
 
         self.table.setColumnCount(len(table_headers))
         self.table.setHorizontalHeaderLabels(table_headers)
@@ -238,7 +261,7 @@ class ResourcesList(QFrame):
         # alternating coloring,
         # hide gird line
         # set default row height
-        self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        # self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.table.setSelectionMode(QAbstractItemView.SingleSelection)
         self.table.setAlternatingRowColors(True)
@@ -256,20 +279,15 @@ class ResourcesList(QFrame):
 
     # data format: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
     def add_data(self, data):
-        column = self.table.columnCount()-1
+        column = self.table.columnCount()
 
         if self.current_row <= 9:
 
             for i in range(column):
                 self.table.setItem(self.current_row, i, QTableWidgetItem(data[i]))
-                self.table.item(self.current_row, i).setTextAlignment(Qt.AlignCenter)
-                self.table.item(self.current_row, i).setFont(QFont("Helvetica Neue", 12, QFont.Light))
-
-            button = add_button(self.table, "x", name="Page_table_button")
-            self.table.setCellWidget(self.current_row, column, button)
-
-            button.clicked.connect(partial(self.remove_data, self.current_row))
-
+                if self.table.item(self.current_row, i) is not None:
+                    self.table.item(self.current_row, i).setTextAlignment(Qt.AlignCenter)
+                    self.table.item(self.current_row, i).setFont(QFont("Helvetica Neue", 12, QFont.Light))
             self.current_row += 1
         else:
             row = self.table.rowCount()
@@ -277,13 +295,6 @@ class ResourcesList(QFrame):
             self.table.insertRow(row)
             for i in range(column):
                 self.table.setItem(row, i, QTableWidgetItem(data[i]))
-                self.table.item(row, i).setTextAlignment(Qt.AlignCenter)
-                self.table.item(row, i).setFont(QFont("Helvetica Neue", 12, QFont.Light))
-
-            button = add_button(self.table, "x", name="Page_table_button")
-            self.table.setCellWidget(row, column, button)
-
-    def remove_data(self, row):
-
-        # confirm_removal = Question("Are you sure you want to remove this?")
-        self.table.removeRow(row)
+                if self.table.item(row, i) is not None:
+                    self.table.item(row, i).setTextAlignment(Qt.AlignCenter)
+                    self.table.item(row, i).setFont(QFont("Helvetica Neue", 12, QFont.Light))

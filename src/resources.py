@@ -3,7 +3,6 @@
 
     class ResourcesWorkspace:
 
-        self.add_resources = None       # button
         self.machine_name = None        # input string
         self.ip_address = None          # input string
         self.cpu_gpu = None             # input number
@@ -32,6 +31,9 @@ class Resources(MainView):
         super(QFrame, self).__init__(*args, **kwargs)
 
         # variable
+        self.menu = None
+        self.add_resources = None
+
         self.resources_workspace = None
         self.resources_list = None
         self.if_test = False
@@ -44,11 +46,25 @@ class Resources(MainView):
     def _init_ui(self):
         section_layout = add_layout(self, VERTICAL)
 
+        # menu frame
+        self.menu = QFrame(self)
+        self.menu.setFixedHeight(41)
+
+        menu_layout = add_layout(self.menu, HORIZONTAL, t_m=6, l_m=40, r_m=40, space=40)
+
+        self.add_resources = add_button(self.menu, "Add Resources", stylesheet=page_menu_button_active)
+
+        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        menu_layout.addWidget(self.add_resources)
+        menu_layout.addItem(spacer)
+
         self.resources_workspace = ResourcesWorkspace(self)
         self.resources_list = ResourcesList(self)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
+        section_layout.addWidget(self.menu)
         section_layout.addWidget(self.resources_workspace)
         section_layout.addWidget(self.resources_list)
         section_layout.addItem(spacer)
@@ -125,12 +141,19 @@ class ResourcesWorkspace(QFrame):
         super(QFrame, self).__init__(*args, **kwargs)
 
         # variable
+        self.input = None               # frame
+        self.spec = None                # frame
+
         self.add_resources = None       # button
         self.machine_name = None        # input string
         self.ip_address = None          # input string
         self.cpu_gpu = None             # input number
         self.cores = None               # input number
         self.ram = None                 # input number
+
+        self.current_cpu = 8            # param number
+        self.current_core = 4           # param number
+        self.current_ram = 4            # param number
 
         self.hint = None                # label string
         self.test_button = None         # button
@@ -140,55 +163,47 @@ class ResourcesWorkspace(QFrame):
         self._init_ui()
         self.setStyleSheet(page_style)
 
-    def _init_geometry(self):
-        self.setFixedHeight(206)
-
     def _init_ui(self):
-        section_layout = add_layout(self, VERTICAL, t_m=6)
+        self.setObjectName("Page_input_frame")
+        self.setFixedHeight(165)
 
-        # menu frame
-        menu_frame = QFrame(self)
-        menu_layout = add_layout(menu_frame, HORIZONTAL, l_m=40, r_m=40, space=40)
+        section_layout = add_layout(self, HORIZONTAL, t_m=35, l_m=30, b_m=30, r_m=30, space=50)
 
-        self.add_resources = add_button(menu_frame, "Add Resources", stylesheet=page_menu_button_active)
+        self._init_input()
+        self._init_spec()
 
-        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        section_layout.addWidget(self.input)
+        section_layout.addWidget(self.spec)
 
-        menu_layout.addWidget(self.add_resources)
-        menu_layout.addItem(spacer)
-
-        # input frame
-        input_frame = QFrame(self)
-        input_frame.setObjectName("Page_input_frame")
-        input_frame.setFixedHeight(165)
-
-        input_layout = add_layout(input_frame, VERTICAL, l_m=30, r_m=30, space=20)
+    def _init_input(self):
+        self.input = QFrame(self)
+        input_layout = add_layout(self.input, VERTICAL, space=20)
 
         # line_01 frame
-        line_01_frame = QFrame(input_frame)
-        line_01_layout = add_layout(line_01_frame, HORIZONTAL, t_m=35, space=30)
+        line_01_frame = QFrame(self.input)
+        line_01_layout = add_layout(line_01_frame, HORIZONTAL, space=30)
 
-        box, self.machine_name = add_input_box_02(line_01_frame, "Machine Name:")
+        box, self.machine_name = add_input_box_03(line_01_frame, "Machine Name:", width=260)
         line_01_layout.addWidget(box)
 
-        box, self.ip_address = add_input_box_02(line_01_frame, "IP Address:", fix_length=False)
+        box, self.ip_address = add_input_box_03(line_01_frame, "IP Address:", fix_width=False)
         line_01_layout.addWidget(box)
 
         # line_02 frame
-        line_02_frame = QFrame(input_frame)
-        line_02_layout = add_layout(line_02_frame, HORIZONTAL, space=30)
+        line_02_frame = QFrame(self.input)
+        line_02_layout = add_layout(line_02_frame, HORIZONTAL)
 
-        box, self.cpu_gpu = add_input_box_02(line_02_frame, "CPUs/GPUs #:")
+        box, self.cpu_gpu = add_input_box_03(line_02_frame, "CPUs/GPUs #:")
         line_02_layout.addWidget(box)
 
-        box, self.cores = add_input_box_02(line_02_frame, "Cores:")
+        box, self.cores = add_input_box_03(line_02_frame, "Cores:")
         line_02_layout.addWidget(box)
 
-        box, self.ram = add_input_box_02(line_02_frame, "Ram (Gb.):", fix_length=False)
+        box, self.ram = add_input_box_03(line_02_frame, "Ram (Gb.):", fix_width=False)
         line_02_layout.addWidget(box)
 
         # line_03 frame
-        line_03_frame = QFrame(input_frame)
+        line_03_frame = QFrame(self.input)
         line_03_layout = add_layout(line_03_frame, HORIZONTAL, space=30)
 
         spacer = QSpacerItem(5, 0, QSizePolicy.Fixed, QSizePolicy.Minimum)
@@ -216,8 +231,67 @@ class ResourcesWorkspace(QFrame):
         input_layout.addWidget(line_03_frame)
         input_layout.addItem(spacer)
 
-        section_layout.addWidget(menu_frame)
-        section_layout.addWidget(input_frame)
+    def _init_spec(self):
+        self.spec = QFrame(self)
+        self.spec.setObjectName("Page_machine_spec")
+        self.spec.setFixedWidth(191)
+
+        spec_layout = add_layout(self.spec, VERTICAL, t_m=15, l_m=20, b_m=15, r_m=20, space=15)
+
+        title = add_label(self.spec, "Current Machine Configuration",
+                          name="Page_machine_spec_title", align=Qt.AlignLeft)
+
+        content = QFrame(self.spec)
+        content_layout = add_layout(content, VERTICAL, space=8)
+
+        # frame_01: cpu
+        frame_01 = QFrame(content)
+        frame_layout = add_layout(frame_01, HORIZONTAL)
+
+        frame_title = add_label(frame_01, "CPU:", name="Page_machine_spec_label")
+        frame_layout.addWidget(frame_title)
+
+        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        frame_layout.addItem(spacer)
+
+        frame_value = add_label(frame_01, f"{self.current_cpu} GB", name="Page_machine_spec_label")
+        frame_layout.addWidget(frame_value)
+
+        # frame_02: core
+        frame_02 = QFrame(content)
+        frame_layout = add_layout(frame_02, HORIZONTAL)
+
+        frame_title = add_label(frame_02, "Core #:", name="Page_machine_spec_label")
+        frame_layout.addWidget(frame_title)
+
+        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        frame_layout.addItem(spacer)
+
+        frame_value = add_label(frame_02, f"{self.current_core}", name="Page_machine_spec_label")
+        frame_layout.addWidget(frame_value)
+
+        # frame_03: ram
+        frame_03 = QFrame(content)
+        frame_layout = add_layout(frame_03, HORIZONTAL)
+
+        frame_title = add_label(frame_03, "Ram:", name="Page_machine_spec_label")
+        frame_layout.addWidget(frame_title)
+
+        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        frame_layout.addItem(spacer)
+
+        frame_value = add_label(frame_03, f"{self.current_ram} GB", name="Page_machine_spec_label")
+        frame_layout.addWidget(frame_value)
+
+        spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        content_layout.addWidget(frame_01)
+        content_layout.addWidget(frame_02)
+        content_layout.addWidget(frame_03)
+        content_layout.addItem(spacer)
+
+        spec_layout.addWidget(title)
+        spec_layout.addWidget(content)
 
 
 # pure UI unit

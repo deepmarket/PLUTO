@@ -331,19 +331,36 @@ page_style = """
         background-color: white;
     }
 
-    #Page_input_title {
+    #Page_input_title_01 {
         font-family: "Helvetica Neue";
         font-size: 13px;
         font-weight: 300;
         color: #6C7E8E;
     }
     
-    #Page_input_input {
+    #Page_input_title_02 {
+        font-family: "Helvetica Neue";
+        font-size: 9px;
+        font-weight: 200;
+        color: #6C7E8E;
+    }
+    
+    #Page_input_input_01 {
         border: None;
         background-color: #F7F7F7;
         padding: 0 1px;
         font-family: "Helvetica Neue";
         font-size: 12px;
+        font-weight: 200;
+        color: black;
+    }
+    
+    #Page_input_input_02 {
+        border: None;
+        background-color: #F7F7F7;
+        padding: 0 1px;
+        font-family: "Helvetica Neue";
+        font-size: 10px;
         font-weight: 200;
         color: black;
     }
@@ -383,11 +400,24 @@ page_style = """
         color: white;
     }
     
-    #Page_table_button {
-        border: None;
+    #Page_machine_spec {
+        border: none;
+        border-radius: 3px;
+        background-color: #F4F8F9;
+    }
+    
+    #Page_machine_spec_title {
         font-family: "Helvetica Neue";
-        font-size:12px;
-        font-weight: 100;
+        font-size:9px;
+        font-weight: 300;
+        color: #6C7E8E;
+    }
+    
+    #Page_machine_spec_label {
+        font-family: "Helvetica Neue";
+        font-size:7px;
+        font-weight: 200;
+        color: #6C7E8E;
     }
 """
 

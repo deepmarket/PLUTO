@@ -340,7 +340,7 @@ page_style = """
     
     #Page_input_title_02 {
         font-family: "Helvetica Neue";
-        font-size: 9px;
+        font-size: 10px;
         font-weight: 200;
         color: #6C7E8E;
     }
@@ -408,15 +408,8 @@ page_style = """
     
     #Page_machine_spec_title {
         font-family: "Helvetica Neue";
-        font-size:9px;
+        font-size:10px;
         font-weight: 300;
-        color: #6C7E8E;
-    }
-    
-    #Page_machine_spec_label {
-        font-family: "Helvetica Neue";
-        font-size:7px;
-        font-weight: 200;
         color: #6C7E8E;
     }
 """
@@ -430,6 +423,27 @@ page_menu_button_active = f"""
     font-size: 11px;
     font-weight: 100;
     color: {COLOR_01};
+"""
+
+Page_machine_spec_label = f"""
+    font-family: "Helvetica Neue";
+    font-size: 8px;
+    font-weight: 200;
+    color: {COLOR_01};
+"""
+
+Page_machine_spec_label_red = f"""
+    font-family: "Helvetica Neue";
+    font-size: 8px;
+    font-weight: 500;
+    color: red;
+"""
+
+Page_machine_spec_label_green = f"""
+    font-family: "Helvetica Neue";
+    font-size: 8px;
+    font-weight: 400;
+    color: #95E637;
 """
 
 question_style = """

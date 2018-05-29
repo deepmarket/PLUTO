@@ -28,7 +28,7 @@ from src.uix.popup import Question
 class Jobs(MainView):
 
     def __init__(self, *args, **kwargs):
-        super(QFrame, self).__init__(*args, **kwargs)
+        super(Jobs, self).__init__(*args, **kwargs)
 
         # variable
         self.menu = None

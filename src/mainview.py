@@ -3,11 +3,10 @@ from src.uix.util import *
 
 
 class MainView(QFrame):
-    def __init__(self, parent: QFrame=None, *args, **kwargs):
-        super(MainView, self).__init__(parent, *args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(QFrame, self).__init__(*args, **kwargs)
 
-        self.NUM_TABLE_ROWS = 0  # Legacy support?
-        self.NUM_TABLE_COLUMNS = 6
+        self.num_regex = re.compile(r"(?<![-.])\b[0-9]+\b(?!\.[0-9])")
 
         self.api_endpoint = None
 

@@ -41,6 +41,7 @@ from src.uix.util import *
 from src.dashboard import Dashboard
 from src.resources import Resources
 from src.jobs import Jobs
+from src.uix.popup import Notification
 
 
 class App(QMainWindow):
@@ -112,6 +113,8 @@ class App(QMainWindow):
         self.sidebar.jobs.clicked.connect(self.on_jobs_clicked)
         self.navigation.menu_button.clicked.connect(self.on_menu_clicked)
         self.mask.clicked_area.clicked.connect(self.on_mask_clicked)
+        self.account.credit_history.clicked.connect(self.on_credit_history_clicked)
+        self.account.notification.clicked.connect(self.on_notification_clicked)
 
     # mouse graping and window moves
     def mousePressEvent(self, event):
@@ -188,6 +191,18 @@ class App(QMainWindow):
         self.animation.addAnimation(mask_action)
 
         self.animation.start()
+
+    # notification popup
+    @staticmethod
+    def on_notification_clicked():
+        popup = Notification()
+        popup.exec_()
+
+    # credit history popup
+    @staticmethod
+    def on_credit_history_clicked():
+        popup = Notification()
+        popup.exec_()
 
 
 # Pure UI class, no functionality

@@ -98,11 +98,11 @@ class Resources(MainView):
     def on_add_clicked(self):
         if not self.if_test:
             # testing
-            # self.resources_list.add_data(["Martin-Mac", "100.10.2.1", "4", "2", "4", "$30/hr", "running"])
-            # self.resources_list.add_data(["Martin-Window", "180.10.2.1", "3", "1", "2", "$15/hr", "running"])
-            # self.resources_list.add_data(["Martin-Linux", "120.10.2.1", "1", "1", "1", "$8.5/hr", "finished"])
+            self.resources_list.add_data(["Martin-Mac", "100.10.2.1", "4", "2", "4", "$30/hr", "running"])
+            self.resources_list.add_data(["Martin-Window", "180.10.2.1", "3", "1", "2", "$15/hr", "running"])
+            self.resources_list.add_data(["Martin-Linux", "120.10.2.1", "1", "1", "1", "$8.5/hr", "finished"])
 
-            self.resources_workspace.hint.setText("The resource must be tested before add.")
+            # self.resources_workspace.hint.setText("The resource must be tested before add.")
         else:
             # resource information
             machine_name = self.resources_workspace.machine_name.text()
@@ -115,9 +115,12 @@ class Resources(MainView):
             status = "Submitting"
 
             self.resources_list.add_data([machine_name, ip_address, cpu_gpu, cores, ram, self.price, status])
+            self.resources_workspace.hint.setText("Add resources successfully!")
             self.clean_workspace()
 
     def on_remove_clicked(self):
+        self.resources_workspace.hint.setText("")
+
         model = self.resources_list.table.selectionModel()
 
         # check if table has selected row
@@ -131,11 +134,11 @@ class Resources(MainView):
             if self.resources_list.table.item(row, column-1).text() is not "":
 
                 # ask if user want to delete rows
-                confirm_removal = Question(self)
-                answer = confirm_removal.ask("Are you sure you want to remove this?")
+                question = Question("Are you sure you want to remove this?")
 
-                if answer:
+                if question.exec_():
                     self.resources_list.table.removeRow(row)
+                    self.resources_workspace.hint.setText(f"Remove resources at Row {row}.")
 
                     if row <= 9:
                         self.resources_list.current_row -= 1

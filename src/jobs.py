@@ -116,23 +116,21 @@ class Jobs(MainView):
             row = model.selectedRows()[0].row()
             column = self.jobs_list.table.columnCount()
 
-            # check if row has value
-            if self.jobs_list.table.item(row, column - 2).text() is not "":
+            # ask if user want to delete rows
+            question = Question("Are you sure you want to remove this?")
 
-                # ask if user want to delete rows
-                confirm_removal = Question(self)
-                answer = confirm_removal.ask("Are you sure you want to remove this?")
+            if question.exec_():
 
-                if answer:
-                    self.jobs_list.table.removeRow(row)
+                self.jobs_list.table.removeRow(row)
+                self.jobs_workspace.hint.setText(f"Remove jobs at Row {row}.")
 
-                    if row <= 9:
-                        self.jobs_list.current_row -= 1
+                if row <= 9:
+                    self.jobs_list.current_row -= 1
 
-                        row = self.jobs_list.table.rowCount()
-                        self.jobs_list.table.insertRow(row)
-                        for c in range(column):
-                            self.jobs_list.table.setItem(row, c, QTableWidgetItem(""))
+                    row = self.jobs_list.table.rowCount()
+                    self.jobs_list.table.insertRow(row)
+                    for c in range(column):
+                        self.jobs_list.table.setItem(row, c, QTableWidgetItem(""))
 
 
 # pure UI unit

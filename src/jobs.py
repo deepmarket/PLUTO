@@ -28,9 +28,12 @@ from src.uix.popup import Question
 class Jobs(MainView):
 
     def __init__(self, *args, **kwargs):
-        super(QFrame, self).__init__(*args, **kwargs)
+        super(Jobs, self).__init__(*args, **kwargs)
 
         # variable
+        self.menu = None
+        self.add_jobs = None
+
         self.jobs_workspace = None
         self.jobs_list = None
 
@@ -40,11 +43,25 @@ class Jobs(MainView):
     def _init_ui(self):
         section_layout = add_layout(self, VERTICAL)
 
+        # menu frame
+        self.menu = QFrame(self)
+        self.menu.setFixedHeight(41)
+
+        menu_layout = add_layout(self.menu, HORIZONTAL, t_m=6, l_m=40, r_m=40, space=40)
+
+        self.add_jobs = add_button(self.menu, "Add Jobs", stylesheet=page_menu_button_active)
+
+        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        menu_layout.addWidget(self.add_jobs)
+        menu_layout.addItem(spacer)
+
         self.jobs_workspace = JobsWorkspace(self)
         self.jobs_list = JobsList(self)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
+        section_layout.addWidget(self.menu)
         section_layout.addWidget(self.jobs_workspace)
         section_layout.addWidget(self.jobs_list)
         section_layout.addItem(spacer)
@@ -140,32 +157,13 @@ class JobsWorkspace(QFrame):
         self._init_ui()
         self.setStyleSheet(page_style)
 
-    def _init_geometry(self):
-        self.setFixedHeight(206)
-
     def _init_ui(self):
-        section_layout = add_layout(self, VERTICAL, t_m=6)
-
-        # menu frame
-        menu_frame = QFrame(self)
-        menu_layout = add_layout(menu_frame, HORIZONTAL, l_m=40, r_m=40, space=40)
-
-        self.add_jobs = add_button(menu_frame, "Add Jobs", stylesheet=page_menu_button_active)
-
-        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        menu_layout.addWidget(self.add_jobs)
-        menu_layout.addItem(spacer)
-
-        # input frame
-        input_frame = QFrame(self)
-        input_frame.setObjectName("Page_input_frame")
-        input_frame.setFixedHeight(165)
-
-        input_layout = add_layout(input_frame, VERTICAL, l_m=30, r_m=30)
+        self.setObjectName("Page_input_frame")
+        self.setFixedHeight(165)
+        section_layout = add_layout(self, VERTICAL, l_m=30, r_m=30)
 
         # line_01 frame
-        line_01_frame = QFrame(input_frame)
+        line_01_frame = QFrame(self)
         line_01_layout = add_layout(line_01_frame, HORIZONTAL, t_m=35, space=25)
 
         box, self.workers = add_input_box_02(line_01_frame, "Workers #:")
@@ -181,17 +179,17 @@ class JobsWorkspace(QFrame):
         line_01_layout.addItem(spacer)
 
         # line_02 frame
-        line_02_frame = QFrame(input_frame)
+        line_02_frame = QFrame(self)
         line_02_layout = add_layout(line_02_frame, HORIZONTAL)
 
         # left frame
         left_frame = QFrame(line_02_frame)
         left_layout = add_layout(left_frame, VERTICAL, t_m=20, space=20)
 
-        box, self.source_file = add_input_box_02(left_frame, "Source file:", fix_length=False)
+        box, self.source_file = add_input_box_02(left_frame, "Source file:", fix_width=False)
         left_layout.addWidget(box)
 
-        box, self.input_file = add_input_box_02(left_frame, "Input file:", fix_length=False)
+        box, self.input_file = add_input_box_02(left_frame, "Input file:", fix_width=False)
         left_layout.addWidget(box)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
@@ -200,7 +198,7 @@ class JobsWorkspace(QFrame):
         # right frame
         right_frame = QFrame(line_02_frame)
         right_frame.setFixedWidth(286)
-        right_layout = add_layout(right_frame, VERTICAL, l_m=74, b_m=25, space=10)
+        right_layout = add_layout(right_frame, VERTICAL, l_m=74, t_m=5, space=10)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
         right_layout.addItem(spacer)
@@ -237,11 +235,11 @@ class JobsWorkspace(QFrame):
         line_02_layout.addWidget(right_frame)
         line_02_layout.addItem(spacer)
 
-        input_layout.addWidget(line_01_frame)
-        input_layout.addWidget(line_02_frame)
+        spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
-        section_layout.addWidget(menu_frame)
-        section_layout.addWidget(input_frame)
+        section_layout.addWidget(line_01_frame)
+        section_layout.addWidget(line_02_frame)
+        section_layout.addItem(spacer)
 
 
 # pure UI unit

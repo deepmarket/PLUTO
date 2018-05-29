@@ -3,7 +3,6 @@
 
     class ResourcesWorkspace:
 
-        self.add_resources = None       # button
         self.machine_name = None        # input string
         self.ip_address = None          # input string
         self.cpu_gpu = None             # input number
@@ -29,12 +28,19 @@ from src.uix.popup import Question
 class Resources(MainView):
 
     def __init__(self, *args, **kwargs):
-        super(QFrame, self).__init__(*args, **kwargs)
+        super(Resources, self).__init__(*args, **kwargs)
 
         # variable
+        self.menu = None
+        self.add_resources = None
+
         self.resources_workspace = None
         self.resources_list = None
+
         self.if_test = False
+        self.cpu_check = False
+        self.core_check = False
+        self.ram_check = False
 
         self.price = None
 
@@ -44,28 +50,49 @@ class Resources(MainView):
     def _init_ui(self):
         section_layout = add_layout(self, VERTICAL)
 
+        # menu frame
+        self.menu = QFrame(self)
+        self.menu.setFixedHeight(41)
+
+        menu_layout = add_layout(self.menu, HORIZONTAL, t_m=6, l_m=40, r_m=40, space=40)
+
+        self.add_resources = add_button(self.menu, "Add Resources", stylesheet=page_menu_button_active)
+
+        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        menu_layout.addWidget(self.add_resources)
+        menu_layout.addItem(spacer)
+
         self.resources_workspace = ResourcesWorkspace(self)
         self.resources_list = ResourcesList(self)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
+        section_layout.addWidget(self.menu)
         section_layout.addWidget(self.resources_workspace)
         section_layout.addWidget(self.resources_list)
         section_layout.addItem(spacer)
 
         # connect function
+        self.resources_workspace.cpu_gpu.editingFinished.connect(self.cpu_test)
+        self.resources_workspace.cores.editingFinished.connect(self.core_test)
+        self.resources_workspace.ram.editingFinished.connect(self.ram_test)
+
         self.resources_workspace.test_button.clicked.connect(self.on_test_clicked)
         self.resources_workspace.add_button.clicked.connect(self.on_add_clicked)
         self.resources_workspace.remove_button.clicked.connect(self.on_remove_clicked)
 
     def on_test_clicked(self):
-        # TODO: evaluate price here
+        if self.cpu_check and self.core_check and self.ram_check:
+            # TODO: evaluate price here
 
-        self.price = "15 credits / hr"
+            self.price = "15 credits / hr"
 
-        # TEST PASS
-        self.resources_workspace.hint.setText("TEST PASS. Be able to add.")
-        self.if_test = True
+            # TEST PASS
+            self.resources_workspace.hint.setText("TEST PASS. Be able to add.")
+            self.if_test = True
+        else:
+            self.resources_workspace.hint.setText("TEST FAIL. Invalid input.")
 
     # input data format: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
     def on_add_clicked(self):
@@ -88,6 +115,7 @@ class Resources(MainView):
             status = "Submitting"
 
             self.resources_list.add_data([machine_name, ip_address, cpu_gpu, cores, ram, self.price, status])
+            self.clean_workspace()
 
     def on_remove_clicked(self):
         model = self.resources_list.table.selectionModel()
@@ -117,6 +145,79 @@ class Resources(MainView):
                         for c in range(column):
                             self.resources_list.table.setItem(row, c, QTableWidgetItem(""))
 
+    def cpu_test(self):
+        cpu_input = self.resources_workspace.cpu_gpu.text()
+
+        # empty input or input is not number
+        if cpu_input is "" or not self.num_regex.match(cpu_input):
+            self.resources_workspace.hint.setText("Please enter number to CPUs / GPUs.")
+            self.resources_workspace.current_cpu_label.setStyleSheet(Page_machine_spec_label_red)
+            self.resources_workspace.current_cpu_value.setStyleSheet(Page_machine_spec_label_red)
+        else:
+            num = int(cpu_input)
+            if num > self.resources_workspace.current_cpu:
+                self.resources_workspace.hint.setText("Input in CPUs / GPUs is out of range.")
+                self.resources_workspace.current_cpu_label.setStyleSheet(Page_machine_spec_label_red)
+                self.resources_workspace.current_cpu_value.setStyleSheet(Page_machine_spec_label_red)
+            else:
+                self.resources_workspace.current_cpu_label.setStyleSheet(Page_machine_spec_label_green)
+                self.resources_workspace.current_cpu_value.setStyleSheet(Page_machine_spec_label_green)
+
+                self.cpu_check = True
+
+    def core_test(self):
+        core_input = self.resources_workspace.cores.text()
+
+        # empty input or input is not number
+        if core_input is "" or not self.num_regex.match(core_input):
+            self.resources_workspace.hint.setText("Please enter number to Cores.")
+            self.resources_workspace.current_core_label.setStyleSheet(Page_machine_spec_label_red)
+            self.resources_workspace.current_core_value.setStyleSheet(Page_machine_spec_label_red)
+        else:
+            num = int(core_input)
+            if num > self.resources_workspace.current_core:
+                self.resources_workspace.hint.setText("Input in Cores is out of range.")
+                self.resources_workspace.current_core_label.setStyleSheet(Page_machine_spec_label_red)
+                self.resources_workspace.current_core_value.setStyleSheet(Page_machine_spec_label_red)
+            else:
+                self.resources_workspace.current_core_label.setStyleSheet(Page_machine_spec_label_green)
+                self.resources_workspace.current_core_value.setStyleSheet(Page_machine_spec_label_green)
+
+                self.core_check = True
+
+    def ram_test(self):
+        ram_input = self.resources_workspace.cores.text()
+
+        # empty input or input is not number
+        if ram_input is "" or not self.num_regex.match(ram_input):
+            self.resources_workspace.hint.setText("Please enter number to Ram.")
+            self.resources_workspace.current_ram_label.setStyleSheet(Page_machine_spec_label_red)
+            self.resources_workspace.current_ram_value.setStyleSheet(Page_machine_spec_label_red)
+        else:
+            num = int(ram_input)
+            if num > self.resources_workspace.current_core:
+                self.resources_workspace.hint.setText("Input in Ram is out of range.")
+                self.resources_workspace.current_ram_label.setStyleSheet(Page_machine_spec_label_red)
+                self.resources_workspace.current_ram_value.setStyleSheet(Page_machine_spec_label_red)
+            else:
+                self.resources_workspace.current_ram_label.setStyleSheet(Page_machine_spec_label_green)
+                self.resources_workspace.current_ram_value.setStyleSheet(Page_machine_spec_label_green)
+
+                self.ram_check = True
+
+    def clean_workspace(self):
+        self.resources_workspace.machine_name.setText("")
+        self.resources_workspace.ip_address.setText("")
+        self.resources_workspace.cpu_gpu.setText("")
+        self.resources_workspace.cores.setText("")
+        self.resources_workspace.ram.setText("")
+        self.resources_workspace.hint.setText("")
+
+        self.if_test = False
+        self.cpu_check = False
+        self.core_check = False
+        self.ram_check = False
+
 
 # pure UI unit
 class ResourcesWorkspace(QFrame):
@@ -125,12 +226,27 @@ class ResourcesWorkspace(QFrame):
         super(QFrame, self).__init__(*args, **kwargs)
 
         # variable
+        self.input = None               # frame
+        self.spec = None                # frame
+
         self.add_resources = None       # button
         self.machine_name = None        # input string
         self.ip_address = None          # input string
         self.cpu_gpu = None             # input number
         self.cores = None               # input number
         self.ram = None                 # input number
+
+        self.current_cpu = 8  # param number
+        self.current_core = 4  # param number
+        self.current_ram = 4  # param number
+
+        self.current_cpu_label = None   # label string
+        self.current_core_label = None  # label string
+        self.current_ram_label = None   # label string
+
+        self.current_cpu_value = None   # label string
+        self.current_core_value = None  # label string
+        self.current_ram_value = None   # label string
 
         self.hint = None                # label string
         self.test_button = None         # button
@@ -140,58 +256,50 @@ class ResourcesWorkspace(QFrame):
         self._init_ui()
         self.setStyleSheet(page_style)
 
-    def _init_geometry(self):
-        self.setFixedHeight(206)
-
     def _init_ui(self):
-        section_layout = add_layout(self, VERTICAL, t_m=6)
+        self.setObjectName("Page_input_frame")
+        self.setFixedHeight(165)
 
-        # menu frame
-        menu_frame = QFrame(self)
-        menu_layout = add_layout(menu_frame, HORIZONTAL, l_m=40, r_m=40, space=40)
+        section_layout = add_layout(self, HORIZONTAL, t_m=35, l_m=30, b_m=30, r_m=30, space=50)
 
-        self.add_resources = add_button(menu_frame, "Add Resources", stylesheet=page_menu_button_active)
+        self._init_input()
+        self._init_spec()
 
-        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        section_layout.addWidget(self.input)
+        section_layout.addWidget(self.spec)
 
-        menu_layout.addWidget(self.add_resources)
-        menu_layout.addItem(spacer)
-
-        # input frame
-        input_frame = QFrame(self)
-        input_frame.setObjectName("Page_input_frame")
-        input_frame.setFixedHeight(165)
-
-        input_layout = add_layout(input_frame, VERTICAL, l_m=30, r_m=30, space=20)
+    def _init_input(self):
+        self.input = QFrame(self)
+        input_layout = add_layout(self.input, VERTICAL, space=20)
 
         # line_01 frame
-        line_01_frame = QFrame(input_frame)
-        line_01_layout = add_layout(line_01_frame, HORIZONTAL, t_m=35, space=30)
+        line_01_frame = QFrame(self.input)
+        line_01_layout = add_layout(line_01_frame, HORIZONTAL, space=30)
 
-        box, self.machine_name = add_input_box_02(line_01_frame, "Machine Name:")
+        box, self.machine_name = add_input_box_03(line_01_frame, "Machine Name:", width=260)
         line_01_layout.addWidget(box)
 
-        box, self.ip_address = add_input_box_02(line_01_frame, "IP Address:", fix_length=False)
+        box, self.ip_address = add_input_box_03(line_01_frame, "IP Address:", fix_width=False)
         line_01_layout.addWidget(box)
 
         # line_02 frame
-        line_02_frame = QFrame(input_frame)
-        line_02_layout = add_layout(line_02_frame, HORIZONTAL, space=30)
+        line_02_frame = QFrame(self.input)
+        line_02_layout = add_layout(line_02_frame, HORIZONTAL)
 
-        box, self.cpu_gpu = add_input_box_02(line_02_frame, "CPUs/GPUs #:")
+        box, self.cpu_gpu = add_input_box_03(line_02_frame, "CPUs (Gb.):")
         line_02_layout.addWidget(box)
 
-        box, self.cores = add_input_box_02(line_02_frame, "Cores:")
+        box, self.cores = add_input_box_03(line_02_frame, "Cores:")
         line_02_layout.addWidget(box)
 
-        box, self.ram = add_input_box_02(line_02_frame, "Ram (Gb.):", fix_length=False)
+        box, self.ram = add_input_box_03(line_02_frame, "Ram (Gb.):", fix_width=False)
         line_02_layout.addWidget(box)
 
         # line_03 frame
-        line_03_frame = QFrame(input_frame)
+        line_03_frame = QFrame(self.input)
         line_03_layout = add_layout(line_03_frame, HORIZONTAL, space=30)
 
-        spacer = QSpacerItem(5, 0, QSizePolicy.Fixed, QSizePolicy.Minimum)
+        spacer = QSpacerItem(15, 0, QSizePolicy.Fixed, QSizePolicy.Minimum)
         line_03_layout.addItem(spacer)
 
         self.hint = add_label(line_03_frame, text="", name="Page_hint", align=Qt.AlignVCenter)
@@ -216,8 +324,67 @@ class ResourcesWorkspace(QFrame):
         input_layout.addWidget(line_03_frame)
         input_layout.addItem(spacer)
 
-        section_layout.addWidget(menu_frame)
-        section_layout.addWidget(input_frame)
+    def _init_spec(self):
+        self.spec = QFrame(self)
+        self.spec.setObjectName("Page_machine_spec")
+        self.spec.setFixedWidth(191)
+
+        spec_layout = add_layout(self.spec, VERTICAL, t_m=15, l_m=20, b_m=15, r_m=20, space=15)
+
+        title = add_label(self.spec, "Current Machine Configuration",
+                          name="Page_machine_spec_title", align=Qt.AlignLeft)
+
+        content = QFrame(self.spec)
+        content_layout = add_layout(content, VERTICAL, space=8)
+
+        # frame_01: cpu
+        frame_01 = QFrame(content)
+        frame_layout = add_layout(frame_01, HORIZONTAL)
+
+        self.current_cpu_label = add_label(frame_01, "CPU:", stylesheet=Page_machine_spec_label)
+        frame_layout.addWidget(self.current_cpu_label)
+
+        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        frame_layout.addItem(spacer)
+
+        self.current_cpu_value = add_label(frame_01, f"{self.current_cpu} GB", stylesheet=Page_machine_spec_label)
+        frame_layout.addWidget(self.current_cpu_value)
+
+        # frame_02: core
+        frame_02 = QFrame(content)
+        frame_layout = add_layout(frame_02, HORIZONTAL)
+
+        self.current_core_label = add_label(frame_02, "Core #:", stylesheet=Page_machine_spec_label)
+        frame_layout.addWidget(self.current_core_label)
+
+        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        frame_layout.addItem(spacer)
+
+        self.current_core_value = add_label(frame_02, f"{self.current_core}", stylesheet=Page_machine_spec_label)
+        frame_layout.addWidget(self.current_core_value)
+
+        # frame_03: ram
+        frame_03 = QFrame(content)
+        frame_layout = add_layout(frame_03, HORIZONTAL)
+
+        self.current_ram_label = add_label(frame_03, "Ram:", stylesheet=Page_machine_spec_label)
+        frame_layout.addWidget(self.current_ram_label)
+
+        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        frame_layout.addItem(spacer)
+
+        self.current_ram_value = add_label(frame_03, f"{self.current_ram} GB", stylesheet=Page_machine_spec_label)
+        frame_layout.addWidget(self.current_ram_value)
+
+        spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        content_layout.addWidget(frame_01)
+        content_layout.addWidget(frame_02)
+        content_layout.addWidget(frame_03)
+        content_layout.addItem(spacer)
+
+        spec_layout.addWidget(title)
+        spec_layout.addWidget(content)
 
 
 # pure UI unit

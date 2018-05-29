@@ -138,7 +138,7 @@ def add_button(widget, text=None, name=None, stylesheet=None, icon=None, icon_si
 
 
 # create a QLabel object
-def add_label(widget, text, width=0, height=0, name=None, align=None):
+def add_label(widget, text, width=0, height=0, name=None, align=None, stylesheet= None):
 
     # Create object
     label = QLabel(widget)
@@ -161,6 +161,9 @@ def add_label(widget, text, width=0, height=0, name=None, align=None):
     # set height (if necessary)
     if height:
         label.setFixedHeight(height)
+
+    if stylesheet:
+        label.setStyleSheet(stylesheet)
 
     return label
 
@@ -257,8 +260,8 @@ def add_input_box_01(widget, title, hint=None, echo=False):
     return box, box_input
 
 
-# type 02 input box for page
-def add_input_box_02(widget, title, hint=None, echo=False, fix_length=True):
+# type 02 input box for jobs
+def add_input_box_02(widget, title, hint=None, echo=False, width=260, fix_width=True):
 
     layout = HORIZONTAL
     space = 18
@@ -268,13 +271,37 @@ def add_input_box_02(widget, title, hint=None, echo=False, fix_length=True):
                                               align=(Qt.AlignRight | Qt.AlignVCenter))
 
     box_title.setFixedSize(90, 22)
-    box_title.setObjectName("Page_input_title")
+    box_title.setObjectName("Page_input_title_01")
 
     box_input.setFixedHeight(22)
-    box_input.setObjectName("Page_input_input")
+    box_input.setObjectName("Page_input_input_01")
 
-    if fix_length:
-        box.setFixedSize(260, 22)
+    if fix_width:
+        box.setFixedSize(width, 22)
+    else:
+        box.setFixedHeight(22)
+
+    return box, box_input
+
+
+# type 02 input box for resources
+def add_input_box_03(widget, title, hint=None, echo=False, width=210, fix_width=True):
+
+    layout = HORIZONTAL
+    space = 18
+
+    # create object
+    box, box_title, box_input = add_input_box(widget, title, layout, space=space, hint=hint, echo=echo,
+                                              align=(Qt.AlignRight | Qt.AlignVCenter))
+
+    box_title.setFixedSize(80, 22)
+    box_title.setObjectName("Page_input_title_02")
+
+    box_input.setFixedHeight(22)
+    box_input.setObjectName("Page_input_input_02")
+
+    if fix_width:
+        box.setFixedSize(width, 22)
     else:
         box.setFixedHeight(22)
 

@@ -63,7 +63,7 @@ class App(QMainWindow):
         self.setStyleSheet(app_style)
         self.show()
 
-        self.on_jobs_clicked()
+        self.on_resources_clicked()
 
     def _init_geometry(self):
         # window size

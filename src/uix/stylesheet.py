@@ -448,6 +448,58 @@ Page_machine_spec_label_green = f"""
 
 question_style = """
 
+    #Question_window {
+        border: none;
+        background-color: #F4F8F9;
+    }
 
+    #Question_question {
+        font-family: "Helvetica Neue";
+        font-size: 14px;
+        font-weight: 100;
+        color: #6C7E8E;
+    }
+    
+    #Question_button_confirm {
+        border: none;
+        border-radius: 3px;
+        background-color: #0069D9;
+        height: 25px;
+        width: 90px;
+        font-family: "Helvetica Neue";
+        font-size: 9px;
+        font-weight: 400;
+        color: white;
+    }
+    
+    #Question_button_cancel {
+        border: none;
+        border-radius: 3px;
+        background-color: #B9CCDD;
+        height: 25px;
+        width: 90px;
+        font-family: "Helvetica Neue";
+        font-size: 9px;
+        font-weight: 400;
+        color: white;
+    }
+
+"""
+
+notification_style = """
+
+    #Notification_window {
+        border: none;
+        background-color: #F4F8F9;
+    }
+
+"""
+
+credit_history_style = """
+
+    #Credit_window {
+        border: none;
+        background-color: #F4F8F9;
+    }
 
 """

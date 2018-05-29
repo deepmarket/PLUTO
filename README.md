@@ -42,6 +42,11 @@ $ npm app.js
 * sip _4.19.7_
 * requests _2.18.4_
 
+#### To install:
+```bash
+$ pip install -r requirements.txt
+```
+
 #### Team Members:
 * [Susham Yerabolu](mailto:yerabolu@pdx.edu)
 * [Haritha Munagala](mailto:mharitha@pdx.edu)

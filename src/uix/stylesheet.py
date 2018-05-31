@@ -5,6 +5,7 @@ COLOR_03 = "#F4F8F9"
 COLOR_04 = "#657FEB"
 COLOR_05 = "#7DCC54"
 COLOR_06 = "#FFFFFF"
+COLOR_07 = "#D0DBE0"
 
 # System Environment variable
 QT_AUTO_SCREEN_SCALE_FACTOR = 1
@@ -488,18 +489,94 @@ question_style = """
 
 notification_style = """
 
-    #Notification_window {
+    #Notification {
         border: none;
         background-color: #F4F8F9;
+    }
+    
+    #Notification_title_frame {
+        background-color: white;
+    }
+    
+    #Notification_title {
+        font-family: "Helvetica Neue";
+        font-size: 17px;
+        font-weight: 100;
+        color: #6C7E8E;
+    }
+    
+    #Notification_button {
+        border: none;
+        background-color: #6C7E8E;
+        height: 27px;
+        width: 180px;
+        font-family: "Helvetica Neue";
+        font-size: 9px;
+        font-weight: 200;
+        color: white;
+    }
+    
+    #Notification_window {
+        border: none;
+        background-color: white;
     }
 
 """
 
-credit_history_style = """
+credit_style = """
 
-    #Credit_window {
+    #Credit {
         border: none;
         background-color: #F4F8F9;
     }
+    
+    #Credit_title_frame {
+        background-color: white;
+    }
 
+    #Credit_title {
+        font-family: "Helvetica Neue";
+        font-size: 17px;
+        font-weight: 100;
+        color: #6C7E8E;
+    }
+    
+    #Credit_button {
+        border: none;
+        border-radius: 3px;
+        background-color: #6C7E8E;
+        height: 27px;
+        width: 150px;
+        font-family: "Helvetica Neue";
+        font-size: 9px;
+        font-weight: 200;
+        color: white;
+    }
+    
+    #Credit_window {
+        border: none;
+        background-color: white;
+    }
+
+"""
+
+Credit_section_button_active = f"""
+    border: None;
+    border-bottom: 2px solid {COLOR_01};
+    width: 90px;
+    height: 33px;
+    font-family: "Helvetica Neue";
+    font-size: 11px;
+    font-weight: 100;
+    color: {COLOR_01};
+"""
+
+Credit_section_button = f"""
+    border: None;
+    width: 90px;
+    height: 33px;
+    font-family: "Helvetica Neue";
+    font-size: 11px;
+    font-weight: 100;
+    color: {COLOR_07};
 """

@@ -23,6 +23,7 @@
 from src.mainview import MainView
 from src.uix.util import *
 from src.uix.popup import Question
+from src.api import Api
 
 
 class Jobs(MainView):
@@ -92,13 +93,19 @@ class Jobs(MainView):
         # temp set logs value
         logs = "Logs"
 
-        # testing
-        # self.jobs_list.add_data(["AC1827320", "3", "4", "2", "15 credits / hr", "running", "No log shows"])
-        # self.jobs_list.add_data(["DC1672343", "4", "3", "1", "15 credits / hr", "running", "No log shows"])
-        # self.jobs_list.add_data(["AC1456462", "2", "2", "1", "15 credits / hr", "running", "No log shows"])
+        job_payload = {
+            "workers": workers,
+            "cores": cores,
+            "memory": memory,
+        }
+        job_api = Api("/jobs")
+        status, res = job_api.post(job_payload)
 
-        self.jobs_workspace.hint.setText("Submission success!")
-        self.jobs_list.add_data([job_id, workers, cores, memory, price, status, logs])
+        if status == 200:
+            print(res)
+
+            self.jobs_workspace.hint.setText("Submission success!")
+            self.jobs_list.add_data([job_id, workers, cores, memory, price, status, logs])
 
     def on_refresh_clicked(self):
         self.jobs_workspace.hint.setText("Refresh is clicked")
@@ -184,10 +191,10 @@ class JobsWorkspace(QFrame):
         left_frame = QFrame(line_02_frame)
         left_layout = add_layout(left_frame, VERTICAL, t_m=20, space=20)
 
-        box, self.source_file = add_input_box_02(left_frame, "Source file:", fix_width=False)
+        box, self.source_file = add_input_box_02(left_frame, "Source files:", fix_width=False)
         left_layout.addWidget(box)
 
-        box, self.input_file = add_input_box_02(left_frame, "Input file:", fix_width=False)
+        box, self.input_file = add_input_box_02(left_frame, "Input files:", fix_width=False)
         left_layout.addWidget(box)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)

@@ -23,6 +23,7 @@
 from src.mainview import MainView
 from src.uix.util import *
 from src.uix.popup import Question
+from src.api import Api
 
 
 class Resources(MainView):
@@ -89,20 +90,21 @@ class Resources(MainView):
             self.price = "15 credits / hr"
 
             # TEST PASS
-            self.resources_workspace.hint.setText("TEST PASS. Be able to add.")
+            self.resources_workspace.hint.setText("Resource testing passed.")
             self.if_test = True
         else:
-            self.resources_workspace.hint.setText("TEST FAIL. Invalid input.")
+            self.resources_workspace.hint.setText("Resource testing failed; please verify the resources details.")
 
     # input data format: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
     def on_add_clicked(self):
+        print(self.if_test)
         if not self.if_test:
             # testing
-            self.resources_list.add_data(["Martin-Mac", "100.10.2.1", "4", "2", "4", "$30/hr", "running"])
-            self.resources_list.add_data(["Martin-Window", "180.10.2.1", "3", "1", "2", "$15/hr", "running"])
-            self.resources_list.add_data(["Martin-Linux", "120.10.2.1", "1", "1", "1", "$8.5/hr", "finished"])
+            # self.resources_list.add_data(["Martin-Mac", "100.10.2.1", "4", "2", "4", "$30/hr", "running"])
+            # self.resources_list.add_data(["Martin-Window", "180.10.2.1", "3", "1", "2", "$15/hr", "running"])
+            # self.resources_list.add_data(["Martin-Linux", "120.10.2.1", "1", "1", "1", "$8.5/hr", "finished"])
 
-            # self.resources_workspace.hint.setText("The resource must be tested before add.")
+            self.resources_workspace.hint.setText("The resource must be tested before being added; press test.")
         else:
             # resource information
             machine_name = self.resources_workspace.machine_name.text()
@@ -111,12 +113,25 @@ class Resources(MainView):
             cores = self.resources_workspace.cores.text()
             ram = self.resources_workspace.ram.text()
 
-            # first status would be 'Submitting'
-            status = "Submitting"
+            resource_payload = {
+                "machine_name": machine_name,
+                "ip_address": ip_address,
+                "ram": ram,
+                "cores": cores,
+                "cpus": cpu_gpu,
+                "gpus": cpu_gpu,
+            }
+            resource_api = Api("/resources")
+            status, res = resource_api.post(resource_payload)
 
-            self.resources_list.add_data([machine_name, ip_address, cpu_gpu, cores, ram, self.price, status])
-            self.resources_workspace.hint.setText("Add resources successfully!")
-            self.clean_workspace()
+            if status == 200:
+                print(res['resources'])
+
+                self.resources_list.add_data([machine_name, ip_address, cpu_gpu, cores, ram, self.price, status])
+                self.resources_workspace.hint.setText("Resource added successfully!")
+                self.clean_workspace()
+            else:
+                print("Handling errors too efficiently to update the ui")
 
     def on_remove_clicked(self):
         self.resources_workspace.hint.setText("")
@@ -138,7 +153,7 @@ class Resources(MainView):
 
                 if question.exec_():
                     self.resources_list.table.removeRow(row)
-                    self.resources_workspace.hint.setText(f"Remove resources at Row {row}.")
+                    self.resources_workspace.hint.setText(f"Removing resource at Row {row}.")
 
                     if row <= 9:
                         self.resources_list.current_row -= 1
@@ -429,7 +444,7 @@ class ResourcesList(QFrame):
         # selected entire row,
         # single rows selected each time,
         # alternating coloring,
-        # hide gird line
+        # hide gird line TODO typo
         # set default row height
         # self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.table.setSelectionBehavior(QAbstractItemView.SelectRows)

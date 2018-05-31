@@ -120,11 +120,7 @@ class Login(QDialog):
     # verified user input on db
     def attempt_login(self, username, pwd):
 
-        # join api later
-        # self.accept()
-        # self.close()
-
-        api: Api = Api("/auth/login")
+        api: Api = Api("/auth/login", True)
 
         status, res = api.post({
             "email": username,
@@ -136,14 +132,14 @@ class Login(QDialog):
             # customer_id_endpoint = Api(f"/account/{pwd}")
             # customer_id = customer_id_endpoint.get()
 
-            token = res['token']
-
-            self.credential_store = os.path.join(os.path.abspath("./"), ".credential_store")
-            if os.path.exists(self.credential_store):
-                os.remove(self.credential_store)
-
-            with open(self.credential_store, "w+") as store:
-                store.write(token)
+            # token = res['token']
+            #
+            # self.credential_store = os.path.join(os.path.abspath("./"), ".credential_store")
+            # if os.path.exists(self.credential_store):
+            #     os.remove(self.credential_store)
+            #
+            # with open(self.credential_store, "w+") as store:
+            #     store.write(token)
 
             self.accept()
             self.close()
@@ -181,7 +177,7 @@ class Login(QDialog):
 
     # verified user input and load into db
     def attempt_create(self, first, last, username, pwd):
-        api: Api = Api("/account")
+        api: Api = Api("/account", True)
 
         auth_dict = {
             "firstname": first,

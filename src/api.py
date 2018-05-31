@@ -8,7 +8,7 @@ class Api:
 
         self.domain = "localhost"  # Used for testing
         # self.domain = "172.20.10.6"  # ip of lab intranet
-        self.port = 3000
+        self.port = 8080
         self.endpoint = endpoint
         if not self.endpoint.startswith("/"):
             self.endpoint = f"/{self.endpoint}"
@@ -38,14 +38,12 @@ class Api:
         try:
             val = res.__getattribute__(attr)
             val = loads(val)
-            # self.token = val['token']
         except AttributeError:
-            # TODO: Add logging
             val = res
-        # except req.exceptions.ConnectionError:
-        #     pass
+        except req.exceptions.ConnectionError:
+            pass
         finally:
-            return val
+            return res.status_code, val
 
     def put(self, payload: dict={}, attr: str="text", url: str=None):
 
@@ -76,7 +74,7 @@ class Api:
 
 
 if __name__ == "__main__":
-    DEFAULT_URL = "http://localhost:3000"
+    DEFAULT_URL = "http://localhost:8080"
     api = Api("/resources/resources")
     get = api.get()
 

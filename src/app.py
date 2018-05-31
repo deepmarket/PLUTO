@@ -71,7 +71,7 @@ class App(QMainWindow):
         set_base_geometry(self, 1024, 720, fixed=True)
 
         # hide title bar
-        self.setWindowFlags(Qt.FramelessWindowHint)
+        # self.setWindowFlags(Qt.FramelessWindowHint)
 
     def _init_ui(self):
         self.setObjectName("App")

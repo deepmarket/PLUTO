@@ -46,14 +46,11 @@ class Login(QDialog):
         self._init_ui()
         self._init_property()
 
-        self.login.username.setText("test@test.com")
-        self.login.pwd.setText("1234")
-
     def _init_geometry(self):
         set_base_geometry(self, 300, 520, fixed=True)
 
         # hide title bar
-        self.setWindowFlags(Qt.FramelessWindowHint)
+        # self.setWindowFlags(Qt.FramelessWindowHint)
 
     def _init_ui(self):
         # login page
@@ -78,7 +75,7 @@ class Login(QDialog):
 
     def _init_property(self):
         # Graciously borrowed from http://emailregex.com/
-        self.username_regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", re.IGNORECASE)
+        self.email_verification_regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", re.IGNORECASE)
 
         # add more on later build...
 
@@ -102,15 +99,15 @@ class Login(QDialog):
 
         # Both empty
         if not username and not pwd:
-            self.login.login_hint.setText("Please enter username / password.")
+            self.login.login_hint.setText("Please enter email / password.")
 
         # Empty username
         elif not username and pwd:
-            self.login.login_hint.setText("Username is empty.")
+            self.login.login_hint.setText("Please enter your email.")
 
         # Empty password
         elif not pwd and username:
-            self.login.login_hint.setText("Password is empty.")
+            self.login.login_hint.setText("Please enter your password.")
 
         # elif not re.match(self.username_regex, username):
         #     self.login.login_hint.setText("Invalid username. Please login with email address.")
@@ -124,32 +121,34 @@ class Login(QDialog):
     def attempt_login(self, username, pwd):
 
         # join api later
-        self.accept()
-        self.close()
+        # self.accept()
+        # self.close()
 
-        # api: Api = Api("/authenticate")
-        #
-        # res = api.post({
-        #     "emailid": username,
-        #     "password": pwd
-        # }, "")
-        #
-        # if res.status_code == 200:
-        #
-        #     customer_id_endpoint = Api(f"/account/{pwd}")
-        #     customer_id = customer_id_endpoint.get()
-        #
-        #     credential_store = os.path.join(os.path.abspath("./"), ".credential_store")
-        #     if os.path.exists(self.credential_store):
-        #         os.remove(self.credential_store)
-        #
-        #     with open(credential_store, "w+") as store:
-        #         store.write(customer_id['CustomerID'])
-        #
-        #     self.accept()
-        #     self.close()
-        # else:
-        #     self.login.login_hint.setText("Username / password you have entered is invalid.")
+        api: Api = Api("/auth/login")
+
+        status, res = api.post({
+            "email": username,
+            "password": pwd
+        })
+
+        if status == 200:
+
+            # customer_id_endpoint = Api(f"/account/{pwd}")
+            # customer_id = customer_id_endpoint.get()
+
+            token = res['token']
+
+            self.credential_store = os.path.join(os.path.abspath("./"), ".credential_store")
+            if os.path.exists(self.credential_store):
+                os.remove(self.credential_store)
+
+            with open(self.credential_store, "w+") as store:
+                store.write(token)
+
+            self.accept()
+            self.close()
+        else:
+            self.login.login_hint.setText("The email or password you entered is invalid.")
 
     # pre-check user input before access db
     def create_action(self):
@@ -158,7 +157,7 @@ class Login(QDialog):
 
         first = self.create.first.text()
         last = self.create.last.text()
-        username = self.create.username.text()
+        email = self.create.username.text()
         pwd = self.create.pwd.text()
 
         # First name empty
@@ -169,7 +168,7 @@ class Login(QDialog):
         elif not last:
             self.create.create_hint.setText("Must enter a last name.")
 
-        elif not re.match(self.email_verification_regex, username):
+        elif not re.match(self.email_verification_regex, email):
             self.create.create_hint.setText("Please enter a valid Email address.")
 
         # should be confirmed password check here
@@ -177,8 +176,8 @@ class Login(QDialog):
         # otherwise, check pass
         else:
             print(f"Creating account with:\n\tFirst name: '{first}'\n\tLast name: '{last}'\n"
-                  f"\tUsername:'{username}'\n\tPassword: '{pwd}''")
-            self.attempt_create(first, last, username, pwd)
+                  f"\tEmail:'{email}'\n\tPassword: '{pwd}''")
+            self.attempt_create(first, last, email, pwd)
 
     # verified user input and load into db
     def attempt_create(self, first, last, username, pwd):
@@ -187,31 +186,34 @@ class Login(QDialog):
         auth_dict = {
             "firstname": first,
             "lastname": last,
-            "emailid": username,
+            "email": username,
             "password": pwd
         }
 
         try:
-            res = api.post(auth_dict, "")
+            status, res = api.post(auth_dict)
         except ConnectionRefusedError:
             self.create.create_hint.setText("Connection refused, please contact your system administrator")
         except ConnectionError:  # From requests library
             self.create.create_hint.setText("Could not connect to the share resources server")
+        finally:
+            print(res['message'])
 
-            if res and res.status_code == 200:
-                customer_id_endpoint = Api(f"/account/{username}")
-                customer_id = customer_id_endpoint.get()
+            if status == 200:
+                # customer_id_endpoint = Api(f"/account/{username}")
+                # customer_id = customer_id_endpoint.get()
+                # token = res['token']
 
-                with open(self.credential_store, "w+") as store:
-                    store.write(customer_id['CustomerID'])
+                # with open(self.credential_store, "w+") as store:
+                #     store.write(token)
 
-                timer = QTimer()
-                timer.timeout.connect(self.cancel_action)
-                timer.start(900)
+                # timer = QTimer()
+                # timer.timeout.connect(self.cancel_action)
+                # timer.start(900)
 
-                if timer:
+                # if timer:
                     # Accept and close parent window
-                    self.attempt_login(username, pwd)
+                self.attempt_login(username, pwd)
             else:
                 self.create.create_hint.setText("Email/password combination already in use")
 

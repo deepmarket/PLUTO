@@ -43,111 +43,101 @@ login_style = """
 
     #Login {
         border: None;
-        background: white;
+        background: #F4F8F9;
     }
     
-    #Login_title {
-        font-family: "Open Sans";
-        font-size: 14px;
-        font-weight: 500;
-        color: #7bcafa;
+    #Login_login_title {
+        background-color: white;
+        font-family: "Helvetica Neue";
+        font-size: 32px;
+        font-weight: 50;
+        color: #6C7E8E;
+    }
+    
+    #Login_create_title {
+        font-family: "Helvetica Neue";
+        font-size: 25px;
+        font-weight: 50;
+        color: #6C7E8E;
     }
     
     #Login_prologue {
-        font-family: "Open Sans";
-        font-size: 9px;
-        font-weight: 300;
-        color: #7f7f7f;
+        font-family: "Helvetica Neue";
+        font-size: 12px;
+        font-weight: 50;
+        color: #6C7E8E;
     }
     
-    #Login_input_title {
-        font-family: "Open Sans";
-        font-size: 10px;
-        font-weight: 500;
-        color: #616161;
-    }
-    
-    #Login_input_input {
+    #Login_input_box {
         border: none;
-        border-bottom: 1px solid #616161;
-        font-family: "Open Sans";
+        background-color: white;
+    }
+    
+    #Login_input_title_01 {
+        font-family: "Helvetica Neue";
+        font-size: 15px;
+        font-weight: 100;
+        color: #6C7E8E;
+    }
+    
+    #Login_input_input_01 {
+        border: none;
+        font-family: "Helvetica Neue";
         font-weight: 200;
-        font-size: 10px;
+        font-size: 14px;
     }
     
-    #Login_big_button {
+    #Login_input_title_02 {
+        font-family: "Helvetica Neue";
+        font-size: 13px;
+        font-weight: 100;
+        color: #6C7E8E;
+    }
+    
+    #Login_input_input_02 {
         border: none;
-        border-radius: 3px;
-        background-color: #7BCAFA;
-        height: 30px;
-        font-family: "Open Sans";
-        font-size: 11px;
-        font-weight: 500;
-        color: white;
+        font-family: "Helvetica Neue";
+        font-weight: 200;
+        font-size: 12px;
     }
     
     #Login_hint {
-        font-family: "Open Sans";
-        font-size: 9px;
-        font-weight: 400;
-        color: #ff2020;
+        padding-left: 15px;
+        font-family: "Helvetica Neue";
+        font-size: 13px;
+        font-weight: 200;
+        color: #FF4500;
     }
     
-    #Login_check_box_check::indicator {
-        width: 10px;
-        height: 10px;
-    }
-    
-    #Login_check_box_check::indicator:checked {
-        border-image: url(./src/img/checked.png);
-    }
-    
-    #Login_check_box_check::indicator:unchecked {   
-        border-image: url(./src/img/unchecked.png);     
-    }         
-                                        
-    #Login_check_box_title_label {
-        font-family: "Open Sans";
-        font-size: 10px;
-        font-weight: 400;
-        color: #616161;
-    }
-    
-    #Login_check_box_title_button {
+    #Login_large_button {
         border: none;
-        font-family: "Open Sans";
-        font-size: 10px;
-        font-weight: 400;
-        color: #0030ff;
-    }
-    
-    #Login_forget_pwd {
-        border: none;
-        text-align: right;
-        font-family: "Open Sans";
-        font-size: 10px;
-        font-weight: 400;
-        color: #4c6eff;
-    }
-    
-    #Login_switch_section {
-        border: none;
+        background-color: #6C7E8E;
+        height: 48px;
+        font-family: "Helvetica Neue";
+        font-size: 16px;
+        font-weight: 100;
+        color: white;
     }
     
     #Login_switch_description {
-        font-family: "Open Sans";
-        font-weight:300;
-        font-size: 10px;
-        color: #7f7f7f;
+        background-color: white;
+        padding-right: 10px;
+        font-family: "Helvetica Neue";
+        font-size: 14px;
+        font-weight:100;
+        color: #6C7E8E;
     }
     
     #Login_switch_button {
         border: None;
+        background-color: white;
+        padding-left: 10px;
+        height: 63px;
         text-align: left;
-        font-family: "Open Sans";
-        font-size: 10px;
-        font-weight: 400;
-        color: #0030ff;
+        font-family: "Helvetica Neue";
+        font-size: 14px;
+        font-weight: 200;
+        color: #2F0FFF;
     }
 
 """

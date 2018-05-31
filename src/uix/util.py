@@ -216,11 +216,11 @@ def add_image(widget, img_name, img_type, width=0, height=0, name=None, align=No
 
 
 # helper function to add input box
-def add_input_box(widget, title, layout, space, align=None, hint=None, echo=False):
+def add_input_box(widget, title, space, l_m=0, r_m=0, align=None, hint=None, echo=False):
 
     # create object
     box = QFrame(widget)
-    box_layout = add_layout(box, layout, space=space)
+    box_layout = add_layout(box, HORIZONTAL, l_m=l_m, r_m=r_m, space=space)
 
     # input box title
     box_title = add_label(box, title, align=align)
@@ -246,16 +246,39 @@ def add_input_box(widget, title, layout, space, align=None, hint=None, echo=Fals
 
 
 # type 01 input box for login
-def add_input_box_01(widget, title, hint=None, echo=False):
-
-    layout = VERTICAL
-    space = 9
+def add_login_input_box_01(widget, title, hint=None, echo=False):
 
     # create object
-    box, box_title, box_input = add_input_box(widget, title, layout, space=space, hint=hint, echo=echo)
+    box, box_title, box_input = add_input_box(widget, title, l_m=30, r_m=30, space=9, hint=hint, echo=echo)
 
-    box_title.setObjectName("Login_input_title")
-    box_input.setObjectName("Login_input_input")
+    box.setFixedHeight(52)
+
+    box.setObjectName("Login_input_box")
+
+    box_title.setFixedSize(117, 52)
+    box_title.setObjectName("Login_input_title_01")
+
+    box_input.setFixedHeight(52)
+    box_input.setObjectName("Login_input_input_01")
+
+    return box, box_input
+
+
+# type 01 input box for login
+def add_login_input_box_02(widget, title, title_width=130, hint=None, echo=False):
+
+    # create object
+    box, box_title, box_input = add_input_box(widget, title, l_m=21, r_m=21, space=9, hint=hint, echo=echo)
+
+    box.setFixedHeight(52)
+
+    box.setObjectName("Login_input_box")
+
+    box_title.setFixedSize(title_width, 52)
+    box_title.setObjectName("Login_input_title_02")
+
+    box_input.setFixedHeight(52)
+    box_input.setObjectName("Login_input_input_02")
 
     return box, box_input
 
@@ -263,11 +286,10 @@ def add_input_box_01(widget, title, hint=None, echo=False):
 # type 02 input box for jobs
 def add_input_box_02(widget, title, hint=None, echo=False, width=260, fix_width=True):
 
-    layout = HORIZONTAL
     space = 18
 
     # create object
-    box, box_title, box_input = add_input_box(widget, title, layout, space=space, hint=hint, echo=echo,
+    box, box_title, box_input = add_input_box(widget, title, space=space, hint=hint, echo=echo,
                                               align=(Qt.AlignRight | Qt.AlignVCenter))
 
     box_title.setFixedSize(90, 22)
@@ -287,11 +309,10 @@ def add_input_box_02(widget, title, hint=None, echo=False, width=260, fix_width=
 # type 02 input box for resources
 def add_input_box_03(widget, title, hint=None, echo=False, width=210, fix_width=True):
 
-    layout = HORIZONTAL
     space = 18
 
     # create object
-    box, box_title, box_input = add_input_box(widget, title, layout, space=space, hint=hint, echo=echo,
+    box, box_title, box_input = add_input_box(widget, title, space=space, hint=hint, echo=echo,
                                               align=(Qt.AlignRight | Qt.AlignVCenter))
 
     box_title.setFixedSize(80, 22)

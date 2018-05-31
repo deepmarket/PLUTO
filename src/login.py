@@ -163,7 +163,7 @@ class Login(QDialog):
             self.create.create_hint.setText("Must enter a last name.")
 
         elif not re.match(self.email_verification_regex, email):
-        elif not re.match(self.username_regex, username):
+            # elif not re.match(self.username_regex, username):
             self.create.create_hint.setText("Please enter a valid Email address.")
 
         # should be confirmed password check here

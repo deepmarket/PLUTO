@@ -64,14 +64,14 @@ class App(QMainWindow):
         self.setStyleSheet(app_style)
         self.show()
 
-        self.on_dashboard_clicked()
+        self.on_resources_clicked()
 
     def _init_geometry(self):
         # window size
         set_base_geometry(self, 1024, 720, fixed=True)
 
         # hide title bar
-        self.setWindowFlags(Qt.FramelessWindowHint)
+        # self.setWindowFlags(Qt.FramelessWindowHint)
 
     def _init_ui(self):
         self.setObjectName("App")

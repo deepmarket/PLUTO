@@ -37,7 +37,7 @@ class Question(BaseDialog):
 
     def _init_geometry(self):
         # hide title bar
-        self.setWindowFlags(Qt.FramelessWindowHint)
+        # self.setWindowFlags(Qt.FramelessWindowHint)
 
         # widget optimization
         self.setWindowModality(Qt.ApplicationModal)
@@ -102,7 +102,7 @@ class Notification(BaseDialog):
 
     def _init_geometry(self):
         # hide title bar
-        self.setWindowFlags(Qt.FramelessWindowHint)
+        # self.setWindowFlags(Qt.FramelessWindowHint)
 
         # widget optimization
         self.setWindowModality(Qt.ApplicationModal)
@@ -168,7 +168,7 @@ class CreditHistory(BaseDialog):
 
     def _init_geometry(self):
         # hide title bar
-        self.setWindowFlags(Qt.FramelessWindowHint)
+        # self.setWindowFlags(Qt.FramelessWindowHint)
 
         # widget optimization
         self.setWindowModality(Qt.ApplicationModal)

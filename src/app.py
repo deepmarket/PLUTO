@@ -41,7 +41,7 @@ from src.uix.util import *
 from src.dashboard import Dashboard
 from src.resources import Resources
 from src.jobs import Jobs
-from src.uix.popup import Notification
+from src.uix.popup import Notification, CreditHistory
 
 
 class App(QMainWindow):
@@ -64,7 +64,7 @@ class App(QMainWindow):
         self.setStyleSheet(app_style)
         self.show()
 
-        self.on_resources_clicked()
+        self.on_dashboard_clicked()
 
     def _init_geometry(self):
         # window size
@@ -201,7 +201,7 @@ class App(QMainWindow):
     # credit history popup
     @staticmethod
     def on_credit_history_clicked():
-        popup = Notification()
+        popup = CreditHistory()
         popup.exec_()
 
 

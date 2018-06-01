@@ -26,6 +26,7 @@
 
 from src.mainview import MainView
 from src.uix.util import *
+from src.api import Api
 
 
 class Dashboard(MainView):
@@ -39,8 +40,15 @@ class Dashboard(MainView):
         self.resource_spec = None       # section
 
         self.greeting = None            # param string
-        self.username = "Martin"        # param string
+        self.username = ""              # param string
         self.add_dashlet = None         # button
+
+        account_api = Api("/account")
+        status, res = account_api.get()
+
+        if status == 200:
+            # Insert comma here so we can default to nameless greeting if api fails.
+            self.username = f", {res['customer']['firstname'].capitalize()}"
 
         self._init_ui()
         self.setStyleSheet(dashboard_style)
@@ -56,14 +64,14 @@ class Dashboard(MainView):
         now = datetime.datetime.now()
 
         if now.hour < 12:
-            self.greeting = "Good morning,"
+            self.greeting = "Good morning"
         elif 12 <= now.hour < 18:
-            self.greeting = "Good afternoon,"
+            self.greeting = "Good afternoon"
         else:
-            self.greeting = "Good evening,"
+            self.greeting = "Good evening"
 
         greeting = add_label(title_frame, f"{self.greeting}", name="Dashboard_greeting")
-        username = add_label(title_frame, f" {self.username}", name="Dashboard_username")
+        username = add_label(title_frame, f"{self.username}", name="Dashboard_username")
 
         self.add_dashlet = add_button(title_frame, "Add Dashlet", name="Dashboard_add_dashlet")
 

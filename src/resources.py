@@ -125,7 +125,7 @@ class Resources(MainView):
             status, res = resource_api.post(resource_payload)
 
             if status == 200:
-                print(res['resources'])
+                print(res['resource_id'])
 
                 self.resources_list.add_data([machine_name, ip_address, cpu_gpu, cores, ram, self.price, status])
                 self.resources_workspace.hint.setText("Resource added successfully!")

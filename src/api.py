@@ -7,7 +7,12 @@ class CredentialManager(object):
     # TODO: Consider using something like marshal, shelve, or pickle
     def __init__(self, file_path="./"):
         self.file_path = file_path
-        self.credential_store = path.join(path.abspath(self.file_path), ".credential_store")
+        if not path.exists(path.join(path.abspath(self.file_path), ".credential_store")):
+            credential_store_path = path.join(path.abspath(self.file_path), ".credential_store")
+            self.credential_store = open(credential_store_path, "w+")
+            self.credential_store.close()
+        else:
+            self.credential_store = path.join(path.abspath(self.file_path), ".credential_store")
 
     def put(self, obj):
         with open(self.credential_store, "w+") as store:
@@ -26,6 +31,7 @@ class Api:
 
         self.domain = "localhost"  # Used for testing
         # self.domain = "131.252.209.102"  # ip of lab intranet
+
         self.port = 8080
         self.endpoint = endpoint
         if not self.endpoint.startswith("/"):

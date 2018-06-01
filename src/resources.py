@@ -25,6 +25,9 @@ from src.uix.util import *
 from src.uix.popup import Question
 from src.api import Api
 
+# Amount per (core * worker) / hour
+PRICING_CONSTANT = 0.005
+
 
 class Resources(MainView):
 
@@ -43,6 +46,13 @@ class Resources(MainView):
         self.core_check = False
         self.ram_check = False
 
+        self.machine_name = None
+        self.ip_address = None
+        self.cpu_gpu = None
+        self.cores = None
+        self.ram = None
+
+        self.pricing_constant = PRICING_CONSTANT
         self.price = None
 
         self._init_ui()
@@ -87,7 +97,14 @@ class Resources(MainView):
         if self.cpu_check and self.core_check and self.ram_check:
             # TODO: evaluate price here
 
-            self.price = "15 credits / hr"
+            # resource information
+            self.machine_name = self.resources_workspace.machine_name.text()
+            self.ip_address = self.resources_workspace.ip_address.text()
+            self.cpu_gpu = self.resources_workspace.cpu_gpu.text()
+            self.cores = self.resources_workspace.cores.text()
+            self.ram = self.resources_workspace.ram.text()
+
+            self.price = (float(self.cores) * float(self.cpu_gpu)) * self.pricing_constant
 
             # TEST PASS
             self.resources_workspace.hint.setText("Resource testing passed.")
@@ -97,38 +114,30 @@ class Resources(MainView):
 
     # input data format: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
     def on_add_clicked(self):
-        print(self.if_test)
         if not self.if_test:
-            # testing
-            # self.resources_list.add_data(["Martin-Mac", "100.10.2.1", "4", "2", "4", "$30/hr", "running"])
-            # self.resources_list.add_data(["Martin-Window", "180.10.2.1", "3", "1", "2", "$15/hr", "running"])
-            # self.resources_list.add_data(["Martin-Linux", "120.10.2.1", "1", "1", "1", "$8.5/hr", "finished"])
-
             self.resources_workspace.hint.setText("The resource must be tested before being added; press test.")
         else:
-            # resource information
-            machine_name = self.resources_workspace.machine_name.text()
-            ip_address = self.resources_workspace.ip_address.text()
-            cpu_gpu = self.resources_workspace.cpu_gpu.text()
-            cores = self.resources_workspace.cores.text()
-            ram = self.resources_workspace.ram.text()
-
             resource_payload = {
-                "machine_name": machine_name,
-                "ip_address": ip_address,
-                "ram": ram,
-                "cores": cores,
-                "cpus": cpu_gpu,
-                "gpus": cpu_gpu,
+                "machine_name": self.machine_name,
+                "ip_address": self.ip_address,
+                "ram": self.ram,
+                "cores": self.cores,
+                "cpus": self.cpu_gpu,
+                "gpus": self.cpu_gpu,
             }
             resource_api = Api("/resources")
             status, res = resource_api.post(resource_payload)
 
             if status == 200:
-                print(res['resource_id'])
-
-                self.resources_list.add_data([machine_name, ip_address, cpu_gpu, cores, ram, self.price, status])
-                self.resources_workspace.hint.setText("Resource added successfully!")
+                print(res['resource'])
+                rsrc = res['resource']
+                resource_data = {
+                    "data": [rsrc['machine_name'], rsrc['ip_address'], rsrc['cpus'], rsrc['cores'], rsrc['ram'], self.price, rsrc['status']],
+                    "resource_id": rsrc['_id'],
+                    "owner": rsrc['owner'],
+                }
+                self.resources_list.add_data(resource_data)
+                self.resources_workspace.hint.setText("Resource added successfully.")
                 self.clean_workspace()
             else:
                 print("Handling errors too efficiently to update the ui")
@@ -417,7 +426,27 @@ class ResourcesList(QFrame):
 
         self._init_geometry()
         self._init_ui()
+        self._fetch_resource_data()
         self.setStyleSheet(page_style)
+
+    def _fetch_resource_data(self):
+        resource_api = Api("/resources")
+        status, res = resource_api.get()
+
+        if status == 200:
+            for rsrc in res["resources"]:
+                resource_data = {
+                    "data": [rsrc['machine_name'],
+                             rsrc['ip_address'],
+                             rsrc['cpus'],
+                             rsrc['cores'],
+                             rsrc['ram'],
+                             None,
+                             rsrc['status']],
+                    "resource_id": rsrc['_id'],
+                    "owner": rsrc['owner'],
+                }
+                self.add_data(resource_data)
 
     def _init_geometry(self):
         self.setFixedHeight(470)
@@ -428,7 +457,7 @@ class ResourcesList(QFrame):
         self.table = QTableWidget(self)
         self.table.setObjectName("Page_table")
 
-        table_headers = ["Machine Name", "IP Address", "CPUs/GPUs", "Cores", "Ram (Gb.)", "Price", "Status"]
+        table_headers = ["Machine Name", "IP Address", "CPUs/GPUs", "Cores", "Ram (gb)", "Price", "Status"]
         table_headers_width = [150, 150, 100, 100, 100, 120, 150]
 
         self.table.setColumnCount(len(table_headers))
@@ -465,9 +494,9 @@ class ResourcesList(QFrame):
     # data format: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
     def add_data(self, data_obj):
         column = self.table.columnCount()
-        data = data_obj['data']
-        if self.current_row <= 9:
+        data = data_obj["data"]
 
+        if self.current_row <= 9:
             for i in range(column):
                 self.table.setItem(self.current_row, i, QTableWidgetItem(data[i]))
                 if self.table.item(self.current_row, i) is not None:

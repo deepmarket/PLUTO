@@ -25,6 +25,9 @@ from src.uix.util import *
 from src.uix.popup import Question
 from src.api import Api
 
+# Amount per (core * worker) / hour
+PRICING_CONSTANT = 0.005
+
 
 class Jobs(MainView):
 
@@ -77,41 +80,44 @@ class Jobs(MainView):
 
     # input data format: [job_id, workers, cores, memory, price, status, logs]
     def on_submit_clicked(self):
-
-        # job_id generating strategy
-        from random import randint
-        job_id = "A01085" + str(randint(10, 99))
-
         workers = self.jobs_workspace.workers.text()
         cores = self.jobs_workspace.cores.text()
         memory = self.jobs_workspace.memory.text()
+        source_files = self.jobs_workspace.source_file.text()
+        input_files = self.jobs_workspace.input_file.text()
 
-        # TODO: evaluate price here
-        price = "15 credits / hr"
-
-        # TODO: check if submission is success
-        status = "Submitting"
-
-        # TODO: what and where to present in this column
-        # temp set logs value
-        logs = "Logs"
+        price = (float(cores) * float(workers)) * PRICING_CONSTANT
 
         job_payload = {
             "workers": workers,
             "cores": cores,
             "memory": memory,
+            "price": price,
+            "source_files": source_files,
+            "input_files": input_files,
         }
         job_api = Api("/jobs")
         status, res = job_api.post(job_payload)
 
         if status == 200:
-            print(res)
+            job = res['job']
+            job_data = {
+                "data": [job['_id'],
+                         job['workers'],
+                         job['cores'],
+                         job['memory'],
+                         job['price'],
+                         job['status'],
+                         "logs"],
+                "job_id": job['_id'],
+                "customer_id": job['customer_id'],
+            }
 
-            self.jobs_workspace.hint.setText("Submission success!")
-            self.jobs_list.add_data([job_id, workers, cores, memory, price, status, logs])
+            self.jobs_workspace.hint.setText("Successfully added job to queue.")
+            self.jobs_list.add_data(job_data)
 
     def on_refresh_clicked(self):
-        self.jobs_workspace.hint.setText("Refresh is clicked")
+        self.jobs_workspace.hint.setText("Refreshing...")
 
     def on_remove_clicked(self):
         # clean hint
@@ -132,7 +138,7 @@ class Jobs(MainView):
             if question.exec_():
 
                 self.jobs_list.table.removeRow(row)
-                self.jobs_workspace.hint.setText(f"Remove jobs at Row {row}.")
+                self.jobs_workspace.hint.setText(f"Remove job....")
 
                 if row <= 9:
                     self.jobs_list.current_row -= 1
@@ -260,9 +266,33 @@ class JobsList(QFrame):
         self.table = None               # section
         self.current_row = 0            # param number
 
+        # TODO add this to a config file
+        self.pricing_constant = PRICING_CONSTANT
+        self.price = None
+
         self._init_geometry()
         self._init_ui()
+        self._fetch_job_data()
         self.setStyleSheet(page_style)
+
+    def _fetch_job_data(self):
+        job_api = Api("/jobs")
+        status, res = job_api.get()
+
+        if status == 200:
+            for job in res["jobs"]:
+                job_data = {
+                    "data": [job['_id'],
+                             job['workers'],
+                             job['cores'],
+                             job['memory'],
+                             job['price'],
+                             job['status'],
+                             "logs"],
+                    "job_id": job['_id'],
+                    "customer_id": job['customer_id'],
+                }
+                self.add_data(job_data)
 
     def _init_geometry(self):
         self.setFixedHeight(470)
@@ -308,8 +338,9 @@ class JobsList(QFrame):
         section_layout.addWidget(self.table)
 
     # data format: [job_id, workers, cores, memory, price, status, logs]
-    def add_data(self, data):
+    def add_data(self, data_obj):
         column = self.table.columnCount()
+        data = data_obj["data"]
 
         if self.current_row <= 9:
             for i in range(column):

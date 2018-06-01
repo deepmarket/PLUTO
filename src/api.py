@@ -43,17 +43,27 @@ class Api:
         self.token = None
 
     def get(self, attr: str="text", url: str=None):
+        val: str = None
+        token: str = self.store.get("token")
+
         if not url:
             url = self.url
-        res: req.Response = req.get(url)
-        val: str = None
+
+        if token:
+            headers = {"x-access-token": token}
+            res: req.Response = req.get(url, headers=headers)
+        else:
+            res: req.Response = req.get(url)
+
         try:
             val = res.__getattribute__(attr)
             val = loads(val)
         except AttributeError:
             val = res
         finally:
-            return val
+            if self.auth and token:
+                self.store.put(token)
+            return res.status_code, val
 
     def post(self, payload: dict={}, attr: str="text", url: str=None):
         val: dict = None
@@ -94,10 +104,15 @@ class Api:
             return val
 
     def delete(self, attr: str="text", url: str=None):
-        if not url:
-            url = self.url
-        res: req.Response = req.delete(url)
-        val: str = None
+        val: dict = None
+        token: str = self.store.get("token")
+
+        if token:
+            headers = {"x-access-token": token}
+            res = req.delete(url, headers=headers)
+        else:
+            res: req.Response = req.delete(url)
+
         try:
             val = res.__getattribute__(attr)
             val = loads(val)
@@ -105,7 +120,9 @@ class Api:
             # TODO: Add logging
             val = res
         finally:
-            return val
+            if self.auth and token:
+                self.store.put(token)
+            return res.status_code, val
 
 
 if __name__ == "__main__":

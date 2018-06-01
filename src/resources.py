@@ -304,13 +304,13 @@ class ResourcesWorkspace(QFrame):
         line_02_frame = QFrame(self.input)
         line_02_layout = add_layout(line_02_frame, HORIZONTAL)
 
-        box, self.cpu_gpu = add_input_box_03(line_02_frame, "CPUs (Gb.):")
+        box, self.cpu_gpu = add_input_box_03(line_02_frame, "CPUs (gb):")
         line_02_layout.addWidget(box)
 
         box, self.cores = add_input_box_03(line_02_frame, "Cores:")
         line_02_layout.addWidget(box)
 
-        box, self.ram = add_input_box_03(line_02_frame, "Ram (Gb.):", fix_width=False)
+        box, self.ram = add_input_box_03(line_02_frame, "Ram (gb):", fix_width=False)
         line_02_layout.addWidget(box)
 
         # line_03 frame
@@ -365,7 +365,7 @@ class ResourcesWorkspace(QFrame):
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
         frame_layout.addItem(spacer)
 
-        self.current_cpu_value = add_label(frame_01, f"{self.current_cpu} GB", stylesheet=Page_machine_spec_label)
+        self.current_cpu_value = add_label(frame_01, f"{self.current_cpu}", stylesheet=Page_machine_spec_label)
         frame_layout.addWidget(self.current_cpu_value)
 
         # frame_02: core
@@ -463,9 +463,9 @@ class ResourcesList(QFrame):
         section_layout.addWidget(self.table)
 
     # data format: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
-    def add_data(self, data):
+    def add_data(self, data_obj):
         column = self.table.columnCount()
-
+        data = data_obj['data']
         if self.current_row <= 9:
 
             for i in range(column):

@@ -31,6 +31,9 @@ class Jobs(MainView):
     def __init__(self, *args, **kwargs):
         super(Jobs, self).__init__(*args, **kwargs)
 
+        # Constant price
+        self.price_per_hour = 0.005
+
         # variable
         self.menu = None
         self.add_jobs = None

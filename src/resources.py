@@ -129,10 +129,14 @@ class Resources(MainView):
             status, res = resource_api.post(resource_payload)
 
             if status == 200:
-                print(res['resource'])
                 rsrc = res['resource']
                 resource_data = {
-                    "data": [rsrc['machine_name'], rsrc['ip_address'], rsrc['cpus'], rsrc['cores'], rsrc['ram'], self.price, rsrc['status']],
+                    "data": [rsrc['machine_name'],
+                             rsrc['ip_address'],
+                             rsrc['cpus'], rsrc['cores'],
+                             rsrc['ram'],
+                             self.price,
+                             rsrc['status']],
                     "resource_id": rsrc['_id'],
                     "owner": rsrc['owner'],
                 }
@@ -140,7 +144,7 @@ class Resources(MainView):
                 self.resources_workspace.hint.setText("Resource added successfully.")
                 self.clean_workspace()
             else:
-                print("Handling errors too efficiently to update the ui")
+                self.resources_workspace.hint.setText("There was an error adding the resource.\nPlease try again.")
 
     def on_remove_clicked(self):
         self.resources_workspace.hint.setText("")

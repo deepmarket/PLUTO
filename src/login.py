@@ -128,8 +128,12 @@ class Login(QDialog):
         if status == 200:
             self.accept()
             self.close()
-        else:
+        elif status == 401:
             self.login.login_hint.setText("The email or password you entered is invalid.")
+        # Only other status API will return is an error, so let the user know
+        else:
+            self.login.login_hint.setText("There was an error while trying to log in. Please try again.")
+            print(status)
 
     # pre-check user input before access db
     def create_action(self):
@@ -153,7 +157,7 @@ class Login(QDialog):
         elif not re.match(self.email_verification_regex, email):
             self.create.create_hint.setText("Please enter a valid Email address.")
 
-        elif pwd is not confirm_pwd:
+        elif pwd != confirm_pwd:
             self.create.create_hint.setText("Passwords do not match.")
 
         # otherwise, check pass
@@ -265,8 +269,23 @@ class LoginPage(QFrame):
         title_frame.setFixedHeight(285)
         title_layout = add_layout(title_frame, VERTICAL, l_m=8, r_m=8, t_m=8)
 
-        title = add_label(title_frame, "Welcome to Pluto", name="Login_login_title", align=Qt.AlignCenter)
-        title_layout.addWidget(title)
+        # TODO
+        # title = add_label(title_frame, "Welcome.", name="Login_login_title", align=Qt.AlignCenter)
+        # title_layout.addWidget(title)
+
+        # Broken
+        def login_kindly():
+            def update_title(title_text: str="Please Sign In."):
+                title = add_label(title_frame, title_text, name="Login_login_title", align=Qt.AlignCenter)
+                title_layout.addWidget(title)
+
+            update_title("Welcome.")
+
+            timer = QTimer()
+            timer.timeout.connect(update_title)
+            timer.start(3500)
+
+        login_kindly()
 
         # login_frame: username, pwd, login_button
         login_frame = QFrame(self)
@@ -310,6 +329,18 @@ class LoginPage(QFrame):
         window_layout.addWidget(button_frame)
         window_layout.addWidget(to_create_frame)
 
+    # def login_kindly(self):
+    #     this = self
+    #
+    #     def update_title(title_text: str):
+    #         title = add_label(this.title_frame, title_text, name="Login_login_title", align=Qt.AlignCenter)
+    #         this.title_layout.addWidget(title)
+    #
+    #     update_title("Welcome.")
+    #
+    #     timer = QTimer()
+    #     timer.timeout.connect(update_title("Please Sign In."))
+    #     timer.start(3500)
 
 # Pure UI class, no functionality
 class CreatePage(QFrame):

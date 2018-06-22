@@ -269,7 +269,6 @@ class LoginPage(QFrame):
         title_frame.setFixedHeight(285)
         title_layout = add_layout(title_frame, VERTICAL, l_m=8, r_m=8, t_m=8)
 
-        # TODO
         # title = add_label(title_frame, "Welcome.", name="Login_login_title", align=Qt.AlignCenter)
         # title_layout.addWidget(title)
 
@@ -317,7 +316,7 @@ class LoginPage(QFrame):
                           align=(Qt.AlignRight | Qt.AlignVCenter))
         to_create_layout.addWidget(label)
 
-        self.to_create_button = add_button(to_create_frame, "Create Account", name="Login_switch_button")
+        self.to_create_button = add_button(to_create_frame, "Create An Account.", name="Login_switch_button")
         to_create_layout.addWidget(self.to_create_button)
 
         # spacer
@@ -380,7 +379,7 @@ class CreatePage(QFrame):
         title_frame.setFixedHeight(208)
         title_layout = add_layout(title_frame, VERTICAL, t_m=39, l_m=31, r_m=8, space=28)
 
-        title = add_label(title_frame, "Thank you for registering.", name="Login_create_title")
+        title = add_label(title_frame, "Create An Account.", name="Login_create_title")
         title_layout.addWidget(title)
 
         prologue = "please enter your information."

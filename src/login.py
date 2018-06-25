@@ -48,7 +48,10 @@ class Login(QDialog):
         self.login.pwd.setText("1234")
 
     def _init_geometry(self):
-        set_base_geometry(self, 500, 580, fixed=True)
+        set_base_geometry(self, 580, 580, fixed=True)
+
+        # set title name
+        self.setWindowTitle("Login")
 
         # hide title bar
         # self.setWindowFlags(Qt.FramelessWindowHint)
@@ -273,7 +276,7 @@ class LoginPage(QFrame):
         self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
         # Fix size
-        self.setFixedSize(500, 585)
+        self.setFixedSize(580, 580)
 
     def _init_ui(self):
 
@@ -301,7 +304,7 @@ class LoginPage(QFrame):
         login_layout.addWidget(box)
 
         button_frame = QFrame(self)
-        button_layout = add_layout(button_frame, VERTICAL, l_m=8, r_m=8, space=10)
+        button_layout = add_layout(button_frame, VERTICAL, l_m=3, r_m=3, space=10)
 
         self.login_hint = add_label(button_frame, "", name="Login_hint")
         button_layout.addWidget(self.login_hint)
@@ -312,7 +315,7 @@ class LoginPage(QFrame):
         # to_create_frame: to_create_button
         to_create_frame = QFrame(self)
         to_create_frame.setFixedHeight(63)
-        to_create_layout = add_layout(to_create_frame, HORIZONTAL, l_m=8, r_m=8, b_m=8, t_m=8)
+        to_create_layout = add_layout(to_create_frame, HORIZONTAL, l_m=3, r_m=3, b_m=8, t_m=8)
 
         label = add_label(to_create_frame, "Not Member?", name="Login_switch_description",
                           align=(Qt.AlignRight | Qt.AlignVCenter))
@@ -357,7 +360,7 @@ class CreatePage(QFrame):
         self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
         # Fix size
-        self.setFixedSize(500, 585)
+        self.setFixedSize(580, 580)
 
     def _init_ui(self):
 
@@ -372,7 +375,7 @@ class CreatePage(QFrame):
         title = add_label(title_frame, "Thanks for Registering", name="Login_create_title")
         title_layout.addWidget(title)
 
-        prologue = "In the following section,\nlease enter the oorrect information,\nAnd, enjoy…"
+        prologue = "In the following section,\nlease enter the correct information,\nAnd, enjoy…"
         prologue = add_label(title_frame, prologue, name="Login_prologue")
         title_layout.addWidget(prologue)
 
@@ -380,20 +383,20 @@ class CreatePage(QFrame):
         title_layout.addItem(spacer)
 
         input_frame = QFrame(self)
-        input_layout = add_layout(input_frame, VERTICAL, l_m=8, r_m=8, space=8)
+        input_layout = add_layout(input_frame, VERTICAL, l_m=3, r_m=3, space=3)
 
         input_sub_frame = QFrame(input_frame)
-        input_sub_layout = add_layout(input_sub_frame, HORIZONTAL, space=8)
+        input_sub_layout = add_layout(input_sub_frame, HORIZONTAL, space=4)
 
-        box, self.first = add_login_input_box_02(input_sub_frame, "FIRST NAME", title_width=80, hint="First name...")
+        box, self.first = add_login_input_box_02(input_sub_frame, "FIRST NAME", title_width=100, hint="First name...")
         input_sub_layout.addWidget(box)
 
-        box, self.last = add_login_input_box_02(input_sub_frame, "LAST NAME", title_width=80, hint="Last name...")
+        box, self.last = add_login_input_box_02(input_sub_frame, "LAST NAME", title_width=100, hint="Last name...")
         input_sub_layout.addWidget(box)
         input_layout.addWidget(input_sub_frame)
 
         box, self.username = add_login_input_box_02(input_frame, "EMAIL",
-                                                    hint="Please enter an email address as your username...")
+                                                    hint="Please enter an email address as username...")
         input_layout.addWidget(box)
 
         box, self.pwd = add_login_input_box_02(input_frame, "PASSWORD",
@@ -406,7 +409,7 @@ class CreatePage(QFrame):
 
         # button_frame: hint, create_button
         button_frame = QFrame(self)
-        button_layout = add_layout(button_frame, VERTICAL, l_m=8, r_m=8, space=10)
+        button_layout = add_layout(button_frame, VERTICAL, l_m=3, r_m=3, space=10)
 
         self.create_hint = add_label(button_frame, "", name="Login_hint")
         button_layout.addWidget(self.create_hint)
@@ -417,7 +420,7 @@ class CreatePage(QFrame):
         # to_create_frame: to_create_button
         to_login_frame = QFrame(self)
         to_login_frame.setFixedHeight(63)
-        to_login_layout = add_layout(to_login_frame, HORIZONTAL, l_m=8, r_m=8, b_m=8, t_m=8)
+        to_login_layout = add_layout(to_login_frame, HORIZONTAL, l_m=3, r_m=3, b_m=8, t_m=8)
 
         label = add_label(to_login_frame, "Already Member?", name="Login_switch_description",
                           align=(Qt.AlignRight | Qt.AlignVCenter))

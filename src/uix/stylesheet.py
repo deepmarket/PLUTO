@@ -47,24 +47,23 @@ login_style = """
     }
     
     #Login_login_title {
-        background-color: white;
         font-family: "Helvetica Neue";
-        font-size: 32px;
-        font-weight: 50;
+        font-size: 35px;
+        font-weight: 100;
         color: #6C7E8E;
     }
     
     #Login_create_title {
         font-family: "Helvetica Neue";
         font-size: 25px;
-        font-weight: 50;
+        font-weight: 100;
         color: #6C7E8E;
     }
     
     #Login_prologue {
         font-family: "Helvetica Neue";
         font-size: 12px;
-        font-weight: 50;
+        font-weight: 200;
         color: #6C7E8E;
     }
     
@@ -76,7 +75,7 @@ login_style = """
     #Login_input_title_01 {
         font-family: "Helvetica Neue";
         font-size: 15px;
-        font-weight: 100;
+        font-weight: 200;
         color: #6C7E8E;
     }
     
@@ -90,7 +89,7 @@ login_style = """
     #Login_input_title_02 {
         font-family: "Helvetica Neue";
         font-size: 13px;
-        font-weight: 100;
+        font-weight: 200;
         color: #6C7E8E;
     }
     
@@ -115,7 +114,7 @@ login_style = """
         height: 48px;
         font-family: "Helvetica Neue";
         font-size: 16px;
-        font-weight: 100;
+        font-weight: 200;
         color: white;
     }
     
@@ -124,7 +123,7 @@ login_style = """
         padding-right: 10px;
         font-family: "Helvetica Neue";
         font-size: 14px;
-        font-weight:100;
+        font-weight:200;
         color: #6C7E8E;
     }
     

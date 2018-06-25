@@ -255,7 +255,7 @@ def add_login_input_box_01(widget, title, hint=None, echo=False):
 
     box.setObjectName("Login_input_box")
 
-    box_title.setFixedSize(117, 52)
+    box_title.setFixedSize(150, 52)
     box_title.setObjectName("Login_input_title_01")
 
     box_input.setFixedHeight(52)
@@ -265,10 +265,10 @@ def add_login_input_box_01(widget, title, hint=None, echo=False):
 
 
 # type 01 input box for login
-def add_login_input_box_02(widget, title, title_width=130, hint=None, echo=False):
+def add_login_input_box_02(widget, title, title_width=170, hint=None, echo=False):
 
     # create object
-    box, box_title, box_input = add_input_box(widget, title, l_m=21, r_m=21, space=9, hint=hint, echo=echo)
+    box, box_title, box_input = add_input_box(widget, title, l_m=30, r_m=30, space=9, hint=hint, echo=echo)
 
     box.setFixedHeight(52)
 

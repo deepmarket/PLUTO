@@ -271,15 +271,15 @@ class Navigation(QFrame):
     def __init__(self, *args, **kwargs):
         super(QFrame, self).__init__(*args, **kwargs)
 
-        account_api = Api("/account")
-        status, res = account_api.get()
-
-        if status == 200:
-            self.credits = "{:.2f}".format(round(res['customer']['credits'], 3))
+        # account_api = Api("/account")
+        # status, res = account_api.get()
+        #
+        # if status == 200:
+        #     self.credits = "{:.2f}".format(round(res['customer']['credits'], 3))
+        self.credits = 15
 
         self.head_img = None
         self.menu_button = None
-        self.credits = 15
         self._init_ui()
 
         self.setStyleSheet(app_style)

@@ -65,7 +65,7 @@ class App(QMainWindow):
         self.show()
 
         # self.on_dashboard_clicked()
-        self.on_resources_clicked()
+        self.on_jobs_clicked()
 
     def _init_geometry(self):
         # window size

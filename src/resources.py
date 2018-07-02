@@ -71,10 +71,8 @@ class Resources(MainView):
     def _init_ui(self):
         section_layout = add_layout(self, VERTICAL, b_m=8)
 
-        button_frame = QFrame(self)
+        button_frame, button_layout = add_frame(self, height=35, layout=HORIZONTAL, l_m=40, r_m=40, space=24)
         section_layout.addWidget(button_frame)
-        button_frame.setFixedHeight(35)
-        button_layout = add_layout(button_frame, HORIZONTAL, l_m=40, r_m=40, space=24)
 
         self.workspace_button = add_button(button_frame, "Add Resources", stylesheet=page_menu_button_active)
         self.list_button = add_button(button_frame, "Resources List", stylesheet=page_menu_button)
@@ -823,18 +821,11 @@ class ResourcesList(QFrame):
         # data = data_obj["data"]
 
         if self.current_row <= 13:
-            for i in range(column):
-                self.table.setItem(self.current_row, i, QTableWidgetItem(data[i]))
-                if self.table.item(self.current_row, i) is not None:
-                    self.table.item(self.current_row, i).setTextAlignment(Qt.AlignCenter)
-                    self.table.item(self.current_row, i).setFont(QFont("Helvetica Neue", 12, QFont.Light))
+            add_row(self.table, column, data, self.current_row)
+
             self.current_row += 1
         else:
             row = self.table.rowCount()
 
             self.table.insertRow(row)
-            for i in range(column):
-                self.table.setItem(row, i, QTableWidgetItem(data[i]))
-                if self.table.item(row, i) is not None:
-                    self.table.item(row, i).setTextAlignment(Qt.AlignCenter)
-                    self.table.item(row, i).setFont(QFont("Helvetica Neue", 12, QFont.Light))
+            add_row(self.table, column, data, row)

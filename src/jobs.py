@@ -51,10 +51,8 @@ class Jobs(MainView):
     def _init_ui(self):
         section_layout = add_layout(self, VERTICAL, b_m=8)
 
-        button_frame = QFrame(self)
+        button_frame, button_layout = add_frame(self, height=35, layout=HORIZONTAL, l_m=40, r_m=40, space=24)
         section_layout.addWidget(button_frame)
-        button_frame.setFixedHeight(35)
-        button_layout = add_layout(button_frame, HORIZONTAL, l_m=40, r_m=40, space=24)
 
         self.workspace_button = add_button(button_frame, "Add Job", stylesheet=page_menu_button_active)
         self.list_button = add_button(button_frame, "Job Lists", stylesheet=page_menu_button)
@@ -76,6 +74,9 @@ class Jobs(MainView):
 
         self.workspace_button.clicked.connect(self.on_workspace_clicked)
         self.list_button.clicked.connect(self.on_list_clicked)
+
+        self.workspace.submit_button.clicked.connect(self.on_submit_clicked)
+        self.list.remove_button.clicked.connect(self.on_remove_clicked)
 
     def on_workspace_clicked(self):
         # set button to enable stylesheet
@@ -123,6 +124,62 @@ class Jobs(MainView):
         for i in range(len(dat)):
             labels[i].setText(text[i])
 
+    # input data format: [job_id, workers, cores, memory, price, status, logs]
+    def on_submit_clicked(self):
+        workers = self.workspace.workers.text()
+        cores = self.workspace.cores.text()
+        memory = self.workspace.memory.text()
+        # source_files = self.workspace.source_file.text()
+        # input_files = self.workspace.input_file.text()
+        # price = (float(cores) * float(workers)) * PRICING_CONSTANT
+
+        self.list.add_data(["1", workers, cores, memory, "0.005", "running", "-"])
+        self.on_list_clicked()
+
+    # remove button functionality for JobList
+    def on_remove_clicked(self):
+        model = self.list.table.selectionModel()
+
+        # check if table has selected row
+        if not model.hasSelection():
+            pass
+        else:
+            row = model.selectedRows()[0].row()
+            column = self.list.table.columnCount()
+
+            # ask if user want to delete rows
+            question = Question("Are you sure you want to remove this?")
+
+            if question.exec_():
+                self.list.table.removeRow(row)
+
+                if row <= 9:
+                    self.list.current_row -= 1
+                    row = self.list.table.rowCount()
+                    self.list.table.insertRow(row)
+                    for c in range(column):
+                        self.list.table.setItem(row, c, QTableWidgetItem(""))
+
+    # backup
+    # def _fetch_job_data(self):
+    #     job_api = Api("/jobs")
+    #     status, res = job_api.get()
+    #
+    #     if status == 200:
+    #         for job in res["jobs"]:
+    #             job_data = {
+    #                 "data": [job['_id'],
+    #                          job['workers'],
+    #                          job['cores'],
+    #                          job['memory'],
+    #                          job['price'],
+    #                          job['status'],
+    #                          "logs"],
+    #                 "job_id": job['_id'],
+    #                 "customer_id": job['customer_id'],
+    #             }
+    #             self.add_data(job_data)
+
 
 class JobWorkspace(QFrame):
 
@@ -162,9 +219,8 @@ class JobWorkspace(QFrame):
 
         # --------- begin pricing_scheme: line_frame, sub_section_frame ------------
 
-        section_frame = QFrame(self)
+        section_frame, section_layout = add_frame(self, space=18)
         window_layout.addWidget(section_frame)
-        section_layout = add_layout(section_frame, VERTICAL, space=18)
 
         # --------- line_frame: title, spacer ------------
 
@@ -180,156 +236,64 @@ class JobWorkspace(QFrame):
 
         # --------- begin sub_section: left_section, right_section ------------
 
-        sub_section_frame = QFrame(section_frame)
-        sub_section_frame.setFixedHeight(211)
+        sub_section_frame, sub_section_layout = add_frame(section_frame, height=211, layout=HORIZONTAL)
         section_layout.addWidget(sub_section_frame)
-        sub_section_layout = add_layout(sub_section_frame, HORIZONTAL)
 
         # --------- left_section: scheme_title, four scheme choice frame, spacer ------------
 
-        left_frame = QFrame(sub_section_frame)
-        left_frame.setObjectName("Page_scheme")
+        left_frame, left_layout = add_frame(sub_section_frame, name="Page_scheme", layout=HORIZONTAL,
+                                            l_m=28, t_m=12, b_m=12, space=10)
         sub_section_layout.addWidget(left_frame)
-        left_layout = add_layout(left_frame, HORIZONTAL, l_m=28, t_m=12, b_m=12, space=10)
 
         # --------- title_frame ------------
 
-        title_frame = QFrame(left_frame)
+        title_frame, title_layout = add_frame(left_frame, t_m=31, b_m=32, r_m=13, space=16)
         left_layout.addWidget(title_frame)
-        title_layout = add_layout(title_frame, VERTICAL, t_m=31, b_m=32, r_m=13, space=16)
 
-        title = add_label(title_frame, "Time", stylesheet=Page_scheme_label_disable, align=Qt.AlignRight)
-        title_layout.addWidget(title)
-
-        title = add_label(title_frame, "CPU:", stylesheet=Page_scheme_label_disable, align=Qt.AlignRight)
-        title_layout.addWidget(title)
-
-        title = add_label(title_frame, "GPU:", stylesheet=Page_scheme_label_disable, align=Qt.AlignRight)
-        title_layout.addWidget(title)
-
-        title = add_label(title_frame, "Memory:", stylesheet=Page_scheme_label_disable, align=Qt.AlignRight)
-        title_layout.addWidget(title)
-
-        title = add_label(title_frame, "Disk Space:", stylesheet=Page_scheme_label_disable, align=Qt.AlignRight)
-        title_layout.addWidget(title)
+        titles = ["Time", "CPU:", "GPU:", "Memory:", "Disk Space:"]
+        add_labels(title_layout, title_frame, titles, Page_scheme_label_disable, Qt.AlignRight)
 
         # --------- scheme_01_frame ------------
 
-        self.scheme_01_frame = QFrame(left_frame)
-        self.scheme_01_frame.setFixedWidth(124)
-        self.scheme_01_frame.setStyleSheet(Page_scheme_box)
+        self.scheme_01_frame, scheme_layout = add_frame(left_frame, width=124, stylesheet=Page_scheme_box,
+                                                        t_m=31, b_m=32, space=16)
         left_layout.addWidget(self.scheme_01_frame)
-        scheme_layout = add_layout(self.scheme_01_frame, VERTICAL, t_m=31, b_m=32, space=16)
 
-        label = add_label(self.scheme_01_frame, "12:00 AM - 5:59 AM",
-                          stylesheet=Page_scheme_label, align=Qt.AlignHCenter)
-        scheme_layout.addWidget(label)
-
-        label = add_label(self.scheme_01_frame, "0 Credit/Hr",
-                          stylesheet=Page_scheme_label, align=Qt.AlignHCenter)
-        scheme_layout.addWidget(label)
-
-        label = add_label(self.scheme_01_frame, "0 Credit/Hr",
-                          stylesheet=Page_scheme_label, align=Qt.AlignHCenter)
-        scheme_layout.addWidget(label)
-
-        label = add_label(self.scheme_01_frame, "0 Credit/Hr",
-                          stylesheet=Page_scheme_label, align=Qt.AlignHCenter)
-        scheme_layout.addWidget(label)
-
-        label = add_label(self.scheme_01_frame, "0 Credit/Hr",
-                          stylesheet=Page_scheme_label, align=Qt.AlignHCenter)
-        scheme_layout.addWidget(label)
+        labels = ["12:00 AM - 5:59 AM", "0 Credit/Hr", "0 Credit/Hr", "0 Credit/Hr", "0 Credit/Hr"]
+        add_labels(scheme_layout, self.scheme_01_frame, labels, Page_scheme_label, Qt.AlignHCenter)
 
         self.scheme_01_frame.mousePressEvent = self.enable_scheme_01_frame
 
         # --------- scheme_02_frame ------------
 
-        self.scheme_02_frame = QFrame(left_frame)
-        self.scheme_02_frame.setFixedWidth(124)
-        self.scheme_02_frame.setStyleSheet(Page_scheme_box_disable)
+        self.scheme_02_frame, scheme_layout = add_frame(left_frame, width=124, stylesheet=Page_scheme_box_disable,
+                                                        t_m=31, b_m=32, space=16)
         left_layout.addWidget(self.scheme_02_frame)
-        scheme_layout = add_layout(self.scheme_02_frame, VERTICAL, t_m=31, b_m=32, space=16)
 
-        label = add_label(self.scheme_02_frame, "6:00 AM - 11:59 PM",
-                          stylesheet=Page_scheme_label_disable, align=Qt.AlignHCenter)
-        scheme_layout.addWidget(label)
-
-        label = add_label(self.scheme_02_frame, "0 Credit/Hr",
-                          stylesheet=Page_scheme_label_disable, align=Qt.AlignHCenter)
-        scheme_layout.addWidget(label)
-
-        label = add_label(self.scheme_02_frame, "0 Credit/Hr",
-                          stylesheet=Page_scheme_label_disable, align=Qt.AlignHCenter)
-        scheme_layout.addWidget(label)
-
-        label = add_label(self.scheme_02_frame, "0 Credit/Hr",
-                          stylesheet=Page_scheme_label_disable, align=Qt.AlignHCenter)
-        scheme_layout.addWidget(label)
-
-        label = add_label(self.scheme_02_frame, "0 Credit/Hr",
-                          stylesheet=Page_scheme_label_disable, align=Qt.AlignHCenter)
-        scheme_layout.addWidget(label)
+        labels[0] = "6:00 AM - 11:59 PM"
+        add_labels(scheme_layout, self.scheme_02_frame, labels, Page_scheme_label_disable, Qt.AlignHCenter)
 
         self.scheme_02_frame.mousePressEvent = self.enable_scheme_02_frame
 
         # --------- scheme_03_frame ------------
 
-        self.scheme_03_frame = QFrame(left_frame)
-        self.scheme_03_frame.setFixedWidth(124)
-        self.scheme_03_frame.setStyleSheet(Page_scheme_box_disable)
+        self.scheme_03_frame, scheme_layout = add_frame(left_frame, width=124, stylesheet=Page_scheme_box_disable,
+                                                        t_m=31, b_m=32, space=16)
         left_layout.addWidget(self.scheme_03_frame)
-        scheme_layout = add_layout(self.scheme_03_frame, VERTICAL, t_m=31, b_m=32, space=16)
 
-        label = add_label(self.scheme_03_frame, "12:00 PM - 5: 59 PM",
-                          stylesheet=Page_scheme_label_disable, align=Qt.AlignHCenter)
-        scheme_layout.addWidget(label)
-
-        label = add_label(self.scheme_03_frame, "0 Credit/Hr",
-                          stylesheet=Page_scheme_label_disable, align=Qt.AlignHCenter)
-        scheme_layout.addWidget(label)
-
-        label = add_label(self.scheme_03_frame, "0 Credit/Hr",
-                          stylesheet=Page_scheme_label_disable, align=Qt.AlignHCenter)
-        scheme_layout.addWidget(label)
-
-        label = add_label(self.scheme_03_frame, "0 Credit/Hr",
-                          stylesheet=Page_scheme_label_disable, align=Qt.AlignHCenter)
-        scheme_layout.addWidget(label)
-
-        label = add_label(self.scheme_03_frame, "0 Credit/Hr",
-                          stylesheet=Page_scheme_label_disable, align=Qt.AlignHCenter)
-        scheme_layout.addWidget(label)
+        labels[0] = "12:00 PM - 5: 59 PM"
+        add_labels(scheme_layout, self.scheme_03_frame, labels, Page_scheme_label_disable, Qt.AlignHCenter)
 
         self.scheme_03_frame.mousePressEvent = self.enable_scheme_03_frame
 
         # --------- scheme_04_frame ------------
 
-        self.scheme_04_frame = QFrame(left_frame)
-        self.scheme_04_frame.setFixedWidth(124)
-        self.scheme_04_frame.setStyleSheet(Page_scheme_box_disable)
+        self.scheme_04_frame, scheme_layout = add_frame(left_frame, width=124, stylesheet=Page_scheme_box_disable,
+                                                        t_m=31, b_m=32, space=16)
         left_layout.addWidget(self.scheme_04_frame)
-        scheme_layout = add_layout(self.scheme_04_frame, VERTICAL, t_m=31, b_m=32, space=16)
 
-        label = add_label(self.scheme_04_frame, "6:00 PM - 11: 59 PM",
-                          stylesheet=Page_scheme_label_disable, align=Qt.AlignHCenter)
-        scheme_layout.addWidget(label)
-
-        label = add_label(self.scheme_04_frame, "0 Credit/Hr",
-                          stylesheet=Page_scheme_label_disable, align=Qt.AlignHCenter)
-        scheme_layout.addWidget(label)
-
-        label = add_label(self.scheme_04_frame, "0 Credit/Hr",
-                          stylesheet=Page_scheme_label_disable, align=Qt.AlignHCenter)
-        scheme_layout.addWidget(label)
-
-        label = add_label(self.scheme_04_frame, "0 Credit/Hr",
-                          stylesheet=Page_scheme_label_disable, align=Qt.AlignHCenter)
-        scheme_layout.addWidget(label)
-
-        label = add_label(self.scheme_04_frame, "0 Credit/Hr",
-                          stylesheet=Page_scheme_label_disable, align=Qt.AlignHCenter)
-        scheme_layout.addWidget(label)
+        labels[0] = "6:00 PM - 11: 59 PM"
+        add_labels(scheme_layout, self.scheme_04_frame, labels, Page_scheme_label_disable, Qt.AlignHCenter)
 
         self.scheme_04_frame.mousePressEvent = self.enable_scheme_04_frame
 
@@ -340,11 +304,9 @@ class JobWorkspace(QFrame):
 
         # --------- right_section: title, available cpu, gpu, memory, disk_space ------------
 
-        right_frame = QFrame(sub_section_frame)
-        right_frame.setFixedWidth(170)
-        right_frame.setObjectName("Page_available_resources")
+        right_frame, right_layout = add_frame(sub_section_frame, width=170, name="Page_available_resources",
+                                              t_m=37, b_m=40)
         sub_section_layout.addWidget(right_frame)
-        right_layout = add_layout(right_frame, VERTICAL, t_m=37, b_m=40)
 
         title = add_label(right_frame, "Available Resources", name="Page_available_title", align=Qt.AlignCenter)
         title.setFixedHeight(13)
@@ -355,9 +317,8 @@ class JobWorkspace(QFrame):
 
         # --------- line_frame: cpu, gpu, memory, disk_space ------------
 
-        line_frame = QFrame(right_frame)
+        line_frame, line_layout = add_frame(right_frame, l_m=30, r_m=30, space=16)
         right_layout.addWidget(line_frame)
-        line_layout = add_layout(line_frame, VERTICAL, l_m=30, r_m=30, space=16)
 
         self.available_cpu = add_label(line_frame, "CPU #: 0", name="Page_available_label")
         line_layout.addWidget(self.available_cpu)
@@ -373,15 +334,13 @@ class JobWorkspace(QFrame):
 
         # --------- begin job_submission ------------
 
-        section_frame = QFrame(self)
+        section_frame, section_layout = add_frame(self, space=18)
         window_layout.addWidget(section_frame)
-        section_layout = add_layout(section_frame, VERTICAL, space=18)
 
         # --------- line_frame: title, spacer ------------
 
-        line_frame = QFrame(section_frame)
+        line_frame, line_layout = add_frame(section_frame, layout=HORIZONTAL)
         section_layout.addWidget(line_frame)
-        line_layout = add_layout(line_frame, HORIZONTAL)
 
         title = add_label(line_frame, "Job Submission", name="Page_section_title", align=Qt.AlignVCenter)
         line_layout.addWidget(title)
@@ -391,17 +350,14 @@ class JobWorkspace(QFrame):
 
         # --------- begin sub_section ------------
 
-        sub_section_frame = QFrame(section_frame)
-        sub_section_frame.setFixedHeight(234)
-        sub_section_frame.setObjectName("Page_job_submission")
+        sub_section_frame, sub_section_layout = add_frame(section_frame, height=234, name="Page_job_submission",
+                                                          t_m=25, b_m=25, l_m=30, r_m=30, space=22)
         section_layout.addWidget(sub_section_frame)
-        section_layout = add_layout(sub_section_frame, VERTICAL, t_m=25, b_m=25, l_m=30, r_m=30, space=22)
 
         # --------- line_frame: workers, cores, memory ------------
 
-        line_frame = QFrame(section_frame)
-        section_layout.addWidget(line_frame)
-        line_layout = add_layout(line_frame, HORIZONTAL)
+        line_frame, line_layout = add_frame(section_frame, layout=HORIZONTAL)
+        sub_section_layout.addWidget(line_frame)
 
         box, self.workers = add_page_input_box(line_frame, "Workers #:", 70, 20, stylesheet=Page_input_input)
         line_layout.addWidget(box)
@@ -416,22 +372,21 @@ class JobWorkspace(QFrame):
 
         box, self.source_file = add_page_input_box(line_frame, "Source file:", 70, 20,
                                                    stylesheet=Page_input_input, fix_width=False)
-        section_layout.addWidget(box)
+        sub_section_layout.addWidget(box)
 
         box, self.input_file = add_page_input_box(line_frame, "Input file:", 70, 20,
                                                   stylesheet=Page_input_input, fix_width=False)
-        section_layout.addWidget(box)
+        sub_section_layout.addWidget(box)
 
         # --------- spacer ------------
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
-        section_layout.addItem(spacer)
+        sub_section_layout.addItem(spacer)
 
         # --------- line_frame: submission_hint, spacer, submit_button ------------
 
-        line_frame = QFrame(section_frame)
-        section_layout.addWidget(line_frame)
-        line_layout = add_layout(line_frame, HORIZONTAL, l_m=8)
+        line_frame, line_layout = add_frame(section_frame, layout=HORIZONTAL, l_m=8)
+        sub_section_layout.addWidget(line_frame)
 
         self.submission_hint = add_label(line_frame, "", name="Page_hint", align=Qt.AlignVCenter)
         line_layout.addWidget(self.submission_hint)
@@ -448,136 +403,16 @@ class JobWorkspace(QFrame):
         window_layout.addItem(spacer)
 
     def enable_scheme_01_frame(self, event):
-        if self.select_scheme != 1:
-            # find the previous selected frame
-            if self.select_scheme == 2:
-                frame = self.scheme_02_frame
-            elif self.select_scheme == 3:
-                frame = self.scheme_03_frame
-            else:
-                frame = self.scheme_04_frame
-
-            # set frame to disable stylesheet
-            frame.setStyleSheet(Page_scheme_box_disable)
-
-            # find all QLabel children within the frame
-            labels = frame.findChildren(QLabel)
-
-            # set labels to disable stylesheet
-            for label in labels:
-                label.setStyleSheet(Page_scheme_label_disable)
-
-            # set flag
-            self.select_scheme = 1
-
-            # set frame to active stylesheet
-            self.scheme_01_frame.setStyleSheet(Page_scheme_box)
-
-            # find all QLabel children within the frame
-            labels = self.scheme_01_frame.findChildren(QLabel)
-
-            # set labels to enable stylesheet
-            for label in labels:
-                label.setStyleSheet(Page_scheme_label)
+        set_frame(self, 1, self.scheme_01_frame)
 
     def enable_scheme_02_frame(self, event):
-        if self.select_scheme != 2:
-            # find the previous selected frame
-            if self.select_scheme == 1:
-                frame = self.scheme_01_frame
-            elif self.select_scheme == 3:
-                frame = self.scheme_03_frame
-            else:
-                frame = self.scheme_04_frame
-
-            # set frame to disable stylesheet
-            frame.setStyleSheet(Page_scheme_box_disable)
-
-            # find all QLabel children within the frame
-            labels = frame.findChildren(QLabel)
-
-            # set labels to disable stylesheet
-            for label in labels:
-                label.setStyleSheet(Page_scheme_label_disable)
-
-            # set flag
-            self.select_scheme = 2
-
-            # set frame to active stylesheet
-            self.scheme_02_frame.setStyleSheet(Page_scheme_box)
-
-            # find all QLabel children within the frame
-            labels = self.scheme_02_frame.findChildren(QLabel)
-
-            # set labels to enable stylesheet
-            for label in labels:
-                label.setStyleSheet(Page_scheme_label)
+        set_frame(self, 2, self.scheme_02_frame)
 
     def enable_scheme_03_frame(self, event):
-        if self.select_scheme != 3:
-            # find the previous selected frame
-            if self.select_scheme == 1:
-                frame = self.scheme_01_frame
-            elif self.select_scheme == 2:
-                frame = self.scheme_02_frame
-            else:
-                frame = self.scheme_04_frame
-
-            # set frame to disable stylesheet
-            frame.setStyleSheet(Page_scheme_box_disable)
-
-            # find all QLabel children within the frame
-            labels = frame.findChildren(QLabel)
-
-            # set labels to disable stylesheet
-            for label in labels:
-                label.setStyleSheet(Page_scheme_label_disable)
-
-            # set flag
-            self.select_scheme = 3
-
-            # set frame to active stylesheet
-            self.scheme_03_frame.setStyleSheet(Page_scheme_box)
-
-            # find all QLabel children within the frame
-            labels = self.scheme_03_frame.findChildren(QLabel)
-
-            # set labels to enable stylesheet
-            for label in labels:
-                label.setStyleSheet(Page_scheme_label)
+        set_frame(self, 3, self.scheme_03_frame)
 
     def enable_scheme_04_frame(self, event):
-        if self.select_scheme != 4:
-            # find the previous selected frame
-            if self.select_scheme == 1:
-                frame = self.scheme_01_frame
-            elif self.select_scheme == 2:
-                frame = self.scheme_02_frame
-            else:
-                frame = self.scheme_03_frame
-
-            # set frame to disable stylesheet
-            frame.setStyleSheet(Page_scheme_box_disable)
-
-            # find all QLabel children within the frame
-            labels = frame.findChildren(QLabel)
-
-            # set labels to disable stylesheet
-            for label in labels:
-                label.setStyleSheet(Page_scheme_label_disable)
-
-            # set flag
-            self.select_scheme = 4
-
-            # set frame to active stylesheet
-            self.scheme_04_frame.setStyleSheet(Page_scheme_box)
-
-            # find all QLabel children within the frame
-            labels = self.scheme_04_frame.findChildren(QLabel)
-
-            # set labels to enable stylesheet
-            for label in labels:
-                label.setStyleSheet(Page_scheme_label)
+        set_frame(self, 4, self.scheme_04_frame)
 
 
 class JobList(QFrame):
@@ -588,7 +423,6 @@ class JobList(QFrame):
         # variable
         self.table = None                   # widget
         self.search_bar = None              # input
-        self.edit_button = None             # button
         self.remove_button = None           # button
 
         self.current_row = 0                # param number
@@ -601,30 +435,21 @@ class JobList(QFrame):
 
         # --------- table_workspace ------------
 
-        table_workspace = QFrame(self)
-        table_workspace.setFixedHeight(72)
-        table_workspace.setObjectName("Page_table_workspace")
+        table_workspace, workspace_layout = add_frame(self, height=72, name="Page_table_workspace", layout=HORIZONTAL,
+                                                      l_m=40, r_m=40, t_m=21, b_m=21, space=32)
         window_layout.addWidget(table_workspace)
-        workspace_layout = add_layout(table_workspace, HORIZONTAL, l_m=40, r_m=40, t_m=21, b_m=21, space=32)
 
-        self.search_bar = QLineEdit(table_workspace)
-        self.search_bar.setObjectName("Page_table_workspace_search")
+        self.search_bar = add_input(table_workspace, height=30, name="Page_table_workspace_search",
+                                    hint="Search a job... (Haven't implemented yet)")
         workspace_layout.addWidget(self.search_bar)
-        self.search_bar.setFixedHeight(30)
-        self.search_bar.setAttribute(Qt.WA_MacShowFocusRect, 0)
-        self.search_bar.setPlaceholderText("Search a job...")
-
-        self.edit_button = add_button(table_workspace, "EDIT", name="Page_table_workspace_button")
-        workspace_layout.addWidget(self.edit_button)
 
         self.remove_button = add_button(table_workspace, "REMOVE", name="Page_table_workspace_button")
         workspace_layout.addWidget(self.remove_button)
 
         # --------- table_frame ------------
 
-        table_frame = QFrame(self)
+        table_frame, table_layout = add_frame(self, l_m=5, r_m=5, t_m=5)
         window_layout.addWidget(table_frame)
-        table_layout = add_layout(table_frame, VERTICAL, l_m=5, r_m=5, t_m=5)
 
         self.table = QTableWidget(table_frame)
         self.table.setObjectName("Page_table")
@@ -665,220 +490,20 @@ class JobList(QFrame):
     # data format: [job_id, workers, cores, memory, price, status, logs]
     def add_data(self, data_obj):
         column = self.table.columnCount()
-        data = data_obj["data"]
+
+        # for testing TODO: change back when finish testing
+        data = data_obj
+        # data = data_obj["data"]
 
         if self.current_row <= 13:
-            for i in range(column):
-                self.table.setItem(self.current_row, i, QTableWidgetItem(data[i]))
-                if self.table.item(self.current_row, i) is not None:
-                    self.table.item(self.current_row, i).setTextAlignment(Qt.AlignCenter)
-                    self.table.item(self.current_row, i).setFont(QFont("Helvetica Neue", 12, QFont.Light))
+            add_row(self.table, column, data, self.current_row)
 
             self.current_row += 1
         else:
             row = self.table.rowCount()
 
             self.table.insertRow(row)
-            for i in range(column):
-                self.table.setItem(row, i, QTableWidgetItem(data[i]))
-                if self.table.item(row, i) is not None:
-                    self.table.item(row, i).setTextAlignment(Qt.AlignCenter)
-                    self.table.item(row, i).setFont(QFont("Helvetica Neue", 12, QFont.Light))
+            add_row(self.table, column, data, row)
 
-#
-#     # input data format: [job_id, workers, cores, memory, price, status, logs]
-#     def on_submit_clicked(self):
-#         workers = self.jobs_workspace.workers.text()
-#         cores = self.jobs_workspace.cores.text()
-#         memory = self.jobs_workspace.memory.text()
-#         source_files = self.jobs_workspace.source_file.text()
-#         input_files = self.jobs_workspace.input_file.text()
-#
-#         price = (float(cores) * float(workers)) * PRICING_CONSTANT
-#
-#         job_payload = {
-#             "workers": workers,
-#             "cores": cores,
-#             "memory": memory,
-#             "price": price,
-#             "source_files": source_files,
-#             "input_files": input_files,
-#         }
-#         job_api = Api("/jobs")
-#         status, res = job_api.post(job_payload)
-#
-#         if status == 200:
-#             job = res['job']
-#             job_data = {
-#                 "data": [job['_id'],
-#                          job['workers'],
-#                          job['cores'],
-#                          job['memory'],
-#                          job['price'],
-#                          job['status'],
-#                          "logs"],
-#                 "job_id": job['_id'],
-#                 "customer_id": job['customer_id'],
-#             }
-#
-#             self.jobs_workspace.hint.setText("Successfully added job to queue.")
-#             self.jobs_list.add_data(job_data)
-#
-#     def on_refresh_clicked(self):
-#         self.jobs_workspace.hint.setText("Refreshing...")
-#
-#     def on_remove_clicked(self):
-#         # clean hint
-#         self.jobs_workspace.hint.setText("")
-#
-#         model = self.jobs_list.table.selectionModel()
-#
-#         # check if table has selected row
-#         if not model.hasSelection():
-#             pass
-#         else:
-#             row = model.selectedRows()[0].row()
-#             column = self.jobs_list.table.columnCount()
-#
-#             # ask if user want to delete rows
-#             question = Question("Are you sure you want to remove this?")
-#
-#             if question.exec_():
-#
-#                 self.jobs_list.table.removeRow(row)
-#                 self.jobs_workspace.hint.setText(f"Remove job....")
-#
-#                 if row <= 9:
-#                     self.jobs_list.current_row -= 1
-#
-#                     row = self.jobs_list.table.rowCount()
-#                     self.jobs_list.table.insertRow(row)
-#                     for c in range(column):
-#                         self.jobs_list.table.setItem(row, c, QTableWidgetItem(""))
-#
-#
-# # pure UI unit
-# class JobsWorkspace(QFrame):
-#
-#     def __init__(self, *args, **kwargs):
-#         super(QFrame, self).__init__(*args, **kwargs)
-#
-#         # variable
-#         self.add_jobs = None            # button
-#         self.workers = None             # input string
-#         self.cores = None               # input number
-#         self.memory = None              # input number
-#         self.source_file = None         # input string
-#         self.input_file = None          # input string
-#
-#         self.submit_button = None       # button
-#         self.refresh_button = None      # button
-#         self.remove_button = None       # button
-#         self.hint = None                # string
-#
-#         self._init_ui()
-#         self.setStyleSheet(page_style)
-#
-#     def _init_ui(self):
-#         self.setObjectName("Page_input_frame")
-#         self.setFixedHeight(165)
-#         section_layout = add_layout(self, VERTICAL, l_m=30, r_m=30)
-#
-#         # line_01 frame
-#         line_01_frame = QFrame(self)
-#         line_01_layout = add_layout(line_01_frame, HORIZONTAL, t_m=35, space=25)
-#
-#         box, self.workers = add_input_box_02(line_01_frame, "Workers #:")
-#         line_01_layout.addWidget(box)
-#
-#         box, self.cores = add_input_box_02(line_01_frame, "Cores #:")
-#         line_01_layout.addWidget(box)
-#
-#         box, self.memory = add_input_box_02(line_01_frame, "Memory:")
-#         line_01_layout.addWidget(box)
-#
-#         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
-#         line_01_layout.addItem(spacer)
-#
-#         # line_02 frame
-#         line_02_frame = QFrame(self)
-#         line_02_layout = add_layout(line_02_frame, HORIZONTAL)
-#
-#         # left frame
-#         left_frame = QFrame(line_02_frame)
-#         left_layout = add_layout(left_frame, VERTICAL, t_m=20, space=20)
-#
-#         box, self.source_file = add_input_box_02(left_frame, "Source files:", fix_width=False)
-#         left_layout.addWidget(box)
-#
-#         box, self.input_file = add_input_box_02(left_frame, "Input files:", fix_width=False)
-#         left_layout.addWidget(box)
-#
-#         spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
-#         left_layout.addItem(spacer)
-#
-#         # right frame
-#         right_frame = QFrame(line_02_frame)
-#         right_frame.setFixedWidth(286)
-#         right_layout = add_layout(right_frame, VERTICAL, l_m=74, t_m=5, space=10)
-#
-#         spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
-#         right_layout.addItem(spacer)
-#
-#         self.hint = add_label(right_frame, "", name="Page_hint", align=Qt.AlignBottom)
-#         self.hint.setFixedHeight(15)
-#         right_layout.addWidget(self.hint)
-#
-#         # button frame
-#         button_frame_01 = QFrame(right_frame)
-#         button_layout = add_layout(button_frame_01, HORIZONTAL, space=15)
-#
-#         self.submit_button = add_button(right_frame, text="SUBMIT", name="Page_button_small")
-#         button_layout.addWidget(self.submit_button)
-#
-#         self.refresh_button = add_button(right_frame, text="REFRESH", name="Page_button_small")
-#         button_layout.addWidget(self.refresh_button)
-#
-#         button_frame_02 = QFrame(right_frame)
-#         button_layout = add_layout(button_frame_02, HORIZONTAL, space=15)
-#
-#         self.remove_button = add_button(right_frame, text="REMOVE", name="Page_button_small")
-#         button_layout.addWidget(self.remove_button)
-#
-#         spacer = QSpacerItem(113, 0, QSizePolicy.Fixed, QSizePolicy.Minimum)
-#         button_layout.addItem(spacer)
-#
-#         right_layout.addWidget(button_frame_01)
-#         right_layout.addWidget(button_frame_02)
-#
-#         spacer = QSpacerItem(34, 0, QSizePolicy.Fixed, QSizePolicy.Minimum)
-#
-#         line_02_layout.addWidget(left_frame)
-#         line_02_layout.addWidget(right_frame)
-#         line_02_layout.addItem(spacer)
-#
-#         spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
-#
-#         section_layout.addWidget(line_01_frame)
-#         section_layout.addWidget(line_02_frame)
-#         section_layout.addItem(spacer)
-#
-#     def _fetch_job_data(self):
-#         job_api = Api("/jobs")
-#         status, res = job_api.get()
-#
-#         if status == 200:
-#             for job in res["jobs"]:
-#                 job_data = {
-#                     "data": [job['_id'],
-#                              job['workers'],
-#                              job['cores'],
-#                              job['memory'],
-#                              job['price'],
-#                              job['status'],
-#                              "logs"],
-#                     "job_id": job['_id'],
-#                     "customer_id": job['customer_id'],
-#                 }
-#                 self.add_data(job_data)
+
 

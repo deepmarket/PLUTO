@@ -365,10 +365,15 @@ def add_menu_icon(width):
 
 
 # add a section, return frame, and frame_layout
-def add_frame(widget, height=None, name=None, t_m=0, b_m=0, l_m=0, r_m=0, space=0, layout=VERTICAL):
+def add_frame(widget, layout=VERTICAL, height=None, width=None, name=None, stylesheet=None,
+              t_m=0, b_m=0, l_m=0, r_m=0, space=0):
     section_frame = QFrame(widget)
     if height:
         section_frame.setFixedHeight(height)
+    if width:
+        section_frame.setFixedWidth(width)
+    if stylesheet:
+        section_frame.setStyleSheet(stylesheet)
     if name:
         section_frame.setObjectName(name)
 
@@ -418,3 +423,56 @@ def add_price_box(widget, title, box_width=307, box_height=37, space=28):
     box_layout.addWidget(value)
 
     return frame, box, button
+
+
+# helper function to add widgets in _init_ui() in JobWorkspace() class
+def add_labels(layout, frame, texts, style, alignment):
+    for text in texts:
+        to_add = add_label(frame, text, stylesheet=style, align=alignment)
+        layout.addWidget(to_add)
+
+
+# helper function to transition between scheme highlighting in JobWorkspace() class
+def set_frame(widget, num, frame):
+    if widget.select_scheme != num:
+        # find the previous selected frame
+        if widget.select_scheme == 1:
+            prev = widget.scheme_01_frame
+        elif widget.select_scheme == 2:
+            prev = widget.scheme_02_frame
+        elif widget.select_scheme == 3:
+            prev = widget.scheme_03_frame
+        else:
+            prev = widget.scheme_04_frame
+
+        # set frame to disable stylesheet
+        prev.setStyleSheet(Page_scheme_box_disable)
+
+        # find all QLabel children within the frame
+        labels = prev.findChildren(QLabel)
+
+        # set labels to disable stylesheet
+        for label in labels:
+            label.setStyleSheet(Page_scheme_label_disable)
+
+        # set flag
+        widget.select_scheme = num
+
+        # set frame to active stylesheet
+        frame.setStyleSheet(Page_scheme_box)
+
+        # find all QLabel children within the frame
+        labels = frame.findChildren(QLabel)
+
+        # set labels to enable stylesheet
+        for label in labels:
+            label.setStyleSheet(Page_scheme_label)
+
+
+# helper function for add_data() in JobList() class
+def add_row(widget, column, data, row):
+    for i in range(column):
+        widget.setItem(row, i, QTableWidgetItem(data[i]))
+        if widget.item(row, i) is not None:
+            widget.item(row, i).setTextAlignment(Qt.AlignCenter)
+            widget.item(row, i).setFont(QFont("Helvetica Neue", 12, QFont.Light))

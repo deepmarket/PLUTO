@@ -1,11 +1,13 @@
 # UI Palette
-COLOR_01 = "#6C7E8E"
+COLOR_01 = "#6C7E8E"        # standard label, background
 COLOR_02 = "#91A4AD"
 COLOR_03 = "#F4F8F9"
 COLOR_04 = "#657FEB"
 COLOR_05 = "#7DCC54"
 COLOR_06 = "#FFFFFF"
 COLOR_07 = "#D0DBE0"
+COLOR_08 = "#C6CDDB"        # disable background
+COLOR_09 = "#F2F2F2"        # disable label
 
 # System Environment variable
 QT_AUTO_SCREEN_SCALE_FACTOR = 1
@@ -47,24 +49,23 @@ login_style = """
     }
     
     #Login_login_title {
-        background-color: white;
         font-family: "Helvetica Neue";
-        font-size: 32px;
-        font-weight: 50;
+        font-size: 35px;
+        font-weight: 100;
         color: #6C7E8E;
     }
     
     #Login_create_title {
         font-family: "Helvetica Neue";
-        font-size: 25px;
-        font-weight: 50;
+        font-size: 26px;
+        font-weight: 100;
         color: #6C7E8E;
     }
     
     #Login_prologue {
         font-family: "Helvetica Neue";
-        font-size: 12px;
-        font-weight: 50;
+        font-size: 13px;
+        font-weight: 200;
         color: #6C7E8E;
     }
     
@@ -73,32 +74,18 @@ login_style = """
         background-color: white;
     }
     
-    #Login_input_title_01 {
+    #Login_input_title {
         font-family: "Helvetica Neue";
-        font-size: 15px;
-        font-weight: 100;
-        color: #6C7E8E;
-    }
-    
-    #Login_input_input_01 {
-        border: none;
-        font-family: "Helvetica Neue";
-        font-weight: 200;
         font-size: 14px;
-    }
-    
-    #Login_input_title_02 {
-        font-family: "Helvetica Neue";
-        font-size: 13px;
-        font-weight: 100;
+        font-weight: 400;
         color: #6C7E8E;
     }
     
-    #Login_input_input_02 {
+    #Login_input_input {
         border: none;
         font-family: "Helvetica Neue";
-        font-weight: 200;
-        font-size: 12px;
+        font-weight: 300;
+        font-size: 14px;
     }
     
     #Login_hint {
@@ -115,7 +102,7 @@ login_style = """
         height: 48px;
         font-family: "Helvetica Neue";
         font-size: 16px;
-        font-weight: 100;
+        font-weight: 200;
         color: white;
     }
     
@@ -124,7 +111,7 @@ login_style = """
         padding-right: 10px;
         font-family: "Helvetica Neue";
         font-size: 14px;
-        font-weight:100;
+        font-weight:200;
         color: #6C7E8E;
     }
     
@@ -174,8 +161,8 @@ app_style = """
     
     #App_navigation_credit {
         font-family: "Helvetica Neue";
-        font-size: 11px;
-        font-weight: 100;
+        font-size: 12px;
+        font-weight: 300;
         color: #505A5F;
     }
     
@@ -232,10 +219,10 @@ app_style = """
 app_sidebar_button = f"""
     border: None;
     height: 20px;
-    padding-left: 15px;
+    padding-left: 16px;
     font-family: "Helvetica Neue";
     font-size: 13px;
-    font-weight: 300;
+    font-weight: 400;
     color: {COLOR_02};
     text-align: left;
 """
@@ -244,10 +231,10 @@ app_sidebar_button_active = f"""
     border: None;
     border-left: 2px solid {COLOR_01};
     height: 20px;
-    padding-left: 15px;
+    padding-left: 16px;
     font-family: "Helvetica Neue";
     font-size: 13px;
-    font-weight: 300;
+    font-weight: 400;
     color: {COLOR_01};
     text-align: left;
 """
@@ -258,120 +245,204 @@ dashboard_style = """
         background-color: white;
     }
     
-    #Dashboard_performance {
-        background-color: white;
-    }
-    
-    #Dashboard_resources_spec {
-        background-color: white;
-    }
-
     #Dashboard_greeting {
         font-family: "Helvetica Neue";
-        font-size: 26px;
+        font-size: 32px;
         font-weight: 50;
-        color: #505A5F;
+        color: #6C7E8E;
     }
-
+    
     #Dashboard_username {
         font-family: "Helvetica Neue";
-        font-size: 22px;
+        font-size: 32px;
         font-weight: 100;
-        color: #505A5F;
-    }
-
-    #Dashboard_add_dashlet {
-        border: none;
-        border-radius: 4px;
-        height: 26px;
-        width: 125px;
-        background-color: #6C7E8E;
-        font-family: "Helvetica Neue";
-        font-size: 13px;
-        font-weight: 100;
-        color: white;
+        color: #6C7E8E;
     }
     
-    #Dashboard_section_title {
+    #Dashboard_description {
+        font-family: "Helvetica Neue";
+        font-size: 14px;
+        font-weight: 250;
+        color: #6C7E8E;
+    }
+    
+    #Dashboard_highlight_description {
+        font-family: "Helvetica Neue";
+        font-size: 14px;
+        font-weight: 500;
+        color: #6C7E8E;
+    }
+    
+    #Dashboard_balance_title {
+        font-family: "Helvetica Neue";
+        font-size: 30px;
+        font-weight: 50;
+        color: #6C7E8E;
+    }
+    
+    #Dashboard_balance {
+        font-family: "Helvetica Neue";
+        font-size: 34px;
+        font-weight: 100;
+        color: #6C7E8E;
+    }
+    
+    #Dashboard_estimated_title {
         font-family: "Helvetica Neue";
         font-size: 16px;
-        font-weight: 100;
-        color: #505A5F;
+        font-weight: 200;
+        color: #6C7E8E;
     }
     
-    #Dashboard_section_switch {
-    
-    }
-    
-    #Dashboard_section_context {
+    #Dashboard_estimated_title_small {
         font-family: "Helvetica Neue";
-        font-size: 10px;
-        font-weight: 100;
-        color: #505A5F;
+        font-size: 12px;
+        font-weight: 200;
+        color: #6C7E8E;
     }
     
-    #Dashboard_view {
-        border: none;
-        background: transparent;
+    #Dashboard_estimated {
+        font-family: "Helvetica Neue";
+        font-size: 24px;
+        font-weight: 300;
+        color: #6C7E8E;
     }
+    
+    #Dashboard_history {
+        background-color: white;
+    }
+    
+    #Dashboard_history_title {
+        font-family: "Helvetica Neue";
+        font-size: 18px;
+        font-weight: 200;
+        color: #6C7E8E;
+    }
+    
+    #Dashboard_history_table {
+        border: none;
+        background-color: #F5F5F5;
+        alternate-background-color: white;
+    }
+    
 """
 
 page_style = """
+
+    #Page_sub_page {
+        background-color: white;
+    }
+    
+    #Page_machine_config {
+        background-color: #D6EFEF;
+    }
+    
+    #Page_resource_planning {
+        background-color: #F4F8F9;
+    }
+    
+    #Page_resource_submission {
+        background-color: #F4F8F9;
+    }
+    
+    #Page_scheme {
+        background-color: #F4F8F9;
+    }
+    
+    #Page_available_resources {
+        background-color: #D6EFEF;
+    }
+    
+    #Page_job_submission {
+        background-color: #F4F8F9;
+    }
+    
+    #Page_section_title {
+        font-family: "Helvetica Neue";
+        font-size: 20px;
+        font-weight: 100;
+        color: #6C7E8E;
+    }
+    
+    #Page_section_title_small {
+        font-family: "Helvetica Neue";
+        font-size: 16px;
+        font-weight: 300;
+        color: #6C7E8E;
+    }
+    
+    #Page_hint {
+        font-family: "Helvetica Neue";
+        font-size: 12px;
+        font-weight: 300;
+        color: red;
+    }
+    
+    #Page_hint_small {
+        font-family: "Helvetica Neue";
+        font-size: 11px;
+        font-weight: 300;
+        color: red;
+    }
 
     #Page_input_frame {
         background-color: white;
     }
 
-    #Page_input_title_01 {
+    #Page_input_title {
         font-family: "Helvetica Neue";
         font-size: 13px;
         font-weight: 300;
         color: #6C7E8E;
     }
     
-    #Page_input_title_02 {
+    #Page_button {
+        border: None;
+        background-color: #6C7E8E;
+        height: 30px;
+        width: 120px;
         font-family: "Helvetica Neue";
-        font-size: 10px;
-        font-weight: 200;
+        font-size: 12px;
+        font-weight: 300;
+        color: white;
+    }
+
+    #Page_available_title {
+        font-family: "Helvetica Neue";
+        font-size: 12px;
+        font-weight: 500;
         color: #6C7E8E;
     }
     
-    #Page_input_input_01 {
+    #Page_available_label {
+        font-family: "Helvetica Neue";
+        font-size: 11px;
+        font-weight: 500;
+        color: #6C7E8E;
+    }
+    
+    #Page_table_workspace {
+        background-color: white;
+    }
+    
+    #Page_table_workspace_search {
         border: None;
         background-color: #F7F7F7;
-        padding: 0 1px;
+        padding: 0 20px;
         font-family: "Helvetica Neue";
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 200;
         color: black;
     }
     
-    #Page_input_input_02 {
+    #Page_table_workspace_button {
         border: None;
-        background-color: #F7F7F7;
-        padding: 0 1px;
-        font-family: "Helvetica Neue";
-        font-size: 10px;
-        font-weight: 200;
-        color: black;
-    }
-    
-    #Page_hint {
-        font-family: "Helvetica Neue";
-        font-size: 9px;
-        font-weight: 300;
-        color: red;
-    }
-    
-    #Page_button_small {
-        border: None;
-        border-radius: 3px;
         background-color: #6C7E8E;
-        height: 20px;
+        height: 30px;
         width: 90px;
         font-family: "Helvetica Neue";
-        font-size: 8px;
-        font-weight: 500;
+        font-size: 13px;
+        font-weight: 200;
         color: white;
     }
     
@@ -390,51 +461,220 @@ page_style = """
         font-weight: 100;
         color: white;
     }
-    
-    #Page_machine_spec {
-        border: none;
-        border-radius: 3px;
-        background-color: #F4F8F9;
-    }
-    
-    #Page_machine_spec_title {
-        font-family: "Helvetica Neue";
-        font-size:10px;
-        font-weight: 300;
-        color: #6C7E8E;
-    }
 """
 
 page_menu_button_active = f"""
     border: None;
     border-bottom: 2px solid {COLOR_01};
-    width: 90px;
-    height: 33px;
+    width: 95px;
+    height: 27px;
     font-family: "Helvetica Neue";
-    font-size: 11px;
-    font-weight: 100;
-    color: {COLOR_01};
-"""
-
-Page_machine_spec_label = f"""
-    font-family: "Helvetica Neue";
-    font-size: 8px;
+    font-size: 12px;
     font-weight: 200;
     color: {COLOR_01};
 """
 
-Page_machine_spec_label_red = f"""
+page_menu_button = """
+    border: None;
+    width: 95px;
+    height: 27px;
     font-family: "Helvetica Neue";
-    font-size: 8px;
+    font-size: 12px;
+    font-weight: 100;
+    color: #CBCBCB;
+"""
+
+Page_input_ip_input = """
+    border: None;
+    background-color: #F7F7F7;
+    padding: 0 1px;
+    font-family: "Helvetica Neue";
+    font-size: 12px;
+    font-weight: 200;
+    color: black;
+"""
+
+Page_input_ip_input_disable = f"""
+    border: None;
+    background-color: {COLOR_08};
+    padding: 0 1px;
+    font-family: "Helvetica Neue";
+    font-size: 12px;
+    font-weight: 200;
+    color: {COLOR_09};
+"""
+
+
+Page_machine_config_box = """
+    background-color: white;
+"""
+
+Page_machine_config_box_disable = f"""
+    background-color: {COLOR_08};
+"""
+
+Page_machine_config_label = f"""
+    font-family: "Helvetica Neue";
+    font-size: 12px;
+    font-weight: 200;
+    color: {COLOR_01};
+"""
+
+Page_machine_config_label_red = f"""
+    font-family: "Helvetica Neue";
+    font-size: 12px;
     font-weight: 500;
     color: red;
 """
 
-Page_machine_spec_label_green = f"""
+Page_machine_config_label_green = f"""
     font-family: "Helvetica Neue";
-    font-size: 8px;
+    font-size: 12px;
     font-weight: 400;
     color: #95E637;
+"""
+
+Page_machine_config_label_disable = f"""
+    font-family: "Helvetica Neue";
+    font-size: 12px;
+    font-weight: 400;
+    color: #F2F2F2;
+"""
+
+Page_input_input = f"""
+    border: None;
+    background-color: white;
+    padding: 0 1px;
+    font-family: "Helvetica Neue";
+    font-size: 12px;
+    font-weight: 200;
+    color: black;
+"""
+
+Page_input_input_disable = f"""
+    border: None;
+    background-color: {COLOR_08};
+    padding: 0 1px;
+    font-family: "Helvetica Neue";
+    font-size: 12px;
+    font-weight: 200;
+    color: {COLOR_09};
+"""
+
+Page_evaluate_button = f"""
+    border: None;
+    background-color: {COLOR_01};
+    height: 30px;
+    width: 120px;
+    font-family: "Helvetica Neue";
+    font-size: 12px;
+    font-weight: 300;
+    color: white;   
+"""
+
+Page_evaluate_button_disable = f"""
+    border: None;
+    background-color: {COLOR_08};
+    height: 30px;
+    width: 120px;
+    font-family: "Helvetica Neue";
+    font-size: 12px;
+    font-weight: 300;
+    color: {COLOR_09};
+"""
+
+Page_submission_button = f"""
+    border: none;
+    background-color: white;
+    padding-bottom: 3px;
+    height: 20px;
+    width: 23px;
+    font-size: 20px;
+    color: {COLOR_01};
+"""
+
+Page_submission_button_disable = f"""
+    border: none;
+    background-color: {COLOR_08};
+    padding-bottom: 3px;
+    height: 20px;
+    width: 23px;
+    font-size: 20px;
+    color: {COLOR_09};
+"""
+
+Page_submission_box = f"""
+    background-color: white;
+"""
+
+Page_submission_box_disable = f"""
+    background-color: {COLOR_08};
+"""
+
+Page_submission_label = f"""
+    font-family: "Helvetica Neue";
+    font-size: 13px;
+    font-weight: 300;
+    color: {COLOR_01};
+"""
+
+Page_submission_label_disable = f"""
+    font-family: "Helvetica Neue";
+    font-size: 13px;
+    font-weight: 300;
+    color: {COLOR_09};
+"""
+
+Page_submission_submit = f"""
+    border: None;
+    background-color: {COLOR_01};
+    height: 30px;
+    width: 90px;
+    font-family: "Helvetica Neue";
+    font-size: 12px;
+    font-weight: 300;
+    color: white;
+"""
+
+Page_submission_submit_disable = f"""
+    border: None;
+    background-color: {COLOR_08};
+    height: 30px;
+    width: 90px;
+    font-family: "Helvetica Neue";
+    font-size: 12px;
+    font-weight: 300;
+    color: {COLOR_09};
+"""
+
+Page_scheme_box = f"""
+    background-color: #82B9B9;
+"""
+
+Page_scheme_box_disable = f"""
+    background-color: {COLOR_03};
+"""
+
+Page_scheme_button_frame = f"""
+    border-color: {COLOR_01};
+    border-width: 1px;        
+    border-style: solid;
+
+    background-color: white;
+"""
+
+Page_scheme_label = f"""
+    font-family: "Helvetica Neue";
+    font-size: 11px;
+    font-weight: 400;
+    color: white;
+"""
+
+Page_scheme_label_disable = f"""
+    font-family: "Helvetica Neue";
+    font-size: 11px;
+    font-weight: 400;
+    color: {COLOR_01};
 """
 
 question_style = """

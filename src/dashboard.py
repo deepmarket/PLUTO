@@ -26,6 +26,7 @@
 
 from src.mainview import MainView
 from src.uix.util import *
+from src.api import Api
 
 
 class Dashboard(MainView):
@@ -34,421 +35,360 @@ class Dashboard(MainView):
         super(QFrame, self).__init__(*args, **kwargs)
 
         # variable
-        self.overview = None            # section
-        self.performance = None         # section
-        self.resource_spec = None       # section
+        self.overview = None                # section
+        self.profit_history_frame = None    # section
+        self.cost_history_frame = None      # section
 
-        self.greeting = None            # param string
-        self.username = "Martin"        # param string
-        self.add_dashlet = None         # button
+        self.profit_history = None          # table widget
+        self.cost_history = None            # table widget
+
+        self.greeting = add_greeting()      # param string
+        self.username = ""                  # param string
+        self.total_balance = 15             # param number
+        self.estimated_profit = 30          # param number
+        self.estimated_cost = 20            # param number
+        self.running_machine = 5            # param number
+        self.panic_machine = 2              # param number
+        self.finished_job = 3               # param number
+        self.running_job = 2                # param number
+        self.panic_job = 0                  # param number
+
+        account_api = Api("/account")
+        status, res = account_api.get()
+
+        if status == 200:
+            # Insert comma here so we can default to nameless greeting if api fails.
+            self.username = f", {res['customer']['firstname'].capitalize()}"
+
+        # TODO: request "Total Balance", "Estimated profit", "Estimated cost" "machine status"from api also
+
+        # for testing
+        self.username = "Martin"
 
         self._init_ui()
         self.setStyleSheet(dashboard_style)
 
     def _init_ui(self):
-        section_layout = add_layout(self, VERTICAL, l_m=5, r_m=5, b_m=5)
+        widget_layout = add_layout(self, VERTICAL, t_m=5, b_m=5, space=5)
 
-        # title frame
-        title_frame = QFrame(self)
-        title_frame.setFixedHeight(82)
-        title_layout = add_layout(title_frame, HORIZONTAL, l_m=30, r_m=30)
+        self._init_overview()
 
-        now = datetime.datetime.now()
+        history_frame = QFrame(self)
+        history_layout = add_layout(history_frame, HORIZONTAL, space=2)
 
-        if now.hour < 12:
-            self.greeting = "Good morning,"
-        elif 12 <= now.hour < 18:
-            self.greeting = "Good afternoon,"
-        else:
-            self.greeting = "Good evening,"
+        self._init_profit_history()
+        self._init_cost_history()
+        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
-        greeting = add_label(title_frame, f"{self.greeting}", name="Dashboard_greeting")
-        username = add_label(title_frame, f" {self.username}", name="Dashboard_username")
+        history_layout.addWidget(self.profit_history_frame)
+        history_layout.addItem(spacer)
+        history_layout.addWidget(self.cost_history_frame)
 
-        self.add_dashlet = add_button(title_frame, "Add Dashlet", name="Dashboard_add_dashlet")
+        widget_layout.addWidget(self.overview)
+        widget_layout.addWidget(history_frame)
 
+    def _init_overview(self):
+        self.overview = QFrame(self)
+        self.overview.setFixedHeight(300)
+        self.overview.setObjectName("Dashboard_overview")
+
+        section_layout = add_layout(self.overview, HORIZONTAL, t_m=45, b_m=67, l_m=40, r_m=50)
+
+        # --------- begin left_frame ------------
+
+        left_frame = QFrame(self.overview)
+        left_layout = add_layout(left_frame, VERTICAL, space=2)
+
+        # --------- title_frame ------------
+
+        title_frame = QFrame(left_frame)
+        title_layout = add_layout(title_frame, HORIZONTAL, space=10)
+
+        greeting = add_label(left_frame, f"{self.greeting}", name="Dashboard_greeting")
+        username = add_label(left_frame, f"{self.username}", name="Dashboard_username")
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         title_layout.addWidget(greeting)
         title_layout.addWidget(username)
         title_layout.addItem(spacer)
-        title_layout.addWidget(self.add_dashlet)
+        left_layout.addWidget(title_frame)
 
-        # content frame
-        content_frame = QFrame(self)
-        content_layout = add_layout(content_frame, HORIZONTAL)
-
-        # left frame
-        left_frame = QFrame(content_frame)
-        left_layout = add_layout(left_frame, VERTICAL, space=4)
-
-        self.performance = DashboardPerformance(left_frame)
-        self.resource_spec = DashboardResourceSpec(left_frame)
-
-        left_layout.addWidget(self.performance)
-        left_layout.addWidget(self.resource_spec)
-
-        # right frame
-        right_frame = QFrame(content_frame)
-        right_layout = add_layout(right_frame, VERTICAL)
-
-        self.overview = DashboardOverview(right_frame)
-
-        right_layout.addWidget(self.overview)
-
-        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        content_layout.addWidget(left_frame)
-        content_layout.addItem(spacer)
-        content_layout.addWidget(right_frame)
-
-        section_layout.addWidget(title_frame)
-        section_layout.addWidget(content_frame)
-
-
-# pure UI unit
-class DashboardOverview(QFrame):
-
-    def __init__(self, *args, **kwargs):
-        super(QFrame, self).__init__(*args, **kwargs)
-
-        # variable
-        self.current_machine = 3            # input number
-        self.panic_machine = 0              # input number
-        self.current_resources = 7          # input number
-        self.finished_resources = 3         # input number
-        self.panic_resources = 1            # input number
-        self.current_jobs = 6               # input number
-        self.finished_jobs = 2              # input number
-        self.panic_jobs = 0                 # input number
-
-        self._init_geometry()
-        self._init_ui()
-        self.setStyleSheet(dashboard_style)
-
-    def _init_geometry(self):
-        self.setFixedWidth(455)
-
-    def _init_ui(self):
-        self.setObjectName("Dashboard_overview")
-
-        section_layout = add_layout(self, VERTICAL, l_m=47, r_m=47, t_m=26, b_m=100)
-
-        title_frame = QFrame(self)
-        title_layout = add_layout(title_frame, HORIZONTAL)
-
-        title = add_label(title_frame, "Overview", name="Dashboard_section_title")
-
-        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        title_layout.addWidget(title)
-        title_layout.addItem(spacer)
-
-        content_frame = QFrame(self)
-        content_layout = add_layout(content_frame, VERTICAL, space=28)
-
-        # current machine
-        current_machine = QFrame(content_frame)
-        current_machine_layout = add_layout(current_machine, HORIZONTAL)
-
-        title = add_label(current_machine, "Current Running Machine #", name="Dashboard_section_context")
-        current_machine_layout.addWidget(title)
-
-        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
-        current_machine_layout.addItem(spacer)
-
-        data = add_label(current_machine, f"{self.current_machine}", name="Dashboard_section_context")
-        current_machine_layout.addWidget(data)
-
-        # panic machine
-        panic_machine = QFrame(content_frame)
-        panic_machine_layout = add_layout(panic_machine, HORIZONTAL)
-
-        title = add_label(panic_machine, "Panic Machine #", name="Dashboard_section_context")
-        panic_machine_layout.addWidget(title)
-
-        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
-        panic_machine_layout.addItem(spacer)
-
-        data = add_label(panic_machine, f"{self.panic_machine}", name="Dashboard_section_context")
-        panic_machine_layout.addWidget(data)
-
-        # current resources
-        current_resources = QFrame(content_frame)
-        current_resources_layout = add_layout(current_resources, HORIZONTAL)
-
-        title = add_label(current_resources, "Current Running Resources #", name="Dashboard_section_context")
-        current_resources_layout.addWidget(title)
-
-        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
-        current_resources_layout.addItem(spacer)
-
-        data = add_label(current_resources, f"{self.current_resources}", name="Dashboard_section_context")
-        current_resources_layout.addWidget(data)
-
-        # finished resources
-        finished_resources = QFrame(content_frame)
-        finished_resources_layout = add_layout(finished_resources, HORIZONTAL)
-
-        title = add_label(finished_resources, "Finished Resources #", name="Dashboard_section_context")
-        finished_resources_layout.addWidget(title)
-
-        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
-        finished_resources_layout.addItem(spacer)
-
-        data = add_label(finished_resources, f"{self.finished_resources}", name="Dashboard_section_context")
-        finished_resources_layout.addWidget(data)
-
-        # panic resources
-        panic_resources = QFrame(content_frame)
-        panic_resources_layout = add_layout(panic_resources, HORIZONTAL)
-
-        title = add_label(panic_resources, "Panic Resources #", name="Dashboard_section_context")
-        panic_resources_layout.addWidget(title)
-
-        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
-        panic_resources_layout.addItem(spacer)
-
-        data = add_label(panic_resources, f"{self.panic_resources}", name="Dashboard_section_context")
-        panic_resources_layout.addWidget(data)
-
-        # current jobs
-        current_jobs = QFrame(content_frame)
-        current_jobs_layout = add_layout(current_jobs, HORIZONTAL)
-
-        title = add_label(current_jobs, "Current Running Jobs #", name="Dashboard_section_context")
-        current_jobs_layout.addWidget(title)
-
-        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
-        current_jobs_layout.addItem(spacer)
-
-        data = add_label(current_jobs, f"{self.current_jobs}", name="Dashboard_section_context")
-        current_jobs_layout.addWidget(data)
-
-        # finished jobs
-        finished_jobs = QFrame(content_frame)
-        finished_jobs_layout = add_layout(finished_jobs, HORIZONTAL)
-
-        title = add_label(finished_jobs, "Finished Jobs #", name="Dashboard_section_context")
-        finished_jobs_layout.addWidget(title)
-
-        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
-        finished_jobs_layout.addItem(spacer)
-
-        data = add_label(finished_jobs, f"{self.finished_jobs}", name="Dashboard_section_context")
-        finished_jobs_layout.addWidget(data)
-
-        # panic jobs
-        panic_jobs = QFrame(content_frame)
-        panic_jobs_layout = add_layout(panic_jobs, HORIZONTAL)
-
-        title = add_label(panic_jobs, "Panic Jobs #", name="Dashboard_section_context")
-        panic_jobs_layout.addWidget(title)
-
-        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
-        panic_jobs_layout.addItem(spacer)
-
-        data = add_label(panic_jobs, f"{self.panic_jobs}", name="Dashboard_section_context")
-        panic_jobs_layout.addWidget(data)
-
-        content_layout.addWidget(current_machine)
-        content_layout.addWidget(panic_machine)
-        content_layout.addWidget(current_resources)
-        content_layout.addWidget(finished_resources)
-        content_layout.addWidget(panic_resources)
-        content_layout.addWidget(current_jobs)
-        content_layout.addWidget(finished_jobs)
-        content_layout.addWidget(panic_jobs)
+        # --------- spacer ------------
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        left_layout.addItem(spacer)
 
-        section_layout.addWidget(title_frame)
-        section_layout.addItem(spacer)
-        section_layout.addWidget(content_frame)
+        # --------- begin description, a line ------------
 
+        line_frame = QFrame(left_frame)
+        line_layout = add_layout(line_frame, HORIZONTAL)
 
-# pure UI unit
-class DashboardPerformance(QFrame):
-
-    def __init__(self, *args, **kwargs):
-        super(QFrame, self).__init__(*args, **kwargs)
-
-        # variable
-        self.profit = 30                    # input number
-        self.cost = 15                      # input number
-
-        self._init_geometry()
-        self._init_ui()
-        self.setStyleSheet(dashboard_style)
-
-    def _init_geometry(self):
-        self.setFixedSize(455, 278)
-
-    def _init_ui(self):
-        self.setObjectName("Dashboard_performance")
-
-        section_layout = add_layout(self, VERTICAL, l_m=47, r_m=47, t_m=26, b_m=26)
-
-        title_frame = QFrame(self)
-        title_layout = add_layout(title_frame, HORIZONTAL)
-
-        title = add_label(title_frame, "Performance", name="Dashboard_section_title")
+        segment = add_label(line_frame, "Here is some detail about resources / jobs:", name="Dashboard_description")
+        line_layout.addWidget(segment)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        line_layout.addItem(spacer)
 
-        title_layout.addWidget(title)
-        title_layout.addItem(spacer)
+        # --------- a line ------------
 
-        content_frame = QFrame(self)
-        content_layout = add_layout(content_frame, VERTICAL, align=Qt.AlignHCenter)
+        left_layout.addWidget(line_frame)
 
-        # parameter
-        width = 150
-        height = 180
-        offset = 6
+        line_frame = QFrame(left_frame)
+        line_layout = add_layout(line_frame, HORIZONTAL)
 
-        # pen
-        pen_01 = QPen(QColor(COLOR_04), offset)
-        pen_02 = QPen(QColor(COLOR_05), offset)
-
-        # brush
-        brush_01 = QBrush(QColor(COLOR_04))
-        brush_02 = QBrush(QColor(COLOR_05))
-
-        # view & scene
-        view, scene = add_graph_scene(content_frame, width=width, height=height, name="Dashboard_view")
-
-        # circle geometry
-        rect = QRectF(-width/2, -height/2, width-offset*2, width-offset*2)
-
-        angle = int(360 * self.profit / (self.profit + self.cost))
-
-        # profit
-        path = QPainterPath()
-        path.arcMoveTo(rect, 0)
-        path.arcTo(rect, 0, angle)
-
-        item = QGraphicsPathItem(path)
-        item.setPen(pen_01)
-
-        scene.addItem(item)
-
-        # cost
-        path = QPainterPath()
-        path.arcMoveTo(rect, angle)
-
-        path.arcTo(rect, angle, 360 - angle)
-
-        item = QGraphicsPathItem(path)
-        item.setPen(pen_02)
-
-        scene.addItem(item)
-
-        # profit legend
-
-        item = QGraphicsEllipseItem(-65, 65, 14, 14)
-        item.setPen(QPen(Qt.NoPen))
-        item.setBrush(brush_01)
-
-        scene.addItem(item)
-
-        item = QGraphicsTextItem("Profit")
-        item.setPos(-45, 61)
-
-        font = QFont("Helvetica Neue", 12, QFont.Light)
-        item.setFont(font)
-
-        scene.addItem(item)
-
-        # cost legend
-
-        item = QGraphicsEllipseItem(5, 65, 14, 14)
-        item.setPen(QPen(Qt.NoPen))
-        item.setBrush(brush_02)
-
-        scene.addItem(item)
-
-        item = QGraphicsTextItem("Cost")
-        item.setPos(25, 61)
-
-        font = QFont("Helvetica Neue", 12, QFont.Light)
-        item.setFont(font)
-
-        scene.addItem(item)
-
-        # title
-        item = QGraphicsTextItem("Net Credit")
-        item.setPos(-37, -50)
-
-        font = QFont("Helvetica Neue", 13, QFont.Thin)
-        item.setFont(font)
-
-        scene.addItem(item)
-
-        # net profit
-        net = self.profit - self.cost
-
-        if net > 0:
-            net = "+ " + str(net) + " / DAY"
-        else:
-            net = str(net) + " / DAY"
-
-        item = QGraphicsTextItem(net)
-        item.setPos(-57, -25)
-
-        font = QFont("Helvetica Neue", 20, 7)
-        item.setFont(font)
-
-        scene.addItem(item)
-
-        content_layout.addWidget(view)
-
-        spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        section_layout.addWidget(title_frame)
-        section_layout.addItem(spacer)
-        section_layout.addWidget(content_frame)
-
-
-# pure UI unit
-class DashboardResourceSpec(QFrame):
-
-    def __init__(self, *args, **kwargs):
-        super(QFrame, self).__init__(*args, **kwargs)
-
-        self.resource_num = None            # param number
-        self.resource_name = None           # list of resource name
-        self.resource_list = None           # list of list resource data
-
-        self._init_ui()
-        self.setStyleSheet(dashboard_style)
-
-    def _init_ui(self):
-        self.setObjectName("Dashboard_resources_spec")
-
-        section_layout = add_layout(self, VERTICAL, l_m=47, r_m=47, t_m=26, b_m=26)
-
-        title_frame = QFrame(self)
-        title_layout = add_layout(title_frame, HORIZONTAL)
-
-        title = add_label(title_frame, "Resources Spec.", name="Dashboard_section_title")
+        segment = add_label(line_frame, "Within your last logout,", name="Dashboard_description")
+        line_layout.addWidget(segment)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        line_layout.addItem(spacer)
 
-        title_layout.addWidget(title)
-        title_layout.addItem(spacer)
+        left_layout.addWidget(line_frame)
 
-        content_frame = QFrame(self)
-        content_layout = add_layout(content_frame, VERTICAL, align=Qt.AlignHCenter)
+        # --------- a line ------------
 
-        width = 340
-        height = 187
+        line_frame = QFrame(left_frame)
+        line_layout = add_layout(line_frame, HORIZONTAL)
 
-        view, scene = add_graph_scene(content_frame, width=width, height=height, name="Dashboard_view1")
-        content_layout.addWidget(view)
+        segment = add_label(line_frame, "There are ", name="Dashboard_description")
+        line_layout.addWidget(segment)
+
+        segment = add_label(line_frame, f"{self.running_machine}", name="Dashboard_highlight_description")
+        line_layout.addWidget(segment)
+
+        segment = add_label(line_frame, " resources are running, and ", name="Dashboard_description")
+        line_layout.addWidget(segment)
+
+        segment = add_label(line_frame, f"{self.panic_machine}", name="Dashboard_highlight_description")
+        line_layout.addWidget(segment)
+
+        segment = add_label(line_frame, " are panic.", name="Dashboard_description")
+        line_layout.addWidget(segment)
+
+        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        line_layout.addItem(spacer)
+
+        left_layout.addWidget(line_frame)
+
+        # --------- a line ------------
+
+        line_frame = QFrame(left_frame)
+        line_layout = add_layout(line_frame, HORIZONTAL)
+
+        segment = add_label(line_frame, "There are ", name="Dashboard_description")
+        line_layout.addWidget(segment)
+
+        segment = add_label(line_frame, f"{self.finished_job}", name="Dashboard_highlight_description")
+        line_layout.addWidget(segment)
+
+        segment = add_label(line_frame, " jobs are finished, ", name="Dashboard_description")
+        line_layout.addWidget(segment)
+
+        segment = add_label(line_frame, f"{self.running_job}", name="Dashboard_highlight_description")
+        line_layout.addWidget(segment)
+
+        segment = add_label(line_frame, " are still running, and ", name="Dashboard_description")
+        line_layout.addWidget(segment)
+
+        segment = add_label(line_frame, f"{self.panic_job}", name="Dashboard_highlight_description")
+        line_layout.addWidget(segment)
+
+        segment = add_label(line_frame, " jobs are panic.", name="Dashboard_description")
+        line_layout.addWidget(segment)
+
+        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        line_layout.addItem(spacer)
+
+        left_layout.addWidget(line_frame)
+
+        # --------- end left_frame, begin right_frame ------------
+
+        right_frame = QFrame(self.overview)
+        right_layout = add_layout(right_frame, VERTICAL, space=17)
+
+        # --------- balance_frame ------------
+
+        balance_frame = QFrame(right_frame)
+        balance_layout = add_layout(balance_frame, HORIZONTAL, space=25)
+
+        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        balance_layout.addItem(spacer)
+
+        balance_title = add_label(balance_frame, "Total Balance:", name="Dashboard_balance_title",
+                                  align=Qt.AlignVCenter)
+        balance_layout.addWidget(balance_title)
+
+        balance = add_label(balance_frame, f"{self.total_balance} credits", name="Dashboard_balance")
+        balance_layout.addWidget(balance)
+
+        right_layout.addWidget(balance_frame)
+
+        # --------- spacer ------------
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        right_layout.addItem(spacer)
 
-        section_layout.addWidget(title_frame)
+        # --------- estimated item ------------
+
+        estimated_frame = QFrame(right_frame)
+        estimated_layout = add_layout(estimated_frame, HORIZONTAL, space=60)
+
+        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        estimated_layout.addItem(spacer)
+
+        estimated_title_frame = QFrame(estimated_frame)
+        estimated_title_layout = add_layout(estimated_title_frame, VERTICAL)
+
+        estimated_title = add_label(estimated_title_frame, "Estimated profit:", name="Dashboard_estimated_title")
+        estimated_title_layout.addWidget(estimated_title)
+
+        estimated_subtitle = add_label(estimated_title_frame, "(within next 24 hrs)",
+                                       name="Dashboard_estimated_title_small", align=Qt.AlignLeft)
+        estimated_title_layout.addWidget(estimated_subtitle)
+
+        estimated_layout.addWidget(estimated_title_frame)
+
+        estimated_value = add_label(estimated_frame, f"+ {self.estimated_profit} credits",
+                                    name="Dashboard_estimated", align=Qt.AlignVCenter)
+        estimated_layout.addWidget(estimated_value)
+
+        right_layout.addWidget(estimated_frame)
+
+        # --------- estimated item ------------
+
+        estimated_frame = QFrame(right_frame)
+        estimated_layout = add_layout(estimated_frame, HORIZONTAL, space=60)
+
+        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        estimated_layout.addItem(spacer)
+
+        estimated_title_frame = QFrame(estimated_frame)
+        estimated_title_layout = add_layout(estimated_title_frame, VERTICAL)
+
+        estimated_title = add_label(estimated_title_frame, "Estimated cost:", name="Dashboard_estimated_title")
+        estimated_title_layout.addWidget(estimated_title)
+
+        estimated_subtitle = add_label(estimated_title_frame, "(within next 24 hrs)",
+                                       name="Dashboard_estimated_title_small", align=Qt.AlignLeft)
+        estimated_title_layout.addWidget(estimated_subtitle)
+
+        estimated_layout.addWidget(estimated_title_frame)
+
+        estimated_value = add_label(estimated_frame, f"- {self.estimated_cost} credits",
+                                    name="Dashboard_estimated", align=Qt.AlignVCenter)
+        estimated_layout.addWidget(estimated_value)
+
+        right_layout.addWidget(estimated_frame)
+
+        # --------- end right_frame ------------
+
+        # spacer
+        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        section_layout.addWidget(left_frame)
         section_layout.addItem(spacer)
-        section_layout.addWidget(content_frame)
+        section_layout.addWidget(right_frame)
+
+    def _init_profit_history(self):
+        self.profit_history_frame = QFrame(self)
+        self.profit_history_frame.setFixedWidth(461)
+        self.profit_history_frame.setObjectName("Dashboard_history")
+
+        section_layout = add_layout(self.profit_history_frame, VERTICAL, space=14, t_m=20, b_m=20, l_m=22, r_m=15)
+
+        title = add_label(self.profit_history_frame, "Past 30 days Profit History", name="Dashboard_history_title")
+        section_layout.addWidget(title)
+
+        self.profit_history = QTableWidget(self.profit_history_frame)
+        self.profit_history.setObjectName("Dashboard_history_table")
+        section_layout.addWidget(self.profit_history)
+
+        column_width = [130, 180, 1]
+
+        self.profit_history.setColumnCount(len(column_width))
+        for i in range(len(column_width)):
+            self.profit_history.setColumnWidth(i, column_width[i])
+        self.profit_history.horizontalHeader().setStretchLastSection(True)
+
+        # table property
+        # hide horizontal, vertical header
+        # hide horizontal scroll bar
+        # disable edited
+        # not allow selected row
+        # alternating color
+        # hide grid line
+        # set default row height
+        self.profit_history.horizontalHeader().hide()
+        self.profit_history.verticalHeader().hide()
+        self.profit_history.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.profit_history.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.profit_history.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.profit_history.setSelectionMode(QAbstractItemView.NoSelection)
+        self.profit_history.setAlternatingRowColors(True)
+        self.profit_history.setShowGrid(False)
+
+        self.profit_history.verticalHeader().setDefaultSectionSize(31)
+
+        column = self.profit_history.columnCount()
+        for r in range(9):
+            self.profit_history.insertRow(r)
+            for c in range(column):
+                self.profit_history.setItem(r, c, QTableWidgetItem(""))
+
+        row = self.profit_history.rowCount()
+        if row > 9:
+            self.profit_history.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+
+    def _init_cost_history(self):
+        self.cost_history_frame = QFrame(self)
+        self.cost_history_frame.setFixedWidth(461)
+        self.cost_history_frame.setObjectName("Dashboard_history")
+
+        section_layout = add_layout(self.cost_history_frame, VERTICAL, space=14, t_m=20, b_m=20, l_m=15, r_m=22)
+
+        title = add_label(self.cost_history_frame, "Past 30 days Cost History", name="Dashboard_history_title")
+        section_layout.addWidget(title)
+
+        self.cost_history = QTableWidget(self.profit_history_frame)
+        self.cost_history.setObjectName("Dashboard_history_table")
+        section_layout.addWidget(self.cost_history)
+
+        column_width = [130, 180, 1]
+
+        self.cost_history.setColumnCount(len(column_width))
+        for i in range(len(column_width)):
+            self.cost_history.setColumnWidth(i, column_width[i])
+        self.cost_history.horizontalHeader().setStretchLastSection(True)
+
+        # table property
+        # hide horizontal, vertical header
+        # hide horizontal scroll bar
+        # disable edited
+        # not allow selected row
+        # alternating color
+        # hide grid line
+        # set default row height
+        self.cost_history.horizontalHeader().hide()
+        self.cost_history.verticalHeader().hide()
+        self.cost_history.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.cost_history.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.cost_history.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.cost_history.setSelectionMode(QAbstractItemView.NoSelection)
+        self.cost_history.setAlternatingRowColors(True)
+        self.cost_history.setShowGrid(False)
+        self.cost_history.verticalHeader().setDefaultSectionSize(31)
+
+        column = self.cost_history.columnCount()
+        for r in range(9):
+            self.cost_history.insertRow(r)
+            for c in range(column):
+                self.cost_history.setItem(r, c, QTableWidgetItem(""))
+
+        row = self.cost_history.rowCount()
+        if row > 9:
+            self.cost_history.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+
+    # self-updated function by calling timer in main
+    # can be used later on
+    def update(self):
+        pass
+

@@ -6,15 +6,8 @@ import os
 import re
 import datetime
 
-import matplotlib
-# matplotlib.use('Qt5Agg')
-import matplotlib.pyplot as plt
-
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.figure import Figure
-from numpy import arange, sin, pi
-
-from PyQt5.QtCore import Qt, QSize, QRect, QPropertyAnimation, QPoint, QTimer, QPointF, QRectF, QSequentialAnimationGroup
+from PyQt5.QtCore import (Qt, QSize, QRect, QPropertyAnimation, QRectF, QPoint, QTimer, QPointF,
+                          QSequentialAnimationGroup, QTimer)
 from PyQt5.QtGui import QPixmap, QIcon, QFontDatabase, QPainter, QFont, QColor, QPen, QBrush, QPolygonF, QPainterPath
 from PyQt5.QtWidgets import (QDesktopWidget, QPushButton, QLabel, QFrame, QLineEdit, QCheckBox,
                              QVBoxLayout, QHBoxLayout, QStackedLayout, QGraphicsView, QGraphicsScene,
@@ -215,8 +208,32 @@ def add_image(widget, img_name, img_type, width=0, height=0, name=None, align=No
     return label
 
 
+def add_input(widget, height=0, name=None, hint=None, echo=False):
+    input_bar = QLineEdit(widget)
+
+    # no focus frame
+    input_bar.setAttribute(Qt.WA_MacShowFocusRect, 0)
+
+    if height:
+        input_bar.setFixedHeight(height)
+
+    # Set object name
+    if name:
+        input_bar.setObjectName(name)
+
+    # Set hint on input
+    if hint:
+        input_bar.setPlaceholderText(hint)
+
+    # password encrypt
+    if echo:
+        input_bar.setEchoMode(QLineEdit.Password)
+
+    return input_bar
+
+
 # helper function to add input box
-def add_input_box(widget, title, space, l_m=0, r_m=0, align=None, hint=None, echo=False):
+def add_input_box(widget, title, space=0, l_m=0, r_m=0, align=None, hint=None, echo=False):
 
     # create object
     box = QFrame(widget)
@@ -224,29 +241,17 @@ def add_input_box(widget, title, space, l_m=0, r_m=0, align=None, hint=None, ech
 
     # input box title
     box_title = add_label(box, title, align=align)
+    box_layout.addWidget(box_title)
 
     # input
-    box_input = QLineEdit()
-
-    # no focus frame
-    box_input.setAttribute(Qt.WA_MacShowFocusRect, 0)
-
-    # Set hint on input
-    if hint:
-        box_input.setPlaceholderText(hint)
-
-    # password encrypt
-    if echo:
-        box_input.setEchoMode(QLineEdit.Password)
-
-    box_layout.addWidget(box_title)
+    box_input = add_input(widget, hint=hint, echo=echo)
     box_layout.addWidget(box_input)
 
     return box, box_title, box_input
 
 
-# type 01 input box for login
-def add_login_input_box_01(widget, title, hint=None, echo=False):
+# input box for login
+def add_login_input_box(widget, title, title_width=160, hint=None, echo=False):
 
     # create object
     box, box_title, box_input = add_input_box(widget, title, l_m=30, r_m=30, space=9, hint=hint, echo=echo)
@@ -255,109 +260,37 @@ def add_login_input_box_01(widget, title, hint=None, echo=False):
 
     box.setObjectName("Login_input_box")
 
-    box_title.setFixedSize(117, 52)
-    box_title.setObjectName("Login_input_title_01")
-
-    box_input.setFixedHeight(52)
-    box_input.setObjectName("Login_input_input_01")
-
-    return box, box_input
-
-
-# type 01 input box for login
-def add_login_input_box_02(widget, title, title_width=130, hint=None, echo=False):
-
-    # create object
-    box, box_title, box_input = add_input_box(widget, title, l_m=21, r_m=21, space=9, hint=hint, echo=echo)
-
-    box.setFixedHeight(52)
-
-    box.setObjectName("Login_input_box")
-
     box_title.setFixedSize(title_width, 52)
-    box_title.setObjectName("Login_input_title_02")
+    box_title.setObjectName("Login_input_title")
 
     box_input.setFixedHeight(52)
-    box_input.setObjectName("Login_input_input_02")
+    box_input.setObjectName("Login_input_input")
 
     return box, box_input
 
 
 # type 02 input box for jobs
-def add_input_box_02(widget, title, hint=None, echo=False, width=260, fix_width=True):
-
-    space = 18
-
-    # create object
-    box, box_title, box_input = add_input_box(widget, title, space=space, hint=hint, echo=echo,
-                                              align=(Qt.AlignRight | Qt.AlignVCenter))
-
-    box_title.setFixedSize(90, 22)
-    box_title.setObjectName("Page_input_title_01")
-
-    box_input.setFixedHeight(22)
-    box_input.setObjectName("Page_input_input_01")
-
-    if fix_width:
-        box.setFixedSize(width, 22)
-    else:
-        box.setFixedHeight(22)
-
-    return box, box_input
-
-
-# type 02 input box for resources
-def add_input_box_03(widget, title, hint=None, echo=False, width=210, fix_width=True):
-
-    space = 18
+def add_page_input_box(widget, title, title_width, space, width=258, stylesheet=None, hint=None,
+                       echo=False, fix_width=True):
 
     # create object
     box, box_title, box_input = add_input_box(widget, title, space=space, hint=hint, echo=echo,
                                               align=(Qt.AlignRight | Qt.AlignVCenter))
 
-    box_title.setFixedSize(80, 22)
-    box_title.setObjectName("Page_input_title_02")
+    box_title.setFixedSize(title_width, 30)
+    box_title.setObjectName("Page_input_title")
 
-    box_input.setFixedHeight(22)
-    box_input.setObjectName("Page_input_input_02")
+    box_input.setFixedHeight(30)
+
+    if stylesheet:
+        box_input.setStyleSheet(stylesheet)
 
     if fix_width:
-        box.setFixedSize(width, 22)
+        box.setFixedSize(width, 30)
     else:
-        box.setFixedHeight(22)
+        box.setFixedHeight(30)
 
     return box, box_input
-
-
-# create a checkbox object with a checkbox and description
-def add_checkbox(widget, title, title_type=LABEL, space=10, align=None, check=False):
-
-    # Create object
-    box = QFrame(widget)
-    box_layout = add_layout(box, HORIZONTAL, space=space, align=align)
-
-    # checkbox
-    checkbox = QCheckBox(box)
-    checkbox.setObjectName("Login_check_box_check")
-
-    # checkbox property
-    checkbox.setCursor(Qt.PointingHandCursor)
-    if check:
-        checkbox.setChecked(True)
-
-    # description
-    if title_type is QPUSHBUTTON:
-        box_title = add_button(box, title, name="Login_check_box_title_button")
-    else:
-        box_title = add_label(box, title, name="Login_check_box_title_label", align=Qt.AlignVCenter)
-
-    box_layout.addWidget(checkbox)
-    box_layout.addWidget(box_title)
-
-    if title_type is QPUSHBUTTON:
-        return box, checkbox, box_title
-    else:
-        return box, checkbox
 
 
 # create a moving animation
@@ -397,3 +330,149 @@ def add_graph_scene(widget, width=None, height=None, name=None):
 
     return view, scene
 
+
+# return a greeting
+def add_greeting():
+    now = datetime.datetime.now()
+
+    if now.hour < 12:
+        return "Good morning"
+    elif 12 <= now.hour < 18:
+        return "Good afternoon"
+    else:
+        return "Good evening"
+
+
+# return a menu icon
+def add_menu_icon(width):
+
+    height = 3
+    pix = QPixmap(width, width)
+    pix.fill(Qt.transparent)
+    painter = QPainter()
+
+    painter.begin(pix)
+
+    painter.setPen(Qt.NoPen)
+    painter.setBrush(QBrush(QColor(COLOR_01)))
+    painter.drawRect(QRectF(0, 2, width, height))
+    painter.drawRect(QRectF(0, height + 2 * 2, width, height))
+    painter.drawRect(QRectF(0, height * 2 + 3 * 2, width, height))
+
+    painter.end()
+
+    return QIcon(pix)
+
+
+# add a section, return frame, and frame_layout
+def add_frame(widget, layout=VERTICAL, height=None, width=None, name=None, stylesheet=None,
+              t_m=0, b_m=0, l_m=0, r_m=0, space=0):
+    section_frame = QFrame(widget)
+    if height:
+        section_frame.setFixedHeight(height)
+    if width:
+        section_frame.setFixedWidth(width)
+    if stylesheet:
+        section_frame.setStyleSheet(stylesheet)
+    if name:
+        section_frame.setObjectName(name)
+
+    section_layout = add_layout(section_frame, layout, t_m=t_m, b_m=b_m, l_m=l_m, r_m=r_m, space=space)
+
+    return section_frame, section_layout
+
+
+# return config box
+def add_config_box(widget, title, box_width=200):
+    box = QFrame(widget)
+    box.setFixedWidth(box_width)
+    box_layout = add_layout(box, HORIZONTAL, l_m=11, r_m=11)
+
+    title = add_label(box, title, align=Qt.AlignVCenter)
+    box_layout.addWidget(title)
+
+    spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+    box_layout.addItem(spacer)
+
+    value = add_label(box, "", align=Qt.AlignVCenter)
+    box_layout.addWidget(value)
+
+    return box
+
+
+# return outer frame, label box and button
+def add_price_box(widget, title, box_width=307, box_height=37, space=28):
+    frame = QFrame(widget)
+    frame.setFixedSize(box_width, box_height)
+    frame_layout = add_layout(frame, HORIZONTAL, space=space)
+
+    button = add_button(frame)
+    frame_layout.addWidget(button)
+
+    box = QFrame(frame)
+    frame_layout.addWidget(box)
+    box_layout = add_layout(box, HORIZONTAL, l_m=9, r_m=25)
+
+    title = add_label(box, title)
+    box_layout.addWidget(title)
+
+    spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+    box_layout.addItem(spacer)
+
+    value = add_label(box, "0 credit / Hr")
+    box_layout.addWidget(value)
+
+    return frame, box, button
+
+
+# helper function to add widgets in _init_ui() in JobWorkspace() class
+def add_labels(layout, frame, texts, style, alignment):
+    for text in texts:
+        to_add = add_label(frame, text, stylesheet=style, align=alignment)
+        layout.addWidget(to_add)
+
+
+# helper function to transition between scheme highlighting in JobWorkspace() class
+def set_frame(widget, num, frame):
+    if widget.select_scheme != num:
+        # find the previous selected frame
+        if widget.select_scheme == 1:
+            prev = widget.scheme_01_frame
+        elif widget.select_scheme == 2:
+            prev = widget.scheme_02_frame
+        elif widget.select_scheme == 3:
+            prev = widget.scheme_03_frame
+        else:
+            prev = widget.scheme_04_frame
+
+        # set frame to disable stylesheet
+        prev.setStyleSheet(Page_scheme_box_disable)
+
+        # find all QLabel children within the frame
+        labels = prev.findChildren(QLabel)
+
+        # set labels to disable stylesheet
+        for label in labels:
+            label.setStyleSheet(Page_scheme_label_disable)
+
+        # set flag
+        widget.select_scheme = num
+
+        # set frame to active stylesheet
+        frame.setStyleSheet(Page_scheme_box)
+
+        # find all QLabel children within the frame
+        labels = frame.findChildren(QLabel)
+
+        # set labels to enable stylesheet
+        for label in labels:
+            label.setStyleSheet(Page_scheme_label)
+
+
+# helper function for add_data() in JobList() class
+def add_row(widget, column, data, row):
+    for i in range(column):
+        widget.setItem(row, i, QTableWidgetItem(data[i]))
+        if widget.item(row, i) is not None:
+            widget.item(row, i).setTextAlignment(Qt.AlignCenter)
+            widget.item(row, i).setFont(QFont("Helvetica Neue", 12, QFont.Light))

@@ -36,7 +36,7 @@
         self.logout = None                  # button
 
 """
-
+from src.api import Api
 from src.uix.util import *
 from src.dashboard import Dashboard
 from src.resources import Resources
@@ -56,7 +56,7 @@ class App(QMainWindow):
         self.account = None
 
         # gui property
-        self.pos = None
+        # self.pos = None
         self.animation = None
 
         self._init_geometry()
@@ -64,7 +64,8 @@ class App(QMainWindow):
         self.setStyleSheet(app_style)
         self.show()
 
-        self.on_resources_clicked()
+        # self.on_dashboard_clicked()
+        self.on_jobs_clicked()
 
     def _init_geometry(self):
         # window size
@@ -115,16 +116,17 @@ class App(QMainWindow):
         self.mask.clicked_area.clicked.connect(self.on_mask_clicked)
         self.account.credit_history.clicked.connect(self.on_credit_history_clicked)
         self.account.notification.clicked.connect(self.on_notification_clicked)
+        self.account.logout.clicked.connect(self.on_logout_clicked)
 
-    # mouse graping and window moves
-    def mousePressEvent(self, event):
-        self.pos = event.globalPos()
-
-    # mouse graping and window moves
-    def mouseMoveEvent(self, event):
-        delta = QPoint(event.globalPos() - self.pos)
-        self.move(self.x() + delta.x(), self.y() + delta.y())
-        self.pos = event.globalPos()
+    # # mouse graping and window moves
+    # def mousePressEvent(self, event):
+    #     self.pos = event.globalPos()
+    #
+    # # mouse graping and window moves
+    # def mouseMoveEvent(self, event):
+    #     delta = QPoint(event.globalPos() - self.pos)
+    #     self.move(self.x() + delta.x(), self.y() + delta.y())
+    #     self.pos = event.globalPos()
 
     # switch tab to dashboard
     def on_dashboard_clicked(self):
@@ -204,6 +206,17 @@ class App(QMainWindow):
         popup = CreditHistory()
         popup.exec_()
 
+    @staticmethod
+    def on_logout_clicked():
+        account_api = Api("/auth/logout")
+        status, res = account_api.post()
+
+        if status == 200:
+            print("Logging out.")
+
+    def update(self):
+        self.main_window.stack_widget.update()
+
 
 # Pure UI class, no functionality
 class SideBar(QFrame):
@@ -258,10 +271,15 @@ class Navigation(QFrame):
     def __init__(self, *args, **kwargs):
         super(QFrame, self).__init__(*args, **kwargs)
 
-        self.credit = 15                # input number
-        self.head_img = None            # input string
-        self.menu_button = None         # button
+        account_api = Api("/account")
+        status, res = account_api.get()
 
+        if status == 200:
+            self.credits = "{:.2f}".format(round(res['customer']['credits'], 3))
+
+        self.head_img = None
+        self.menu_button = None
+        self.credits = 15
         self._init_ui()
 
         self.setStyleSheet(app_style)
@@ -271,27 +289,13 @@ class Navigation(QFrame):
 
         section_layout = add_layout(self, HORIZONTAL, align=Qt.AlignVCenter, space=16)
 
-        credit = add_label(self, f"CREDIT: {self.credit}", name="App_navigation_credit")
+        credit = add_label(self, f"CREDITS: {self.credits}", name="App_navigation_credit")
 
         self.menu_button = add_button(self, name="App_navigation_button")
 
-        # draw icon
-        width = 14
-        height = 2
-        pix = QPixmap(width, width)
-        pix.fill(Qt.transparent)
-        painter = QPainter()
+        width = 17
 
-        painter.begin(pix)
-
-        painter.setPen(Qt.NoPen)
-        painter.setBrush(QBrush(QColor(COLOR_01)))
-        painter.drawRect(QRectF(0, 2, width, height))
-        painter.drawRect(QRectF(0, 2+2*height, width, height))
-        painter.drawRect(QRectF(0, 2+4*height, width, height))
-
-        painter.end()
-        self.menu_button.setIcon(QIcon(pix))
+        self.menu_button.setIcon(add_menu_icon(width))
         self.menu_button.setIconSize(QSize(width, width))
 
         spacer_01 = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)

@@ -36,6 +36,7 @@
 # Intellij's project specific settings files #
 ##############################################
 .idea
+.credential_store
 
 # Other #
 #########

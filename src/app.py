@@ -64,8 +64,7 @@ class App(QMainWindow):
         self.setStyleSheet(app_style)
         self.show()
 
-        # self.on_dashboard_clicked()
-        self.on_resources_clicked()
+        self.on_dashboard_clicked()
 
     def _init_geometry(self):
         # window size
@@ -271,6 +270,7 @@ class Navigation(QFrame):
     def __init__(self, *args, **kwargs):
         super(QFrame, self).__init__(*args, **kwargs)
 
+        # TODO: isolated from Api until the incomplete handling
         # account_api = Api("/account")
         # status, res = account_api.get()
         #

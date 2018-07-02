@@ -56,7 +56,7 @@ class App(QMainWindow):
         self.account = None
 
         # gui property
-        self.pos = None
+        # self.pos = None
         self.animation = None
 
         self._init_geometry()
@@ -64,6 +64,7 @@ class App(QMainWindow):
         self.setStyleSheet(app_style)
         self.show()
 
+        # self.on_dashboard_clicked()
         self.on_resources_clicked()
 
     def _init_geometry(self):
@@ -117,15 +118,15 @@ class App(QMainWindow):
         self.account.notification.clicked.connect(self.on_notification_clicked)
         self.account.logout.clicked.connect(self.on_logout_clicked)
 
-    # mouse graping and window moves
-    def mousePressEvent(self, event):
-        self.pos = event.globalPos()
-
-    # mouse graping and window moves
-    def mouseMoveEvent(self, event):
-        delta = QPoint(event.globalPos() - self.pos)
-        self.move(self.x() + delta.x(), self.y() + delta.y())
-        self.pos = event.globalPos()
+    # # mouse graping and window moves
+    # def mousePressEvent(self, event):
+    #     self.pos = event.globalPos()
+    #
+    # # mouse graping and window moves
+    # def mouseMoveEvent(self, event):
+    #     delta = QPoint(event.globalPos() - self.pos)
+    #     self.move(self.x() + delta.x(), self.y() + delta.y())
+    #     self.pos = event.globalPos()
 
     # switch tab to dashboard
     def on_dashboard_clicked(self):
@@ -213,6 +214,9 @@ class App(QMainWindow):
         if status == 200:
             print("Logging out.")
 
+    def update(self):
+        self.main_window.stack_widget.update()
+
 
 # Pure UI class, no functionality
 class SideBar(QFrame):
@@ -275,6 +279,7 @@ class Navigation(QFrame):
 
         self.head_img = None
         self.menu_button = None
+        self.credits = 15
         self._init_ui()
 
         self.setStyleSheet(app_style)
@@ -288,23 +293,9 @@ class Navigation(QFrame):
 
         self.menu_button = add_button(self, name="App_navigation_button")
 
-        # draw icon
-        width = 14
-        height = 2
-        pix = QPixmap(width, width)
-        pix.fill(Qt.transparent)
-        painter = QPainter()
+        width = 17
 
-        painter.begin(pix)
-
-        painter.setPen(Qt.NoPen)
-        painter.setBrush(QBrush(QColor(COLOR_01)))
-        painter.drawRect(QRectF(0, 2, width, height))
-        painter.drawRect(QRectF(0, 2+2*height, width, height))
-        painter.drawRect(QRectF(0, 2+4*height, width, height))
-
-        painter.end()
-        self.menu_button.setIcon(QIcon(pix))
+        self.menu_button.setIcon(add_menu_icon(width))
         self.menu_button.setIconSize(QSize(width, width))
 
         spacer_01 = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)

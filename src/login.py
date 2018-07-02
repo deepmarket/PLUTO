@@ -33,7 +33,7 @@ class Login(QDialog):
         self.create = None
 
         # gui property
-        self.pos = None
+        # self.pos = None
         self.login_move = None
         self.create_move = None
 
@@ -60,6 +60,10 @@ class Login(QDialog):
         # set initial position
         self.login.move(0, 0)
 
+        # for testing
+        self.login.username.setText("test@test.com")
+        self.login.pwd.setText("1234")
+
         # connect function
         self.login.login_button.clicked.connect(self.login_action)
         self.login.to_create_button.clicked.connect(self.to_create)
@@ -80,15 +84,15 @@ class Login(QDialog):
 
         # add more on later build...
 
-    # mouse graping and window moves
-    def mousePressEvent(self, event):
-        self.pos = event.globalPos()
-
-    # mouse graping and window moves
-    def mouseMoveEvent(self, event):
-        delta = QPoint(event.globalPos() - self.pos)
-        self.move(self.x() + delta.x(), self.y() + delta.y())
-        self.pos = event.globalPos()
+    # # mouse graping and window moves
+    # def mousePressEvent(self, event):
+    #     self.pos = event.globalPos()
+    #
+    # # mouse graping and window moves
+    # def mouseMoveEvent(self, event):
+    #     delta = QPoint(event.globalPos() - self.pos)
+    #     self.move(self.x() + delta.x(), self.y() + delta.y())
+    #     self.pos = event.globalPos()
 
     # pre-check user input before access db
     def login_action(self):
@@ -156,7 +160,7 @@ class Login(QDialog):
         elif not re.match(self.email_verification_regex, email):
             self.create.create_hint.setText("Please enter a valid Email address.")
 
-        elif pwd is not confirm_pwd:
+        elif pwd != confirm_pwd:
             self.create.create_hint.setText("Passwords do not match.")
 
         # otherwise, check pass
@@ -183,7 +187,6 @@ class Login(QDialog):
         except ConnectionError:  # From requests library
             self.create.create_hint.setText("Could not connect to the share resources server")
         finally:
-            print(res['message'])
 
             if status == 200:
                 # timer = QTimer()
@@ -275,12 +278,12 @@ class LoginPage(QFrame):
         login_frame = QFrame(self)
         login_layout = add_layout(login_frame, VERTICAL, t_m=20, space=20)
 
-        box, self.username = add_login_input_box_01(login_frame, "U S E R N A M E",
-                                                    hint="Enter an email address here...")
+        box, self.username = add_login_input_box(login_frame, "U S E R N A M E", title_width=150,
+                                                 hint="Enter an email address here...")
         login_layout.addWidget(box)
 
-        box, self.pwd = add_login_input_box_01(login_frame, "P A S S W O R D",
-                                               hint="Enter a password here...", echo=True)
+        box, self.pwd = add_login_input_box(login_frame, "P A S S W O R D", title_width=150,
+                                            hint="Enter a password here...", echo=True)
         login_layout.addWidget(box)
 
         button_frame = QFrame(self)
@@ -352,10 +355,10 @@ class CreatePage(QFrame):
         title_frame.setFixedHeight(208)
         title_layout = add_layout(title_frame, VERTICAL, t_m=39, l_m=31, r_m=8, space=28)
 
-        title = add_label(title_frame, "Thank you for registering.", name="Login_create_title")
+        title = add_label(title_frame, "Thanks for Registering", name="Login_create_title")
         title_layout.addWidget(title)
 
-        prologue = "In the following section,\nlease enter the correct information,\nAnd, enjoy…"
+        prologue = "In the following section,\nlease enter the oorrect information,\nAnd, enjoy…"
         prologue = add_label(title_frame, prologue, name="Login_prologue")
         title_layout.addWidget(prologue)
 
@@ -363,33 +366,32 @@ class CreatePage(QFrame):
         title_layout.addItem(spacer)
 
         input_frame = QFrame(self)
-        input_layout = add_layout(input_frame, VERTICAL, l_m=3, r_m=3, space=3)
+        input_layout = add_layout(input_frame, VERTICAL, l_m=8, r_m=8, space=8)
 
         input_sub_frame = QFrame(input_frame)
-        input_sub_layout = add_layout(input_sub_frame, HORIZONTAL, space=4)
+        input_sub_layout = add_layout(input_sub_frame, HORIZONTAL, space=8)
 
-        box, self.first = add_login_input_box_02(input_sub_frame, "FIRST NAME", title_width=100, hint="First name...")
+        box, self.first = add_login_input_box(input_sub_frame, "FIRST NAME", title_width=100, hint="First name...")
         input_sub_layout.addWidget(box)
 
-        box, self.last = add_login_input_box_02(input_sub_frame, "LAST NAME", title_width=100, hint="Last name...")
+        box, self.last = add_login_input_box(input_sub_frame, "LAST NAME", title_width=100, hint="Last name...")
         input_sub_layout.addWidget(box)
         input_layout.addWidget(input_sub_frame)
 
-        box, self.username = add_login_input_box_02(input_frame, "EMAIL",
-                                                    hint="Please enter your email address...")
+        box, self.username = add_login_input_box(input_frame, "EMAIL",
+                                                 hint="Please enter an email address as your username...")
         input_layout.addWidget(box)
 
-        box, self.pwd = add_login_input_box_02(input_frame, "PASSWORD",
-                                               hint="Please enter your password...")
+        box, self.pwd = add_login_input_box(input_frame, "PASSWORD", hint="Please enter your password...")
         input_layout.addWidget(box)
 
-        box, self.confirm_pwd = add_login_input_box_02(input_frame, "CONFIRM PASSWORD",
-                                               hint="Please re-enter your password...")
+        box, self.confirm_pwd = add_login_input_box(input_frame, "CONFIRM PASSWORD",
+                                                    hint="Please re-enter your password...")
         input_layout.addWidget(box)
 
         # button_frame: hint, create_button
         button_frame = QFrame(self)
-        button_layout = add_layout(button_frame, VERTICAL, l_m=3, r_m=3, space=10)
+        button_layout = add_layout(button_frame, VERTICAL, l_m=8, r_m=8, space=10)
 
         self.create_hint = add_label(button_frame, "", name="Login_hint")
         button_layout.addWidget(self.create_hint)
@@ -400,13 +402,13 @@ class CreatePage(QFrame):
         # to_create_frame: to_create_button
         to_login_frame = QFrame(self)
         to_login_frame.setFixedHeight(63)
-        to_login_layout = add_layout(to_login_frame, HORIZONTAL, l_m=3, r_m=3, b_m=8, t_m=8)
+        to_login_layout = add_layout(to_login_frame, HORIZONTAL, l_m=8, r_m=8, b_m=8, t_m=8)
 
-        label = add_label(to_login_frame, "Already a member?", name="Login_switch_description",
+        label = add_label(to_login_frame, "Already Member?", name="Login_switch_description",
                           align=(Qt.AlignRight | Qt.AlignVCenter))
         to_login_layout.addWidget(label)
 
-        self.to_login_button = add_button(to_login_frame, "Login Here.", name="Login_switch_button")
+        self.to_login_button = add_button(to_login_frame, "Login Here", name="Login_switch_button")
         to_login_layout.addWidget(self.to_login_button)
 
         # spacer

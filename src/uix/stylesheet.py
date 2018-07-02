@@ -686,32 +686,30 @@ question_style = """
 
     #Question_question {
         font-family: "Helvetica Neue";
-        font-size: 14px;
-        font-weight: 100;
+        font-size: 12px;
+        font-weight: 400;
         color: #6C7E8E;
     }
     
     #Question_button_confirm {
         border: none;
-        border-radius: 3px;
         background-color: #0069D9;
-        height: 25px;
-        width: 90px;
+        height: 22px;
+        width: 65px;
         font-family: "Helvetica Neue";
-        font-size: 9px;
-        font-weight: 400;
+        font-size: 10px;
+        font-weight: 500;
         color: white;
     }
     
     #Question_button_cancel {
         border: none;
-        border-radius: 3px;
         background-color: #B9CCDD;
-        height: 25px;
-        width: 90px;
+        height: 22px;
+        width: 65px;
         font-family: "Helvetica Neue";
-        font-size: 9px;
-        font-weight: 400;
+        font-size: 10px;
+        font-weight: 500;
         color: white;
     }
 

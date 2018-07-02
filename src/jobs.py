@@ -133,8 +133,38 @@ class Jobs(MainView):
         # input_files = self.workspace.input_file.text()
         # price = (float(cores) * float(workers)) * PRICING_CONSTANT
 
-        self.list.add_data(["1", workers, cores, memory, "0.005", "running", "-"])
-        self.on_list_clicked()
+        # find the selected frame
+        if self.workspace.select_scheme == 1:
+            frame = self.workspace.scheme_01_frame
+        elif self.workspace.select_scheme == 2:
+            frame = self.workspace.scheme_02_frame
+        elif self.workspace.select_scheme == 3:
+            frame = self.workspace.scheme_03_frame
+        else:
+            frame = self.workspace.scheme_04_frame
+
+        # get text
+        text = []
+        labels = frame.findChildren(QLabel)
+
+        for label in labels:
+            text.append(label.text())
+
+        # TODO: generate job name here
+        job_name = "My Job"
+
+        question = f"""Job "{job_name}" will be charged with """
+        question += f"""CPU: {text[1]}, GPU: {text[2]}, Memory: {text[3]}\nDisk Space: {text[4]} """
+        question += f"""and run in the Time slot: {text[0]}\n\n"""
+        question += f"""You are required """
+        question += f"""worker #: {workers}, Cores #: {cores}, Memory: {memory} GB for this submission.\n\n"""
+        question += f"""Do you want to submit this job at the above mentioned rate and time slot?"""
+
+        question = Question(question)
+
+        if question.exec_():
+            self.list.add_data([job_name, workers, cores, memory, "0.005", "running", "-"])
+            self.on_list_clicked()
 
     # remove button functionality for JobList
     def on_remove_clicked(self):

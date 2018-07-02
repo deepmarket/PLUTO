@@ -36,7 +36,7 @@
         self.logout = None                  # button
 
 """
-
+from src.api import Api
 from src.uix.util import *
 from src.dashboard import Dashboard
 from src.resources import Resources
@@ -115,6 +115,7 @@ class App(QMainWindow):
         self.mask.clicked_area.clicked.connect(self.on_mask_clicked)
         self.account.credit_history.clicked.connect(self.on_credit_history_clicked)
         self.account.notification.clicked.connect(self.on_notification_clicked)
+        self.account.logout.clicked.connect(self.on_logout_clicked)
 
     # mouse graping and window moves
     def mousePressEvent(self, event):
@@ -204,6 +205,14 @@ class App(QMainWindow):
         popup = CreditHistory()
         popup.exec_()
 
+    @staticmethod
+    def on_logout_clicked():
+        account_api = Api("/auth/logout")
+        status, res = account_api.post()
+
+        if status == 200:
+            print("Logging out.")
+
 
 # Pure UI class, no functionality
 class SideBar(QFrame):
@@ -258,10 +267,14 @@ class Navigation(QFrame):
     def __init__(self, *args, **kwargs):
         super(QFrame, self).__init__(*args, **kwargs)
 
-        self.credit = 15                # input number
-        self.head_img = None            # input string
-        self.menu_button = None         # button
+        account_api = Api("/account")
+        status, res = account_api.get()
 
+        if status == 200:
+            self.credits = "{:.2f}".format(round(res['customer']['credits'], 3))
+
+        self.head_img = None
+        self.menu_button = None
         self._init_ui()
 
         self.setStyleSheet(app_style)
@@ -271,7 +284,7 @@ class Navigation(QFrame):
 
         section_layout = add_layout(self, HORIZONTAL, align=Qt.AlignVCenter, space=16)
 
-        credit = add_label(self, f"CREDIT: {self.credit}", name="App_navigation_credit")
+        credit = add_label(self, f"CREDITS: {self.credits}", name="App_navigation_credit")
 
         self.menu_button = add_button(self, name="App_navigation_button")
 

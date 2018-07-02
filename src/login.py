@@ -44,9 +44,6 @@ class Login(QDialog):
         self._init_ui()
         self._init_property()
 
-        self.login.username.setText("test@test.com")
-        self.login.pwd.setText("1234")
-
     def _init_geometry(self):
         set_base_geometry(self, 580, 580, fixed=True)
 
@@ -79,7 +76,7 @@ class Login(QDialog):
 
     def _init_property(self):
         # Graciously borrowed from http://emailregex.com/
-        self.username_regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", re.IGNORECASE)
+        self.email_verification_regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", re.IGNORECASE)
 
         # add more on later build...
 
@@ -103,15 +100,15 @@ class Login(QDialog):
 
         # Both empty
         if not username and not pwd:
-            self.login.login_hint.setText("Please enter username / password.")
+            self.login.login_hint.setText("Please enter email / password.")
 
         # Empty username
         elif not username and pwd:
-            self.login.login_hint.setText("Username is empty.")
+            self.login.login_hint.setText("Please enter your email.")
 
         # Empty password
         elif not pwd and username:
-            self.login.login_hint.setText("Password is empty.")
+            self.login.login_hint.setText("Please enter your password.")
 
         # elif not re.match(self.username_regex, username):
         #     self.login.login_hint.setText("Invalid username. Please login with email address.")
@@ -124,33 +121,18 @@ class Login(QDialog):
     # verified user input on db
     def attempt_login(self, username, pwd):
 
-        # join api later
-        self.accept()
-        self.close()
+        api: Api = Api("/auth/login", True)
 
-        # api: Api = Api("/authenticate")
-        #
-        # res = api.post({
-        #     "emailid": username,
-        #     "password": pwd
-        # }, "")
-        #
-        # if res.status_code == 200:
-        #
-        #     customer_id_endpoint = Api(f"/account/{pwd}")
-        #     customer_id = customer_id_endpoint.get()
-        #
-        #     credential_store = os.path.join(os.path.abspath("./"), ".credential_store")
-        #     if os.path.exists(self.credential_store):
-        #         os.remove(self.credential_store)
-        #
-        #     with open(credential_store, "w+") as store:
-        #         store.write(customer_id['CustomerID'])
-        #
-        #     self.accept()
-        #     self.close()
-        # else:
-        #     self.login.login_hint.setText("Username / password you have entered is invalid.")
+        status, res = api.post({
+            "email": username,
+            "password": pwd
+        })
+
+        if status == 200:
+            self.accept()
+            self.close()
+        else:
+            self.login.login_hint.setText("The email or password you entered is invalid.")
 
     # pre-check user input before access db
     def create_action(self):
@@ -159,8 +141,9 @@ class Login(QDialog):
 
         first = self.create.first.text()
         last = self.create.last.text()
-        username = self.create.username.text()
+        email = self.create.username.text()
         pwd = self.create.pwd.text()
+        confirm_pwd = self.create.confirm_pwd.text()
 
         # First name empty
         if not first:
@@ -170,49 +153,46 @@ class Login(QDialog):
         elif not last:
             self.create.create_hint.setText("Must enter a last name.")
 
-        elif not re.match(self.username_regex, username):
+        elif not re.match(self.email_verification_regex, email):
             self.create.create_hint.setText("Please enter a valid Email address.")
 
-        # should be confirmed password check here
+        elif pwd is not confirm_pwd:
+            self.create.create_hint.setText("Passwords do not match.")
 
         # otherwise, check pass
         else:
             print(f"Creating account with:\n\tFirst name: '{first}'\n\tLast name: '{last}'\n"
-                  f"\tUsername:'{username}'\n\tPassword: '{pwd}''")
-            self.attempt_create(first, last, username, pwd)
+                  f"\tEmail:'{email}'\n\tPassword: '{pwd}''")
+            self.attempt_create(first, last, email, pwd)
 
     # verified user input and load into db
     def attempt_create(self, first, last, username, pwd):
-        api: Api = Api("/account")
+        api: Api = Api("/account", True)
 
         auth_dict = {
             "firstname": first,
             "lastname": last,
-            "emailid": username,
+            "email": username,
             "password": pwd
         }
 
         try:
-            res = api.post(auth_dict, "")
+            status, res = api.post(auth_dict)
         except ConnectionRefusedError:
             self.create.create_hint.setText("Connection refused, please contact your system administrator")
         except ConnectionError:  # From requests library
             self.create.create_hint.setText("Could not connect to the share resources server")
+        finally:
+            print(res['message'])
 
-            if res and res.status_code == 200:
-                customer_id_endpoint = Api(f"/account/{username}")
-                customer_id = customer_id_endpoint.get()
+            if status == 200:
+                # timer = QTimer()
+                # timer.timeout.connect(self.cancel_action)
+                # timer.start(900)
 
-                with open(self.credential_store, "w+") as store:
-                    store.write(customer_id['CustomerID'])
-
-                timer = QTimer()
-                timer.timeout.connect(self.cancel_action)
-                timer.start(900)
-
-                if timer:
+                # if timer:
                     # Accept and close parent window
-                    self.attempt_login(username, pwd)
+                self.attempt_login(username, pwd)
             else:
                 self.create.create_hint.setText("Email/password combination already in use")
 
@@ -317,7 +297,7 @@ class LoginPage(QFrame):
         to_create_frame.setFixedHeight(63)
         to_create_layout = add_layout(to_create_frame, HORIZONTAL, l_m=3, r_m=3, b_m=8, t_m=8)
 
-        label = add_label(to_create_frame, "Not Member?", name="Login_switch_description",
+        label = add_label(to_create_frame, "Not a Member?", name="Login_switch_description",
                           align=(Qt.AlignRight | Qt.AlignVCenter))
         to_create_layout.addWidget(label)
 
@@ -372,7 +352,7 @@ class CreatePage(QFrame):
         title_frame.setFixedHeight(208)
         title_layout = add_layout(title_frame, VERTICAL, t_m=39, l_m=31, r_m=8, space=28)
 
-        title = add_label(title_frame, "Thanks for Registering", name="Login_create_title")
+        title = add_label(title_frame, "Thank you for registering.", name="Login_create_title")
         title_layout.addWidget(title)
 
         prologue = "In the following section,\nlease enter the correct information,\nAnd, enjoy…"
@@ -396,14 +376,14 @@ class CreatePage(QFrame):
         input_layout.addWidget(input_sub_frame)
 
         box, self.username = add_login_input_box_02(input_frame, "EMAIL",
-                                                    hint="Please enter an email address as username...")
+                                                    hint="Please enter your email address...")
         input_layout.addWidget(box)
 
         box, self.pwd = add_login_input_box_02(input_frame, "PASSWORD",
                                                hint="Please enter your password...")
         input_layout.addWidget(box)
 
-        box, self.pwd = add_login_input_box_02(input_frame, "CONFIRM PASSWORD",
+        box, self.confirm_pwd = add_login_input_box_02(input_frame, "CONFIRM PASSWORD",
                                                hint="Please re-enter your password...")
         input_layout.addWidget(box)
 
@@ -422,11 +402,11 @@ class CreatePage(QFrame):
         to_login_frame.setFixedHeight(63)
         to_login_layout = add_layout(to_login_frame, HORIZONTAL, l_m=3, r_m=3, b_m=8, t_m=8)
 
-        label = add_label(to_login_frame, "Already Member?", name="Login_switch_description",
+        label = add_label(to_login_frame, "Already a member?", name="Login_switch_description",
                           align=(Qt.AlignRight | Qt.AlignVCenter))
         to_login_layout.addWidget(label)
 
-        self.to_login_button = add_button(to_login_frame, "Login Here", name="Login_switch_button")
+        self.to_login_button = add_button(to_login_frame, "Login Here.", name="Login_switch_button")
         to_login_layout.addWidget(self.to_login_button)
 
         # spacer

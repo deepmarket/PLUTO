@@ -1,51 +1,94 @@
 import requests as req
 from json import loads, dumps
-# import dsktp.ping
+from os import path, remove
+
+
+class CredentialManager(object):
+    # TODO: Consider using something like marshal, shelve, or pickle
+    def __init__(self, file_path="./"):
+        self.file_path = file_path
+        if not path.exists(path.join(path.abspath(self.file_path), ".credential_store")):
+            credential_store_path = path.join(path.abspath(self.file_path), ".credential_store")
+            self.credential_store = open(credential_store_path, "w+")
+            self.credential_store.close()
+        else:
+            self.credential_store = path.join(path.abspath(self.file_path), ".credential_store")
+
+    def put(self, obj):
+        with open(self.credential_store, "w+") as store:
+            # store.write(dumps(obj))
+            store.write(obj)
+
+    def get(self, attr: str):
+        with open(self.credential_store, "r+") as store:
+            # store = loads(store.read())
+            store = store.read()
+        return store
 
 
 class Api:
-    def __init__(self, endpoint: str="/"):
+    def __init__(self, endpoint: str="/", auth=False):
 
         self.domain = "localhost"  # Used for testing
-        # self.domain = "172.20.10.6"  # ip of lab intranet
-        self.port = 3000
+        # self.domain = "131.252.209.102"  # ip of lab intranet
+
+        self.port = 8080
         self.endpoint = endpoint
         if not self.endpoint.startswith("/"):
             self.endpoint = f"/{self.endpoint}"
 
         self.url: str = f"http://{self.domain}:{self.port}/api/v1{self.endpoint}"
+        self.store = CredentialManager()
+        self.auth = auth
         self.token = None
 
     def get(self, attr: str="text", url: str=None):
+        val: str = None
+        token: str = self.store.get("token")
+
         if not url:
             url = self.url
-        res: req.Response = req.get(url)
-        val: str = None
+
+        if token:
+            headers = {"x-access-token": token}
+            res: req.Response = req.get(url, headers=headers)
+        else:
+            res: req.Response = req.get(url)
+
         try:
             val = res.__getattribute__(attr)
             val = loads(val)
         except AttributeError:
-            # TODO: Add logging
             val = res
         finally:
-            return val
+            if self.auth and token:
+                self.store.put(token)
+            return res.status_code, val
 
     def post(self, payload: dict={}, attr: str="text", url: str=None):
+        val: dict = None
+        token: str = self.store.get("token")
+
         if not url:
             url = self.url
-        res: req.Response = req.post(url, payload)
-        val: dict = None
+        if token:
+            headers = {"x-access-token": token}
+            res = req.post(url, payload, headers=headers)
+        else:
+            res: req.Response = req.post(url, payload)
+
         try:
             val = res.__getattribute__(attr)
             val = loads(val)
-            # self.token = val['token']
+            token = val['token']
         except AttributeError:
-            # TODO: Add logging
             val = res
         # except req.exceptions.ConnectionError:
         #     pass
         finally:
-            return val
+            if self.auth and token:
+                self.store.put(token)
+            return res.status_code, val
 
     def put(self, payload: dict={}, attr: str="text", url: str=None):
 
@@ -61,10 +104,15 @@ class Api:
             return val
 
     def delete(self, attr: str="text", url: str=None):
-        if not url:
-            url = self.url
-        res: req.Response = req.delete(url)
-        val: str = None
+        val: dict = None
+        token: str = self.store.get("token")
+
+        if token:
+            headers = {"x-access-token": token}
+            res = req.delete(url, headers=headers)
+        else:
+            res: req.Response = req.delete(url)
+
         try:
             val = res.__getattribute__(attr)
             val = loads(val)
@@ -72,11 +120,13 @@ class Api:
             # TODO: Add logging
             val = res
         finally:
-            return val
+            if self.auth and token:
+                self.store.put(token)
+            return res.status_code, val
 
 
 if __name__ == "__main__":
-    DEFAULT_URL = "http://localhost:3000"
+    DEFAULT_URL = "http://localhost:8080"
     api = Api("/resources/resources")
     get = api.get()
 

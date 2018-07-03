@@ -492,7 +492,7 @@ class ResourcesWorkspace(QFrame):
         line_frame, line_layout = add_frame(section_frame, layout=HORIZONTAL)
         section_layout.addWidget(line_frame)
 
-        title = add_label(line_frame, "Resource Verification", name="Page_section_title", align=Qt.AlignVCenter)
+        title = add_label(line_frame, "Resource Planning", name="Page_section_title", align=Qt.AlignVCenter)
         line_layout.addWidget(title)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)

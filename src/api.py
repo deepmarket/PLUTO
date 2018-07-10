@@ -29,8 +29,8 @@ class CredentialManager(object):
 class Api:
     def __init__(self, endpoint: str="/", auth=False):
 
-        self.domain = "localhost"  # Used for testing
-        # self.domain = "131.252.209.102"  # ip of lab intranet
+        # self.domain = "localhost"  # Used for testing
+        self.domain = "131.252.209.102"  # ip of lab intranet
 
         self.port = 8080
         self.endpoint = endpoint
@@ -51,10 +51,17 @@ class Api:
 
         if token:
             headers = {"x-access-token": token}
-            res: req.Response = req.get(url, headers=headers)
+            try:
+                res: req.Response = req.get(url, headers=headers)
+            except ConnectionError:
+                # TODO: connection error handle here
+                return 503, None
         else:
-            res: req.Response = req.get(url)
-
+            try:
+                res: req.Response = req.get(url)
+            except ConnectionError:
+                # TODO: same, connection error handle here
+                return 503, None
         try:
             val = res.__getattribute__(attr)
             val = loads(val)

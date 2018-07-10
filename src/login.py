@@ -33,7 +33,7 @@ class Login(QDialog):
         self.create = None
 
         # gui property
-        self.pos = None
+        # self.pos = None
         self.login_move = None
         self.create_move = None
 
@@ -45,7 +45,10 @@ class Login(QDialog):
         self._init_property()
 
     def _init_geometry(self):
-        set_base_geometry(self, 500, 580, fixed=True)
+        set_base_geometry(self, 580, 580, fixed=True)
+
+        # set title name
+        self.setWindowTitle("Login")
 
         # hide title bar
         # self.setWindowFlags(Qt.FramelessWindowHint)
@@ -56,6 +59,10 @@ class Login(QDialog):
 
         # set initial position
         self.login.move(0, 0)
+
+        # for testing
+        self.login.username.setText("test@test.com")
+        self.login.pwd.setText("1234")
 
         # connect function
         self.login.login_button.clicked.connect(self.login_action)
@@ -77,15 +84,15 @@ class Login(QDialog):
 
         # add more on later build...
 
-    # mouse graping and window moves
-    def mousePressEvent(self, event):
-        self.pos = event.globalPos()
-
-    # mouse graping and window moves
-    def mouseMoveEvent(self, event):
-        delta = QPoint(event.globalPos() - self.pos)
-        self.move(self.x() + delta.x(), self.y() + delta.y())
-        self.pos = event.globalPos()
+    # # mouse graping and window moves
+    # def mousePressEvent(self, event):
+    #     self.pos = event.globalPos()
+    #
+    # # mouse graping and window moves
+    # def mouseMoveEvent(self, event):
+    #     delta = QPoint(event.globalPos() - self.pos)
+    #     self.move(self.x() + delta.x(), self.y() + delta.y())
+    #     self.pos = event.globalPos()
 
     # pre-check user input before access db
     def login_action(self):
@@ -184,7 +191,6 @@ class Login(QDialog):
         except ConnectionError:  # From requests library
             self.create.create_hint.setText("Could not connect to the share resources server")
         finally:
-            print(res['message'])
 
             if status == 200:
                 # timer = QTimer()
@@ -257,7 +263,7 @@ class LoginPage(QFrame):
         self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
         # Fix size
-        self.setFixedSize(500, 585)
+        self.setFixedSize(580, 580)
 
     def _init_ui(self):
 
@@ -290,16 +296,16 @@ class LoginPage(QFrame):
         login_frame = QFrame(self)
         login_layout = add_layout(login_frame, VERTICAL, t_m=20, space=20)
 
-        box, self.username = add_login_input_box_01(login_frame, "U S E R N A M E",
-                                                    hint="Enter an email address here...")
+        box, self.username = add_login_input_box(login_frame, "U S E R N A M E", title_width=150,
+                                                 hint="Enter an email address here...")
         login_layout.addWidget(box)
 
-        box, self.pwd = add_login_input_box_01(login_frame, "P A S S W O R D",
-                                               hint="Enter a password here...", echo=True)
+        box, self.pwd = add_login_input_box(login_frame, "P A S S W O R D", title_width=150,
+                                            hint="Enter a password here...", echo=True)
         login_layout.addWidget(box)
 
         button_frame = QFrame(self)
-        button_layout = add_layout(button_frame, VERTICAL, l_m=8, r_m=8, space=10)
+        button_layout = add_layout(button_frame, VERTICAL, l_m=3, r_m=3, space=10)
 
         self.login_hint = add_label(button_frame, "", name="Login_hint")
         button_layout.addWidget(self.login_hint)
@@ -310,7 +316,7 @@ class LoginPage(QFrame):
         # to_create_frame: to_create_button
         to_create_frame = QFrame(self)
         to_create_frame.setFixedHeight(63)
-        to_create_layout = add_layout(to_create_frame, HORIZONTAL, l_m=8, r_m=8, b_m=8, t_m=8)
+        to_create_layout = add_layout(to_create_frame, HORIZONTAL, l_m=3, r_m=3, b_m=8, t_m=8)
 
         label = add_label(to_create_frame, "Not a Member?", name="Login_switch_description",
                           align=(Qt.AlignRight | Qt.AlignVCenter))
@@ -328,18 +334,6 @@ class LoginPage(QFrame):
         window_layout.addWidget(button_frame)
         window_layout.addWidget(to_create_frame)
 
-    # def login_kindly(self):
-    #     this = self
-    #
-    #     def update_title(title_text: str):
-    #         title = add_label(this.title_frame, title_text, name="Login_login_title", align=Qt.AlignCenter)
-    #         this.title_layout.addWidget(title)
-    #
-    #     update_title("Welcome.")
-    #
-    #     timer = QTimer()
-    #     timer.timeout.connect(update_title("Please Sign In."))
-    #     timer.start(3500)
 
 # Pure UI class, no functionality
 class CreatePage(QFrame):
@@ -367,7 +361,7 @@ class CreatePage(QFrame):
         self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
         # Fix size
-        self.setFixedSize(500, 585)
+        self.setFixedSize(580, 580)
 
     def _init_ui(self):
 
@@ -395,23 +389,22 @@ class CreatePage(QFrame):
         input_sub_frame = QFrame(input_frame)
         input_sub_layout = add_layout(input_sub_frame, HORIZONTAL, space=8)
 
-        box, self.first = add_login_input_box_02(input_sub_frame, "FIRST NAME", title_width=80, hint="First name...")
+        box, self.first = add_login_input_box(input_sub_frame, "FIRST NAME", title_width=100, hint="First name...")
         input_sub_layout.addWidget(box)
 
-        box, self.last = add_login_input_box_02(input_sub_frame, "LAST NAME", title_width=80, hint="Last name...")
+        box, self.last = add_login_input_box(input_sub_frame, "LAST NAME", title_width=100, hint="Last name...")
         input_sub_layout.addWidget(box)
         input_layout.addWidget(input_sub_frame)
 
-        box, self.username = add_login_input_box_02(input_frame, "EMAIL",
-                                                    hint="Please enter your email address...")
+        box, self.username = add_login_input_box(input_frame, "EMAIL",
+                                                 hint="Please enter an email address as your username...")
         input_layout.addWidget(box)
 
-        box, self.pwd = add_login_input_box_02(input_frame, "PASSWORD",
-                                               hint="Please enter your password...")
+        box, self.pwd = add_login_input_box(input_frame, "PASSWORD", hint="Please enter your password...")
         input_layout.addWidget(box)
 
-        box, self.confirm_pwd = add_login_input_box_02(input_frame, "CONFIRM PASSWORD",
-                                               hint="Please re-enter your password...")
+        box, self.confirm_pwd = add_login_input_box(input_frame, "CONFIRM PASSWORD",
+                                                    hint="Please re-enter your password...")
         input_layout.addWidget(box)
 
         # button_frame: hint, create_button

@@ -9,18 +9,26 @@ class BaseDialog(QDialog):
     def __init__(self, *args, **kwargs):
         super(QDialog, self).__init__(*args, **kwargs)
 
-        # gui property
-        self.pos = None
+        self._init_geometry()
 
-    # mouse graping and window moves
-    def mousePressEvent(self, event):
-        self.pos = event.globalPos()
+    def _init_geometry(self):
+        # widget optimization
+        self.setWindowModality(Qt.ApplicationModal)
 
-    # mouse graping and window moves
-    def mouseMoveEvent(self, event):
-        delta = QPoint(event.globalPos() - self.pos)
-        self.move(self.x() + delta.x(), self.y() + delta.y())
-        self.pos = event.globalPos()
+        self.setObjectName("Question_window")
+
+    #     # gui property
+    #     self.pos = None
+    #
+    # # mouse graping and window moves
+    # def mousePressEvent(self, event):
+    #     self.pos = event.globalPos()
+    #
+    # # mouse graping and window moves
+    # def mouseMoveEvent(self, event):
+    #     delta = QPoint(event.globalPos() - self.pos)
+    #     self.move(self.x() + delta.x(), self.y() + delta.y())
+    #     self.pos = event.globalPos()
 
 
 class Question(BaseDialog):
@@ -39,40 +47,31 @@ class Question(BaseDialog):
         # hide title bar
         # self.setWindowFlags(Qt.FramelessWindowHint)
 
-        # widget optimization
-        self.setWindowModality(Qt.ApplicationModal)
-
-        self.setObjectName("Question_window")
-
         # window size
-        set_base_geometry(self, 400, 155, fixed=True)
+        # set_base_geometry(self, 400, 155, fixed=True)
+        pass
 
     def _init_ui(self):
 
-        window_layout = add_layout(self, VERTICAL, t_m=50, b_m=38, l_m=76, r_m=76)
+        window_layout = add_layout(self, VERTICAL, t_m=35, b_m=35, l_m=65, r_m=65, space=20)
 
-        question = add_label(self, self.question, name="Question_question", align=Qt.AlignHCenter)
+        question = add_label(self, self.question, name="Question_question")
+        window_layout.addWidget(question)
 
-        button_frame = QFrame(self)
-        button_layout = add_layout(button_frame, HORIZONTAL, space=35)
+        spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        window_layout.addItem(spacer)
 
-        spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
-        button_layout.addItem(spacer)
+        button_frame, button_layout = add_frame(self, layout=HORIZONTAL)
+        window_layout.addWidget(button_frame)
 
         cancel = add_button(self, "CANCEL", name="Question_button_cancel")
         button_layout.addWidget(cancel)
 
-        confirm = add_button(self, "CONFIRM", name="Question_button_confirm")
-        button_layout.addWidget(confirm)
-
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
         button_layout.addItem(spacer)
 
-        spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        window_layout.addWidget(question)
-        window_layout.addItem(spacer)
-        window_layout.addWidget(button_frame)
+        confirm = add_button(self, "CONFIRM", name="Question_button_confirm")
+        button_layout.addWidget(confirm)
 
         confirm.clicked.connect(self.on_confirm_clicked)
         cancel.clicked.connect(self.on_cancel_clicked)

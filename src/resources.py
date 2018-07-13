@@ -57,6 +57,7 @@ class Resources(MainView):
         self.current_ram = 0                        # param number
 
         self.if_verify = False                      # flag
+        self.ip_check = False                       # flag
         self.machine_name_check = False             # flag
         self.cpu_check = False                      # flag
         self.core_check = False                     # flag
@@ -105,10 +106,20 @@ class Resources(MainView):
         self.workspace.offering_price_button.clicked.connect(self.on_offering_price_button_clicked)
         self.workspace.submit_button.clicked.connect(self.on_submit_button_clicked)
 
+        self.workspace.ip_address.editingFinished.connect(self.on_ip_address_edit)
+        self.workspace.ip_address.returnPressed.connect(self.on_verify_button_clicked)
+
         self.workspace.machine_name.editingFinished.connect(self.on_machine_edit)
+        self.workspace.machine_name.textChanged.connect(self.on_machine_edit)
+
         self.workspace.cpu_gpu.editingFinished.connect(self.on_cpu_edit)
+        self.workspace.cpu_gpu.textChanged.connect(self.on_cpu_edit)
+
         self.workspace.cores.editingFinished.connect(self.on_core_edit)
+        self.workspace.cores.textChanged.connect(self.on_core_edit)
+
         self.workspace.ram.editingFinished.connect(self.on_ram_edit)
+        self.workspace.ram.textChanged.connect(self.on_ram_edit)
 
         self.list.refresh_button.clicked.connect(self.on_refresh_button_clicked)
         self.list.remove_button.clicked.connect(self.on_remove_button_clicked)
@@ -126,12 +137,12 @@ class Resources(MainView):
         self._fetch_job_data()
 
     def on_verify_button_clicked(self):
-        self.workspace.verification_hint.setText("")
-        ip_address = self.workspace.ip_address.text()
+        self.on_ip_address_edit()
 
-        if ip_address == "":
-            self.workspace.verification_hint.setText("Please enter an IP address.")
+        if self.ip_check is not True:
+            pass    # invalid input
         else:
+            ip_address = self.workspace.ip_address.text()
             print(f"IP Address: {ip_address}")
 
             # TODO: verify ip_address and get machine config through API
@@ -244,6 +255,19 @@ class Resources(MainView):
         # switch page
         self.on_list_clicked()
 
+    def on_ip_address_edit(self):
+        self.workspace.verification_hint.setText("")
+        ip_address = self.workspace.ip_address.text()
+
+        if ip_address == "":
+            self.workspace.verification_hint.setText("Please enter an IP address.")
+            self.ip_check = False
+        elif not self.ip_regex.match(ip_address):
+            self.workspace.verification_hint.setText("Invalid IP address format. Please check your input. " +
+                                                     "(i.e 127.255.255.255)")
+        else:
+            self.ip_check = True
+
     def on_machine_edit(self):
         self.workspace.planning_hint.setText("")
         user_input = self.workspace.machine_name.text()
@@ -265,6 +289,9 @@ class Resources(MainView):
             labels = self.workspace.current_cpu_box.findChildren(QLabel)
             for label in labels:
                 label.setStyleSheet(Page_machine_config_label_red)
+
+            self.cpu_check = False
+            self.check_flag()
         else:
             num = int(user_input)
             if num > self.current_cpu:
@@ -273,6 +300,8 @@ class Resources(MainView):
                 labels = self.workspace.current_cpu_box.findChildren(QLabel)
                 for label in labels:
                     label.setStyleSheet(Page_machine_config_label_red)
+                self.cpu_check = False
+                self.check_flag()
             else:
                 labels = self.workspace.current_cpu_box.findChildren(QLabel)
                 for label in labels:
@@ -292,6 +321,9 @@ class Resources(MainView):
             labels = self.workspace.current_core_box.findChildren(QLabel)
             for label in labels:
                 label.setStyleSheet(Page_machine_config_label_red)
+
+            self.core_check = False
+            self.check_flag()
         else:
             num = int(user_input)
             if num > self.current_core:
@@ -299,6 +331,9 @@ class Resources(MainView):
                 labels = self.workspace.current_core_box.findChildren(QLabel)
                 for label in labels:
                     label.setStyleSheet(Page_machine_config_label_red)
+
+                self.core_check = False
+                self.check_flag()
             else:
                 labels = self.workspace.current_core_box.findChildren(QLabel)
                 for label in labels:
@@ -317,6 +352,9 @@ class Resources(MainView):
             labels = self.workspace.current_ram_box.findChildren(QLabel)
             for label in labels:
                 label.setStyleSheet(Page_machine_config_label_red)
+
+            self.ram_check = False
+            self.check_flag()
         else:
             num = int(user_input)
             if num > self.current_ram:
@@ -325,6 +363,9 @@ class Resources(MainView):
                 labels = self.workspace.current_ram_box.findChildren(QLabel)
                 for label in labels:
                     label.setStyleSheet(Page_machine_config_label_red)
+
+                self.ram_check = False
+                self.check_flag()
             else:
                 labels = self.workspace.current_ram_box.findChildren(QLabel)
                 for label in labels:
@@ -368,6 +409,8 @@ class Resources(MainView):
     def check_flag(self):
         if self.if_verify and self.machine_name_check and self.cpu_check and self.core_check and self.ram_check:
             self.workspace.enable_evaluate_button()
+        else:
+            self.workspace.disable_evaluate_button()
 
     # load data from db
     def _fetch_job_data(self):

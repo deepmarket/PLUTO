@@ -8,6 +8,10 @@ class MainView(QFrame):
 
         self.num_regex = re.compile(r"(?<![-.])\b[0-9]+\b(?!\.[0-9])")
 
+        # reference by: https://stackoverflow.com/questions/10086572/ip-address-validation-in-python-using-regex
+        self.ip_regex = re.compile("(([2][5][0-5]\.)|([2][0-4][0-9]\.)|([0-1]?[0-9]?[0-9]\.)){3}" +
+                                   "(([2][5][0-5])|([2][0-4][0-9])|([0-1]?[0-9]?[0-9]))")
+
         self.api_endpoint = None
 
         self.credential_store = path.join(path.abspath("./"), ".credential_store")

@@ -119,6 +119,8 @@ class Resources(MainView):
         self.list_button.setStyleSheet(page_menu_button_active)
         self.stack.setCurrentIndex(1)
 
+        self._fetch_job_data()
+
     def on_verify_button_clicked(self):
         self.workspace.verification_hint.setText("")
         ip_address = self.workspace.ip_address.text()
@@ -216,6 +218,19 @@ class Resources(MainView):
             price = self.workspace.offering_price_box.findChildren(QLabel)[1].text()
 
         status = "running"
+
+        # add data to db
+        api = Api("/resources")
+
+        resources_data = {"machine_name": machine_name,
+                          "ip_address": ip_address,
+                          "ram": ram,
+                          "cores": cores,
+                          "cpus": cpu_gpu,
+                          "price": price,
+                          "status": status}
+
+        api.post(resources_data)
 
         self.list.add_data([machine_name, ip_address, cpu_gpu, cores, ram, price, status])
         self.on_list_clicked()
@@ -341,25 +356,24 @@ class Resources(MainView):
         if self.if_verify and self.machine_name_check and self.cpu_check and self.core_check and self.ram_check:
             self.workspace.enable_evaluate_button()
 
-    # backup
-    # def _fetch_resource_data(self):
-    #     resource_api = Api("/resources")
-    #     status, res = resource_api.get()
-    #
-    #     if status == 200:
-    #         for rsrc in res["resources"]:
-    #             resource_data = {
-    #                 "data": [rsrc['machine_name'],
-    #                          rsrc['ip_address'],
-    #                          rsrc['cpus'],
-    #                          rsrc['cores'],
-    #                          rsrc['ram'],
-    #                          None,
-    #                          rsrc['status']],
-    #                 "resource_id": rsrc['_id'],
-    #                 "owner": rsrc['owner'],
-    #             }
-    #             self.add_data(resource_data)
+    # load data from db
+    def _fetch_job_data(self):
+        # data format: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
+
+        # connect to db
+        api = Api("/resources")
+        status, res = api.get()
+
+        # load data to list
+        if status == 200:
+            for rsrc in res["resources"]:
+                self.list.add_data([rsrc['machine_name'],
+                                    rsrc['ip_address'],
+                                    rsrc['cpus'],
+                                    rsrc['cores'],
+                                    rsrc['ram'],
+                                    rsrc['price'],
+                                    rsrc['status']])
 
     # self-updated function by calling timer in main
     # can be used later on

@@ -180,9 +180,7 @@ class Jobs(MainView):
                         "price": price,
                         "customer_id": "customer_id"}
 
-            status, res = job_api.post(job_data)
-
-            print(status, res)
+            job_api.post(job_data)
 
             # add data to list
             self.list.add_data(dat)
@@ -205,6 +203,10 @@ class Jobs(MainView):
             question = Question("Are you sure you want to remove this?")
 
             if question.exec_():
+                # delete on the api
+                job_api = Api("/jobs")
+
+                # delete on the list
                 self.list.table.removeRow(row)
 
                 if row <= 9:
@@ -217,9 +219,11 @@ class Jobs(MainView):
     # load data from db
     def _fetch_job_data(self):
 
+        # connect to db
         job_api = Api("/jobs")
         status, res = job_api.get()
 
+        # load data to list
         if status == 200:
             for job in res["jobs"]:
                 self.list.add_data([job['_id'],
@@ -558,5 +562,14 @@ class JobList(QFrame):
             self.table.insertRow(row)
             add_row(self.table, column, data, row)
 
-
+    def clean_table(self):
+        pass
+        # while self.current_row:
+        #
+        # if row <= 9:
+        #     self.list.current_row -= 1
+        #     row = self.list.table.rowCount()
+        #     self.list.table.insertRow(row)
+        #     for c in range(column):
+        #         self.list.table.setItem(row, c, QTableWidgetItem(""))
 

@@ -32,9 +32,6 @@ class Jobs(MainView):
     def __init__(self, *args, **kwargs):
         super(Jobs, self).__init__(*args, **kwargs)
 
-        # Constant price
-        self.price_per_hour = 0.005
-
         # variable
         self.workspace = None                   # widget
         self.list = None                        # widget
@@ -42,6 +39,12 @@ class Jobs(MainView):
         self.workspace_button = None            # button
         self.list_button = None                 # button
         self.stack = None                       # layout
+
+        self.worker_check = False               # flag
+        self.core_check = False                 # flag
+        self.memory_check = False               # flag
+        self.source_check = False               # flag
+        self.input_check = False                # flag
 
         self._init_ui()
         self.setStyleSheet(page_style)
@@ -96,30 +99,80 @@ class Jobs(MainView):
 
         self._fetch_job_data()
 
+    def on_worker_edit(self):
+        self.workspace.submission_hint.setText("")
+        user_input = self.workspace.workers.text()
+
+        if user_input is "" or not self.num_regex.match(user_input):
+            self.workspace.submission_hint.setText("Please enter number of workers.")
+            self.worker_check = False
+        else:
+            self.worker_check = True
+
+    def on_core_edit(self):
+        self.workspace.submission_hint.setText("")
+        user_input = self.workspace.cores.text()
+
+        if user_input is "" or not self.num_regex.match(user_input):
+            self.workspace.submission_hint.setText("Please enter number of cores.")
+            self.core_check = False
+        else:
+            self.core_check = True
+
+    def on_memory_edit(self):
+        self.workspace.submission_hint.setText("")
+        user_input = self.workspace.memory.text()
+
+        if user_input is "" or not self.num_regex.match(user_input):
+            self.workspace.submission_hint.setText("Please enter number of memory.")
+            self.memory_check = False
+        else:
+            self.memory_check = True
+
+    def on_source_edit(self):
+        self.workspace.submission_hint.setText("")
+        user_input = self.workspace.input_file.text()
+
+        if user_input is "":
+            self.workspace.submission_hint.setText("Please enter source file name.")
+            self.source_check = False
+        else:
+            self.source_check = True
+
+    def on_input_edit(self):
+        self.workspace.submission_hint.setText("")
+        user_input = self.workspace.input_file.text()
+
+        if user_input is "":
+            self.workspace.submission_hint.setText("Please enter input data file name.")
+            self.input_check = False
+        else:
+            self.input_check = True
+
     def update_workspace(self):
+        api = Api("/pricing")
+        status, res = api.get()
+        price_dat = res['prices']
+
         # update scheme
         frames = [self.workspace.scheme_01_frame,
                   self.workspace.scheme_02_frame,
                   self.workspace.scheme_03_frame,
                   self.workspace.scheme_04_frame]
 
-        for frame in frames:
+        for i in range(len(frames)):
             # find all QLabel children within the frame
-            labels = frame.findChildren(QLabel)
+            labels = frames[i].findChildren(QLabel)
 
             # exclude the first label, which is the time label
             labels.pop(0)
 
-            api = Api("/pricing")
-
-            status, res = api.get()
-
             # TODO: load time scheme
-            # print(res)
-            # dat = res['']
+            dat = price_dat[i]
+            dat = [round(dat['cpus'], 6), round(dat['gpus'], 6), round(dat['memory'], 6), round(dat['disk_space'], 6)]
 
-            for i in range(len(labels)):
-                labels[i].setText(f"{self.price_per_hour} Credit/Hr")
+            for j in range(len(labels)):
+                labels[j].setText(f"{dat[j]} Credit/Hr")
 
         # TODO: load dat here
         # format: [cpu, gpu, memory, space], type: int
@@ -221,9 +274,7 @@ class Jobs(MainView):
 
                 # delete on the db
                 job_api = Api(f"/jobs/{job_id}")
-                status, res = job_api.delete()
-
-                print(status, res)
+                job_api.delete()
 
                 # delete on the list
                 self.list.table.removeRow(row)
@@ -255,6 +306,12 @@ class Jobs(MainView):
                                     str(job['input_files'][0] + "..."),
                                     str(job['price']),
                                     job['status'], "-"])
+
+    def _check_input(self):
+        if self.worker_check and self.core_check and self.memory_check and self.source_check and self.input_check:
+            return True
+        else:
+            return False
 
 
 class JobWorkspace(QFrame):

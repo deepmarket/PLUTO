@@ -2,6 +2,8 @@ import requests as req
 from json import loads, dumps
 from os import path, remove
 
+from requests.exceptions import ConnectionError
+
 
 class CredentialManager(object):
     # TODO: Consider using something like marshal, shelve, or pickle
@@ -54,14 +56,12 @@ class Api:
             try:
                 res: req.Response = req.get(url, headers=headers)
             except ConnectionError:
-                # TODO: connection error handle here
-                return 503, None
+                return None, None
         else:
             try:
                 res: req.Response = req.get(url)
             except ConnectionError:
-                # TODO: same, connection error handle here
-                return 503, None
+                return None, None
         try:
             val = res.__getattribute__(attr)
             val = loads(val)
@@ -78,12 +78,15 @@ class Api:
 
         if not url:
             url = self.url
+
         if token:
             headers = {"x-access-token": token}
             res = req.post(url, payload, headers=headers)
         else:
-            res: req.Response = req.post(url, payload)
-
+            try:
+                res: req.Response = req.post(url, payload)
+            except ConnectionError:
+                return None, None
         try:
             val = res.__getattribute__(attr)
             val = loads(val)
@@ -99,7 +102,14 @@ class Api:
 
     def put(self, payload: dict={}, attr: str="text", url: str=None):
 
-        res: req.Response = req.put(url, payload)
+        if not url:
+            url = self.url
+
+        try:
+            res: req.Response = req.put(url, payload)
+        except ConnectionError:
+            return None
+
         val: str = None
         try:
             val = res.__getattribute__(attr)
@@ -112,14 +122,17 @@ class Api:
 
     def delete(self, attr: str="text", url: str=None):
         val: dict = None
+
         token: str = self.store.get("token")
 
         if token:
             headers = {"x-access-token": token}
             res = req.delete(url, headers=headers)
         else:
-            res: req.Response = req.delete(url)
-
+            try:
+                res: req.Response = req.delete(url)
+            except ConnectionError:
+                return None, None
         try:
             val = res.__getattribute__(attr)
             val = loads(val)

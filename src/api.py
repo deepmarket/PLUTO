@@ -31,8 +31,8 @@ class CredentialManager(object):
 class Api:
     def __init__(self, endpoint: str="/", auth=False):
 
-        self.domain = "localhost"  # Used for testing
-        # self.domain = "131.252.209.102"  # ip of lab intranet
+        # self.domain = "localhost"  # Used for testing
+        self.domain = "131.252.209.102"  # ip of lab intranet
 
         self.port = 8080
         self.endpoint = endpoint

@@ -92,6 +92,8 @@ class Jobs(MainView):
         self.list_button.setStyleSheet(page_menu_button_active)
         self.stack.setCurrentIndex(1)
 
+        self._fetch_job_data()
+
     def update_workspace(self):
         # update scheme
         frames = [self.workspace.scheme_01_frame,
@@ -129,8 +131,8 @@ class Jobs(MainView):
         workers = self.workspace.workers.text()
         cores = self.workspace.cores.text()
         memory = self.workspace.memory.text()
-        # source_files = self.workspace.source_file.text()
-        # input_files = self.workspace.input_file.text()
+        source_files = self.workspace.source_file.text()
+        input_files = self.workspace.input_file.text()
         # price = (float(cores) * float(workers)) * PRICING_CONSTANT
 
         # find the selected frame
@@ -151,9 +153,10 @@ class Jobs(MainView):
             text.append(label.text())
 
         # TODO: generate job name here
-        job_name = "My Job"
+        job_id = "My-Job-01"
+        price = "0.005"
 
-        question = f"""Job "{job_name}" will be charged with """
+        question = f"""Job "{job_id}" will be charged with """
         question += f"""CPU: {text[1]}, GPU: {text[2]}, Memory: {text[3]}\nDisk Space: {text[4]} """
         question += f"""and run in the Time slot: {text[0]}\n\n"""
         question += f"""You are required """
@@ -163,52 +166,78 @@ class Jobs(MainView):
         question = Question(question)
 
         if question.exec_():
-            self.list.add_data([job_name, workers, cores, memory, "0.005", "running", "-"])
+            # add data to db
+            job_api = Api("/jobs")
+
+            job_data = {"timeslot_id": self.workspace.select_scheme-1,
+                        "workers": workers,
+                        "cores": cores,
+                        "memory": memory,
+                        "source_files": [source_files],
+                        "input_files": [input_files],
+                        "price": price,
+                        "customer_id": "customer_id"}
+
+            job_api.post(job_data)
+
+            # add data to list
+            self._fetch_job_data()
+
+            # switch page
             self.on_list_clicked()
 
     # remove button functionality for JobList
     def on_remove_clicked(self):
-        model = self.list.table.selectionModel()
+        pass
+        # model = self.list.table.selectionModel()
+        #
+        # # check if table has selected row
+        # if not model.hasSelection():
+        #     pass
+        # else:
+        #     row = model.selectedRows()[0].row()
+        #     column = self.list.table.columnCount()
+        #
+        #     # ask if user want to delete rows
+        #     question = Question("Are you sure you want to remove this?")
+        #
+        #     if question.exec_():
+        #         job_id = self.list.table.item(row, 0).text()
+        #
+        #         # delete on the db
+        #         job_api = Api(f"/jobs/{job_id}")
+        #         status, res = job_api.delete()
+        #
+        #         print(status, res)
+        #
+        #         # delete on the list
+        #         self.list.table.removeRow(row)
+        #
+        #         if row <= 9:
+        #             self.list.current_row -= 1
+        #             row = self.list.table.rowCount()
+        #             self.list.table.insertRow(row)
+        #             for c in range(column):
+        #                 self.list.table.setItem(row, c, QTableWidgetItem(""))
 
-        # check if table has selected row
-        if not model.hasSelection():
-            pass
-        else:
-            row = model.selectedRows()[0].row()
-            column = self.list.table.columnCount()
+    # load data from db
+    def _fetch_job_data(self):
+        self.list.clean_table()
 
-            # ask if user want to delete rows
-            question = Question("Are you sure you want to remove this?")
+        # connect to db
+        job_api = Api("/jobs")
+        status, res = job_api.get()
 
-            if question.exec_():
-                self.list.table.removeRow(row)
-
-                if row <= 9:
-                    self.list.current_row -= 1
-                    row = self.list.table.rowCount()
-                    self.list.table.insertRow(row)
-                    for c in range(column):
-                        self.list.table.setItem(row, c, QTableWidgetItem(""))
-
-    # backup
-    # def _fetch_job_data(self):
-    #     job_api = Api("/jobs")
-    #     status, res = job_api.get()
-    #
-    #     if status == 200:
-    #         for job in res["jobs"]:
-    #             job_data = {
-    #                 "data": [job['_id'],
-    #                          job['workers'],
-    #                          job['cores'],
-    #                          job['memory'],
-    #                          job['price'],
-    #                          job['status'],
-    #                          "logs"],
-    #                 "job_id": job['_id'],
-    #                 "customer_id": job['customer_id'],
-    #             }
-    #             self.add_data(job_data)
+        # load data to list
+        # data format: [job_id, workers, cores, memory, price, status, logs]
+        if status == 200:
+            for job in res["jobs"]:
+                self.list.add_data([job['_id'],
+                                    job['workers'],
+                                    job['cores'],
+                                    job['memory'],
+                                    job['price'],
+                                    job['status'], "-"])
 
 
 class JobWorkspace(QFrame):
@@ -453,6 +482,7 @@ class JobList(QFrame):
         # variable
         self.table = None                   # widget
         self.search_bar = None              # input
+        self.refresh_button = None          # button
         self.remove_button = None           # button
 
         self.current_row = 0                # param number
@@ -472,6 +502,9 @@ class JobList(QFrame):
         self.search_bar = add_input(table_workspace, height=30, name="Page_table_workspace_search",
                                     hint="Search a job... (Haven't implemented yet)")
         workspace_layout.addWidget(self.search_bar)
+
+        self.refresh_button = add_button(table_workspace, "REFRESH", name="Page_table_workspace_button")
+        workspace_layout.addWidget(self.refresh_button)
 
         self.remove_button = add_button(table_workspace, "REMOVE", name="Page_table_workspace_button")
         workspace_layout.addWidget(self.remove_button)
@@ -503,19 +536,20 @@ class JobList(QFrame):
         # alternating coloring,
         # hide grid line
         # set default row height
-        # self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.table.setSelectionMode(QAbstractItemView.SingleSelection)
         self.table.setAlternatingRowColors(True)
         self.table.setShowGrid(False)
         self.table.verticalHeader().setDefaultSectionSize(40)
 
-        # fill first 10 row with empty line
-        column = self.table.columnCount()
-        for r in range(13):
-            self.table.insertRow(r)
-            for c in range(column):
-                self.table.setItem(r, c, QTableWidgetItem(""))
+        self.clean_table()
+        # # fill first 13 row with empty line
+        # column = self.table.columnCount()
+        # for r in range(13):
+        #     self.table.insertRow(r)
+        #     for c in range(column):
+        #         self.table.setItem(r, c, QTableWidgetItem(""))
 
     # data format: [job_id, workers, cores, memory, price, status, logs]
     def add_data(self, data_obj):
@@ -535,5 +569,18 @@ class JobList(QFrame):
             self.table.insertRow(row)
             add_row(self.table, column, data, row)
 
+    def clean_table(self):
+        self.current_row = 0
 
+        row = self.table.rowCount()
+        print(row)
 
+        while self.table.rowCount():
+            self.table.removeRow(0)
+
+        # fill first 13 row with empty line
+        column = self.table.columnCount()
+        for r in range(13):
+            self.table.insertRow(r)
+            for c in range(column):
+                self.table.setItem(r, c, QTableWidgetItem(""))

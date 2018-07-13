@@ -278,7 +278,7 @@ class Resources(MainView):
             self.workspace.planning_hint.setText("Please enter a machine name.")
         else:
             self.machine_name_check = True
-            self.check_flag()
+            self._check_flag()
 
     def on_cpu_edit(self):
         self.workspace.planning_hint.setText("")
@@ -293,7 +293,7 @@ class Resources(MainView):
                 label.setStyleSheet(Page_machine_config_label_red)
 
             self.cpu_check = False
-            self.check_flag()
+            self._check_flag()
         else:
             num = int(user_input)
             if num > self.current_cpu:
@@ -303,14 +303,14 @@ class Resources(MainView):
                 for label in labels:
                     label.setStyleSheet(Page_machine_config_label_red)
                 self.cpu_check = False
-                self.check_flag()
+                self._check_flag()
             else:
                 labels = self.workspace.current_cpu_box.findChildren(QLabel)
                 for label in labels:
                     label.setStyleSheet(Page_machine_config_label_green)
 
                 self.cpu_check = True
-                self.check_flag()
+                self._check_flag()
 
     def on_core_edit(self):
         self.workspace.planning_hint.setText("")
@@ -325,7 +325,7 @@ class Resources(MainView):
                 label.setStyleSheet(Page_machine_config_label_red)
 
             self.core_check = False
-            self.check_flag()
+            self._check_flag()
         else:
             num = int(user_input)
             if num > self.current_core:
@@ -335,14 +335,14 @@ class Resources(MainView):
                     label.setStyleSheet(Page_machine_config_label_red)
 
                 self.core_check = False
-                self.check_flag()
+                self._check_flag()
             else:
                 labels = self.workspace.current_core_box.findChildren(QLabel)
                 for label in labels:
                     label.setStyleSheet(Page_machine_config_label_green)
 
                 self.core_check = True
-                self.check_flag()
+                self._check_flag()
 
     def on_ram_edit(self):
         self.workspace.planning_hint.setText("")
@@ -356,7 +356,7 @@ class Resources(MainView):
                 label.setStyleSheet(Page_machine_config_label_red)
 
             self.ram_check = False
-            self.check_flag()
+            self._check_flag()
         else:
             num = int(user_input)
             if num > self.current_ram:
@@ -367,14 +367,14 @@ class Resources(MainView):
                     label.setStyleSheet(Page_machine_config_label_red)
 
                 self.ram_check = False
-                self.check_flag()
+                self._check_flag()
             else:
                 labels = self.workspace.current_ram_box.findChildren(QLabel)
                 for label in labels:
                     label.setStyleSheet(Page_machine_config_label_green)
 
                 self.ram_check = True
-                self.check_flag()
+                self._check_flag()
 
     def on_refresh_button_clicked(self):
         self._fetch_job_data()
@@ -408,7 +408,7 @@ class Resources(MainView):
         #                     self.list.table.setItem(row, c, QTableWidgetItem(""))
 
     # check if flags are all on, enable evaluate button
-    def check_flag(self):
+    def _check_flag(self):
         if self.if_verify and self.machine_name_check and self.cpu_check and self.core_check and self.ram_check:
             self.workspace.enable_evaluate_button()
         else:

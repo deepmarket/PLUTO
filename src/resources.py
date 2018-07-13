@@ -63,6 +63,9 @@ class Resources(MainView):
         self.ram_check = False                      # flag
         self.price_selected = 0                     # flag
 
+        self.auto_price = 0                         # flag
+        self.offering_price = 0                     # flag
+
         self._init_ui()
         self.setStyleSheet(page_style)
 
@@ -107,6 +110,7 @@ class Resources(MainView):
         self.workspace.cores.editingFinished.connect(self.on_core_edit)
         self.workspace.ram.editingFinished.connect(self.on_ram_edit)
 
+        self.list.refresh_button.clicked.connect(self.on_refresh_button_clicked)
         self.list.remove_button.clicked.connect(self.on_remove_button_clicked)
 
     def on_workspace_clicked(self):
@@ -175,10 +179,10 @@ class Resources(MainView):
         cpu_gpu = self.workspace.cpu_gpu.text()
         ram = self.workspace.ram.text()
 
-        price = (float(cores) * float(cpu_gpu)) * PRICING_CONSTANT
+        self.auto_price = (float(cores) * float(cpu_gpu)) * PRICING_CONSTANT
 
         labels = self.workspace.auto_price_box.findChildren(QLabel)
-        labels[1].setText(f"{price} credit / Hr")
+        labels[1].setText(f"{self.auto_price} credit / Hr")
 
         self.workspace.enable_auto_price_box()
         self.workspace.enable_submit_button()
@@ -213,9 +217,9 @@ class Resources(MainView):
         ram = self.workspace.ram.text()
 
         if self.price_selected == 0:
-            price = self.workspace.auto_price_box.findChildren(QLabel)[1].text()
+            price = self.auto_price
         else:
-            price = self.workspace.offering_price_box.findChildren(QLabel)[1].text()
+            price = self.offering_price
 
         status = "running"
 
@@ -230,7 +234,9 @@ class Resources(MainView):
                           "price": price,
                           "status": status}
 
-        api.post(resources_data)
+        status, res = api.post(resources_data)
+
+        print(res)
 
         # add data to list
         self._fetch_job_data()
@@ -327,32 +333,36 @@ class Resources(MainView):
                 self.ram_check = True
                 self.check_flag()
 
+    def on_refresh_button_clicked(self):
+        self._fetch_job_data()
+
     def on_remove_button_clicked(self):
-        model = self.list.table.selectionModel()
-
-        # check if table has selected row
-        if not model.hasSelection():
-            pass
-        else:
-            row = model.selectedRows()[0].row()
-            column = self.list.table.columnCount()
-
-            # check if row has value
-            if self.list.table.item(row, column-1).text() is not "":
-
-                # ask if user want to delete rows
-                question = Question("Are you sure you want to remove this?")
-
-                if question.exec_():
-                    self.list.table.removeRow(row)
-
-                    if row <= 13:
-                        self.list.current_row -= 1
-
-                        row = self.list.table.rowCount()
-                        self.list.table.insertRow(row)
-                        for c in range(column):
-                            self.list.table.setItem(row, c, QTableWidgetItem(""))
+        pass
+        # model = self.list.table.selectionModel()
+        #
+        # # check if table has selected row
+        # if not model.hasSelection():
+        #     pass
+        # else:
+        #     row = model.selectedRows()[0].row()
+        #     column = self.list.table.columnCount()
+        #
+        #     # check if row has value
+        #     if self.list.table.item(row, column-1).text() is not "":
+        #
+        #         # ask if user want to delete rows
+        #         question = Question("Are you sure you want to remove this?")
+        #
+        #         if question.exec_():
+        #             self.list.table.removeRow(row)
+        #
+        #             if row <= 13:
+        #                 self.list.current_row -= 1
+        #
+        #                 row = self.list.table.rowCount()
+        #                 self.list.table.insertRow(row)
+        #                 for c in range(column):
+        #                     self.list.table.setItem(row, c, QTableWidgetItem(""))
 
     # check if flags are all on, enable evaluate button
     def check_flag(self):
@@ -373,10 +383,10 @@ class Resources(MainView):
             for rsrc in res["resources"]:
                 self.list.add_data([rsrc['machine_name'],
                                     rsrc['ip_address'],
-                                    rsrc['cpus'],
-                                    rsrc['cores'],
-                                    rsrc['ram'],
-                                    rsrc['price'],
+                                    str(rsrc['cpus']),
+                                    str(rsrc['cores']),
+                                    str(rsrc['ram']),
+                                    str(rsrc['price']),
                                     rsrc['status']])
 
     # self-updated function by calling timer in main
@@ -850,9 +860,6 @@ class ResourcesList(QFrame):
 
     def clean_table(self):
         self.current_row = 0
-
-        row = self.table.rowCount()
-        print(row)
 
         while self.table.rowCount():
             self.table.removeRow(0)

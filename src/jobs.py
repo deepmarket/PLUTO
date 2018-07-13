@@ -236,7 +236,7 @@ class Jobs(MainView):
                                     job['workers'],
                                     job['cores'],
                                     job['memory'],
-                                    job['price'],
+                                    str(job['price']),
                                     job['status'], "-"])
 
 
@@ -571,9 +571,6 @@ class JobList(QFrame):
 
     def clean_table(self):
         self.current_row = 0
-
-        row = self.table.rowCount()
-        print(row)
 
         while self.table.rowCount():
             self.table.removeRow(0)

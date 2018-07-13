@@ -76,6 +76,8 @@ class Jobs(MainView):
         self.list_button.clicked.connect(self.on_list_clicked)
 
         self.workspace.submit_button.clicked.connect(self.on_submit_clicked)
+
+        self.list.refresh_button.clicked.connect(self.on_refresh_button_clicked)
         self.list.remove_button.clicked.connect(self.on_remove_clicked)
 
     def on_workspace_clicked(self):
@@ -185,6 +187,10 @@ class Jobs(MainView):
 
             # switch page
             self.on_list_clicked()
+
+    # refresh JobList
+    def on_refresh_button_clicked(self):
+        self._fetch_job_data()
 
     # remove button functionality for JobList
     def on_remove_clicked(self):

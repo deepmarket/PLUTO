@@ -739,7 +739,7 @@ class ResourcesList(QFrame):
         # variable
         self.table = None                   # widget
         self.search_bar = None              # input
-        # self.edit_button = None             # button
+        self.refresh_button = None          # button
         self.remove_button = None           # button
 
         self.current_row = 0                # param number
@@ -765,8 +765,8 @@ class ResourcesList(QFrame):
                                     hint="Search a machine... (Haven't implemented yet)")
         workspace_layout.addWidget(self.search_bar)
 
-        # self.edit_button = add_button(table_workspace, "EDIT", name="Page_table_workspace_button")
-        # workspace_layout.addWidget(self.edit_button)
+        self.refresh_button = add_button(table_workspace, "REFRESH", name="Page_table_workspace_button")
+        workspace_layout.addWidget(self.refresh_button)
 
         self.remove_button = add_button(table_workspace, "REMOVE", name="Page_table_workspace_button")
         workspace_layout.addWidget(self.remove_button)

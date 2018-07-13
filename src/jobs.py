@@ -287,7 +287,7 @@ class JobWorkspace(QFrame):
         section_frame, section_layout = add_frame(self, space=18)
         window_layout.addWidget(section_frame)
 
-        # --------- line_frame: title, spacer ------------
+        # --------- line_frame: title, spacer, note ------------
 
         line_frame = QFrame(section_frame)
         section_layout.addWidget(line_frame)
@@ -297,6 +297,12 @@ class JobWorkspace(QFrame):
         line_layout.addWidget(title)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        line_layout.addItem(spacer)
+
+        note = add_label(line_frame, "Notice: you have to select time slot.", name="Page_hint", align=Qt.AlignBottom)
+        line_layout.addWidget(note)
+
+        spacer = QSpacerItem(5, 0, QSizePolicy.Fixed, QSizePolicy.Minimum)
         line_layout.addItem(spacer)
 
         # --------- begin sub_section: left_section, right_section ------------

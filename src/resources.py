@@ -232,7 +232,10 @@ class Resources(MainView):
 
         api.post(resources_data)
 
-        self.list.add_data([machine_name, ip_address, cpu_gpu, cores, ram, price, status])
+        # add data to list
+        self._fetch_job_data()
+
+        # switch page
         self.on_list_clicked()
 
     def on_machine_edit(self):
@@ -358,13 +361,14 @@ class Resources(MainView):
 
     # load data from db
     def _fetch_job_data(self):
-        # data format: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
+        self.list.clean_table()
 
         # connect to db
         api = Api("/resources")
         status, res = api.get()
 
         # load data to list
+        # data format: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
         if status == 200:
             for rsrc in res["resources"]:
                 self.list.add_data([rsrc['machine_name'],
@@ -843,3 +847,19 @@ class ResourcesList(QFrame):
 
             self.table.insertRow(row)
             add_row(self.table, column, data, row)
+
+    def clean_table(self):
+        self.current_row = 0
+
+        row = self.table.rowCount()
+        print(row)
+
+        while self.table.rowCount():
+            self.table.removeRow(0)
+
+        # fill first 13 row with empty line
+        column = self.table.columnCount()
+        for r in range(13):
+            self.table.insertRow(r)
+            for c in range(column):
+                self.table.setItem(r, c, QTableWidgetItem(""))

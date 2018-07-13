@@ -13,19 +13,18 @@ if __name__ == '__main__':
     app = QApplication(argv)
 
     # for testing
-    main_app = App()  # Instantiate the application
+    # main_app = App()  # Instantiate the application
+    # exit(app.exec_())  # Return control to original event loop
 
     # self-update function, can be used later on
     # timer = QTimer()
     # timer.timeout.connect(main_app.update)
     # timer.start(10000)
 
-    exit(app.exec_())  # Return control to original event loop
+    login = Login()
+    login.show()
 
-    # login = Login()
-    # login.show()
-    #
-    # # login.exec_() return True if user successfully signed in
-    # if login.exec_():
-    #     main_app = App()  # Instantiate the application
-    #     exit(app.exec_())  # Return control to original event loop
+    # login.exec_() return True if user successfully signed in
+    if login.exec_():
+        main_app = App()  # Instantiate the application
+        exit(app.exec_())  # Return control to original event loop

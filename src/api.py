@@ -81,7 +81,10 @@ class Api:
 
         if token:
             headers = {"x-access-token": token}
-            res = req.post(url, payload, headers=headers)
+            try:
+                res = req.post(url, payload, headers=headers)
+            except ConnectionError:
+                return None, None
         else:
             try:
                 res: req.Response = req.post(url, payload)

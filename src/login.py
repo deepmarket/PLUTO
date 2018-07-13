@@ -135,6 +135,8 @@ class Login(QDialog):
         if status == 200:
             self.accept()
             self.close()
+        elif not status:
+            self.login.login_hint.setText("Internet connect error.")
         else:
             self.login.login_hint.setText("The email or password you entered is invalid.")
 

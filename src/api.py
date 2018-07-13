@@ -31,8 +31,8 @@ class CredentialManager(object):
 class Api:
     def __init__(self, endpoint: str="/", auth=False):
 
-        # self.domain = "localhost"  # Used for testing
-        self.domain = "131.252.209.102"  # ip of lab intranet
+        self.domain = "localhost"  # Used for testing
+        # self.domain = "131.252.209.102"  # ip of lab intranet
 
         self.port = 8080
         self.endpoint = endpoint
@@ -96,8 +96,6 @@ class Api:
             token = val['token']
         except AttributeError:
             val = res
-        # except req.exceptions.ConnectionError:
-        #     pass
         finally:
             if self.auth and token:
                 self.store.put(token)
@@ -126,6 +124,9 @@ class Api:
     def delete(self, attr: str="text", url: str=None):
         val: dict = None
 
+        if not url:
+            url = self.url
+
         token: str = self.store.get("token")
 
         if token:
@@ -140,7 +141,6 @@ class Api:
             val = res.__getattribute__(attr)
             val = loads(val)
         except AttributeError:
-            # TODO: Add logging
             val = res
         finally:
             if self.auth and token:

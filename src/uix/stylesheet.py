@@ -102,6 +102,8 @@ login_style = """
         height: 48px;
         font-family: "Helvetica Neue";
         font-size: 16px;
+        font-weight: 100;
+        border-radius: 4px;
         font-weight: 200;
         color: white;
     }

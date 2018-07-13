@@ -110,8 +110,16 @@ class Jobs(MainView):
             # exclude the first label, which is the time label
             labels.pop(0)
 
-            for label in labels:
-                label.setText(f"{self.price_per_hour} Credit/Hr")
+            api = Api("/pricing")
+
+            status, res = api.get()
+
+            # TODO: load time scheme
+            # print(res)
+            # dat = res['']
+
+            for i in range(len(labels)):
+                labels[i].setText(f"{self.price_per_hour} Credit/Hr")
 
         # TODO: load dat here
         # format: [cpu, gpu, memory, space], type: int
@@ -235,8 +243,6 @@ class Jobs(MainView):
         job_api = Api("/jobs")
         status, res = job_api.get()
 
-        print(res)
-
         # load data to list
         # data format: [job_id, workers, cores, memory, price, status, logs]
         if status == 200:
@@ -245,6 +251,8 @@ class Jobs(MainView):
                                     job['workers'],
                                     job['cores'],
                                     job['memory'],
+                                    str(job['source_files'][0] + "..."),
+                                    str(job['input_files'][0] + "..."),
                                     str(job['price']),
                                     job['status'], "-"])
 
@@ -533,8 +541,9 @@ class JobList(QFrame):
         self.table.setObjectName("Page_table")
         table_layout.addWidget(self.table)
 
-        table_headers = ["Job ID", "Workers #", "Cores", "Memory", "Price", "Status", "Logs"]
-        table_headers_width = [150, 100, 100, 100, 120, 120, 1]
+        table_headers = ["Job ID", "Workers #", "Cores", "Memory",
+                         "Source File", "Input File", "Price", "Status", "Logs"]
+        table_headers_width = [180, 70, 70, 70, 150, 150, 80, 80, 1]
 
         self.table.setColumnCount(len(table_headers))
         self.table.setHorizontalHeaderLabels(table_headers)

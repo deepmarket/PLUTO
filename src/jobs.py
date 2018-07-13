@@ -234,6 +234,8 @@ class Jobs(MainView):
         job_api = Api("/jobs")
         status, res = job_api.get()
 
+        print(res)
+
         # load data to list
         # data format: [job_id, workers, cores, memory, price, status, logs]
         if status == 200:

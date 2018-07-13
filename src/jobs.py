@@ -154,6 +154,7 @@ class Jobs(MainView):
 
         # TODO: generate job name here
         job_id = "My-Job-01"
+        price = "0.005"
 
         question = f"""Job "{job_id}" will be charged with """
         question += f"""CPU: {text[1]}, GPU: {text[2]}, Memory: {text[3]}\nDisk Space: {text[4]} """
@@ -165,13 +166,26 @@ class Jobs(MainView):
         question = Question(question)
 
         if question.exec_():
-            dat = [workers, cores, memory, "0.005", source_files, input_files, "-"]
+            dat = [workers, cores, memory, price, source_files, input_files, "-"]
+
+            # add data to db
+            job_api = Api("/jobs")
+
+            job_data = {"timeslot_id": self.workspace.select_scheme-1,
+                        "workers": workers,
+                        "cores": cores,
+                        "memory": memory,
+                        "source_files": [source_files],
+                        "input_files": [input_files],
+                        "price": price,
+                        "customer_id": "customer_id"}
+
+            status, res = job_api.post(job_data)
+
+            print(status, res)
 
             # add data to list
             self.list.add_data(dat)
-
-            # add data to db
-            self._post_job_data(dat)
 
             # switch page
             self.on_list_clicked()
@@ -214,17 +228,6 @@ class Jobs(MainView):
                                     job['memory'],
                                     job['price'],
                                     job['status'], "-"])
-
-    # submit data to db
-    @staticmethod
-    def _post_job_data(dat):
-        job_data = {"data": dat, "job_id": dat[0], "customer_id": "customer_id"}
-
-        job_api = Api("/jobs")
-
-        status, res = job_api.post(job_data)
-
-        print(res)
 
 
 class JobWorkspace(QFrame):

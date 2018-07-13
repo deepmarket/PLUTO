@@ -237,13 +237,15 @@ class Resources(MainView):
         # add data to db
         api = Api("/resources")
 
-        resources_data = {"machine_name": machine_name,
-                          "ip_address": ip_address,
-                          "ram": ram,
-                          "cores": cores,
-                          "cpus": cpu_gpu,
-                          "price": price,
-                          "status": status}
+        resources_data = {
+            "machine_name": machine_name,
+            "ip_address": ip_address,
+            "ram": ram,
+            "cores": cores,
+            "cpus": cpu_gpu,
+            "price": price,
+            "status": status
+        }
 
         status, res = api.post(resources_data)
 

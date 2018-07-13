@@ -171,14 +171,16 @@ class Jobs(MainView):
             # add data to db
             job_api = Api("/jobs")
 
-            job_data = {"timeslot_id": self.workspace.select_scheme-1,
-                        "workers": workers,
-                        "cores": cores,
-                        "memory": memory,
-                        "source_files": [source_files],
-                        "input_files": [input_files],
-                        "price": price,
-                        "customer_id": "customer_id"}
+            job_data = {
+                "timeslot_id": self.workspace.select_scheme-1,
+                "workers": workers,
+                "cores": cores,
+                "memory": memory,
+                "source_files": [source_files],
+                "input_files": [input_files],
+                "price": price,
+                "customer_id": "customer_id"
+            }
 
             job_api.post(job_data)
 
@@ -194,37 +196,36 @@ class Jobs(MainView):
 
     # remove button functionality for JobList
     def on_remove_clicked(self):
-        pass
-        # model = self.list.table.selectionModel()
-        #
-        # # check if table has selected row
-        # if not model.hasSelection():
-        #     pass
-        # else:
-        #     row = model.selectedRows()[0].row()
-        #     column = self.list.table.columnCount()
-        #
-        #     # ask if user want to delete rows
-        #     question = Question("Are you sure you want to remove this?")
-        #
-        #     if question.exec_():
-        #         job_id = self.list.table.item(row, 0).text()
-        #
-        #         # delete on the db
-        #         job_api = Api(f"/jobs/{job_id}")
-        #         status, res = job_api.delete()
-        #
-        #         print(status, res)
-        #
-        #         # delete on the list
-        #         self.list.table.removeRow(row)
-        #
-        #         if row <= 9:
-        #             self.list.current_row -= 1
-        #             row = self.list.table.rowCount()
-        #             self.list.table.insertRow(row)
-        #             for c in range(column):
-        #                 self.list.table.setItem(row, c, QTableWidgetItem(""))
+        model = self.list.table.selectionModel()
+
+        # check if table has selected row
+        if not model.hasSelection():
+            pass
+        else:
+            row = model.selectedRows()[0].row()
+            column = self.list.table.columnCount()
+
+            # ask if user want to delete rows
+            question = Question("Are you sure you want to remove this?")
+
+            if question.exec_():
+                job_id = self.list.table.item(row, 0).text()
+
+                # delete on the db
+                job_api = Api(f"/jobs/{job_id}")
+                status, res = job_api.delete()
+
+                print(status, res)
+
+                # delete on the list
+                self.list.table.removeRow(row)
+
+                if row <= 9:
+                    self.list.current_row -= 1
+                    row = self.list.table.rowCount()
+                    self.list.table.insertRow(row)
+                    for c in range(column):
+                        self.list.table.setItem(row, c, QTableWidgetItem(""))
 
     # load data from db
     def _fetch_job_data(self):

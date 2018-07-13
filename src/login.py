@@ -135,10 +135,12 @@ class Login(QDialog):
         if status == 200:
             self.accept()
             self.close()
-        elif not status:
-            self.login.login_hint.setText("Internet connect error.")
-        else:
+        elif status == 401:
             self.login.login_hint.setText("The email or password you entered is invalid.")
+        # Only other status API will return is an error, so let the user know
+        else:
+            self.login.login_hint.setText("There was an error while trying to log in. Please try again.")
+            print(status)
 
     # pre-check user input before access db
     def create_action(self):
@@ -273,19 +275,33 @@ class LoginPage(QFrame):
         title_frame.setFixedHeight(285)
         title_layout = add_layout(title_frame, VERTICAL, l_m=8, r_m=8, t_m=8)
 
-        title = add_label(title_frame, "Welcome to Pluto", name="Login_login_title", align=Qt.AlignCenter)
-        title_layout.addWidget(title)
+        # title = add_label(title_frame, "Welcome.", name="Login_login_title", align=Qt.AlignCenter)
+        # title_layout.addWidget(title)
+
+        # Broken
+        def login_kindly():
+            def update_title(title_text: str="Please Sign In."):
+                title = add_label(title_frame, title_text, name="Login_login_title", align=Qt.AlignCenter)
+                title_layout.addWidget(title)
+
+            update_title("Welcome.")
+
+            timer = QTimer()
+            timer.timeout.connect(update_title)
+            timer.start(3500)
+
+        login_kindly()
 
         # login_frame: username, pwd, login_button
         login_frame = QFrame(self)
         login_layout = add_layout(login_frame, VERTICAL, t_m=20, space=20)
 
         box, self.username = add_login_input_box(login_frame, "U S E R N A M E", title_width=150,
-                                                 hint="Enter an email address here...")
+                                                 hint="Enter your email address...")
         login_layout.addWidget(box)
 
         box, self.pwd = add_login_input_box(login_frame, "P A S S W O R D", title_width=150,
-                                            hint="Enter a password here...", echo=True)
+                                            hint="Enter your password...", echo=True)
         login_layout.addWidget(box)
 
         button_frame = QFrame(self)
@@ -306,7 +322,7 @@ class LoginPage(QFrame):
                           align=(Qt.AlignRight | Qt.AlignVCenter))
         to_create_layout.addWidget(label)
 
-        self.to_create_button = add_button(to_create_frame, "Create Account", name="Login_switch_button")
+        self.to_create_button = add_button(to_create_frame, "Create An Account.", name="Login_switch_button")
         to_create_layout.addWidget(self.to_create_button)
 
         # spacer
@@ -357,10 +373,10 @@ class CreatePage(QFrame):
         title_frame.setFixedHeight(208)
         title_layout = add_layout(title_frame, VERTICAL, t_m=39, l_m=31, r_m=8, space=28)
 
-        title = add_label(title_frame, "Thanks for Registering", name="Login_create_title")
+        title = add_label(title_frame, "Create An Account.", name="Login_create_title")
         title_layout.addWidget(title)
 
-        prologue = "In the following section,\nlease enter the oorrect information,\nAnd, enjoy…"
+        prologue = "please enter your information."
         prologue = add_label(title_frame, prologue, name="Login_prologue")
         title_layout.addWidget(prologue)
 
@@ -406,11 +422,11 @@ class CreatePage(QFrame):
         to_login_frame.setFixedHeight(63)
         to_login_layout = add_layout(to_login_frame, HORIZONTAL, l_m=8, r_m=8, b_m=8, t_m=8)
 
-        label = add_label(to_login_frame, "Already Member?", name="Login_switch_description",
+        label = add_label(to_login_frame, "Already a member?", name="Login_switch_description",
                           align=(Qt.AlignRight | Qt.AlignVCenter))
         to_login_layout.addWidget(label)
 
-        self.to_login_button = add_button(to_login_frame, "Login Here", name="Login_switch_button")
+        self.to_login_button = add_button(to_login_frame, "Login Here.", name="Login_switch_button")
         to_login_layout.addWidget(self.to_login_button)
 
         # spacer

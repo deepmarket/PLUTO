@@ -297,11 +297,11 @@ class LoginPage(QFrame):
         login_layout = add_layout(login_frame, VERTICAL, t_m=20, space=20)
 
         box, self.username = add_login_input_box(login_frame, "U S E R N A M E", title_width=150,
-                                                 hint="Enter an email address here...")
+                                                 hint="Enter your email address...")
         login_layout.addWidget(box)
 
         box, self.pwd = add_login_input_box(login_frame, "P A S S W O R D", title_width=150,
-                                            hint="Enter a password here...", echo=True)
+                                            hint="Enter your password...", echo=True)
         login_layout.addWidget(box)
 
         button_frame = QFrame(self)

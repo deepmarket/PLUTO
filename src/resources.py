@@ -143,6 +143,10 @@ class Resources(MainView):
             pass    # invalid input
         else:
             ip_address = self.workspace.ip_address.text()
+
+            # connect to
+
+
             print(f"IP Address: {ip_address}")
 
             # TODO: verify ip_address and get machine config through API
@@ -152,6 +156,7 @@ class Resources(MainView):
             self.current_ram = 4
 
             # if fail print: Resource testing failed; please verify the resources details.
+
 
             # set flag
             self.if_verify = True
@@ -272,64 +277,57 @@ class Resources(MainView):
 
     def on_machine_edit(self):
         self.workspace.planning_hint.setText("")
-        user_input = self.workspace.machine_name.text()
+        if self.if_verify:
+            user_input = self.workspace.machine_name.text()
 
-        if user_input is "":
-            self.workspace.planning_hint.setText("Please enter a machine name.")
-        else:
-            self.machine_name_check = True
-            self._check_flag()
+            if user_input is "":
+                self.workspace.planning_hint.setText("Please enter a machine name.")
+            else:
+                self.machine_name_check = True
+                self._check_flag()
 
     def on_cpu_edit(self):
         self.workspace.planning_hint.setText("")
-        user_input = self.workspace.cpu_gpu.text()
+        if self.if_verify:
+            user_input = self.workspace.cpu_gpu.text()
 
-        # empty input or input is not number
-        if user_input is "" or not self.num_regex.match(user_input):
-            self.workspace.planning_hint.setText("Please enter number to CPUs / GPUs.")
-
-            labels = self.workspace.current_cpu_box.findChildren(QLabel)
-            for label in labels:
-                label.setStyleSheet(Page_machine_config_label_red)
-
-            self.cpu_check = False
-            self._check_flag()
-        else:
-            num = int(user_input)
-            if num > self.current_cpu:
-                self.workspace.planning_hint.setText("Input in CPUs / GPUs is out of range.")
+            # empty input or input is not number
+            if user_input is "" or not self.num_regex.match(user_input):
+                self.workspace.planning_hint.setText("Please enter number to CPUs / GPUs.")
 
                 labels = self.workspace.current_cpu_box.findChildren(QLabel)
                 for label in labels:
                     label.setStyleSheet(Page_machine_config_label_red)
+
                 self.cpu_check = False
                 self._check_flag()
             else:
-                labels = self.workspace.current_cpu_box.findChildren(QLabel)
-                for label in labels:
-                    label.setStyleSheet(Page_machine_config_label_green)
+                num = int(user_input)
+                if num > self.current_cpu:
+                    self.workspace.planning_hint.setText("Input in CPUs / GPUs is out of range.")
 
-                self.cpu_check = True
-                self._check_flag()
+                    labels = self.workspace.current_cpu_box.findChildren(QLabel)
+                    for label in labels:
+                        label.setStyleSheet(Page_machine_config_label_red)
+                    self.cpu_check = False
+                    self._check_flag()
+                else:
+                    labels = self.workspace.current_cpu_box.findChildren(QLabel)
+                    for label in labels:
+                        label.setStyleSheet(Page_machine_config_label_green)
+
+                    self.cpu_check = True
+                    self._check_flag()
 
     def on_core_edit(self):
         self.workspace.planning_hint.setText("")
-        user_input = self.workspace.cores.text()
+        if self.if_verify:
+            user_input = self.workspace.cores.text()
 
-        # empty input or input is not number
-        if user_input is "" or not self.num_regex.match(user_input):
-            self.workspace.planning_hint.setText("Please enter number to Cores.")
+            # empty input or input is not number
+            if user_input is "" or not self.num_regex.match(user_input):
+                self.workspace.planning_hint.setText("Please enter number to Cores.")
 
-            labels = self.workspace.current_core_box.findChildren(QLabel)
-            for label in labels:
-                label.setStyleSheet(Page_machine_config_label_red)
-
-            self.core_check = False
-            self._check_flag()
-        else:
-            num = int(user_input)
-            if num > self.current_core:
-                self.workspace.planning_hint.setText("Input in Cores is out of range.")
                 labels = self.workspace.current_core_box.findChildren(QLabel)
                 for label in labels:
                     label.setStyleSheet(Page_machine_config_label_red)
@@ -337,31 +335,31 @@ class Resources(MainView):
                 self.core_check = False
                 self._check_flag()
             else:
-                labels = self.workspace.current_core_box.findChildren(QLabel)
-                for label in labels:
-                    label.setStyleSheet(Page_machine_config_label_green)
+                num = int(user_input)
+                if num > self.current_core:
+                    self.workspace.planning_hint.setText("Input in Cores is out of range.")
+                    labels = self.workspace.current_core_box.findChildren(QLabel)
+                    for label in labels:
+                        label.setStyleSheet(Page_machine_config_label_red)
 
-                self.core_check = True
-                self._check_flag()
+                    self.core_check = False
+                    self._check_flag()
+                else:
+                    labels = self.workspace.current_core_box.findChildren(QLabel)
+                    for label in labels:
+                        label.setStyleSheet(Page_machine_config_label_green)
+
+                    self.core_check = True
+                    self._check_flag()
 
     def on_ram_edit(self):
         self.workspace.planning_hint.setText("")
-        user_input = self.workspace.ram.text()
+        if self.if_verify:
+            user_input = self.workspace.ram.text()
 
-        # empty input or input is not number
-        if user_input is "" or not self.num_regex.match(user_input):
-            self.workspace.planning_hint.setText("Please enter number to Ram.")
-            labels = self.workspace.current_ram_box.findChildren(QLabel)
-            for label in labels:
-                label.setStyleSheet(Page_machine_config_label_red)
-
-            self.ram_check = False
-            self._check_flag()
-        else:
-            num = int(user_input)
-            if num > self.current_ram:
-                self.workspace.planning_hint.setText("Input in Ram is out of range.")
-
+            # empty input or input is not number
+            if user_input is "" or not self.num_regex.match(user_input):
+                self.workspace.planning_hint.setText("Please enter number to Ram.")
                 labels = self.workspace.current_ram_box.findChildren(QLabel)
                 for label in labels:
                     label.setStyleSheet(Page_machine_config_label_red)
@@ -369,12 +367,23 @@ class Resources(MainView):
                 self.ram_check = False
                 self._check_flag()
             else:
-                labels = self.workspace.current_ram_box.findChildren(QLabel)
-                for label in labels:
-                    label.setStyleSheet(Page_machine_config_label_green)
+                num = int(user_input)
+                if num > self.current_ram:
+                    self.workspace.planning_hint.setText("Input in Ram is out of range.")
 
-                self.ram_check = True
-                self._check_flag()
+                    labels = self.workspace.current_ram_box.findChildren(QLabel)
+                    for label in labels:
+                        label.setStyleSheet(Page_machine_config_label_red)
+
+                    self.ram_check = False
+                    self._check_flag()
+                else:
+                    labels = self.workspace.current_ram_box.findChildren(QLabel)
+                    for label in labels:
+                        label.setStyleSheet(Page_machine_config_label_green)
+
+                    self.ram_check = True
+                    self._check_flag()
 
     def on_refresh_button_clicked(self):
         self._fetch_job_data()

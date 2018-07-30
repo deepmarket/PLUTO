@@ -168,11 +168,15 @@ class Jobs(MainView):
             labels.pop(0)
 
             # TODO: load time scheme
-            dat = price_dat[i]
-            dat = [round(dat['cpus'], 6), round(dat['gpus'], 6), round(dat['memory'], 6), round(dat['disk_space'], 6)]
+            if not price_dat:
+                for j in range(len(labels)):
+                    labels[j].setText('Error')
+            else:
+                dat = price_dat[i]
+                dat = [round(dat['cpus'], 6), round(dat['gpus'], 6), round(dat['memory'], 6), round(dat['disk_space'], 6)]
 
-            for j in range(len(labels)):
-                labels[j].setText(f"{dat[j]} Credit/Hr")
+                for j in range(len(labels)):
+                    labels[j].setText(f"{dat[j]} Credit/Hr")
 
         # TODO: load dat here
         # format: [cpu, gpu, memory, space], type: int

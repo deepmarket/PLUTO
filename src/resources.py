@@ -59,7 +59,8 @@ class Resources(MainView):
         self.if_verify = False                      # flag
         self.ip_check = False                       # flag
         self.machine_name_check = False             # flag
-        self.cpu_check = False                      # flag
+        # self.cpu_check = False                      # flag
+        self.cpu_check = True       # cpu check is disable in this version
         self.core_check = False                     # flag
         self.ram_check = False                      # flag
         self.price_selected = 0                     # flag
@@ -112,8 +113,8 @@ class Resources(MainView):
         self.workspace.machine_name.editingFinished.connect(self.on_machine_edit)
         self.workspace.machine_name.textChanged.connect(self.on_machine_edit)
 
-        self.workspace.cpu_gpu.editingFinished.connect(self.on_cpu_edit)
-        self.workspace.cpu_gpu.textChanged.connect(self.on_cpu_edit)
+        # self.workspace.cpu_gpu.editingFinished.connect(self.on_cpu_edit)
+        # self.workspace.cpu_gpu.textChanged.connect(self.on_cpu_edit)
 
         self.workspace.cores.editingFinished.connect(self.on_core_edit)
         self.workspace.cores.textChanged.connect(self.on_core_edit)
@@ -144,27 +145,32 @@ class Resources(MainView):
         else:
             ip_address = self.workspace.ip_address.text()
 
-            # connect to
+            dialog_hint = "Please enter the following command on your resource machine:\n\n\n"
+            dialog_hint += "          ./sbin/start-slave.sh spark://" + MASTER_IP + ":8989\n"
+            question = Question(dialog_hint)
 
+            if question.exec_():
 
-            print(f"IP Address: {ip_address}")
+                if verify_ip_address(ip_address):
 
-            # TODO: verify ip_address and get machine config through API
-            # Now, just assume we pass the test
-            self.current_cpu = 8
-            self.current_core = 4
-            self.current_ram = 4
+                    # set flag
+                    self.if_verify = True
 
-            # if fail print: Resource testing failed; please verify the resources details.
+                    self.current_core, self.current_ram = load_machine_config(ip_address)
 
+                    if self.current_core and self.current_ram:
 
-            # set flag
-            self.if_verify = True
-
-            # disable ip_address, enable machine_config, planning
-            self.workspace.disable_ip_address()
-            self.workspace.enable_machine_config(self.current_cpu, self.current_core, self.current_ram)
-            self.workspace.enable_planning()
+                        # disable ip_address, enable machine_config, planning
+                        self.workspace.disable_ip_address()
+                        self.workspace.enable_machine_config(self.current_cpu, self.current_core, self.current_ram)
+                        self.workspace.enable_planning()
+                    else:
+                        self.if_verify = False
+                        hint = "Machine is added to master, but fail to achieve machine config"
+                        self.workspace.verification_hint.setText(hint)
+                else:
+                    hint = "Fail to find to machine in our master. Please try again."
+                    self.workspace.verification_hint.setText(hint)
 
     def on_change_button_clicked(self):
         self.workspace.clean_hint()
@@ -192,10 +198,10 @@ class Resources(MainView):
 
         # TODO: evaluate price here
         cores = self.workspace.cores.text()
-        cpu_gpu = self.workspace.cpu_gpu.text()
+        # cpu_gpu = self.workspace.cpu_gpu.text()
         ram = self.workspace.ram.text()
 
-        self.auto_price = (float(cores) * float(cpu_gpu)) * PRICING_CONSTANT
+        self.auto_price = float(cores) * PRICING_CONSTANT
 
         labels = self.workspace.auto_price_box.findChildren(QLabel)
         labels[1].setText(f"{self.auto_price} credit / Hr")
@@ -286,6 +292,7 @@ class Resources(MainView):
                 self.machine_name_check = True
                 self._check_flag()
 
+    # disable for this version
     def on_cpu_edit(self):
         self.workspace.planning_hint.setText("")
         if self.if_verify:
@@ -693,9 +700,25 @@ class ResourcesWorkspace(QFrame):
 
     # input three number to update the display on machine config
     def enable_machine_config(self, current_cpu, current_core, current_ram):
-
-        text = [f"{current_cpu} GB", f"{current_core}", f"{current_ram} GB"]
-        boxes = [self.current_cpu_box, self.current_core_box, self.current_ram_box]
+        # disable cpu/gpu permanently in this version
+        # text = [f"{current_cpu} GB", f"{current_core}", f"{current_ram} GB"]
+        # boxes = [self.current_cpu_box, self.current_core_box, self.current_ram_box]
+        #
+        # for i in range(len(boxes)):
+        #     # enable boxes
+        #     boxes[i].setStyleSheet(Page_machine_config_box)
+        #
+        #     # find label children
+        #     labels = boxes[i].findChildren(QLabel)
+        #
+        #     # disable stylesheet
+        #     labels[0].setStyleSheet(Page_machine_config_label)
+        #     labels[1].setStyleSheet(Page_machine_config_label)
+        #
+        #     # set value
+        #     labels[1].setText(text[i])
+        text = [f"{current_core}", f"{current_ram} GB"]
+        boxes = [self.current_core_box, self.current_ram_box]
 
         for i in range(len(boxes)):
             # enable boxes
@@ -713,7 +736,7 @@ class ResourcesWorkspace(QFrame):
 
     # disable machine config before user verify ip address
     def disable_machine_config(self):
-
+        # disable cpu/gpu permanently in this version
         text = ["0 GB", "0", "0 GB"]
         boxes = [self.current_cpu_box, self.current_core_box, self.current_ram_box]
 
@@ -732,7 +755,17 @@ class ResourcesWorkspace(QFrame):
             labels[1].setText(text[i])
 
     def enable_planning(self):
-        widgets = [self.machine_name, self.cpu_gpu, self.cores, self.ram]
+        # disable cpu/gpu permanently in this version
+        # widgets = [self.machine_name, self.cpu_gpu, self.cores, self.ram]
+        #
+        # for widget in widgets:
+        #     # enable input
+        #     widget.setEnabled(True)
+        #
+        #     # set to enable stylesheet
+        #     widget.setStyleSheet(Page_input_input)
+
+        widgets = [self.machine_name, self.cores, self.ram]
 
         for widget in widgets:
             # enable input

@@ -444,7 +444,7 @@ class Resources(MainView):
 
         # load data to list
         # data format: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
-        if status == 200:
+        if status == 200 and isinstance(res, dict) and "resources" in res:
             for rsrc in res["resources"]:
                 self.list.add_data([rsrc['machine_name'],
                                     rsrc['ip_address'],

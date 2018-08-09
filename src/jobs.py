@@ -152,7 +152,11 @@ class Jobs(MainView):
     def update_workspace(self):
         api = Api("/pricing")
         status, res = api.get()
-        price_dat = res['prices']
+
+        if isinstance(res, dict) and "prices" in res:
+            price_dat = res['prices']
+        else:
+            price_dat = []
 
         # update scheme
         frames = [self.workspace.scheme_01_frame,
@@ -180,7 +184,7 @@ class Jobs(MainView):
 
         # TODO: load dat here
         # format: [cpu, gpu, memory, space], type: int
-        dat = [12, 2, 24, 40]
+        dat = [0, 0, 0, 0]
 
         # update available resources
         labels = [self.workspace.available_cpu,
@@ -300,7 +304,7 @@ class Jobs(MainView):
 
         # load data to list
         # data format: [job_id, workers, cores, memory, price, status, logs]
-        if status == 200:
+        if status == 200 and isinstance(res, dict) and "jobs" in res:
             for job in res["jobs"]:
                 self.list.add_data([job['_id'],
                                     job['workers'],

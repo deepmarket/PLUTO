@@ -144,33 +144,36 @@ class Resources(MainView):
             pass    # invalid input
         else:
             ip_address = self.workspace.ip_address.text()
+            if verify_ip_address(ip_address) is True:
+                dialog_hint = "Please enter the following command on your resource machine:\n\n\n"
+                dialog_hint += "          ./sbin/start-slave.sh spark://" + MASTER_IP + ":8989\n"
+                question = Question(dialog_hint)
 
-            dialog_hint = "Please enter the following command on your resource machine:\n\n\n"
-            dialog_hint += "          ./sbin/start-slave.sh spark://" + MASTER_IP + ":8989\n"
-            question = Question(dialog_hint)
+                if question.exec_():
 
-            if question.exec_():
+                    if verify_ip_address(ip_address):
 
-                if verify_ip_address(ip_address):
+                        # set flag
+                        self.if_verify = True
 
-                    # set flag
-                    self.if_verify = True
+                        self.current_core, self.current_ram = load_machine_config(ip_address)
 
-                    self.current_core, self.current_ram = load_machine_config(ip_address)
+                        if self.current_core and self.current_ram:
 
-                    if self.current_core and self.current_ram:
-
-                        # disable ip_address, enable machine_config, planning
-                        self.workspace.disable_ip_address()
-                        self.workspace.enable_machine_config(self.current_cpu, self.current_core, self.current_ram)
-                        self.workspace.enable_planning()
+                            # disable ip_address, enable machine_config, planning
+                            self.workspace.disable_ip_address()
+                            self.workspace.enable_machine_config(self.current_cpu, self.current_core, self.current_ram)
+                            self.workspace.enable_planning()
+                        else:
+                            self.if_verify = False
+                            hint = "Machine is added to master, but fail to achieve machine config"
+                            self.workspace.verification_hint.setText(hint)
                     else:
-                        self.if_verify = False
-                        hint = "Machine is added to master, but fail to achieve machine config"
+                        hint = "Fail to find to machine in our master. Please try again."
                         self.workspace.verification_hint.setText(hint)
-                else:
-                    hint = "Fail to find to machine in our master. Please try again."
-                    self.workspace.verification_hint.setText(hint)
+            else:
+                hint = "Fail to verify machine, machine under such address is in database."
+                self.workspace.verification_hint.setText(hint)
 
     def on_change_button_clicked(self):
         self.workspace.clean_hint()
@@ -234,7 +237,8 @@ class Resources(MainView):
     def on_submit_button_clicked(self):
         machine_name = self.workspace.machine_name.text()
         ip_address = self.workspace.ip_address.text()
-        cpu_gpu = self.workspace.cpu_gpu.text()
+        # cpu_gpu = self.workspace.cpu_gpu.text()
+        cpu_gpu = 0
         cores = self.workspace.cores.text()
         ram = self.workspace.ram.text()
 

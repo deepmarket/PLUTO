@@ -11,7 +11,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 if __name__ == '__main__':
     from sys import exit, argv
     app = QApplication(argv)
-
+    app.aboutToQuit.connect(exit)
     # for testing
     # main_app = App()  # Instantiate the application
     # exit(app.exec_())  # Return control to original event loop
@@ -22,7 +22,7 @@ if __name__ == '__main__':
     # timer.start(10000)
 
     while True:
-        flag = True
+        flag = False
 
         login = Login()
         login.show()
@@ -34,8 +34,8 @@ if __name__ == '__main__':
             app.exec_()
             # exit(app.exec_())  # Return control to original event loop
         else:
-            flag = False
+            flag = True
 
-        if flag is not True:
+        if flag is True:
             break
 

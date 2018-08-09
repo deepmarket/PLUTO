@@ -60,10 +60,6 @@ class Login(QDialog):
         # set initial position
         self.login.move(0, 0)
 
-        # for testing
-        self.login.username.setText("test@test.com")
-        self.login.pwd.setText("1234")
-
         # connect function
         self.login.login_button.clicked.connect(self.login_action)
         self.login.to_create_button.clicked.connect(self.to_create)
@@ -400,11 +396,11 @@ class CreatePage(QFrame):
                                                  hint="Please enter an email address as your username...")
         input_layout.addWidget(box)
 
-        box, self.pwd = add_login_input_box(input_frame, "PASSWORD", hint="Please enter your password...")
+        box, self.pwd = add_login_input_box(input_frame, "PASSWORD", hint="Please enter your password...", echo=True)
         input_layout.addWidget(box)
 
         box, self.confirm_pwd = add_login_input_box(input_frame, "CONFIRM PASSWORD",
-                                                    hint="Please re-enter your password...")
+                                                    hint="Please re-enter your password...", echo=True)
         input_layout.addWidget(box)
 
         # button_frame: hint, create_button

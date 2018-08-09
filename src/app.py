@@ -205,13 +205,13 @@ class App(QMainWindow):
         popup = CreditHistory()
         popup.exec_()
 
-    @staticmethod
-    def on_logout_clicked():
+    def on_logout_clicked(self):
         account_api = Api("/auth/logout")
         status, res = account_api.post()
 
         if status == 200:
             print("Logging out.")
+        self.close()
 
     def update(self):
         self.main_window.stack_widget.update()
@@ -342,7 +342,14 @@ class Account(QFrame):
         super(QFrame, self).__init__(*args, **kwargs)
 
         self.head_img = None                # image filename string
-        self.username = "Martin Li"         # parameter string
+        account_api = Api("/account")
+        status, res = account_api.get()
+
+        if status == 200:
+            # Insert comma here so we can default to nameless greeting if api fails.
+            self.username = f"{res['customer']['firstname'].capitalize()}"
+        else:
+            self.username = "USER"
         self.credit = 15                    # parameter integer
         self.credit_history = None          # button
         self.notification = None            # button

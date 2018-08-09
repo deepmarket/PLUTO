@@ -5,6 +5,8 @@
 import os
 import re
 import datetime
+import urllib.request
+import json
 
 from PyQt5.QtCore import (Qt, QSize, QRect, QPropertyAnimation, QRectF, QPoint, QTimer, QPointF,
                           QSequentialAnimationGroup, QTimer)
@@ -16,6 +18,7 @@ from PyQt5.QtWidgets import (QDesktopWidget, QPushButton, QLabel, QFrame, QLineE
                              QSpacerItem, QTableWidget, QHeaderView, QAbstractItemView, QTableWidgetItem, QMessageBox)
 
 from src.uix.stylesheet import *
+from src.uix.config import *
 
 
 # load icon
@@ -476,3 +479,42 @@ def add_row(widget, column, data, row):
         if widget.item(row, i) is not None:
             widget.item(row, i).setTextAlignment(Qt.AlignCenter)
             widget.item(row, i).setFont(QFont("Helvetica Neue", 12, QFont.Light))
+
+
+def verify_ip_address(ip_address):
+    # get data from master json
+    with urllib.request.urlopen("http://" + MASTER_IP + ":8443/json/") as url:
+        data = json.loads(url.read().decode())
+
+    # open workers
+    # error handle, no worker in data
+    if 'workers' not in data:
+        return False
+
+    # workers exist, then find ip_address from it
+    data = data['workers']
+    for dat in data:
+        if dat['host'] == ip_address:
+            return True
+
+    return False
+
+
+# this function ask fro the machine config by using ip_address
+def load_machine_config(ip_address):
+    # get data from master json
+    with urllib.request.urlopen("http://" + MASTER_IP + ":8443/json/") as url:
+        data = json.loads(url.read().decode())
+
+    # open workers
+    # error handle, no worker in data
+    if 'workers' not in data:
+        return 0, 0
+
+    data = data['workers']
+    for dat in data:
+        print(dat)
+        if dat['host'] == ip_address:
+            return dat['cores'] - dat['coresused'], round((dat['memory'] - dat['memoryused'])/1024, 1)
+
+    return 0, 0

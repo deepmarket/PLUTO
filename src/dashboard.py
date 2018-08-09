@@ -59,11 +59,10 @@ class Dashboard(MainView):
         if status == 200:
             # Insert comma here so we can default to nameless greeting if api fails.
             self.username = f", {res['customer']['firstname'].capitalize()}"
+        else:
+            self.username = ", User"
 
         # TODO: request "Total Balance", "Estimated profit", "Estimated cost" "machine status"from api also
-
-        # for testing
-        # self.username = "Martin"
 
         self._init_ui()
         self.setStyleSheet(dashboard_style)

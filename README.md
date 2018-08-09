@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/shared-systems/api.svg?branch=master)](https://travis-ci.org/shared-systems/api)
 
 #### Synopsis
-**Share Resources** is an open source platform designed to allow 
+**Deep Share** is an open source platform designed to allow 
 dynamic contribution and consumption of distributed computing resources.
 Using a barter based system it allows a user to offer their own computational 
 resources in exchange for tokens or use the resources of others in _the pool_.

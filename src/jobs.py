@@ -184,7 +184,7 @@ class Jobs(MainView):
 
         # TODO: load dat here
         # format: [cpu, gpu, memory, space], type: int
-        dat = [12, 2, 24, 40]
+        dat = [0, 0, 0, 0]
 
         # update available resources
         labels = [self.workspace.available_cpu,

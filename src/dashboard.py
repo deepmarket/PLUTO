@@ -44,13 +44,13 @@ class Dashboard(MainView):
 
         self.greeting = add_greeting()      # param string
         self.username = ""                  # param string
-        self.total_balance = 15             # param number
-        self.estimated_profit = 30          # param number
-        self.estimated_cost = 20            # param number
-        self.running_machine = 5            # param number
-        self.panic_machine = 2              # param number
-        self.finished_job = 3               # param number
-        self.running_job = 2                # param number
+        self.total_balance = 0              # param number
+        self.estimated_profit = 0           # param number
+        self.estimated_cost = 0             # param number
+        self.running_machine = 0            # param number
+        self.panic_machine = 0              # param number
+        self.finished_job = 0               # param number
+        self.running_job = 0                # param number
         self.panic_job = 0                  # param number
 
         account_api = Api("/account")

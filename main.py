@@ -21,10 +21,21 @@ if __name__ == '__main__':
     # timer.timeout.connect(main_app.update)
     # timer.start(10000)
 
-    login = Login()
-    login.show()
+    while True:
+        flag = True
 
-    # login.exec_() return True if user successfully signed in
-    if login.exec_():
-        main_app = App()  # Instantiate the application
-        exit(app.exec_())  # Return control to original event loop
+        login = Login()
+        login.show()
+
+        # login.exec_() return True if user successfully signed in
+        if login.exec_():
+            main_app = App()  # Instantiate the application
+
+            app.exec_()
+            # exit(app.exec_())  # Return control to original event loop
+        else:
+            flag = False
+
+        if flag is not True:
+            break
+

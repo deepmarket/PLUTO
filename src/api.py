@@ -29,12 +29,11 @@ class CredentialManager(object):
 
 
 class Api:
-    def __init__(self, endpoint: str="/", auth=False):
+    def __init__(self, endpoint: str="/", domain: str="131.252.209.102", port: int=8080, auth: bool=False):
 
-        # self.domain = "localhost"  # Used for testing
-        self.domain = "131.252.209.102"  # ip of lab intranet
+        self.domain = domain
+        self.port = port
 
-        self.port = 8080
         self.endpoint = endpoint
         if not self.endpoint.startswith("/"):
             self.endpoint = f"/{self.endpoint}"

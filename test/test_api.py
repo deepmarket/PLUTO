@@ -25,21 +25,31 @@ class ApiTest(unittest.TestCase):
         return False
 
     def test_credential_store(self):
-        # TODO
-        ...
+        if self.server_is_up():
+            with Api('/account', auth=True) as api:
+                new_user = {
+                    'firstname': 'firstname',
+                    'lastname': 'lastname',
+                    'email': 'email@email.com',
+                    'password': 'password'
+                    }
+                status, res = api.post(new_user)
+                self.assertEqual(status, 200)
 
     def test_api_get(self):
+        # self.assertTrue(self.server_is_up())
+        with Api('/', domain='255.255.255.256') as api:
+            self.assertTupleEqual(api.get(), (None, None))
 
-        self.assertTrue(self.server_is_up())
+    def test_api_post(self):
+        with Api('/', domain='255.255.255.256') as api:
+            self.assertTupleEqual(api.post(), (None, None))
 
-        api = Api('/')
-        status, res = api.get()
+    def test_api_put(self):
+        with Api('/', domain='255.255.255.256') as api:
+            self.assertTupleEqual(api.put(), (None, None))
 
-        self.assertEqual(status, 200, "status code should be 200.")
-
-        api = Api('/this/endpoint/should/not/exist')
-        status, res = api.get()
-
-        self.assertEqual(status, 404, "endpoint should not exist")
-
+    def test_api_delete(self):
+        with Api('/', domain='255.255.255.256') as api:
+            self.assertTupleEqual(api.delete(), (None, None))
 

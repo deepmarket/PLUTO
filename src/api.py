@@ -1,4 +1,5 @@
 import requests as req
+
 from json import loads, dumps
 from os import path, remove
 
@@ -28,7 +29,7 @@ class CredentialManager(object):
         return store
 
 
-class Api:
+class Api(object):
     def __init__(self, endpoint: str="/", domain: str="131.252.209.102", port: int=8080, auth: bool=False):
 
         self.domain = domain
@@ -39,117 +40,85 @@ class Api:
             self.endpoint = f"/{self.endpoint}"
 
         self.url: str = f"http://{self.domain}:{self.port}/api/v1{self.endpoint}"
+        self.auth: bool = auth
+        self.token: str = None
+
+    def __enter__(self):
         self.store = CredentialManager()
-        self.auth = auth
-        self.token = None
+        self.token = self.store.get("token")
 
-    def get(self, attr: str="text", url: str=None):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self.auth and self.token:
+            self.store.put(self.token)
+
+    def get(self, attr: str="text"):
         val: str = None
-        token: str = self.store.get("token")
 
-        if not url:
-            url = self.url
-
-        if token:
-            headers = {"x-access-token": token}
-            try:
-                res: req.Response = req.get(url, headers=headers)
-            except ConnectionError:
-                return None, None
-        else:
-            try:
-                res: req.Response = req.get(url)
-            except ConnectionError:
-                return None, None
+        headers = {"x-access-token": self.token}
         try:
-            val = res.__getattribute__(attr)
-            val = loads(val)
-        except AttributeError:
-            val = res
-        finally:
-            if self.auth and token:
-                self.store.put(token)
-            return res.status_code, val
-
-    def post(self, payload: dict={}, attr: str="text", url: str=None):
-        val: dict = None
-        token: str = self.store.get("token")
-
-        if not url:
-            url = self.url
-
-        if token:
-            headers = {"x-access-token": token}
-            try:
-                res = req.post(url, payload, headers=headers)
-            except ConnectionError:
-                return None, None
-        else:
-            try:
-                res: req.Response = req.post(url, payload)
-            except ConnectionError:
-                return None, None
-        try:
-            val = res.__getattribute__(attr)
-            val = loads(val)
-            token = val['token']
-        except AttributeError:
-            val = res
-        finally:
-            if self.auth and token:
-                self.store.put(token)
-            return res.status_code, val
-
-    def put(self, payload: dict={}, attr: str="text", url: str=None):
-
-        if not url:
-            url = self.url
-
-        try:
-            res: req.Response = req.put(url, payload)
+            res: req.Response = req.get(self.url, headers=headers)
         except ConnectionError:
-            return None
+            return None, None
 
+        try:
+            val = loads(res.__getattribute__(attr))
+        except AttributeError:
+            val = res
+        finally:
+            return res.status_code, val
+
+    def post(self, payload: dict={}, attr: str="text"):
+        val: dict = None
+
+        headers = {"x-access-token": self.token}
+        try:
+            res = req.post(self.url, payload, headers=headers)
+        except ConnectionError:
+            return None, None
+
+        try:
+            val = res.__getattribute__(attr)
+            val = loads(val)
+            self.token = val['token']
+        except AttributeError:
+            val = res
+        finally:
+            # if self.auth and token:
+            #     self.store.put(token)
+            return res.status_code, val
+
+    def put(self, payload: dict={}, attr: str="text"):
         val: str = None
+
+        headers = {"x-access-token": self.token}
+        try:
+            res = req.put(self.url, payload, headers=headers)
+        except ConnectionError:
+            return None, None
+
         try:
             val = res.__getattribute__(attr)
             val = loads(val)
         except AttributeError:
-            # TODO: Add logging
             val = res
         finally:
             return val
 
-    def delete(self, attr: str="text", url: str=None):
+    def delete(self, attr: str="text"):
         val: dict = None
 
-        if not url:
-            url = self.url
+        headers = {"x-access-token": self.token}
+        try:
+            res = req.delete(self.url, headers=headers)
+        except ConnectionError:
+            return None, None
 
-        token: str = self.store.get("token")
-
-        if token:
-            headers = {"x-access-token": token}
-            res = req.delete(url, headers=headers)
-        else:
-            try:
-                res: req.Response = req.delete(url)
-            except ConnectionError:
-                return None, None
         try:
             val = res.__getattribute__(attr)
             val = loads(val)
         except AttributeError:
             val = res
         finally:
-            if self.auth and token:
-                self.store.put(token)
             return res.status_code, val
-
-
-if __name__ == "__main__":
-    DEFAULT_URL = "http://localhost:8080"
-    api = Api("/resources/resources")
-    get = api.get()
-
-    print(f"get: {get}")

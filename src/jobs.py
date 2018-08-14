@@ -152,7 +152,9 @@ class Jobs(MainView):
     def update_workspace(self):
         with Api("/pricing")as api:
             status, res = api.get()
-            if isinstance(res, dict) and "prices" in res:        price_dat = res['prices']else:
+            if isinstance(res, dict) and "prices" in res:
+                price_dat = res['prices']
+            else:
                 price_dat = []
 
             # update scheme

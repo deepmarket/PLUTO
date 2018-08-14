@@ -1,7 +1,7 @@
 import requests as req
 
-from json import loads, dumps
-from os import path, remove
+from json import loads, dumps, JSONDecodeError
+from os import path, curdir, remove
 
 from requests.exceptions import ConnectionError
 
@@ -22,14 +22,16 @@ class CredentialManager(object):
             # store.write(dumps(obj))
             store.write(obj)
 
-    def get(self, attr: str):
+    def get(self):
         with open(self.credential_store, "r+") as store:
             # store = loads(store.read())
             store = store.read()
         return store
 
-
 class Api(object):
+    # Set store path globally
+    store_path = path.abspath(curdir)
+
     def __init__(self, endpoint: str="/", domain: str="131.252.209.102", port: int=8080, auth: bool=False):
 
         self.domain = domain
@@ -40,12 +42,13 @@ class Api(object):
             self.endpoint = f"/{self.endpoint}"
 
         self.url: str = f"http://{self.domain}:{self.port}/api/v1{self.endpoint}"
+
         self.auth: bool = auth
         self.token: str = None
 
     def __enter__(self):
-        self.store = CredentialManager()
-        self.token = self.store.get("token")
+        self.store = CredentialManager(self.store_path)
+        self.token = self.store.get()
 
         return self
 
@@ -53,72 +56,46 @@ class Api(object):
         if self.auth and self.token:
             self.store.put(self.token)
 
-    def get(self, attr: str="text"):
-        val: str = None
+    def get(self):
 
         headers = {"x-access-token": self.token}
         try:
             res: req.Response = req.get(self.url, headers=headers)
-        except ConnectionError:
+            return res.status_code, res.json()
+        except (ConnectionError, JSONDecodeError) as err:
+            # log(err)
             return None, None
 
-        try:
-            val = loads(res.__getattribute__(attr))
-        except AttributeError:
-            val = res
-        finally:
-            return res.status_code, val
-
-    def post(self, payload: dict={}, attr: str="text"):
-        val: dict = None
+    def post(self, payload: dict={}):
 
         headers = {"x-access-token": self.token}
         try:
-            res = req.post(self.url, payload, headers=headers)
-        except ConnectionError:
+            res: req.Response = req.post(self.url, payload, headers=headers)
+            res_json: dict = res.json()
+            self.token = res_json.get('token')
+            return res.status_code, res_json
+        except (ConnectionError, JSONDecodeError) as err:
+            # log(err)
             return None, None
 
-        try:
-            val = res.__getattribute__(attr)
-            val = loads(val)
-            self.token = val['token']
-        except AttributeError:
-            val = res
-        finally:
-            # if self.auth and token:
-            #     self.store.put(token)
-            return res.status_code, val
+    def put(self, payload: dict={}):
 
-    def put(self, payload: dict={}, attr: str="text"):
-        val: str = None
-
-        headers = {"x-access-token": self.token}
         try:
-            res = req.put(self.url, payload, headers=headers)
-        except ConnectionError:
+            headers = {"x-access-token": self.token}
+            res: req.Response = req.put(self.url, payload, headers=headers)
+            return res.status_code, res.json()
+
+        except (ConnectionError, JSONDecodeError) as err:
+            # log(err)
             return None, None
 
-        try:
-            val = res.__getattribute__(attr)
-            val = loads(val)
-        except AttributeError:
-            val = res
-        finally:
-            return val
+    def delete(self):
 
-    def delete(self, attr: str="text"):
-        val: dict = None
-
-        headers = {"x-access-token": self.token}
         try:
-            res = req.delete(self.url, headers=headers)
-        except ConnectionError:
+            headers = {"x-access-token": self.token}
+            res: req.Response = req.delete(self.url, headers=headers)
+            return res.status_code, res.json()
+
+        except (ConnectionError, JSONDecodeError) as err:
+            # log(err)
             return None, None
-
-        try:
-            val = res.__getattribute__(attr)
-            val = loads(val)
-        except AttributeError:
-            val = res
-        finally:
-            return res.status_code, val

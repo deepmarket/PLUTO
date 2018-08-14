@@ -25,6 +25,7 @@ class ApiTest(unittest.TestCase):
         return False
 
     def test_credential_store(self):
+        from os import path
         if self.server_is_up():
             with Api('/account', auth=True) as api:
                 new_user = {
@@ -35,6 +36,10 @@ class ApiTest(unittest.TestCase):
                     }
                 status, res = api.post(new_user)
                 self.assertEqual(status, 200)
+
+                self.assertTrue(path.exists(Api.store_path), True)
+                # Clean up
+                api.delete()
 
     def test_api_get(self):
         # self.assertTrue(self.server_is_up())
@@ -53,3 +58,6 @@ class ApiTest(unittest.TestCase):
         with Api('/', domain='255.255.255.256') as api:
             self.assertTupleEqual(api.delete(), (None, None))
 
+
+if __name__ == '__main__':
+    unittest.main()

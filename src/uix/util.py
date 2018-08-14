@@ -495,9 +495,9 @@ def verify_ip_address(ip_address):
     data = data['workers']
     for dat in data:
         if dat['host'] == ip_address:
-            return True
+            return False
 
-    return False
+    return True
 
 
 # this function ask fro the machine config by using ip_address

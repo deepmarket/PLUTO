@@ -44,19 +44,19 @@ class Dashboard(MainView):
 
         self.greeting = add_greeting()      # param string
         self.username = ""                  # param string
-        self.total_balance = 15             # param number
-        self.estimated_profit = 30          # param number
-        self.estimated_cost = 20            # param number
-        self.running_machine = 5            # param number
-        self.panic_machine = 2              # param number
-        self.finished_job = 3               # param number
-        self.running_job = 2                # param number
+        self.total_balance = 0              # param number
+        self.estimated_profit = 0           # param number
+        self.estimated_cost = 0             # param number
+        self.running_machine = 0            # param number
+        self.panic_machine = 0              # param number
+        self.finished_job = 0               # param number
+        self.running_job = 0                # param number
         self.panic_job = 0                  # param number
 
         with Api("/account") as account:
             status, res = account.get()
 
-            if status == 200:
+            if status == 200 and isinstance(res, dict) and "customer" in res and "firstname" in res['customer']:
                 # Insert comma here so we can default to nameless greeting if api fails.
                 self.username = f", {res['customer']['firstname'].capitalize()}"
             else:
@@ -103,8 +103,8 @@ class Dashboard(MainView):
         title_frame = QFrame(left_frame)
         title_layout = add_layout(title_frame, HORIZONTAL, space=10)
 
-        greeting = add_label(left_frame, f"{self.greeting.strip()}", name="Dashboard_greeting")
-        username = add_label(left_frame, f"{self.username.strip()}", name="Dashboard_username")
+        greeting = add_label(left_frame, f"{self.greeting}", name="Dashboard_greeting")
+        username = add_label(left_frame, f"{self.username}", name="Dashboard_username")
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         title_layout.addWidget(greeting)

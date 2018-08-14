@@ -28,6 +28,7 @@ class CredentialManager(object):
             store = store.read()
         return store
 
+
 class Api(object):
     # Set store path globally
     store_path = path.abspath(curdir)

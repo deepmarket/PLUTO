@@ -245,22 +245,23 @@ class Resources(MainView):
 
         status = "running"
 
-        # add data to db
-        api = Api("/resources")
+        with Api("/resource") as api:
 
-        resources_data = {
-            "machine_name": machine_name,
-            "ip_address": ip_address,
-            "ram": ram,
-            "cores": cores,
-            "cpus": cpu_gpu,
-            "price": price,
-            "status": status
-        }
+            resources_data = {
+                "machine_name": machine_name,
+                "ip_address": ip_address,
+                "ram": ram,
+                "cores": cores,
+                "cpus": cpu_gpu,
+                "price": price,
+                "status": status
+            }
 
-        status, res = api.post(resources_data)
-
-        print(res)
+            status, res = api.post(resources_data)
+            if not status == 200:
+                # log(neat error message of some kind?)
+                # And probably notify the user?
+                pass
 
         # add data to list
         self._fetch_job_data()
@@ -434,21 +435,20 @@ class Resources(MainView):
     def _fetch_job_data(self):
         self.list.clean_table()
 
-        # connect to db
-        api = Api("/resources")
-        status, res = api.get()
+        with Api("/resources") as api:
+            status, res = api.get()
 
-        # load data to list
-        # data format: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
-        if status == 200:
-            for rsrc in res["resources"]:
-                self.list.add_data([rsrc['machine_name'],
-                                    rsrc['ip_address'],
-                                    str(rsrc['cpus']),
-                                    str(rsrc['cores']),
-                                    str(rsrc['ram']),
-                                    str(rsrc['price']),
-                                    rsrc['status']])
+            # load data to list
+            # data format: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
+            if status == 200:
+                for rsrc in res["resources"]:
+                    self.list.add_data([rsrc['machine_name'],
+                                        rsrc['ip_address'],
+                                        str(rsrc['cpus']),
+                                        str(rsrc['cores']),
+                                        str(rsrc['ram']),
+                                        str(rsrc['price']),
+                                        rsrc['status']])
 
     # self-updated function by calling timer in main
     # can be used later on

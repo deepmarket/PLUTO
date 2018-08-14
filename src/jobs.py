@@ -150,48 +150,48 @@ class Jobs(MainView):
             self.input_check = True
 
     def update_workspace(self):
-        api = Api("/pricing")
-        status, res = api.get()
-        price_dat = res['prices']
+        with Api("/pricing") as api:
+            status, res = api.get()
+            price_dat = res['prices']
 
-        # update scheme
-        frames = [self.workspace.scheme_01_frame,
-                  self.workspace.scheme_02_frame,
-                  self.workspace.scheme_03_frame,
-                  self.workspace.scheme_04_frame]
+            # update scheme
+            frames = [self.workspace.scheme_01_frame,
+                      self.workspace.scheme_02_frame,
+                      self.workspace.scheme_03_frame,
+                      self.workspace.scheme_04_frame]
 
-        for i in range(len(frames)):
-            # find all QLabel children within the frame
-            labels = frames[i].findChildren(QLabel)
+            for i in range(len(frames)):
+                # find all QLabel children within the frame
+                labels = frames[i].findChildren(QLabel)
 
-            # exclude the first label, which is the time label
-            labels.pop(0)
+                # exclude the first label, which is the time label
+                labels.pop(0)
 
-            # TODO: load time scheme
-            if not price_dat:
-                for j in range(len(labels)):
-                    labels[j].setText('Error')
-            else:
-                dat = price_dat[i]
-                dat = [round(dat['cpus'], 6), round(dat['gpus'], 6), round(dat['memory'], 6), round(dat['disk_space'], 6)]
+                # TODO: load time scheme
+                if not price_dat:
+                    for j in range(len(labels)):
+                        labels[j].setText('Error')
+                else:
+                    dat = price_dat[i]
+                    dat = [round(dat['cpus'], 6), round(dat['gpus'], 6), round(dat['memory'], 6), round(dat['disk_space'], 6)]
 
-                for j in range(len(labels)):
-                    labels[j].setText(f"{dat[j]} Credit/Hr")
+                    for j in range(len(labels)):
+                        labels[j].setText(f"{dat[j]} Credit/Hr")
 
-        # TODO: load dat here
-        # format: [cpu, gpu, memory, space], type: int
-        dat = [12, 2, 24, 40]
+            # TODO: load dat here
+            # format: [cpu, gpu, memory, space], type: int
+            dat = [12, 2, 24, 40]
 
-        # update available resources
-        labels = [self.workspace.available_cpu,
-                  self.workspace.available_gpu,
-                  self.workspace.available_memory,
-                  self.workspace.available_disk]
+            # update available resources
+            labels = [self.workspace.available_cpu,
+                      self.workspace.available_gpu,
+                      self.workspace.available_memory,
+                      self.workspace.available_disk]
 
-        text = [f"CPU #: {dat[0]}", f"GPU #: {dat[1]}", f"Memory: {dat[2]} GB", f"Disk Space: {dat[3]} GB"]
+            text = [f"CPU #: {dat[0]}", f"GPU #: {dat[1]}", f"Memory: {dat[2]} GB", f"Disk Space: {dat[3]} GB"]
 
-        for i in range(len(dat)):
-            labels[i].setText(text[i])
+            for i in range(len(dat)):
+                labels[i].setText(text[i])
 
     # input data format: [job_id, workers, cores, memory, price, status, logs]
     def on_submit_clicked(self):
@@ -233,21 +233,21 @@ class Jobs(MainView):
         question = Question(question)
 
         if question.exec_():
-            # add data to db
-            job_api = Api("/jobs")
 
-            job_data = {
-                "timeslot_id": self.workspace.select_scheme-1,
-                "workers": workers,
-                "cores": cores,
-                "memory": memory,
-                "source_files": [source_files],
-                "input_files": [input_files],
-                "price": price,
-                "customer_id": "customer_id"
-            }
+            with Api("/jobs") as job:
 
-            job_api.post(job_data)
+                job_data = {
+                    "timeslot_id": self.workspace.select_scheme-1,
+                    "workers": workers,
+                    "cores": cores,
+                    "memory": memory,
+                    "source_files": [source_files],
+                    "input_files": [input_files],
+                    "price": price,
+                    "customer_id": "customer_id"
+                }
+
+                job.post(job_data)
 
             # add data to list
             self._fetch_job_data()
@@ -276,9 +276,8 @@ class Jobs(MainView):
             if question.exec_():
                 job_id = self.list.table.item(row, 0).text()
 
-                # delete on the db
-                job_api = Api(f"/jobs/{job_id}")
-                job_api.delete()
+                with Api(f"/jobs/{job_id}") as job_api:
+                    job_api.delete()
 
                 # delete on the list
                 self.list.table.removeRow(row)
@@ -294,22 +293,21 @@ class Jobs(MainView):
     def _fetch_job_data(self):
         self.list.clean_table()
 
-        # connect to db
-        job_api = Api("/jobs")
-        status, res = job_api.get()
+        with Api("/jobs") as job_api:
+            status, res = job_api.get()
 
-        # load data to list
-        # data format: [job_id, workers, cores, memory, price, status, logs]
-        if status == 200:
-            for job in res["jobs"]:
-                self.list.add_data([job['_id'],
-                                    job['workers'],
-                                    job['cores'],
-                                    job['memory'],
-                                    str(job['source_files'][0] + "..."),
-                                    str(job['input_files'][0] + "..."),
-                                    str(job['price']),
-                                    job['status'], "-"])
+            # load data to list
+            # data format: [job_id, workers, cores, memory, price, status, logs]
+            if status == 200:
+                for job in res["jobs"]:
+                    self.list.add_data([job['_id'],
+                                        job['workers'],
+                                        job['cores'],
+                                        job['memory'],
+                                        str(job['source_files'][0] + "..."),
+                                        str(job['input_files'][0] + "..."),
+                                        str(job['price']),
+                                        job['status'], "-"])
 
     def _check_input(self):
         if self.worker_check and self.core_check and self.memory_check and self.source_check and self.input_check:

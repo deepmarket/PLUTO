@@ -115,7 +115,6 @@ class Login(QDialog):
 
         # otherwise, input check pass
         else:
-            print(f"Logging in with:\n\tEmail: '{username}'\n\tPassword: '{pwd}'")
             self.attempt_login(username, pwd)
 
     # verified user input on db

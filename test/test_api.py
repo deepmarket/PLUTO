@@ -15,9 +15,9 @@ class ApiTest(unittest.TestCase):
         
         # All of 
         if all([bool(txt) for txt in ['api', 'is', 'online'] if txt in str(status_request)]):
-            return true
+            return True
         
-        return false
+        return False
         
     def test_credential_store(self):
         from os import path

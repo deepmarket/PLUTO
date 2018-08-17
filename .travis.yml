@@ -1,9 +1,5 @@
 language: python
 
-#python:
-#  - 3.6
-#  - 3.7
-
 os:
   - linux
   - osx
@@ -30,13 +26,13 @@ matrix:
 #      dist: xenial
 #      sudo: required
 
-    # Tests Python 3.7 on Ubuntu Xenial
+    # Tests Python 3.6 on Ubuntu Trusty
     - python: 3.6
-    - python: 3.7
+#    - python: 3.7  # as of 8/17.18 3.7 is still being worked on by the travis team
       dist: trusty
       sudo: true
 
-    # Tests Python 3.7 on Ubuntu Xenial
+    # Tests Python 3.6 and 3.7 on Ubuntu Xenial
     - python: 3.6
     - python: 3.7
       dist: xenial
@@ -50,22 +46,22 @@ matrix:
       language: generic
       osx_image: xcode6.4
 
-    # 10.11 - latest
+    # 10.11.latest
     - os: osx
       language: generic
       osx_image: xcode8
 
-    # 10.12 - latest
+    # 10.12.latest
     - os: osx
       language: generic
       osx_image: xcode9.2
 
-    # 10.13 - latest
+    # 10.13.latest
     - os: osx
       language: generic
       osx_image: xcode10
 
-# Perform manual install on python3 for OS X
+# Perform manual install of 3.6 for OS X
 before_install:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
     # Don't install pyenv twice

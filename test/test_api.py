@@ -7,23 +7,18 @@ class ApiTest(unittest.TestCase):
 
     @staticmethod
     def server_is_up():
-        from os import system
-        from sys import platform
-
         domain = Api().domain
+        port = Api().port
 
-        # Using Linux or OSX
-        if platform == 'linux' or platform == 'darwin':
-            can_ping = system(f"ping -c 1 {domain} 2>&1 > /dev/null")
-
-        else:
-            can_ping = system(f"ping /n 1 {domain} 2>&1")
-
-        if can_ping is 0:
-            return True
-
-        return False
-
+        from requests import get
+        status_request = str(get(f"http://{domain}:{port}/api/v1/").text.encode('utf-8')).lower()
+        
+        # All of 
+        if all([bool(txt) for txt in ['api', 'is', 'online'] if txt in str(status_request)]):
+            return true
+        
+        return false
+        
     def test_credential_store(self):
         from os import path
         if self.server_is_up():

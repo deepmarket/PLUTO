@@ -185,7 +185,6 @@ class Jobs(MainView):
             # format: [cpu, gpu, memory, space], type: int
             dat = [0, 0, 0, 0]
 
-
             # update available resources
             labels = [self.workspace.available_cpu,
                       self.workspace.available_gpu,

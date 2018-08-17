@@ -2,7 +2,6 @@ language: python
 
 python:
   - 3.6
-  - 3.7
 
 os:
   - linux
@@ -16,24 +15,30 @@ install:
 script:
   - python -m unittest test/test_api.py
 
-#matrix:
-#  include:
-#
-#    # Linux
-#    # See
-#    # 14.04
-#    - os: linux
-#      dist: trusty
-#      sudo: required
-#
-#    # 16.04 (Beta)
-#    - os: linux
-#      dist: xenial
-#      sudo: required
-#
-#    # MacOs
-#    # See https://docs.travis-ci.com/user/reference/osx/#os-x-version for details
-#
+matrix:
+  include:
+
+    # Linux
+    # See
+    # 14.04
+    - os: linux
+      dist: trusty
+      sudo: required
+
+    # 16.04 (Beta)
+    - os: linux
+      dist: xenial
+      sudo: required
+
+    # Tests Python 3.7 on Ubuntu Xenial
+    - python: 3.7
+      dist: xenial
+      sudo: true
+
+    # MacOs
+    # See https://docs.travis-ci.com/user/reference/osx/#os-x-version for details
+
+#   Python not supported yet : (
 #    # 10.10
 #    - os: osx
 #      osx_image: xcode6.4

@@ -1,8 +1,5 @@
 language: python
 
-python:
-  - 3.6
-
 os:
   - linux
   - osx
@@ -19,18 +16,24 @@ matrix:
   include:
 
     # Linux
-    # See
     # 14.04
-    - os: linux
-      dist: trusty
-      sudo: required
-
-    # 16.04 (Beta)
-    - os: linux
-      dist: xenial
-      sudo: required
+#    - os: linux
+#      dist: trusty
+#      sudo: required
+#
+#    # 16.04 (Beta)
+#    - os: linux
+#      dist: xenial
+#      sudo: required
 
     # Tests Python 3.7 on Ubuntu Xenial
+    - python: 3.6
+    - python: 3.7
+      dist: trusty
+      sudo: true
+
+    # Tests Python 3.7 on Ubuntu Xenial
+    - python: 3.6
     - python: 3.7
       dist: xenial
       sudo: true
@@ -38,19 +41,28 @@ matrix:
     # MacOs
     # See https://docs.travis-ci.com/user/reference/osx/#os-x-version for details
 
-#   Python not supported yet : (
-#    # 10.10
-#    - os: osx
-#      osx_image: xcode6.4
-#
-#    # 10.11 - latest
-#    - os: osx
-#      osx_image: xcode8
-#
-#    # 10.12 - latest
-#    - os: osx
-#      osx_image: xcode9.2
-#
-#    # 10.13 - latest
-#    - os: osx
-#      osx_image: xcode10
+    # 10.10
+    - os: osx
+      language: generic
+      osx_image: xcode6.4
+
+    # 10.11 - latest
+    - os: osx
+      language: generic
+      osx_image: xcode8
+
+    # 10.12 - latest
+    - os: osx
+      language: generic
+      osx_image: xcode9.2
+
+    # 10.13 - latest
+    - os: osx
+      language: generic
+      osx_image: xcode10
+
+# Perform manual install on python3 for OS X
+before_install:
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/f2a764ef944b1080be64bd88dca9a1d80130c558/Formula/python.rb; fi
+

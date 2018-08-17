@@ -25,8 +25,9 @@ class CredentialManager(object):
     def get(self):
         with open(self.credential_store, "r+") as store:
             # store = loads(store.read())
-            store = store.read()
-        return store
+            # store = store.read()
+            return store.read()
+        # return store
 
 
 class Api(object):

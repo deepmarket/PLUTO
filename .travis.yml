@@ -16,36 +16,36 @@ install:
 script:
   - python -m unittest test/test_api.py
 
-matrix:
-  include:
-
-    # Linux
-    # See
-    # 14.04
-    - os: linux
-      dist: trusty
-      sudo: required
-
-    # 16.04 (Beta)
-    - os: linux
-      dist: xenial
-      sudo: required
-
-    # MacOs
-    # See https://docs.travis-ci.com/user/reference/osx/#os-x-version for details
-
-    # 10.10
-    - os: osx
-      osx_image: xcode6.4
-
-    # 10.11 - latest
-    - os: osx
-      osx_image: xcode8
-
-    # 10.12 - latest
-    - os: osx
-      osx_image: xcode9.2
-
-    # 10.13 - latest
-    - os: osx
-      osx_image: xcode10
+#matrix:
+#  include:
+#
+#    # Linux
+#    # See
+#    # 14.04
+#    - os: linux
+#      dist: trusty
+#      sudo: required
+#
+#    # 16.04 (Beta)
+#    - os: linux
+#      dist: xenial
+#      sudo: required
+#
+#    # MacOs
+#    # See https://docs.travis-ci.com/user/reference/osx/#os-x-version for details
+#
+#    # 10.10
+#    - os: osx
+#      osx_image: xcode6.4
+#
+#    # 10.11 - latest
+#    - os: osx
+#      osx_image: xcode8
+#
+#    # 10.12 - latest
+#    - os: osx
+#      osx_image: xcode9.2
+#
+#    # 10.13 - latest
+#    - os: osx
+#      osx_image: xcode10

@@ -50,13 +50,13 @@ class ApiTest(unittest.TestCase):
         with Api('/', domain='255.255.255.256') as api:
             self.assertTupleEqual(api.post(), (None, None))
 
-    def test_api_put(self):
-        with Api('/', domain='255.255.255.256') as api:
-            self.assertTupleEqual(api.put(), (None, None))
-
     def test_api_delete(self):
         with Api('/', domain='255.255.255.256') as api:
             self.assertTupleEqual(api.delete(), (None, None))
+
+    def test_api_put(self):
+        with Api('/', domain='255.255.255.256') as api:
+            self.assertTupleEqual(api.put(), (None, None))
 
 
 if __name__ == '__main__':

@@ -9,11 +9,15 @@ from requests.exceptions import ConnectionError
 class CredentialManager(object):
     # TODO: Consider using something like marshal, shelve, or pickle
     def __init__(self, file_path="./"):
+
         self.file_path = file_path
         if not path.exists(path.join(path.abspath(self.file_path), ".credential_store")):
-            credential_store_path = path.join(path.abspath(self.file_path), ".credential_store")
-            self.credential_store = open(credential_store_path, "w+")
-            self.credential_store.close()
+            self.credential_store = path.join(path.abspath(self.file_path), ".credential_store")
+
+            # Create file
+            with open(self.credential_store, "w+") as credential_store:
+                pass
+
         else:
             self.credential_store = path.join(path.abspath(self.file_path), ".credential_store")
 
@@ -25,9 +29,7 @@ class CredentialManager(object):
     def get(self):
         with open(self.credential_store, "r+") as store:
             # store = loads(store.read())
-            # store = store.read()
             return store.read()
-        # return store
 
 
 class Api(object):

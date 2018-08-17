@@ -206,12 +206,12 @@ class App(QMainWindow):
         popup.exec_()
 
     def on_logout_clicked(self):
-        account_api = Api("/auth/logout")
-        status, res = account_api.post()
+        with Api("/auth/logout") as account_api:
+            status, res = account_api.post()
 
-        if status == 200:
-            print("Logging out.")
-        self.close()
+            if status == 200:
+                print("Logging out.")
+            self.close()
 
     def update(self):
         self.main_window.stack_widget.update()
@@ -271,11 +271,12 @@ class Navigation(QFrame):
         super(QFrame, self).__init__(*args, **kwargs)
 
         # TODO: isolated from Api until the incomplete handling
-        # account_api = Api("/account")
-        # status, res = account_api.get()
+        # with Api("/account") as account_api:
+        #     status, res = account_api.get()
         #
-        # if status == 200:
-        #     self.credits = "{:.2f}".format(round(res['customer']['credits'], 3))
+        #     if status == 200:
+        #         self.credits = "{:.2f}".format(round(res['customer']['credits'], 3))
+
         self.credits = 15
 
         self.head_img = None
@@ -342,14 +343,16 @@ class Account(QFrame):
         super(QFrame, self).__init__(*args, **kwargs)
 
         self.head_img = None                # image filename string
-        account_api = Api("/account")
-        status, res = account_api.get()
 
-        if status == 200:
-            # Insert comma here so we can default to nameless greeting if api fails.
-            self.username = f"{res['customer']['firstname'].capitalize()}"
-        else:
-            self.username = "USER"
+        with Api("/account") as account_api:
+            status, res = account_api.get()
+
+            if status == 200:
+                # Insert comma here so we can default to nameless greeting if api fails.
+                self.username = f"{res['customer']['firstname'].capitalize()}"
+            else:
+                self.username = "USER"
+
         self.credit = 15                    # parameter integer
         self.credit_history = None          # button
         self.notification = None            # button

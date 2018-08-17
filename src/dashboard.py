@@ -53,14 +53,14 @@ class Dashboard(MainView):
         self.running_job = 0                # param number
         self.panic_job = 0                  # param number
 
-        account_api = Api("/account")
-        status, res = account_api.get()
+        with Api("/account") as account:
+            status, res = account.get()
 
-        if status == 200 and isinstance(res, dict) and "customer" in res and "firstname" in res['customer']:
-            # Insert comma here so we can default to nameless greeting if api fails.
-            self.username = f", {res['customer']['firstname'].capitalize()}"
-        else:
-            self.username = ", User"
+            if status == 200 and isinstance(res, dict) and "customer" in res and "firstname" in res['customer']:
+                # Insert comma here so we can default to nameless greeting if api fails.
+                self.username = f", {res['customer']['firstname'].capitalize()}"
+            else:
+                self.username = "."
 
         # TODO: request "Total Balance", "Estimated profit", "Estimated cost" "machine status"from api also
 

@@ -115,28 +115,26 @@ class Login(QDialog):
 
         # otherwise, input check pass
         else:
-            print(f"Logging in with:\n\tEmail: '{username}'\n\tPassword: '{pwd}'")
             self.attempt_login(username, pwd)
 
     # verified user input on db
     def attempt_login(self, username, pwd):
 
-        api: Api = Api("/auth/login", True)
+        with Api("/auth/login") as api:
+            status, res = api.post({
+                "email": username,
+                "password": pwd
+            })
 
-        status, res = api.post({
-            "email": username,
-            "password": pwd
-        })
-
-        if status == 200:
-            self.accept()
-            self.close()
-        elif status == 401:
-            self.login.login_hint.setText("The email or password you entered is invalid.")
-        # Only other status API will return is an error, so let the user know
-        else:
-            self.login.login_hint.setText("There was an error while trying to log in. Please try again.")
-            print(status)
+            if status == 200:
+                self.accept()
+                self.close()
+            elif status == 401:
+                self.login.login_hint.setText("The email or password you entered is invalid.")
+            # Only other status API will return is an error, so let the user know
+            else:
+                self.login.login_hint.setText("There was an error while trying to log in. Please try again.")
+                print(status)
 
     # pre-check user input before access db
     def create_action(self):
@@ -171,33 +169,38 @@ class Login(QDialog):
 
     # verified user input and load into db
     def attempt_create(self, first, last, username, pwd):
-        api: Api = Api("/account", True)
 
-        auth_dict = {
-            "firstname": first,
-            "lastname": last,
-            "email": username,
-            "password": pwd
-        }
+        with Api("/account") as api:
 
-        try:
+            auth_dict = {
+                "firstname": first,
+                "lastname": last,
+                "email": username,
+                "password": pwd
+            }
+
+            # try:
+            #     status, res = api.post(auth_dict)
+            # except ConnectionRefusedError:
+            #     self.create.create_hint.setText("Connection refused, please contact your system administrator")
+            # except ConnectionError:  # From requests library
+            #     self.create.create_hint.setText("Could not connect to the share resources server")
+            # finally:
+
             status, res = api.post(auth_dict)
-        except ConnectionRefusedError:
-            self.create.create_hint.setText("Connection refused, please contact your system administrator")
-        except ConnectionError:  # From requests library
-            self.create.create_hint.setText("Could not connect to the share resources server")
-        finally:
-
-            if status == 200:
-                # timer = QTimer()
-                # timer.timeout.connect(self.cancel_action)
-                # timer.start(900)
-
-                # if timer:
-                    # Accept and close parent window
-                self.attempt_login(username, pwd)
+            if (status, res) == (None, None):
+                self.create.create_hint.setText("Could not connect to the share resources server")
             else:
-                self.create.create_hint.setText("Email/password combination already in use")
+                if status == 200:
+                    # timer = QTimer()
+                    # timer.timeout.connect(self.cancel_action)
+                    # timer.start(900)
+
+                    # if timer:
+                        # Accept and close parent window
+                    self.attempt_login(username, pwd)
+                else:
+                    self.create.create_hint.setText("Email/password combination already in use")
 
     # gui interact function
     def to_create(self):

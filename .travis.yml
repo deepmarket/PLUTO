@@ -1,9 +1,5 @@
 language: python
 
-os:
-  - linux
-  - osx
-
 cache: pip
 
 install:
@@ -14,17 +10,6 @@ script:
 
 matrix:
   include:
-
-    # Linux
-    # 14.04
-#    - os: linux
-#      dist: trusty
-#      sudo: required
-#
-#    # 16.04 (Beta)
-#    - os: linux
-#      dist: xenial
-#      sudo: required
 
     # Tests Python 3.6 on Ubuntu Trusty
     - python: 3.6
@@ -41,25 +26,28 @@ matrix:
     # MacOs
     # See https://docs.travis-ci.com/user/reference/osx/#os-x-version for details
 
-    # 10.10
-    - os: osx
-      language: generic
-      osx_image: xcode6.4
-
     # 10.11.latest
     - os: osx
       language: generic
       osx_image: xcode8
 
-    # 10.12.latest
-    - os: osx
-      language: generic
-      osx_image: xcode9.2
-
     # 10.13.latest
     - os: osx
       language: generic
       osx_image: xcode10
+  
+  
+  allow_failures:
+    # 10.10
+    - os: osx
+      language: generic
+      osx_image: xcode6.4
+
+  # 10.12.latest
+    - os: osx
+      language: generic
+      osx_image: xcode9.2
+
 
 # Perform manual install of 3.6 for OS X
 before_install:
@@ -68,5 +56,4 @@ before_install:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]] && ! [[ -x "$(command -v pyenv)" ]]; then brew install pyenv ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pyenv install 3.6.5 ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then PATH="~/.pyenv/versions/3.6.5/bin:${PATH}" ; fi
-
 

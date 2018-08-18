@@ -103,12 +103,11 @@ class Dashboard(MainView):
         title_frame = QFrame(left_frame)
         title_layout = add_layout(title_frame, HORIZONTAL, space=10)
 
-        greeting = add_label(left_frame, f"{self.greeting}", name="Dashboard_greeting")
-        username = add_label(left_frame, f"{self.username}", name="Dashboard_username")
+        welcome_user = add_label(left_frame, f"{self.greeting}{self.username}", name="Dashboard_welcome")
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
-        title_layout.addWidget(greeting)
-        title_layout.addWidget(username)
+        title_layout.addWidget(welcome_user)
+
         title_layout.addItem(spacer)
         left_layout.addWidget(title_frame)
 

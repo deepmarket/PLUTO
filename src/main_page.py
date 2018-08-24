@@ -45,6 +45,9 @@ from src.uix.popup import Notification, CreditHistory
 
 
 class MainPage(QFrame):
+
+    to_login_page_signal = pyqtSignal(bool)
+
     def __init__(self, *args, **kwargs):
         super(QFrame, self).__init__(*args, **kwargs)
 
@@ -57,8 +60,9 @@ class MainPage(QFrame):
 
         # gui property
         self.animation = None
-        self.width = 1024
-        self.height = 720
+        self.sidebar_width = 100
+        self.navigation_height = 45
+        self.account_width = 200
 
         self._init_ui()
         self.setStyleSheet(main_style)
@@ -66,35 +70,28 @@ class MainPage(QFrame):
         self.on_dashboard_clicked()
 
     def _init_ui(self):
-        self.setFixedSize(self.width, self.height)
-
-        sidebar_width = 100
-        navigation_height = 45
+        self.setFixedSize(WINDOW_WIDTH, WINDOW_HEIGHT)
 
         # side bar
         self.sidebar = SideBar(self)
-        self.sidebar.setFixedSize(sidebar_width, self.height)
-        self.sidebar.move(0, 0)
+        self.sidebar.setFixedSize(self.sidebar_width, WINDOW_HEIGHT)
 
         # top navigation
         self.navigation = Navigation(self)
-        self.navigation.setFixedSize(self.width-sidebar_width, navigation_height)
-        self.navigation.move(sidebar_width, 0)
+        self.navigation.setFixedSize(WINDOW_WIDTH-self.sidebar_width, self.navigation_height)
 
         self.interface = CurrentInterface(self)
-        self.interface.setFixedSize(self.width-sidebar_width, self.height-navigation_height)
-        self.interface.move(sidebar_width, navigation_height)
+        self.interface.setFixedSize(WINDOW_WIDTH-self.sidebar_width, WINDOW_HEIGHT-self.navigation_height)
 
         # mask & right account bar
         self.mask = Mask(self)
-        self.mask.setFixedSize(self.width, self.height)
-        self.mask.move(self.width, 0)
-        self.mask.clicked_area.setFixedSize(self.width, self.height)
-        self.mask.clicked_area.move(0, 0)
+        self.mask.setFixedSize(WINDOW_WIDTH, WINDOW_HEIGHT)
+        self.mask.clicked_area.setFixedSize(WINDOW_WIDTH, WINDOW_HEIGHT)
 
         self.account = Account(self.mask)
-        self.account.setFixedSize(200, self.height)
-        self.account.move(self.mask.width()-200, 0)
+        self.account.setFixedSize(self.account_width, WINDOW_HEIGHT)
+
+        self._set_component_loc()
 
         # connect function
         self.sidebar.dashboard.clicked.connect(self.on_dashboard_clicked)
@@ -104,6 +101,15 @@ class MainPage(QFrame):
         self.mask.clicked_area.clicked.connect(self.on_mask_clicked)
         self.account.credit_history.clicked.connect(self.on_credit_history_clicked)
         self.account.notification.clicked.connect(self.on_notification_clicked)
+        self.account.logout.clicked.connect(self.on_logout_clicked)
+
+    def _set_component_loc(self):
+        self.sidebar.move(0, 0)
+        self.navigation.move(self.sidebar_width, 0)
+        self.interface.move(self.sidebar_width, self.navigation_height)
+        self.mask.move(WINDOW_WIDTH, 0)
+        self.mask.clicked_area.move(0, 0)
+        self.account.move(self.mask.width() - self.account_width, 0)
 
     # switch tab to dashboard
     def on_dashboard_clicked(self):
@@ -151,7 +157,7 @@ class MainPage(QFrame):
     def on_menu_clicked(self):
         self.animation = QSequentialAnimationGroup()
 
-        mask_action = add_move_animation(self.mask, self.width, 0, 0, 0, duration=0)
+        mask_action = add_move_animation(self.mask, WINDOW_WIDTH, 0, 0, 0, duration=0)
         menu_action = add_move_animation(self.account, self.mask.width(), 0, self.mask.width() - 200, 0)
 
         self.animation.addAnimation(mask_action)
@@ -164,7 +170,7 @@ class MainPage(QFrame):
         self.animation = QSequentialAnimationGroup()
 
         menu_action = add_move_animation(self.account, self.mask.width()-200, 0, self.mask.width(), 0)
-        mask_action = add_move_animation(self.mask, 0, 0, self.width, 0, duration=0)
+        mask_action = add_move_animation(self.mask, 0, 0, WINDOW_WIDTH, 0, duration=0)
 
         self.animation.addAnimation(menu_action)
         self.animation.addAnimation(mask_action)
@@ -183,8 +189,15 @@ class MainPage(QFrame):
         popup = CreditHistory()
         popup.exec_()
 
+    def on_logout_clicked(self):
+        self.to_login_page_signal.emit(True)
+
     def update(self):
         self.interface.stack_widget.update()
+
+    def init_main_page(self):
+        self._set_component_loc()
+        self.on_dashboard_clicked()
 
 
 # Pure UI class, no functionality

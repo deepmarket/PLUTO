@@ -20,14 +20,13 @@
         self.current_row = 0            # param number
 """
 
-from src.mainview import MainView
+from src.interfaces.interface import Interface
 from src.uix.util import *
-from src.uix.config import *
 from src.uix.popup import Question
 from src.api import Api
 
 
-class Jobs(MainView):
+class Jobs(Interface):
 
     def __init__(self, *args, **kwargs):
         super(Jobs, self).__init__(*args, **kwargs)

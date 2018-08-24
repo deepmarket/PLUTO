@@ -517,7 +517,7 @@ def load_machine_config(ip_address):
 
     data = data['workers']
     for dat in data:
-        print(dat)
+        # print(dat)
         if dat['host'] == ip_address:
             return dat['cores'] - dat['coresused'], round((dat['memory'] - dat['memoryused'])/1024, 1)
 

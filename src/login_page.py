@@ -127,7 +127,7 @@ class LoginPage(QFrame):
             # Only other status API will return is an error, so let the user know
             else:
                 self.login.login_hint.setText("There was an error while trying to log in. Please try again.")
-                print(status)
+                # print(status)
 
     # pre-check user input before access db
     def create_action(self):
@@ -156,8 +156,8 @@ class LoginPage(QFrame):
 
         # otherwise, check pass
         else:
-            print(f"Creating account with:\n\tFirst name: '{first}'\n\tLast name: '{last}'\n"
-                  f"\tEmail:'{email}'\n\tPassword: '{pwd}''")
+            # print(f"Creating account with:\n\tFirst name: '{first}'\n\tLast name: '{last}'\n"
+            #      f"\tEmail:'{email}'\n\tPassword: '{pwd}''")
             self.attempt_create(first, last, email, pwd)
 
     # verified user input and load into db

@@ -9,9 +9,9 @@ import urllib.request
 import json
 
 from PyQt5.QtCore import (Qt, QSize, QRect, QPropertyAnimation, QRectF, QPoint, QTimer, QPointF,
-                          QSequentialAnimationGroup, QTimer)
+                          QSequentialAnimationGroup, QTimer, pyqtSignal, QTimeLine)
 from PyQt5.QtGui import QPixmap, QIcon, QFontDatabase, QPainter, QFont, QColor, QPen, QBrush, QPolygonF, QPainterPath
-from PyQt5.QtWidgets import (QDesktopWidget, QPushButton, QLabel, QFrame, QLineEdit, QCheckBox,
+from PyQt5.QtWidgets import (QDesktopWidget, QPushButton, QLabel, QFrame, QLineEdit, QCheckBox, QWidget,
                              QVBoxLayout, QHBoxLayout, QStackedLayout, QGraphicsView, QGraphicsScene,
                              QGraphicsEllipseItem, QGraphicsLineItem, QGraphicsPolygonItem, QGraphicsPathItem,
                              QGraphicsTextItem, QGraphicsDropShadowEffect, QDialog, QMainWindow, QSizePolicy,
@@ -254,19 +254,23 @@ def add_input_box(widget, title, space=0, l_m=0, r_m=0, align=None, hint=None, e
 
 
 # input box for login
-def add_login_input_box(widget, title, title_width=160, hint=None, echo=False):
+def add_login_input_box(widget, title, height=52, title_width=160, hint=None, echo=False, fix_width=False):
 
     # create object
-    box, box_title, box_input = add_input_box(widget, title, l_m=30, r_m=30, space=9, hint=hint, echo=echo)
+    if fix_width:
+        box, box_title, box_input = add_input_box(widget, title, l_m=10, r_m=10, space=9, hint=hint, echo=echo)
+        box.setFixedSize(250, height)
+    else:
+        box, box_title, box_input = add_input_box(widget, title, l_m=20, r_m=20, space=9, hint=hint, echo=echo)
+        box.setFixedHeight(height)
 
-    box.setFixedHeight(52)
+    box.setFixedHeight(height)
 
     box.setObjectName("Login_input_box")
 
-    box_title.setFixedSize(title_width, 52)
+    box_title.setFixedWidth(title_width)
     box_title.setObjectName("Login_input_title")
 
-    box_input.setFixedHeight(52)
     box_input.setObjectName("Login_input_input")
 
     return box, box_input
@@ -513,8 +517,40 @@ def load_machine_config(ip_address):
 
     data = data['workers']
     for dat in data:
-        print(dat)
+        # print(dat)
         if dat['host'] == ip_address:
             return dat['cores'] - dat['coresused'], round((dat['memory'] - dat['memoryused'])/1024, 1)
 
     return 0, 0
+
+
+# switch page animation class
+# pure gui class, no functionality
+class FadeWidget(QWidget):
+
+    def __init__(self, old_widget, new_widget):
+        super(QWidget, self).__init__(new_widget)
+
+        self.old_pixmap = QPixmap(new_widget.size())
+        old_widget.render(self.old_pixmap)
+        self.pixmap_opacity = 1.0
+
+        self.timeline = QTimeLine()
+        self.timeline.valueChanged.connect(self.animate)
+        self.timeline.finished.connect(self.close)
+        self.timeline.setDuration(100)
+        self.timeline.start()
+
+        self.resize(new_widget.size())
+        self.show()
+
+    def paintEvent(self, event):
+        painter = QPainter()
+        painter.begin(self)
+        painter.setOpacity(self.pixmap_opacity)
+        painter.drawPixmap(0, 0, self.old_pixmap)
+        painter.end()
+
+    def animate(self, value):
+        self.pixmap_opacity = 1.0 - value
+        self.repaint()

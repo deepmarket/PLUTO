@@ -29,7 +29,7 @@ for port in range(80, 60000):
     result = conn.connect_ex(('localhost', port))
     if result == 0:
         # print("Port is open")
-        print(f"Port {port} is open")
+        # print(f"Port {port} is open")
     else:
         del conn, result
     # else:

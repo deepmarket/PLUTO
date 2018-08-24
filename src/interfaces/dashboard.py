@@ -52,6 +52,7 @@ class Dashboard(Interface):
         self.finished_jobs = 0               # param number
         self.running_jobs = 0                # param number
         self.killed_jobs = 0                  # param number
+        self.unrecognized_jobs = 0                  # param number
 
         self.get_dashboard_data()
         self._init_ui()
@@ -69,8 +70,6 @@ class Dashboard(Interface):
             else:
                 self.username = "."
                 self.total_balance = 0
-
-
 
         with Api("/resources") as resources:
             status, res = resources.get()
@@ -91,13 +90,12 @@ class Dashboard(Interface):
                         self.finished_jobs += 1
                     elif str(job['status']) == "RUNNING":
                         self.running_jobs += 1
-                    else:
+                    elif str(job['status']) == "KILLED":
                         self.killed_jobs += 1
+                    else:
+                        self.unrecognized_jobs += 1
 
-
-
-
-
+        self.finished_jobs = 0
 
     def _init_ui(self):
         widget_layout = add_layout(self, VERTICAL, t_m=5, b_m=5, space=5)
@@ -234,6 +232,24 @@ class Dashboard(Interface):
         line_layout.addItem(spacer)
 
         left_layout.addWidget(line_frame)
+
+        # --------- a line ------------
+
+        if self.unrecognized_jobs > 0:
+            line_frame = QFrame(left_frame)
+            line_layout = add_layout(line_frame, HORIZONTAL)
+
+            segment = add_label(line_frame, f"{self.unrecognized_jobs}", name="Dashboard_highlight_description")
+            line_layout.addWidget(segment)
+
+            segment = add_label(line_frame, f" jobs are unrecognized.", name="Dashboard_description")
+            line_layout.addWidget(segment)
+
+            spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+            line_layout.addItem(spacer)
+
+            left_layout.addWidget(line_frame)
+
 
         # --------- end left_frame, begin right_frame ------------
 

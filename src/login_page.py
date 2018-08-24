@@ -81,6 +81,7 @@ class LoginPage(QFrame):
         self.login.pwd.returnPressed.connect(self.login_action)
         self.login.sign_up_button.clicked.connect(self.to_create)
         self.create.to_login_button.clicked.connect(self.to_login)
+        self.create.create_button.clicked.connect(self.create_action)
 
     # pre-check user input before access db
     def login_action(self):
@@ -216,6 +217,7 @@ class LoginPage(QFrame):
         self.create.last.setText("")
         self.create.username.setText("")
         self.create.pwd.setText("")
+        self.create.confirm_pwd.setText("")
         self.create.create_hint.setText("")
 
     def init_login_page(self):

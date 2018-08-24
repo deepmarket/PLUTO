@@ -88,7 +88,7 @@ class Dashboard(Interface):
                 for job in res["jobs"]:
                     if str(job['status']) == "FINISHED":
                         self.finished_jobs += 1
-                    elif str(job['status']) == "Running":
+                    elif str(job['status']) == "RUNNING":
                         self.running_jobs += 1
                     elif str(job['status']) == "KILLED":
                         self.killed_jobs += 1
@@ -228,20 +228,28 @@ class Dashboard(Interface):
         segment = add_label(line_frame, " jobs have been killed.", name="Dashboard_description")
         line_layout.addWidget(segment)
 
-        # --------- a line ------------
-
-        line_frame = QFrame(left_frame)
-        line_layout = add_layout(line_frame, HORIZONTAL)
-
-        if self.unrecognized_jobs > 0:
-            segment = add_label(line_frame, f"Additionally, {self.unrecognized_jobs} jobs are unrecognized.",
-                                name="Dashboard_description")
-            line_layout.addWidget(segment)
-
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
         line_layout.addItem(spacer)
 
         left_layout.addWidget(line_frame)
+
+        # --------- a line ------------
+
+        if self.unrecognized_jobs > 0:
+            line_frame = QFrame(left_frame)
+            line_layout = add_layout(line_frame, HORIZONTAL)
+
+            segment = add_label(line_frame, f"{self.unrecognized_jobs}", name="Dashboard_highlight_description")
+            line_layout.addWidget(segment)
+
+            segment = add_label(line_frame, f" jobs are unrecognized.", name="Dashboard_description")
+            line_layout.addWidget(segment)
+
+            spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+            line_layout.addItem(spacer)
+
+            left_layout.addWidget(line_frame)
+
 
         # --------- end left_frame, begin right_frame ------------
 

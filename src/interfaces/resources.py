@@ -866,11 +866,6 @@ class ResourcesList(QFrame):
         self._init_ui()
         self.setStyleSheet(page_style)
 
-        # testing
-        self.add_data(["martin-mac", "12.31.21.1", "1", "2", "4", "0.06 credit / Hr", "running"])
-        self.add_data(["martin-mac", "12.31.21.1", "1", "2", "4", "0.06 credit / Hr", "running"])
-        self.add_data(["martin-mac", "12.31.21.1", "1", "2", "4", "0.06 credit / Hr", "running"])
-
     def _init_ui(self):
         window_layout = add_layout(self, VERTICAL)
 

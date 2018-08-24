@@ -79,7 +79,7 @@ class LoginPage(QFrame):
         self.login.log_in_button.clicked.connect(self.login_action)
         self.login.username.returnPressed.connect(self.login_action)
         self.login.pwd.returnPressed.connect(self.login_action)
-        self.login.sign_in_button.clicked.connect(self.to_create)
+        self.login.sign_up_button.clicked.connect(self.to_create)
         self.create.to_login_button.clicked.connect(self.to_login)
 
     # pre-check user input before access db
@@ -234,7 +234,7 @@ class Login(QFrame):
         self.username = None                # input string
         self.pwd = None                     # input string
         self.log_in_button = None            # button
-        self.sign_in_button = None          # button
+        self.sign_up_button = None          # button
         self.login_hint = None              # param string
 
         self.width = width
@@ -290,7 +290,7 @@ class Login(QFrame):
         self.login_hint = add_label(self, "", name="Login_hint", align=Qt.AlignHCenter)
         window_layout.addWidget(self.login_hint)
 
-        # --------- button_frame: log_in, sign_in ------------
+        # --------- button_frame: log_in, sign_up ------------
 
         button_frame = QFrame(self)
         button_layout = add_layout(button_frame, HORIZONTAL, space=10, t_m=7, align=Qt.AlignHCenter)
@@ -299,8 +299,8 @@ class Login(QFrame):
         self.log_in_button = add_button(button_frame, "LOG IN", name="Login_button")
         button_layout.addWidget(self.log_in_button)
 
-        self.sign_in_button = add_button(button_frame, "SIGN IN", name="Login_button")
-        button_layout.addWidget(self.sign_in_button)
+        self.sign_up_button = add_button(button_frame, "SIGN UP", name="Login_button")
+        button_layout.addWidget(self.sign_up_button)
 
 
 # Pure UI class, no functionality

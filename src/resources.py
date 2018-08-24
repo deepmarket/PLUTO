@@ -282,7 +282,7 @@ class Resources(MainView):
             self.ip_check = False
         elif not self.ip_regex.match(ip_address):
             self.workspace.verification_hint.setText("Invalid IP address format. Please check your input. " +
-                                                     "(i.e 127.255.255.255)")
+                                                     "(i.e 127.0.0.1)")
         else:
             self.ip_check = True
 
@@ -305,7 +305,7 @@ class Resources(MainView):
 
             # empty input or input is not number
             if user_input is "" or not self.num_regex.match(user_input):
-                self.workspace.planning_hint.setText("Please enter number to CPUs / GPUs.")
+                self.workspace.planning_hint.setText("Please enter number of CPUs / GPUs.")
 
                 labels = self.workspace.current_cpu_box.findChildren(QLabel)
                 for label in labels:
@@ -316,7 +316,7 @@ class Resources(MainView):
             else:
                 num = int(user_input)
                 if num > self.current_cpu:
-                    self.workspace.planning_hint.setText("Input in CPUs / GPUs is out of range.")
+                    self.workspace.planning_hint.setText("Input of CPUs / GPUs is out of range.")
 
                     labels = self.workspace.current_cpu_box.findChildren(QLabel)
                     for label in labels:

@@ -270,14 +270,10 @@ class Navigation(QFrame):
     def __init__(self, *args, **kwargs):
         super(QFrame, self).__init__(*args, **kwargs)
 
-        # TODO: isolated from Api until the incomplete handling
-        # with Api("/account") as account_api:
-        #     status, res = account_api.get()
-        #
-        #     if status == 200:
-        #         self.credits = "{:.2f}".format(round(res['customer']['credits'], 3))
+        with Api("/account") as account:
+            status, res = account.get()
 
-        self.credits = 15
+            self.credits = round(res['customer']['credits'], 4)
 
         self.head_img = None
         self.menu_button = None
@@ -350,8 +346,9 @@ class Account(QFrame):
             if status == 200:
                 # Insert comma here so we can default to nameless greeting if api fails.
                 self.username = f"{res['customer']['firstname'].capitalize()}"
+                self.credits = round(res['customer']['credits'], 4)
             else:
-                self.username = "USER"
+                self.username = "New User"
 
         self.credit = 15                    # parameter integer
         self.credit_history = None          # button
@@ -382,7 +379,7 @@ class Account(QFrame):
         title_layout = add_layout(title_frame, HORIZONTAL, b_m=15)
 
         username = add_label(title_frame, f"{self.username}", name="App_account_username", align=Qt.AlignVCenter)
-        credit = add_label(title_frame, f"CREDIT:{self.credit}", name="App_account_credit", align=Qt.AlignVCenter)
+        credit = add_label(title_frame, f"Credits: {self.credits}", name="App_account_credit", align=Qt.AlignVCenter)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 

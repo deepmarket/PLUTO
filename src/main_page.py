@@ -38,9 +38,9 @@
 """
 from src.api import Api
 from src.uix.util import *
-from src.dashboard import Dashboard
-from src.resources import Resources
-from src.jobs import Jobs
+from src.interfaces.dashboard import Dashboard
+from src.interfaces.resources import Resources
+from src.interfaces.jobs import Jobs
 from src.uix.popup import Notification, CreditHistory
 
 
@@ -69,9 +69,6 @@ class App(QMainWindow):
     def _init_geometry(self):
         # window size
         set_base_geometry(self, 1024, 720, fixed=True)
-
-        # hide title bar
-        # self.setWindowFlags(Qt.FramelessWindowHint)
 
     def _init_ui(self):
         self.setObjectName("App")

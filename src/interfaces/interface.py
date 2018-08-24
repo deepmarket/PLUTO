@@ -2,7 +2,7 @@ from os import path
 from src.uix.util import *
 
 
-class MainView(QFrame):
+class Interface(QFrame):
     def __init__(self, *args, **kwargs):
         super(QFrame, self).__init__(*args, **kwargs)
 

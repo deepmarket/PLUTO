@@ -182,7 +182,7 @@ class LoginPage(QFrame):
 
             status, res = api.post(auth_dict)
             if (status, res) == (None, None):
-                self.create.create_hint.setText("Could not connect to the share resources server")
+                self.create.create_hint.setText("Sorry, we're having trouble connecting to our servers")
             else:
                 if status == 200:
                     # timer = QTimer()
@@ -193,7 +193,7 @@ class LoginPage(QFrame):
                         # Accept and close parent window
                     self.attempt_login(username, pwd)
                 else:
-                    self.create.create_hint.setText("Email/password combination already in use")
+                    self.create.create_hint.setText("It looks like that email is already in use")
 
     # gui interact function
     def to_create(self):
@@ -247,7 +247,7 @@ class Login(QFrame):
 
     def _init_ui(self):
         title = "PLUTO"
-        subtitle = "Shared Resources Manager"
+        subtitle = "Distributed Resource Manager"
 
         self.setObjectName("Login")
         self.setFixedSize(self.width, self.height)

@@ -265,7 +265,8 @@ class Resources(Interface):
             if not status == 200:
                 # log(neat error message of some kind?)
                 # And probably notify the user?
-                pass
+                self.workspace.planning_hint.setText("Fail to submit resources to the server.")
+                # pass
 
         # add data to list
         self._fetch_job_data()

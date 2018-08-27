@@ -255,8 +255,10 @@ class Navigation(QFrame):
 
         with Api("/account") as account:
             status, res = account.get()
-
-            self.credits = round(res['customer']['credits'], 4)
+            if status == 200 and isinstance(res, dict) and "customer" in res and "credits" in res['customer']:
+                self.credits = round(res['customer']['credits'], 4)
+            else:
+                self.credits = 0
 
         self.head_img = None
         self.menu_button = None
@@ -326,7 +328,10 @@ class Account(QFrame):
         with Api("/account") as account_api:
             status, res = account_api.get()
 
-            if status == 200:
+            if status == 200 and isinstance(res, dict) \
+                    and "customer" in res \
+                    and "firstname" in res['customer'] \
+                    and "credits" in res["credits"]:
                 # Insert comma here so we can default to nameless greeting if api fails.
                 self.username = f"{res['customer']['firstname'].capitalize()}"
                 self.credits = round(res['customer']['credits'], 4)

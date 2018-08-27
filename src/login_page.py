@@ -21,13 +21,12 @@
 """
 
 from src.api import Api
-from src.main_page import MainPage
 from src.uix.util import *
 
 
 class LoginPage(QFrame):
 
-    to_main_page_signal = pyqtSignal(bool)
+    signal = pyqtSignal(bool)
 
     def __init__(self, *args, **kwargs):
         super(QFrame, self).__init__(*args, **kwargs)
@@ -121,7 +120,10 @@ class LoginPage(QFrame):
 
             if status == 200:
                 # success
-                self.to_main_page_signal.emit(True)
+                with Api("/account") as account:
+                    status, res = account.get()
+                    print(status, res)
+                self.signal.emit(True)
             elif status == 401:
                 self.login.login_hint.setText("The email or password you entered is invalid.")
             # Only other status API will return is an error, so let the user know
@@ -157,7 +159,7 @@ class LoginPage(QFrame):
         # otherwise, check pass
         else:
             # print(f"Creating account with:\n\tFirst name: '{first}'\n\tLast name: '{last}'\n"
-            #      f"\tEmail:'{email}'\n\tPassword: '{pwd}''")
+            #       f"\tEmail:'{email}'\n\tPassword: '{pwd}''")
             self.attempt_create(first, last, email, pwd)
 
     # verified user input and load into db

@@ -46,7 +46,7 @@ from src.uix.popup import Notification, CreditHistory
 
 class MainPage(QFrame):
 
-    to_login_page_signal = pyqtSignal(bool)
+    signal = pyqtSignal(bool)
 
     def __init__(self, *args, **kwargs):
         super(QFrame, self).__init__(*args, **kwargs)
@@ -190,7 +190,7 @@ class MainPage(QFrame):
         popup.exec_()
 
     def on_logout_clicked(self):
-        self.to_login_page_signal.emit(True)
+        self.signal.emit(True)
 
     def update(self):
         self.interface.stack_widget.update()

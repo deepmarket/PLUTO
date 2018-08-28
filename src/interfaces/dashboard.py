@@ -183,7 +183,7 @@ class Dashboard(Interface):
         segment = add_label(line_frame, f"{self.running_machines}", name="Dashboard_highlight_description")
         line_layout.addWidget(segment)
 
-        segment = add_label(line_frame, f" resource{'' if self.running_machines == 1 else 's'} running and",
+        segment = add_label(line_frame, f" resource{' is ' if self.running_machines == 1 else 's are'} running and",
                             name="Dashboard_description")
 
         line_layout.addWidget(segment)
@@ -192,7 +192,7 @@ class Dashboard(Interface):
 
         line_layout.addWidget(segment)
 
-        segment = add_label(line_frame, f"dead resource{'' if self.dead_machine == 1 else 's'}",
+        segment = add_label(line_frame, f"resource{' is' if self.dead_machine == 1 else 's are'} dead",
                             name="Dashboard_description")
 
         line_layout.addWidget(segment)
@@ -213,19 +213,22 @@ class Dashboard(Interface):
         segment = add_label(line_frame, f"{self.finished_jobs}", name="Dashboard_highlight_description")
         line_layout.addWidget(segment)
 
-        segment = add_label(line_frame, " jobs are finished, ", name="Dashboard_description")
+        segment = add_label(line_frame, f" job{' is' if self.finished_jobs == 1 else 's are'} finished, ",
+                            name="Dashboard_description")
         line_layout.addWidget(segment)
 
         segment = add_label(line_frame, f"{self.running_jobs}", name="Dashboard_highlight_description")
         line_layout.addWidget(segment)
 
-        segment = add_label(line_frame, " are still running, and ", name="Dashboard_description")
+        segment = add_label(line_frame, f" {' is' if self.running_jobs == 1 else 's are'} still running, and ",
+                            name="Dashboard_description")
         line_layout.addWidget(segment)
 
         segment = add_label(line_frame, f"{self.killed_jobs}", name="Dashboard_highlight_description")
         line_layout.addWidget(segment)
 
-        segment = add_label(line_frame, " jobs have been killed.", name="Dashboard_description")
+        segment = add_label(line_frame, f" job{' has' if self.killed_jobs == 1 else 's have'} been killed.",
+                            name="Dashboard_description")
         line_layout.addWidget(segment)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -242,14 +245,14 @@ class Dashboard(Interface):
             segment = add_label(line_frame, f"{self.unrecognized_jobs}", name="Dashboard_highlight_description")
             line_layout.addWidget(segment)
 
-            segment = add_label(line_frame, f" jobs are unrecognized.", name="Dashboard_description")
+            segment = add_label(line_frame, f" job{' is' if self.unrecognized_jobs == 1 else 's are'} unrecognized.",
+                                name="Dashboard_description")
             line_layout.addWidget(segment)
 
             spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
             line_layout.addItem(spacer)
 
             left_layout.addWidget(line_frame)
-
 
         # --------- end left_frame, begin right_frame ------------
 

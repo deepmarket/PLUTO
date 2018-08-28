@@ -328,10 +328,7 @@ class Account(QFrame):
         with Api("/account") as account_api:
             status, res = account_api.get()
 
-            if status == 200 and isinstance(res, dict) \
-                    and "customer" in res \
-                    and "firstname" in res['customer'] \
-                    and "credits" in res["credits"]:
+            if status == 200:  # and isinstance(res, dict):
                 # Insert comma here so we can default to nameless greeting if api fails.
                 self.username = f"{res['customer']['firstname'].capitalize()}"
                 self.credits = round(res['customer']['credits'], 4)

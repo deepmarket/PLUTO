@@ -43,25 +43,14 @@ TEXT = "QGraphicsTextItem"
 
 login_style = """
 
-    #LoginPage {
+    #Login {
         border: None;
         background: #F4F8F9;
     }
     
-    #Login {
-        border-image: url("src/img/plutologo.png");
-    }
-    
     #Login_login_title {
         font-family: "Helvetica Neue";
-        font-size: 65px;
-        font-weight: 400;
-        color: #6C7E8E;
-    }
-    
-    #Login_login_subtitle {
-        font-family: "Helvetica Neue";
-        font-size: 16px;
+        font-size: 35px;
         font-weight: 100;
         color: #6C7E8E;
     }
@@ -69,14 +58,14 @@ login_style = """
     #Login_create_title {
         font-family: "Helvetica Neue";
         font-size: 26px;
-        font-weight: 400;
+        font-weight: 100;
         color: #6C7E8E;
     }
     
     #Login_prologue {
         font-family: "Helvetica Neue";
         font-size: 13px;
-        font-weight: 100;
+        font-weight: 200;
         color: #6C7E8E;
     }
     
@@ -87,7 +76,7 @@ login_style = """
     
     #Login_input_title {
         font-family: "Helvetica Neue";
-        font-size: 12px;
+        font-size: 14px;
         font-weight: 400;
         color: #6C7E8E;
     }
@@ -96,40 +85,32 @@ login_style = """
         border: none;
         font-family: "Helvetica Neue";
         font-weight: 300;
-        font-size: 12px;
+        font-size: 14px;
     }
     
     #Login_hint {
-        padding-left: 7px;
+        padding-left: 15px;
         font-family: "Helvetica Neue";
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 200;
         color: #FF4500;
-    }
-    
-    #Login_button {
-        border: none;
-        background-color: #6C7E8E;
-        height: 35px;
-        width: 120px;
-        font-family: "Helvetica Neue";
-        font-size: 12px;
-        font-weight: 200;
-        color: white;
     }
     
     #Login_large_button {
         border: none;
         background-color: #6C7E8E;
-        height: 45px;
-        width: 161px;
+        height: 48px;
         font-family: "Helvetica Neue";
-        font-size: 12px;
+        font-size: 16px;
+        font-weight: 100;
+        border-radius: 4px;
         font-weight: 200;
         color: white;
     }
     
     #Login_switch_description {
+        background-color: white;
+        padding-right: 10px;
         font-family: "Helvetica Neue";
         font-size: 14px;
         font-weight:200;
@@ -138,11 +119,14 @@ login_style = """
     
     #Login_switch_button {
         border: None;
+        background-color: white;
+        padding-left: 10px;
+        height: 63px;
+        text-align: left;
         font-family: "Helvetica Neue";
         font-size: 14px;
         font-weight: 200;
-        color: #6C7E8E;
-        text-decoration: underline;
+        color: #2F0FFF;
     }
 
 """
@@ -220,6 +204,12 @@ main_style = """
         font-weight: 200;
         color: #6C7E8E;
         text-align: left;
+    }
+    
+    #Main_account_button:hover {
+        border-radius: 3px;
+        background: #6C7E8E;
+        color: white;
     }
     
     #Main_account_logout {

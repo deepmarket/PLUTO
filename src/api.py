@@ -36,7 +36,7 @@ class Api(object):
     # Set store path globally
     store_path = path.abspath(curdir)
 
-    def __init__(self, endpoint: str="/", domain: str="131.252.209.102", port: int=8080, auth: bool=False):
+    def __init__(self, endpoint: str="/", domain: str="131.252.209.102", port: int=8080, returns_token: bool=False):
 
         self.domain = domain
         self.port = port
@@ -47,7 +47,7 @@ class Api(object):
 
         self.url: str = f"http://{self.domain}:{self.port}/api/v1{self.endpoint}"
 
-        self.auth: bool = auth
+        self.auth: bool = returns_token
         self.token: str = None
 
     def __enter__(self):

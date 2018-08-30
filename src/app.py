@@ -1,4 +1,3 @@
-from src.api import Api
 from src.uix.util import *
 from src.main_page import MainPage
 from src.login_page import LoginPage

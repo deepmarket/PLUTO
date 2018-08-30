@@ -22,7 +22,7 @@ class ApiTest(unittest.TestCase):
     def test_credential_store(self):
         from os import path
         if self.server_is_up():
-            with Api('/account', auth=True) as api:
+            with Api('/account', returns_token=True) as api:
                 new_user = {
                     'firstname': 'firstname',
                     'lastname': 'lastname',

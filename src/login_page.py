@@ -112,13 +112,16 @@ class LoginPage(QFrame):
     # verified user input on db
     def attempt_login(self, username, pwd):
 
-        with Api("/auth/login", auth=True) as api:
+        with Api("/auth/login", returns_token=True) as api:
             login_status, res = api.post({
                 "email": username,
                 "password": pwd
             })
 
-            if login_status == 401:
+            if login_status == 200:
+                self.signal.emit(True)
+
+            elif login_status == 401:
                 self.login.login_hint.setText("The email or password you entered is invalid.")
             # Only other status API will return is an error, so let the user know
             else:
@@ -129,8 +132,6 @@ class LoginPage(QFrame):
         #     account_status, res = account.get()
         #     print(account_status, res)
 
-        if login_status == 200:
-            self.signal.emit(True)
 
     # pre-check user input before access db
     def create_action(self):

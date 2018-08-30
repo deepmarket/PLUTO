@@ -228,14 +228,8 @@ class Dashboard(Interface):
         segment = add_label(line_frame, " jobs have been killed.", name="Dashboard_description")
         line_layout.addWidget(segment)
 
-        # --------- a line ------------
-
-        line_frame = QFrame(left_frame)
-        line_layout = add_layout(line_frame, HORIZONTAL)
-
         if self.unrecognized_jobs > 0:
-            segment = add_label(line_frame, f"Additionally, {self.unrecognized_jobs} jobs are unrecognized.",
-                                name="Dashboard_description")
+            segment = add_label(line_frame, f"Additionally, {self.unrecognized_jobs} jobs are unrecognized.")
             line_layout.addWidget(segment)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)

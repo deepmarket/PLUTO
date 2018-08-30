@@ -14,7 +14,7 @@ If you would like to submit changes, please open a pull request.
 
 #### To install:
 ```bash
-$ pip install -r requirements.txt
+$ python3 -m pip install -r requirements.txt
 ```
 
 #### Team Members:

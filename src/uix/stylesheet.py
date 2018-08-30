@@ -131,102 +131,94 @@ login_style = """
 
 """
 
-main_style = """
+app_style = """
 
-    #Main_sidebar {
+    #App_sidebar {
         background-color: #FEFEFE;
         border-right: 1px solid #E7EEF0;
     }
     
-    #Main_navigation {
+    #App_navigation {
         background-color: white;
     }
     
-    #Main_current_interface {
+    #App_main_window {
         background-color: #F4F8F9;
     }
     
-    #Main_mask {
+    #App_mask {
         background-color: rgba(255, 255, 255, 150);
     }
     
-    #Main_sidebar_title {
+    #App_sidebar_title {
         font-family: "Helvetica Neue";
         font-size: 22px;
         font-weight: 500;
         color: #505A5F;
     }
 
-    #Main_navigation_button {
+    #App_navigation_button {
         border: None;
     }
     
-    #Main_navigation_credit {
+    #App_navigation_credit {
         font-family: "Helvetica Neue";
         font-size: 12px;
         font-weight: 300;
         color: #505A5F;
     }
     
-    #Main_mask_clicked_area {
+    #App_mask_clicked_area {
         border: none;
     }
     
-    #Main_account {
+    #App_account {
         background-color: white;
     }
 
-    #Main_title_frame {
+    #App_title_frame {
         border: none;
         border-bottom: 1px solid #D5D5D5;
     }
 
-    #Main_account_username {
+    #App_account_username {
         font-family: "Helvetica Neue";
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 500;
         color: #6C7E8E;
     }
     
-    #Main_account_credit {
+    #App_account_credit {
         font-family: "Helvetica Neue";
-        font-size: 13px;
-        font-weight: 200;
+        font-size: 11px;
+        font-weight: 100;
         color: #505A5F;
     }
     
-    #Main_account_button {
+    #App_account_button {
         border: none;
-        height: 30px;
-        padding-left: 10px;
         font-family: "Helvetica Neue";
-        font-size: 12px;
+        font-size: 10px;
         font-weight: 200;
         color: #6C7E8E;
         text-align: left;
     }
     
-    #Main_account_button:hover {
-        border-radius: 3px;
-        background: #6C7E8E;
-        color: white;
-    }
-    
-    #Main_account_logout {
+    #App_account_logout {
         border: none;
         border-radius: 3px;
         background-color: #6C7E8E;
         height: 25px;
         width: 85px;
         font-family: "Helvetica Neue";
-        font-size: 13px;
+        font-size: 11px;
         font-weight: 200;
         color: white;
     }
 
 """
 
-main_sidebar_button = f"""
+app_sidebar_button = f"""
     border: None;
     height: 20px;
     padding-left: 16px;
@@ -237,7 +229,7 @@ main_sidebar_button = f"""
     text-align: left;
 """
 
-main_sidebar_button_active = f"""
+app_sidebar_button_active = f"""
     border: None;
     border-left: 2px solid {COLOR_01};
     height: 20px;

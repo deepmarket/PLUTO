@@ -24,12 +24,12 @@
         self.resource_list = None           # list of list resource data
 """
 
-from src.interfaces.interface import Interface
+from src.mainview import MainView
 from src.uix.util import *
 from src.api import Api
 
 
-class Dashboard(Interface):
+class Dashboard(MainView):
 
     def __init__(self, *args, **kwargs):
         super(QFrame, self).__init__(*args, **kwargs)

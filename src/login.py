@@ -21,11 +21,8 @@
 """
 
 from src.api import Api
+from src.uix.stylesheet import *
 from src.uix.util import *
-
-
-class LoginPage(QFrame):
-    pass
 
 
 class Login(QDialog):

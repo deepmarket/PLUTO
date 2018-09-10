@@ -32,6 +32,9 @@
         self.current_row = 0        # param number
 """
 
+import socket
+import psutil
+
 from src.mainview import MainView
 from src.uix.util import *
 from src.uix.config import *
@@ -56,8 +59,8 @@ class Resources(MainView):
         self.current_core = 0                       # param number
         self.current_ram = 0                        # param number
 
-        self.if_verify = False                      # flag
-        self.ip_check = False                       # flag
+        # self.if_verify = False                      # flag
+        # self.ip_check = False                       # flag
         self.machine_name_check = False             # flag
         # self.cpu_check = False                      # flag
         self.cpu_check = True       # cpu check is disable in this version
@@ -72,6 +75,7 @@ class Resources(MainView):
         self.setStyleSheet(page_style)
 
         self.on_workspace_clicked()
+        self._fetch_ip_address()
 
     def _init_ui(self):
         section_layout = add_layout(self, VERTICAL, b_m=8)
@@ -101,14 +105,14 @@ class Resources(MainView):
         self.list_button.clicked.connect(self.on_list_clicked)
 
         self.workspace.verify_button.clicked.connect(self.on_verify_button_clicked)
-        self.workspace.change_button.clicked.connect(self.on_change_button_clicked)
+        # self.workspace.change_button.clicked.connect(self.on_change_button_clicked)
         self.workspace.evaluate_button.clicked.connect(self.on_evaluate_button_clicked)
         self.workspace.auto_price_button.clicked.connect(self.on_auto_price_button_clicked)
         self.workspace.offering_price_button.clicked.connect(self.on_offering_price_button_clicked)
         self.workspace.submit_button.clicked.connect(self.on_submit_button_clicked)
 
-        self.workspace.ip_address.editingFinished.connect(self.on_ip_address_edit)
-        self.workspace.ip_address.returnPressed.connect(self.on_verify_button_clicked)
+        # self.workspace.ip_address.editingFinished.connect(self.on_ip_address_edit)
+        # self.workspace.ip_address.returnPressed.connect(self.on_verify_button_clicked)
 
         self.workspace.machine_name.editingFinished.connect(self.on_machine_edit)
         self.workspace.machine_name.textChanged.connect(self.on_machine_edit)
@@ -138,64 +142,33 @@ class Resources(MainView):
         self._fetch_job_data()
 
     def on_verify_button_clicked(self):
-        self.on_ip_address_edit()
+        self.current_core = psutil.cpu_count(logical=False)
+        self.current_ram = round(psutil.virtual_memory().available/(pow(1024, 3)), 1)
 
-        if self.ip_check is not True:
-            pass    # invalid input
-        else:
-            ip_address = self.workspace.ip_address.text()
-            if verify_ip_address(ip_address) is True:
-                dialog_hint = "Please enter the following command on your resource machine:\n\n\n"
-                dialog_hint += "          ./sbin/start-slave.sh spark://" + MASTER_IP + ":8989\n"
-                question = Question(dialog_hint)
+        self.workspace.enable_machine_config(self.current_cpu, self.current_core, self.current_ram)
+        self.workspace.enable_planning()
 
-                if question.exec_():
-
-                    if verify_ip_address(ip_address):
-
-                        # set flag
-                        self.if_verify = True
-
-                        self.current_core, self.current_ram = load_machine_config(ip_address)
-
-                        if self.current_core and self.current_ram:
-
-                            # disable ip_address, enable machine_config, planning
-                            self.workspace.disable_ip_address()
-                            self.workspace.enable_machine_config(self.current_cpu, self.current_core, self.current_ram)
-                            self.workspace.enable_planning()
-                        else:
-                            self.if_verify = False
-                            hint = "Machine is added to master, but fail to achieve machine config"
-                            self.workspace.verification_hint.setText(hint)
-                    else:
-                        hint = "Fail to find to machine in our master. Please try again."
-                        self.workspace.verification_hint.setText(hint)
-            else:
-                hint = "Fail to verify machine, machine under such address is in database."
-                self.workspace.verification_hint.setText(hint)
-
-    def on_change_button_clicked(self):
-        self.workspace.clean_hint()
-
-        # reset everything
-        if self.if_verify:
-            # reset flag
-            self.if_verify = False
-            self.machine_name_check = False
-            self.cpu_check = False
-            self.core_check = False
-            self.ram_check = False
-
-            # clean hint
-            self.workspace.planning_hint.setText("")
-            self.workspace.verification_hint.setText("")
-
-            # enable ip_address input, disable machine_config, planning
-            self.workspace.enable_ip_address()
-            self.workspace.disable_machine_config()
-            self.workspace.disable_planning()
-            self.workspace.disable_evaluate_button()
+    # def on_change_button_clicked(self):
+    #     self.workspace.clean_hint()
+    #
+    #     # reset everything
+    #     if self.if_verify:
+    #         # reset flag
+    #         self.if_verify = False
+    #         self.machine_name_check = False
+    #         self.cpu_check = False
+    #         self.core_check = False
+    #         self.ram_check = False
+    #
+    #         # clean hint
+    #         self.workspace.planning_hint.setText("")
+    #         self.workspace.verification_hint.setText("")
+    #
+    #         # enable ip_address input, disable machine_config, planning
+    #         self.workspace.enable_ip_address()
+    #         self.workspace.disable_machine_config()
+    #         self.workspace.disable_planning()
+    #         self.workspace.disable_evaluate_button()
 
     def on_evaluate_button_clicked(self):
 
@@ -273,18 +246,18 @@ class Resources(MainView):
         # switch page
         self.on_list_clicked()
 
-    def on_ip_address_edit(self):
-        self.workspace.verification_hint.setText("")
-        ip_address = self.workspace.ip_address.text()
-
-        if ip_address == "":
-            self.workspace.verification_hint.setText("Please enter an IP address.")
-            self.ip_check = False
-        elif not self.ip_regex.match(ip_address):
-            self.workspace.verification_hint.setText("Invalid IP address format. Please check your input. " +
-                                                     "(i.e 127.0.0.1)")
-        else:
-            self.ip_check = True
+    # def on_ip_address_edit(self):
+    #     self.workspace.verification_hint.setText("")
+    #     ip_address = self.workspace.ip_address.text()
+    #
+    #     if ip_address == "":
+    #         self.workspace.verification_hint.setText("Please enter an IP address.")
+    #         self.ip_check = False
+    #     elif not self.ip_regex.match(ip_address):
+    #         self.workspace.verification_hint.setText("Invalid IP address format. Please check your input. " +
+    #                                                  "(i.e 127.0.0.1)")
+    #     else:
+    #         self.ip_check = True
 
     def on_machine_edit(self):
         self.workspace.planning_hint.setText("")
@@ -347,22 +320,25 @@ class Resources(MainView):
                 self.core_check = False
                 self._check_flag()
             else:
-                num = int(user_input)
-                if num > self.current_core:
-                    self.workspace.planning_hint.setText("Input in Cores is out of range.")
-                    labels = self.workspace.current_core_box.findChildren(QLabel)
-                    for label in labels:
-                        label.setStyleSheet(Page_machine_config_label_red)
+                try:
+                    num = int(user_input)
+                    if num > self.current_core:
+                        self.workspace.planning_hint.setText("Input in Cores is out of range.")
+                        labels = self.workspace.current_core_box.findChildren(QLabel)
+                        for label in labels:
+                            label.setStyleSheet(Page_machine_config_label_red)
 
-                    self.core_check = False
-                    self._check_flag()
-                else:
-                    labels = self.workspace.current_core_box.findChildren(QLabel)
-                    for label in labels:
-                        label.setStyleSheet(Page_machine_config_label_green)
+                        self.core_check = False
+                        self._check_flag()
+                    else:
+                        labels = self.workspace.current_core_box.findChildren(QLabel)
+                        for label in labels:
+                            label.setStyleSheet(Page_machine_config_label_green)
 
-                    self.core_check = True
-                    self._check_flag()
+                        self.core_check = True
+                        self._check_flag()
+                except ValueError:
+                    self.workspace.planning_hint.setText("Input must be integer.")
 
     def on_ram_edit(self):
         self.workspace.planning_hint.setText("")
@@ -379,7 +355,10 @@ class Resources(MainView):
                 self.ram_check = False
                 self._check_flag()
             else:
-                num = int(user_input)
+                try:
+                    num = int(user_input)
+                except ValueError:
+                    num = float(user_input)
                 if num > self.current_ram:
                     self.workspace.planning_hint.setText("Input in Ram is out of range.")
 
@@ -454,6 +433,13 @@ class Resources(MainView):
                                         str(rsrc['price']),
                                         rsrc['status']])
 
+    # load the ip address from the running machine
+    def _fetch_ip_address(self):
+        self.workspace.ip_address.setText(socket.gethostbyname(socket.gethostname()))
+        self.workspace.disable_ip_address()
+
+        self.if_verify = True
+
     # self-updated function by calling timer in main
     # can be used later on
     def update(self):
@@ -483,7 +469,7 @@ class ResourcesWorkspace(QFrame):
         self.ram = None                             # input number
 
         self.verify_button = None                   # button
-        self.change_button = None                   # button
+        # self.change_button = None                   # button
         self.evaluate_button = None                 # button
         self.auto_price_button = None               # button
         self.offering_price_button = None           # button
@@ -526,8 +512,8 @@ class ResourcesWorkspace(QFrame):
         self.verify_button = add_button(line_frame, "VERIFY", name="Page_button")
         line_layout.addWidget(self.verify_button)
 
-        self.change_button = add_button(line_frame, "CHANGE", name="Page_button")
-        line_layout.addWidget(self.change_button)
+        # self.change_button = add_button(line_frame, "CHANGE", name="Page_button")
+        # line_layout.addWidget(self.change_button)
 
         self.enable_ip_address()
 

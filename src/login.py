@@ -98,9 +98,6 @@ class Login(QDialog):
         username = self.login.username.text()
         pwd = self.login.pwd.text()
 
-        username = "test@test.com"
-        pwd = "1234"
-
         # Both empty
         if not username and not pwd:
             self.login.login_hint.setText("Please enter email / password.")

@@ -11,6 +11,7 @@ If you would like to submit changes, please open a pull request.
 * PyQt _5.10_
 * sip _4.19.7_
 * requests _2.18.4_
+* psutil _5.4.7_
 
 #### To install:
 ```bash

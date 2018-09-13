@@ -125,7 +125,6 @@ class Login(QDialog):
                 "email": username,
                 "password": pwd
             })
-
             if status == 200:
                 self.accept()
                 self.close()

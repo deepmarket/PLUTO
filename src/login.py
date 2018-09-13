@@ -119,7 +119,6 @@ class Login(QDialog):
 
     # verified user input on db
     def attempt_login(self, username, pwd):
-
         with Api("/auth/login") as api:
             status, res = api.post({
                 "email": username,

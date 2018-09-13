@@ -235,10 +235,13 @@ class Resources(MainView):
             }
 
             status, res = api.post(resources_data)
-            if not status == 200:
-                # log(neat error message of some kind?)
-                # And probably notify the user?
-                pass
+            if status:
+                if not status == 200:
+                    # log(neat error message of some kind?)
+                    # And probably notify the user?
+                    pass
+            else:
+                print("Status/res is Null")
 
         # add data to list
         self._fetch_job_data()

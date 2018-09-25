@@ -10,6 +10,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 if __name__ == '__main__':
     from sys import exit, argv
+    argv += ['-platform', 'minimal']
     app = QApplication(argv)
     app.aboutToQuit.connect(exit)
     # for testing

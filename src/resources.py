@@ -104,7 +104,8 @@ class Resources(MainView):
         self.workspace_button.clicked.connect(self.on_workspace_clicked)
         self.list_button.clicked.connect(self.on_list_clicked)
 
-        self.workspace.verify_button.clicked.connect(self.on_verify_button_clicked)
+        # self.workspace.verify_button.clicked.connect(self.on_verify_button_clicked)
+        self.on_verify_button_clicked()
         # self.workspace.change_button.clicked.connect(self.on_change_button_clicked)
         self.workspace.evaluate_button.clicked.connect(self.on_evaluate_button_clicked)
         self.workspace.auto_price_button.clicked.connect(self.on_auto_price_button_clicked)
@@ -142,8 +143,9 @@ class Resources(MainView):
         self._fetch_job_data()
 
     def on_verify_button_clicked(self):
-        self.current_core = psutil.cpu_count(logical=False)
-        self.current_ram = round(psutil.virtual_memory().available/(pow(1024, 3)), 1)
+        self.current_cpu = round(psutil.cpu_freq().current/1000, 1)  # Processor's speed in gHz
+        self.current_core = psutil.cpu_count(logical=False)  # Logical cores on the machine
+        self.current_ram = round(psutil.virtual_memory().total/(pow(1024, 3)), 1)  # Total installed RAM
 
         self.workspace.enable_machine_config(self.current_cpu, self.current_core, self.current_ram)
         self.workspace.enable_planning()
@@ -222,7 +224,7 @@ class Resources(MainView):
 
         status = "running"
 
-        with Api("/resource") as api:
+        with Api("/resources") as api:
 
             resources_data = {
                 "machine_name": machine_name,
@@ -509,8 +511,8 @@ class ResourcesWorkspace(QFrame):
         box, self.ip_address = add_page_input_box(line_frame, "IP Address:", 65, 21, fix_width=False)
         line_layout.addWidget(box)
 
-        self.verify_button = add_button(line_frame, "VERIFY", name="Page_button")
-        line_layout.addWidget(self.verify_button)
+        # self.verify_button = add_button(line_frame, "VERIFY", name="Page_button")
+        # line_layout.addWidget(self.verify_button)
 
         # self.change_button = add_button(line_frame, "CHANGE", name="Page_button")
         # line_layout.addWidget(self.change_button)
@@ -544,19 +546,19 @@ class ResourcesWorkspace(QFrame):
 
         # --------- cpu box, spacer, core box, spacer, ram box ------------
 
-        self.current_cpu_box = add_config_box(line_frame, "CPU:")
+        self.current_cpu_box = add_config_box(line_frame, "Compute:")
         line_layout.addWidget(self.current_cpu_box)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
         line_layout.addItem(spacer)
 
-        self.current_core_box = add_config_box(line_frame, "Cores #:")
+        self.current_core_box = add_config_box(line_frame, "Cores:")
         line_layout.addWidget(self.current_core_box)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
         line_layout.addItem(spacer)
 
-        self.current_ram_box = add_config_box(line_frame, "Ram:")
+        self.current_ram_box = add_config_box(line_frame, "RAM:")
         line_layout.addWidget(self.current_ram_box)
 
         self.disable_machine_config()
@@ -613,13 +615,13 @@ class ResourcesWorkspace(QFrame):
         line_frame, line_layout = add_frame(sub_section_frame, layout=HORIZONTAL)
         sub_section_layout.addWidget(line_frame)
 
-        box, self.cores = add_page_input_box(line_frame, "Core #:", 113, 18, width=285)
+        box, self.cores = add_page_input_box(line_frame, "Cores:", 113, 18, width=285)
         line_layout.addWidget(box)
 
         spacer = QSpacerItem(30, 0, QSizePolicy.Fixed, QSizePolicy.Minimum)
         line_layout.addItem(spacer)
 
-        box, self.ram = add_page_input_box(line_frame, "Ram (Gb.):", 113, 18, width=285)
+        box, self.ram = add_page_input_box(line_frame, "RAM (GB):", 113, 18, width=285)
         line_layout.addWidget(box)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -691,8 +693,26 @@ class ResourcesWorkspace(QFrame):
     # input three number to update the display on machine config
     def enable_machine_config(self, current_cpu, current_core, current_ram):
         # disable cpu/gpu permanently in this version
-        # text = [f"{current_cpu} GB", f"{current_core}", f"{current_ram} GB"]
-        # boxes = [self.current_cpu_box, self.current_core_box, self.current_ram_box]
+        text = [f"{current_cpu} GHz", f"{current_core}", f"{current_ram} GB"]
+        boxes = [self.current_cpu_box, self.current_core_box, self.current_ram_box]
+
+        # for i in range(len(boxes)):
+        for i, box in enumerate(boxes):
+            # enable boxes
+            box.setStyleSheet(Page_machine_config_box)
+
+            # find label children
+            labels = box.findChildren(QLabel)
+
+            # disable stylesheet
+            labels[0].setStyleSheet(Page_machine_config_label)
+            labels[1].setStyleSheet(Page_machine_config_label)
+
+            # set value
+            labels[1].setText(text[i])
+        #
+        # text = [f"{current_core}", f"{current_ram} GB"]
+        # boxes = [self.current_core_box, self.current_ram_box]
         #
         # for i in range(len(boxes)):
         #     # enable boxes
@@ -707,27 +727,11 @@ class ResourcesWorkspace(QFrame):
         #
         #     # set value
         #     labels[1].setText(text[i])
-        text = [f"{current_core}", f"{current_ram} GB"]
-        boxes = [self.current_core_box, self.current_ram_box]
-
-        for i in range(len(boxes)):
-            # enable boxes
-            boxes[i].setStyleSheet(Page_machine_config_box)
-
-            # find label children
-            labels = boxes[i].findChildren(QLabel)
-
-            # disable stylesheet
-            labels[0].setStyleSheet(Page_machine_config_label)
-            labels[1].setStyleSheet(Page_machine_config_label)
-
-            # set value
-            labels[1].setText(text[i])
 
     # disable machine config before user verify ip address
     def disable_machine_config(self):
         # disable cpu/gpu permanently in this version
-        text = ["0 GB", "0", "0 GB"]
+        text = ["0 GHz", "0", "0 GB"]
         boxes = [self.current_cpu_box, self.current_core_box, self.current_ram_box]
 
         for i in range(len(boxes)):

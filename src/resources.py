@@ -222,8 +222,6 @@ class Resources(MainView):
         else:
             price = self.offering_price
 
-        status = "running"
-
         with Api("/resources") as api:
 
             resources_data = {
@@ -233,7 +231,7 @@ class Resources(MainView):
                 "cores": cores,
                 "cpus": cpu_gpu,
                 "price": price,
-                "status": status
+                "status": "ALIVE"
             }
 
             status, res = api.post(resources_data)
@@ -312,8 +310,8 @@ class Resources(MainView):
             user_input = self.workspace.cores.text()
 
             # empty input or input is not number
-            if user_input is "" or not self.num_regex.match(user_input):
-                self.workspace.planning_hint.setText("Please enter number to Cores.")
+            if user_input is "" or not self.is_float(user_input):
+                self.workspace.planning_hint.setText("Invalid number of cores.")
 
                 labels = self.workspace.current_core_box.findChildren(QLabel)
                 for label in labels:
@@ -322,25 +320,22 @@ class Resources(MainView):
                 self.core_check = False
                 self._check_flag()
             else:
-                try:
-                    num = int(user_input)
-                    if num > self.current_core:
-                        self.workspace.planning_hint.setText("Input in Cores is out of range.")
-                        labels = self.workspace.current_core_box.findChildren(QLabel)
-                        for label in labels:
-                            label.setStyleSheet(Page_machine_config_label_red)
+                num = int(user_input)
+                if num > self.current_core:
+                    self.workspace.planning_hint.setText("Cores is out of range.")
+                    labels = self.workspace.current_core_box.findChildren(QLabel)
+                    for label in labels:
+                        label.setStyleSheet(Page_machine_config_label_red)
 
-                        self.core_check = False
-                        self._check_flag()
-                    else:
-                        labels = self.workspace.current_core_box.findChildren(QLabel)
-                        for label in labels:
-                            label.setStyleSheet(Page_machine_config_label_green)
+                    self.core_check = False
+                    self._check_flag()
+                else:
+                    labels = self.workspace.current_core_box.findChildren(QLabel)
+                    for label in labels:
+                        label.setStyleSheet(Page_machine_config_label_green)
 
-                        self.core_check = True
-                        self._check_flag()
-                except ValueError:
-                    self.workspace.planning_hint.setText("Input must be integer.")
+                    self.core_check = True
+                    self._check_flag()
 
     def on_ram_edit(self):
         self.workspace.planning_hint.setText("")
@@ -348,8 +343,8 @@ class Resources(MainView):
             user_input = self.workspace.ram.text()
 
             # empty input or input is not number
-            if user_input is "" or not self.num_regex.match(user_input):
-                self.workspace.planning_hint.setText("Please enter number to Ram.")
+            if user_input is "" or not self.is_float(user_input):
+                self.workspace.planning_hint.setText("Invalid amount of RAM.")
                 labels = self.workspace.current_ram_box.findChildren(QLabel)
                 for label in labels:
                     label.setStyleSheet(Page_machine_config_label_red)
@@ -357,12 +352,10 @@ class Resources(MainView):
                 self.ram_check = False
                 self._check_flag()
             else:
-                try:
-                    num = int(user_input)
-                except ValueError:
-                    num = float(user_input)
+                num = float(user_input)
+
                 if num > self.current_ram:
-                    self.workspace.planning_hint.setText("Input in Ram is out of range.")
+                    self.workspace.planning_hint.setText("Amount of RAM is out of range.")
 
                     labels = self.workspace.current_ram_box.findChildren(QLabel)
                     for label in labels:
@@ -382,32 +375,31 @@ class Resources(MainView):
         self._fetch_job_data()
 
     def on_remove_button_clicked(self):
-        pass
-        # model = self.list.table.selectionModel()
-        #
-        # # check if table has selected row
-        # if not model.hasSelection():
-        #     pass
-        # else:
-        #     row = model.selectedRows()[0].row()
-        #     column = self.list.table.columnCount()
-        #
-        #     # check if row has value
-        #     if self.list.table.item(row, column-1).text() is not "":
-        #
-        #         # ask if user want to delete rows
-        #         question = Question("Are you sure you want to remove this?")
-        #
-        #         if question.exec_():
-        #             self.list.table.removeRow(row)
-        #
-        #             if row <= 13:
-        #                 self.list.current_row -= 1
-        #
-        #                 row = self.list.table.rowCount()
-        #                 self.list.table.insertRow(row)
-        #                 for c in range(column):
-        #                     self.list.table.setItem(row, c, QTableWidgetItem(""))
+        model = self.list.table.selectionModel()
+
+        # check if table has selected row
+        if not model.hasSelection():
+            pass
+        else:
+            row = model.selectedRows()[0].row()
+            column = self.list.table.columnCount()
+
+            # check if row has value
+            if self.list.table.item(row, column-1).text() is not "":
+
+                # ask if user want to delete rows
+                question = Question("Are you sure you want to remove this?")
+
+                if question.exec_():
+                    self.list.table.removeRow(row)
+
+                    if row <= 13:
+                        self.list.current_row -= 1
+
+                        row = self.list.table.rowCount()
+                        self.list.table.insertRow(row)
+                        for c in range(column):
+                            self.list.table.setItem(row, c, QTableWidgetItem(""))
 
     # check if flags are all on, enable evaluate button
     def _check_flag(self):
@@ -494,7 +486,7 @@ class ResourcesWorkspace(QFrame):
         line_frame, line_layout = add_frame(section_frame, layout=HORIZONTAL, r_m=3)
         section_layout.addWidget(line_frame)
 
-        title = add_label(line_frame, "Resource Verification", name="Page_section_title", align=Qt.AlignVCenter)
+        title = add_label(line_frame, "Available Resources", name="Page_section_title", align=Qt.AlignVCenter)
         line_layout.addWidget(title)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -573,7 +565,7 @@ class ResourcesWorkspace(QFrame):
         line_frame, line_layout = add_frame(section_frame, layout=HORIZONTAL)
         section_layout.addWidget(line_frame)
 
-        title = add_label(line_frame, "Resource Planning", name="Page_section_title", align=Qt.AlignVCenter)
+        title = add_label(line_frame, "Add a Resource", name="Page_section_title", align=Qt.AlignVCenter)
         line_layout.addWidget(title)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)

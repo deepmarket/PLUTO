@@ -21,3 +21,12 @@ class MainView(QFrame):
         if path.exists(self.credential_store):
             with open(self.credential_store, "r") as credentials:
                 self.customer_id: str = credentials.readline()
+
+    @staticmethod
+    def is_float(number):
+        try:
+            float(number)
+        except ValueError:
+            return False
+        else:
+            return True

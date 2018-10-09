@@ -179,7 +179,7 @@ class Jobs(MainView):
                     dat = [round(dat['cpus'], 6), round(dat['gpus'], 6), round(dat['memory'], 6), round(dat['disk_space'], 6)]
 
                     for j in range(len(labels)):
-                        labels[j].setText(f"{dat[j]} Credit/Hr")
+                        labels[j].setText(f"{dat[j]}\b Credits/Hr")
 
             # TODO: load dat here
             # format: [cpu, gpu, memory, space], type: int
@@ -220,18 +220,23 @@ class Jobs(MainView):
         labels = frame.findChildren(QLabel)
 
         for label in labels:
-            text.append(label.text())
+            text.append(label.text().split('\b')[0])
 
-        # TODO: generate job name here
-        job_id = "My-Job-01"
+        from random import choices
+        from string import ascii_uppercase, digits
+        job_id = "J"
+        job_id += "".join(choices(ascii_uppercase + digits, k=6))
+
         price = "0.005"
 
-        question = f"""Job "{job_id}" will be charged with """
-        question += f"""CPU: {text[1]}, GPU: {text[2]}, Memory: {text[3]}\nDisk Space: {text[4]} """
-        question += f"""and run in the Time slot: {text[0]}\n\n"""
-        question += f"""You are required """
-        question += f"""worker #: {workers}, Cores #: {cores}, Memory: {memory} GB for this submission.\n\n"""
-        question += f"""Do you want to submit this job at the above mentioned rate and time slot?"""
+        question = f"""
+            Job '{job_id}' will be charged for using:
+            {text[1]} per CPU/hr, {text[2]} per GPU/hr, and {text[3]} per GB/hr of memory.
+            \n
+            It will run between {text[0]}.
+            
+            Do you want to submit this job at the aforementioned rate and time?
+        """
 
         question = Question(question)
 
@@ -372,11 +377,11 @@ class JobWorkspace(QFrame):
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
         line_layout.addItem(spacer)
 
-        note = add_label(line_frame, "Notice: you have to select time slot.", name="Page_hint", align=Qt.AlignBottom)
-        line_layout.addWidget(note)
-
-        spacer = QSpacerItem(5, 0, QSizePolicy.Fixed, QSizePolicy.Minimum)
-        line_layout.addItem(spacer)
+        # note = add_label(line_frame, "Notice: you have to select time slot.", name="Page_hint", align=Qt.AlignBottom)
+        # line_layout.addWidget(note)
+        #
+        # spacer = QSpacerItem(5, 0, QSizePolicy.Fixed, QSizePolicy.Minimum)
+        # line_layout.addItem(spacer)
 
         # --------- begin sub_section: left_section, right_section ------------
 

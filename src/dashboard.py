@@ -70,8 +70,6 @@ class Dashboard(MainView):
                 self.username = "."
                 self.total_balance = 0
 
-
-
         with Api("/resources") as resources:
             status, res = resources.get()
 

@@ -39,11 +39,9 @@ def open_application(context):
 
 @when(r'I click on the (dashboard|resources|jobs) tab')
 def open_tab(context, tab):
-    print(tab)
     if tab == "dashboard":
         context.app.on_dashboard_clicked()
     elif tab == "resources":
-        print(tab)
         # context.app.sidebar.resources
         QTest.mouseClick(context.app.sidebar.resources, Qt.LeftButton)
     elif tab == "jobs":
@@ -52,13 +50,18 @@ def open_tab(context, tab):
 
 @then(r'the current tab should be the (dashboard|resources|jobs) tab')
 def verify_tab(context, tab):
-    print(context.app.main_window.stack.currentWidget())
-    # if tab is "dashboard":
-    #     context.app.sidebar.dashboard.click()
-    # elif tab is "resources":
-    #     context.app.sidebar.resources.click()
-    # elif tab is "jobs":
-    #     context.app.sidebar
+    from src.dashboard import Dashboard
+    from src.resources import Resources
+    from src.jobs import Jobs
+
+    check_type = lambda type_: isinstance(context.app.main_window.stack.currentWidget(), type_)
+
+    if tab == "dashboard":
+        check_type(Dashboard)
+    elif tab == "resources":
+        isinstance(context.app.main_window.stack.currentWidget(), Resources)
+    elif tab == "jobs":
+        isinstance(context.app.main_window.stack.currentWidget(), Jobs)
 
 
 @when(r'I execute the application')

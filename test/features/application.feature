@@ -3,10 +3,14 @@
 Feature: High level application testing
   # Enter feature description here
 
-  Scenario: Verify the application stands up
-#    When I wait 2 seconds
+  Scenario Outline: Verify the application stands up
     When I stand up the application
-#      And I wait 2 seconds
-      And I click on the resources tab
-#      And I execute the application
-    Then the current tab should be the resources tab
+      And I wait 2 seconds
+      And I click on the <tab> tab
+    Then the current tab should be the <tab> tab
+
+    Examples:
+      | tab       |
+      | dashboard |
+      | resources |
+      | jobs      |

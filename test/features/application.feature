@@ -6,4 +6,7 @@ Feature: High level application testing
   Scenario: Verify the application stands up
 #    When I wait 2 seconds
     When I stand up the application
-      And I wait 5 seconds
+#      And I wait 2 seconds
+      And I click on the resources tab
+#      And I execute the application
+    Then the current tab should be the resources tab

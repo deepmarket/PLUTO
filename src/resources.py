@@ -78,6 +78,8 @@ class Resources(MainView):
         self._fetch_ip_address()
 
     def _init_ui(self):
+        self.setObjectName("resources")
+
         section_layout = add_layout(self, VERTICAL, b_m=8)
 
         button_frame, button_layout = add_frame(self, height=35, layout=HORIZONTAL, l_m=40, r_m=40, space=24)

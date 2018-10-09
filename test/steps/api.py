@@ -37,3 +37,9 @@ def verify_api_request_to(context, request_type, endpoint, status):
     status = status if type(status) == str and status is None else None
 
     assert context.api_status == status, f"{context.api_status} != {status}"
+
+
+# @then(r'the request should reply with a status of (\d{3})')
+# @then(r'the request should reply with a status of (\w+)')
+# def verify_api_request_to(context, status):
+#     pass

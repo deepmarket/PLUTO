@@ -431,7 +431,14 @@ class Resources(MainView):
 
     # load the ip address from the running machine
     def _fetch_ip_address(self):
-        self.workspace.ip_address.setText(socket.gethostbyname(socket.gethostname()))
+        from socket import socket, AF_INET, SOCK_DGRAM
+
+        server_and_port = ('8.8.8.8', 443)
+        sock = socket(AF_INET, SOCK_DGRAM)
+        sock.connect(server_and_port)
+        ip_addr = sock.getsockname()[0]
+
+        self.workspace.ip_address.setText(ip_addr)
         self.workspace.disable_ip_address()
 
         self.if_verify = True

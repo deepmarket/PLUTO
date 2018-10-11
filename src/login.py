@@ -100,7 +100,7 @@ class Login(QDialog):
 
         # Both empty
         if not username and not pwd:
-            self.login.login_hint.setText("Please enter email / password.")
+            self.login.login_hint.setText("Please enter your email and password.")
 
         # Empty username
         elif not username and pwd:
@@ -187,7 +187,7 @@ class Login(QDialog):
             # finally:
 
             status, res = api.post(auth_dict)
-            if (status, res) == (None, None):
+            if (res or status) is None:
                 self.create.create_hint.setText("Could not connect to the share resources server")
             else:
                 if status == 200:

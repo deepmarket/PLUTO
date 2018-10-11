@@ -32,7 +32,6 @@
         self.current_row = 0        # param number
 """
 
-import socket
 import psutil
 
 from src.mainview import MainView
@@ -120,8 +119,8 @@ class Resources(MainView):
         self.workspace.machine_name.editingFinished.connect(self.on_machine_edit)
         self.workspace.machine_name.textChanged.connect(self.on_machine_edit)
 
-        # self.workspace.cpu_gpu.editingFinished.connect(self.on_cpu_edit)
-        # self.workspace.cpu_gpu.textChanged.connect(self.on_cpu_edit)
+        self.workspace.cpu_gpu.editingFinished.connect(self.on_cpu_edit)
+        self.workspace.cpu_gpu.textChanged.connect(self.on_cpu_edit)
 
         self.workspace.cores.editingFinished.connect(self.on_core_edit)
         self.workspace.cores.textChanged.connect(self.on_core_edit)
@@ -178,7 +177,7 @@ class Resources(MainView):
 
         # TODO: evaluate price here
         cores = self.workspace.cores.text()
-        # cpu_gpu = self.workspace.cpu_gpu.text()
+        cpu_gpu = self.workspace.cpu_gpu.text()
         ram = self.workspace.ram.text()
 
         self.auto_price = float(cores) * PRICING_CONSTANT
@@ -214,8 +213,8 @@ class Resources(MainView):
     def on_submit_button_clicked(self):
         machine_name = self.workspace.machine_name.text()
         ip_address = self.workspace.ip_address.text()
-        # cpu_gpu = self.workspace.cpu_gpu.text()
-        cpu_gpu = 0
+        cpu_gpu = self.workspace.cpu_gpu.text()
+        # cpu_gpu = 0
         cores = self.workspace.cores.text()
         ram = self.workspace.ram.text()
 
@@ -760,7 +759,7 @@ class ResourcesWorkspace(QFrame):
         #     # set to enable stylesheet
         #     widget.setStyleSheet(Page_input_input)
 
-        widgets = [self.machine_name, self.cores, self.ram]
+        widgets = [self.cpu_gpu, self.machine_name, self.cores, self.ram]
 
         for widget in widgets:
             # enable input
@@ -856,11 +855,6 @@ class ResourcesList(QFrame):
 
         self._init_ui()
         self.setStyleSheet(page_style)
-
-        # testing
-        self.add_data(["martin-mac", "12.31.21.1", "1", "2", "4", "0.06 credit / Hr", "running"])
-        self.add_data(["martin-mac", "12.31.21.1", "1", "2", "4", "0.06 credit / Hr", "running"])
-        self.add_data(["martin-mac", "12.31.21.1", "1", "2", "4", "0.06 credit / Hr", "running"])
 
     def _init_ui(self):
         window_layout = add_layout(self, VERTICAL)

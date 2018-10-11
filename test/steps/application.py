@@ -42,9 +42,9 @@ def verify_login_input_text(context, text):
     assert_(context.login_window.login.login_hint.text(), text)
 
 
-@then(r'I should be able to log in')
+@then(r'I should be able to log in to the application')
 def verify_can_log_in(context):
-    pass
+    assert context.login_window.exec_()
 
 
 @when(r'I open the application window')

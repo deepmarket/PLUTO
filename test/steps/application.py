@@ -1,44 +1,59 @@
+from main import Login
 from src.app import App
 
 from PyQt5.QtTest import QTest
 from PyQt5.QtCore import Qt
 
 from behave import use_step_matcher, given, when, then, step
+
+from test.steps.helpers import assert_equal_wrapper as assert_
 use_step_matcher("re")
 
 
-@given(r'the application is in headless mode')
-def api_is_up(context):
-    from os import environ
-    environ['HEADLESS'] = True
+@when(r'I open the login dialog')
+def open_login_window(context):
+    context.login_window = Login()
+    context.login_window.show()
 
 
-@when(r'I wait (\d+) (second|seconds|minute|minutes|hour|hours)')
-def wait(context, timeout, denomination):
-    from time import sleep
-    timeout = int(timeout)
-
-    if "second" in denomination:
-        sleep(timeout)
-    elif "minute" in denomination:
-        timeout *= 60
-        sleep(timeout)
-    elif "hour" in denomination:
-        timeout *= (60 * 60)
-        sleep(timeout)
+@when(r'I enter "(.*)" in the (username|password) input box')
+def enter_login_input_text(context, text, dialog_box):
+    if dialog_box == "username":
+        context.login_window.login.username.setText(text)
+    elif dialog_box == "password":
+        context.login_window.login.pwd.setText(text)
 
 
-@when(r'I stand up the application')
+@then(r'the (username|password) input box text should be "(.*)"')
+def verify_login_input_text(context, dialog_box, text):
+    if dialog_box == "username":
+        assert context.login_window.login.username.text() == text
+    elif dialog_box == "password":
+        assert context.login_window.login.pwd.text() == text
+
+
+@when(r'I click the login button')
+def click_the_button(context, ):
+    context.login_window.login.login_button.click()
+
+
+@then(r'the login hint text should be "(.*)"')
+def verify_login_input_text(context, text):
+    assert_(context.login_window.login.login_hint.text(), text)
+
+
+@then(r'I should be able to log in')
+def verify_can_log_in(context):
+    pass
+
+
+@when(r'I open the application window')
 def open_application(context):
-    from PyQt5.QtWidgets import QApplication
-    if QApplication.instance() is None:
-        app = QApplication([])
-        context.app_ = app
         context.app = App()
 
 
 @when(r'I click on the (dashboard|resources|jobs) tab')
-def open_tab(context, tab):
+def open_main_tab(context, tab):
     if tab == "dashboard":
         context.app.on_dashboard_clicked()
     elif tab == "resources":
@@ -49,7 +64,7 @@ def open_tab(context, tab):
 
 
 @then(r'the current tab should be the (dashboard|resources|jobs) tab')
-def verify_tab(context, tab):
+def verify_main_tab(context, tab):
     from src.dashboard import Dashboard
     from src.resources import Resources
     from src.jobs import Jobs

@@ -32,7 +32,6 @@
         self.current_row = 0        # param number
 """
 
-import socket
 import psutil
 
 from src.mainview import MainView
@@ -59,11 +58,11 @@ class Resources(MainView):
         self.current_core = 0                       # param number
         self.current_ram = 0                        # param number
 
-        # self.if_verify = False                      # flag
-        # self.ip_check = False                       # flag
+        # self.if_verify = False                    # flag
+        # self.ip_check = False                     # flag
         self.machine_name_check = False             # flag
-        # self.cpu_check = False                      # flag
-        self.cpu_check = True       # cpu check is disable in this version
+        # self.cpu_check = False                    # flag
+        self.cpu_check = True                       # cpu check is disable in this version
         self.core_check = False                     # flag
         self.ram_check = False                      # flag
         self.price_selected = 0                     # flag
@@ -78,6 +77,8 @@ class Resources(MainView):
         self._fetch_ip_address()
 
     def _init_ui(self):
+        self.setObjectName("resources")
+
         section_layout = add_layout(self, VERTICAL, b_m=8)
 
         button_frame, button_layout = add_frame(self, height=35, layout=HORIZONTAL, l_m=40, r_m=40, space=24)
@@ -104,7 +105,8 @@ class Resources(MainView):
         self.workspace_button.clicked.connect(self.on_workspace_clicked)
         self.list_button.clicked.connect(self.on_list_clicked)
 
-        self.workspace.verify_button.clicked.connect(self.on_verify_button_clicked)
+        # self.workspace.verify_button.clicked.connect(self.on_verify_button_clicked)
+        self.on_verify_button_clicked()
         # self.workspace.change_button.clicked.connect(self.on_change_button_clicked)
         self.workspace.evaluate_button.clicked.connect(self.on_evaluate_button_clicked)
         self.workspace.auto_price_button.clicked.connect(self.on_auto_price_button_clicked)
@@ -117,8 +119,8 @@ class Resources(MainView):
         self.workspace.machine_name.editingFinished.connect(self.on_machine_edit)
         self.workspace.machine_name.textChanged.connect(self.on_machine_edit)
 
-        # self.workspace.cpu_gpu.editingFinished.connect(self.on_cpu_edit)
-        # self.workspace.cpu_gpu.textChanged.connect(self.on_cpu_edit)
+        self.workspace.cpu_gpu.editingFinished.connect(self.on_cpu_edit)
+        self.workspace.cpu_gpu.textChanged.connect(self.on_cpu_edit)
 
         self.workspace.cores.editingFinished.connect(self.on_core_edit)
         self.workspace.cores.textChanged.connect(self.on_core_edit)
@@ -142,8 +144,9 @@ class Resources(MainView):
         self._fetch_job_data()
 
     def on_verify_button_clicked(self):
-        self.current_core = psutil.cpu_count(logical=False)
-        self.current_ram = round(psutil.virtual_memory().available/(pow(1024, 3)), 1)
+        self.current_cpu = round(psutil.cpu_freq().current/1000, 1)  # Processor's speed in gHz
+        self.current_core = psutil.cpu_count(logical=False)  # Logical cores on the machine
+        self.current_ram = round(psutil.virtual_memory().total/(pow(1024, 3)), 1)  # Total installed RAM
 
         self.workspace.enable_machine_config(self.current_cpu, self.current_core, self.current_ram)
         self.workspace.enable_planning()
@@ -174,7 +177,7 @@ class Resources(MainView):
 
         # TODO: evaluate price here
         cores = self.workspace.cores.text()
-        # cpu_gpu = self.workspace.cpu_gpu.text()
+        cpu_gpu = self.workspace.cpu_gpu.text()
         ram = self.workspace.ram.text()
 
         self.auto_price = float(cores) * PRICING_CONSTANT
@@ -210,8 +213,8 @@ class Resources(MainView):
     def on_submit_button_clicked(self):
         machine_name = self.workspace.machine_name.text()
         ip_address = self.workspace.ip_address.text()
-        # cpu_gpu = self.workspace.cpu_gpu.text()
-        cpu_gpu = 0
+        cpu_gpu = self.workspace.cpu_gpu.text()
+        # cpu_gpu = 0
         cores = self.workspace.cores.text()
         ram = self.workspace.ram.text()
 
@@ -220,9 +223,7 @@ class Resources(MainView):
         else:
             price = self.offering_price
 
-        status = "running"
-
-        with Api("/resource") as api:
+        with Api("/resources") as api:
 
             resources_data = {
                 "machine_name": machine_name,
@@ -231,7 +232,7 @@ class Resources(MainView):
                 "cores": cores,
                 "cpus": cpu_gpu,
                 "price": price,
-                "status": status
+                "status": "ALIVE"
             }
 
             status, res = api.post(resources_data)
@@ -278,7 +279,7 @@ class Resources(MainView):
 
             # empty input or input is not number
             if user_input is "" or not self.num_regex.match(user_input):
-                self.workspace.planning_hint.setText("Please enter number of CPUs / GPUs.")
+                self.workspace.planning_hint.setText("Please enter number of GPUs.")
 
                 labels = self.workspace.current_cpu_box.findChildren(QLabel)
                 for label in labels:
@@ -289,7 +290,7 @@ class Resources(MainView):
             else:
                 num = int(user_input)
                 if num > self.current_cpu:
-                    self.workspace.planning_hint.setText("Input of CPUs / GPUs is out of range.")
+                    self.workspace.planning_hint.setText("Input for GPUs is out of range.")
 
                     labels = self.workspace.current_cpu_box.findChildren(QLabel)
                     for label in labels:
@@ -310,8 +311,8 @@ class Resources(MainView):
             user_input = self.workspace.cores.text()
 
             # empty input or input is not number
-            if user_input is "" or not self.num_regex.match(user_input):
-                self.workspace.planning_hint.setText("Please enter number to Cores.")
+            if user_input is "" or not self.is_float(user_input):
+                self.workspace.planning_hint.setText("Invalid number of cores.")
 
                 labels = self.workspace.current_core_box.findChildren(QLabel)
                 for label in labels:
@@ -320,25 +321,22 @@ class Resources(MainView):
                 self.core_check = False
                 self._check_flag()
             else:
-                try:
-                    num = int(user_input)
-                    if num > self.current_core:
-                        self.workspace.planning_hint.setText("Input in Cores is out of range.")
-                        labels = self.workspace.current_core_box.findChildren(QLabel)
-                        for label in labels:
-                            label.setStyleSheet(Page_machine_config_label_red)
+                num = int(user_input)
+                if num > self.current_core:
+                    self.workspace.planning_hint.setText("Cores is out of range.")
+                    labels = self.workspace.current_core_box.findChildren(QLabel)
+                    for label in labels:
+                        label.setStyleSheet(Page_machine_config_label_red)
 
-                        self.core_check = False
-                        self._check_flag()
-                    else:
-                        labels = self.workspace.current_core_box.findChildren(QLabel)
-                        for label in labels:
-                            label.setStyleSheet(Page_machine_config_label_green)
+                    self.core_check = False
+                    self._check_flag()
+                else:
+                    labels = self.workspace.current_core_box.findChildren(QLabel)
+                    for label in labels:
+                        label.setStyleSheet(Page_machine_config_label_green)
 
-                        self.core_check = True
-                        self._check_flag()
-                except ValueError:
-                    self.workspace.planning_hint.setText("Input must be integer.")
+                    self.core_check = True
+                    self._check_flag()
 
     def on_ram_edit(self):
         self.workspace.planning_hint.setText("")
@@ -346,8 +344,8 @@ class Resources(MainView):
             user_input = self.workspace.ram.text()
 
             # empty input or input is not number
-            if user_input is "" or not self.num_regex.match(user_input):
-                self.workspace.planning_hint.setText("Please enter number to Ram.")
+            if user_input is "" or not self.is_float(user_input):
+                self.workspace.planning_hint.setText("Invalid amount of RAM.")
                 labels = self.workspace.current_ram_box.findChildren(QLabel)
                 for label in labels:
                     label.setStyleSheet(Page_machine_config_label_red)
@@ -355,12 +353,10 @@ class Resources(MainView):
                 self.ram_check = False
                 self._check_flag()
             else:
-                try:
-                    num = int(user_input)
-                except ValueError:
-                    num = float(user_input)
+                num = float(user_input)
+
                 if num > self.current_ram:
-                    self.workspace.planning_hint.setText("Input in Ram is out of range.")
+                    self.workspace.planning_hint.setText("Amount of RAM is out of range.")
 
                     labels = self.workspace.current_ram_box.findChildren(QLabel)
                     for label in labels:
@@ -380,32 +376,31 @@ class Resources(MainView):
         self._fetch_job_data()
 
     def on_remove_button_clicked(self):
-        pass
-        # model = self.list.table.selectionModel()
-        #
-        # # check if table has selected row
-        # if not model.hasSelection():
-        #     pass
-        # else:
-        #     row = model.selectedRows()[0].row()
-        #     column = self.list.table.columnCount()
-        #
-        #     # check if row has value
-        #     if self.list.table.item(row, column-1).text() is not "":
-        #
-        #         # ask if user want to delete rows
-        #         question = Question("Are you sure you want to remove this?")
-        #
-        #         if question.exec_():
-        #             self.list.table.removeRow(row)
-        #
-        #             if row <= 13:
-        #                 self.list.current_row -= 1
-        #
-        #                 row = self.list.table.rowCount()
-        #                 self.list.table.insertRow(row)
-        #                 for c in range(column):
-        #                     self.list.table.setItem(row, c, QTableWidgetItem(""))
+        model = self.list.table.selectionModel()
+
+        # check if table has selected row
+        if not model.hasSelection():
+            pass
+        else:
+            row = model.selectedRows()[0].row()
+            column = self.list.table.columnCount()
+
+            # check if row has value
+            if self.list.table.item(row, column-1).text() is not "":
+
+                # ask if user want to delete rows
+                question = Question("Are you sure you want to remove this?")
+
+                if question.exec_():
+                    self.list.table.removeRow(row)
+
+                    if row <= 13:
+                        self.list.current_row -= 1
+
+                        row = self.list.table.rowCount()
+                        self.list.table.insertRow(row)
+                        for c in range(column):
+                            self.list.table.setItem(row, c, QTableWidgetItem(""))
 
     # check if flags are all on, enable evaluate button
     def _check_flag(self):
@@ -435,7 +430,14 @@ class Resources(MainView):
 
     # load the ip address from the running machine
     def _fetch_ip_address(self):
-        self.workspace.ip_address.setText(socket.gethostbyname(socket.gethostname()))
+        from socket import socket, AF_INET, SOCK_DGRAM
+
+        server_and_port = ('8.8.8.8', 443)
+        sock = socket(AF_INET, SOCK_DGRAM)
+        sock.connect(server_and_port)
+        ip_addr = sock.getsockname()[0]
+
+        self.workspace.ip_address.setText(ip_addr)
         self.workspace.disable_ip_address()
 
         self.if_verify = True
@@ -492,7 +494,7 @@ class ResourcesWorkspace(QFrame):
         line_frame, line_layout = add_frame(section_frame, layout=HORIZONTAL, r_m=3)
         section_layout.addWidget(line_frame)
 
-        title = add_label(line_frame, "Resource Verification", name="Page_section_title", align=Qt.AlignVCenter)
+        title = add_label(line_frame, "Available Resources", name="Page_section_title", align=Qt.AlignVCenter)
         line_layout.addWidget(title)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -509,8 +511,8 @@ class ResourcesWorkspace(QFrame):
         box, self.ip_address = add_page_input_box(line_frame, "IP Address:", 65, 21, fix_width=False)
         line_layout.addWidget(box)
 
-        self.verify_button = add_button(line_frame, "VERIFY", name="Page_button")
-        line_layout.addWidget(self.verify_button)
+        # self.verify_button = add_button(line_frame, "VERIFY", name="Page_button")
+        # line_layout.addWidget(self.verify_button)
 
         # self.change_button = add_button(line_frame, "CHANGE", name="Page_button")
         # line_layout.addWidget(self.change_button)
@@ -544,19 +546,19 @@ class ResourcesWorkspace(QFrame):
 
         # --------- cpu box, spacer, core box, spacer, ram box ------------
 
-        self.current_cpu_box = add_config_box(line_frame, "CPU:")
+        self.current_cpu_box = add_config_box(line_frame, "Compute:")
         line_layout.addWidget(self.current_cpu_box)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
         line_layout.addItem(spacer)
 
-        self.current_core_box = add_config_box(line_frame, "Cores #:")
+        self.current_core_box = add_config_box(line_frame, "Cores:")
         line_layout.addWidget(self.current_core_box)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
         line_layout.addItem(spacer)
 
-        self.current_ram_box = add_config_box(line_frame, "Ram:")
+        self.current_ram_box = add_config_box(line_frame, "RAM:")
         line_layout.addWidget(self.current_ram_box)
 
         self.disable_machine_config()
@@ -571,7 +573,7 @@ class ResourcesWorkspace(QFrame):
         line_frame, line_layout = add_frame(section_frame, layout=HORIZONTAL)
         section_layout.addWidget(line_frame)
 
-        title = add_label(line_frame, "Resource Planning", name="Page_section_title", align=Qt.AlignVCenter)
+        title = add_label(line_frame, "Add a Resource", name="Page_section_title", align=Qt.AlignVCenter)
         line_layout.addWidget(title)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -594,7 +596,7 @@ class ResourcesWorkspace(QFrame):
         spacer = QSpacerItem(30, 0, QSizePolicy.Fixed, QSizePolicy.Minimum)
         line_layout.addItem(spacer)
 
-        box, self.cpu_gpu = add_page_input_box(line_frame, "CPUs/GPUs #:", 113, 18, width=285)
+        box, self.cpu_gpu = add_page_input_box(line_frame, "GPUs #:", 113, 18, width=285)
         line_layout.addWidget(box)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -613,13 +615,13 @@ class ResourcesWorkspace(QFrame):
         line_frame, line_layout = add_frame(sub_section_frame, layout=HORIZONTAL)
         sub_section_layout.addWidget(line_frame)
 
-        box, self.cores = add_page_input_box(line_frame, "Core #:", 113, 18, width=285)
+        box, self.cores = add_page_input_box(line_frame, "Cores:", 113, 18, width=285)
         line_layout.addWidget(box)
 
         spacer = QSpacerItem(30, 0, QSizePolicy.Fixed, QSizePolicy.Minimum)
         line_layout.addItem(spacer)
 
-        box, self.ram = add_page_input_box(line_frame, "Ram (Gb.):", 113, 18, width=285)
+        box, self.ram = add_page_input_box(line_frame, "RAM (GB):", 113, 18, width=285)
         line_layout.addWidget(box)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -691,8 +693,26 @@ class ResourcesWorkspace(QFrame):
     # input three number to update the display on machine config
     def enable_machine_config(self, current_cpu, current_core, current_ram):
         # disable cpu/gpu permanently in this version
-        # text = [f"{current_cpu} GB", f"{current_core}", f"{current_ram} GB"]
-        # boxes = [self.current_cpu_box, self.current_core_box, self.current_ram_box]
+        text = [f"{current_cpu} GHz", f"{current_core}", f"{current_ram} GB"]
+        boxes = [self.current_cpu_box, self.current_core_box, self.current_ram_box]
+
+        # for i in range(len(boxes)):
+        for i, box in enumerate(boxes):
+            # enable boxes
+            box.setStyleSheet(Page_machine_config_box)
+
+            # find label children
+            labels = box.findChildren(QLabel)
+
+            # disable stylesheet
+            labels[0].setStyleSheet(Page_machine_config_label)
+            labels[1].setStyleSheet(Page_machine_config_label)
+
+            # set value
+            labels[1].setText(text[i])
+        #
+        # text = [f"{current_core}", f"{current_ram} GB"]
+        # boxes = [self.current_core_box, self.current_ram_box]
         #
         # for i in range(len(boxes)):
         #     # enable boxes
@@ -707,27 +727,11 @@ class ResourcesWorkspace(QFrame):
         #
         #     # set value
         #     labels[1].setText(text[i])
-        text = [f"{current_core}", f"{current_ram} GB"]
-        boxes = [self.current_core_box, self.current_ram_box]
-
-        for i in range(len(boxes)):
-            # enable boxes
-            boxes[i].setStyleSheet(Page_machine_config_box)
-
-            # find label children
-            labels = boxes[i].findChildren(QLabel)
-
-            # disable stylesheet
-            labels[0].setStyleSheet(Page_machine_config_label)
-            labels[1].setStyleSheet(Page_machine_config_label)
-
-            # set value
-            labels[1].setText(text[i])
 
     # disable machine config before user verify ip address
     def disable_machine_config(self):
         # disable cpu/gpu permanently in this version
-        text = ["0 GB", "0", "0 GB"]
+        text = ["0 GHz", "0", "0 GB"]
         boxes = [self.current_cpu_box, self.current_core_box, self.current_ram_box]
 
         for i in range(len(boxes)):
@@ -852,11 +856,6 @@ class ResourcesList(QFrame):
         self._init_ui()
         self.setStyleSheet(page_style)
 
-        # testing
-        self.add_data(["martin-mac", "12.31.21.1", "1", "2", "4", "0.06 credit / Hr", "running"])
-        self.add_data(["martin-mac", "12.31.21.1", "1", "2", "4", "0.06 credit / Hr", "running"])
-        self.add_data(["martin-mac", "12.31.21.1", "1", "2", "4", "0.06 credit / Hr", "running"])
-
     def _init_ui(self):
         window_layout = add_layout(self, VERTICAL)
 
@@ -885,7 +884,7 @@ class ResourcesList(QFrame):
         self.table.setObjectName("Page_table")
         table_layout.addWidget(self.table)
 
-        table_headers = ["Machine Name", "IP Address", "CPUs/GPUs", "Cores", "Ram (gb)", "Price", "Status"]
+        table_headers = ["Machine Name", "IP Address", "GPUs", "Cores", "Ram (gb)", "Price", "Status"]
         table_headers_width = [150, 150, 100, 100, 100, 120, 150]
 
         self.table.setColumnCount(len(table_headers))

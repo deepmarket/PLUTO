@@ -58,11 +58,11 @@ class Resources(MainView):
         self.current_core = 0                       # param number
         self.current_ram = 0                        # param number
 
-        # self.if_verify = False                      # flag
-        # self.ip_check = False                       # flag
+        # self.if_verify = False                    # flag
+        # self.ip_check = False                     # flag
         self.machine_name_check = False             # flag
-        # self.cpu_check = False                      # flag
-        self.cpu_check = True       # cpu check is disable in this version
+        # self.cpu_check = False                    # flag
+        self.cpu_check = True                       # cpu check is disable in this version
         self.core_check = False                     # flag
         self.ram_check = False                      # flag
         self.price_selected = 0                     # flag
@@ -279,7 +279,7 @@ class Resources(MainView):
 
             # empty input or input is not number
             if user_input is "" or not self.num_regex.match(user_input):
-                self.workspace.planning_hint.setText("Please enter number of CPUs / GPUs.")
+                self.workspace.planning_hint.setText("Please enter number of GPUs.")
 
                 labels = self.workspace.current_cpu_box.findChildren(QLabel)
                 for label in labels:
@@ -290,7 +290,7 @@ class Resources(MainView):
             else:
                 num = int(user_input)
                 if num > self.current_cpu:
-                    self.workspace.planning_hint.setText("Input of CPUs / GPUs is out of range.")
+                    self.workspace.planning_hint.setText("Input for GPUs is out of range.")
 
                     labels = self.workspace.current_cpu_box.findChildren(QLabel)
                     for label in labels:
@@ -596,7 +596,7 @@ class ResourcesWorkspace(QFrame):
         spacer = QSpacerItem(30, 0, QSizePolicy.Fixed, QSizePolicy.Minimum)
         line_layout.addItem(spacer)
 
-        box, self.cpu_gpu = add_page_input_box(line_frame, "CPUs/GPUs #:", 113, 18, width=285)
+        box, self.cpu_gpu = add_page_input_box(line_frame, "GPUs #:", 113, 18, width=285)
         line_layout.addWidget(box)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -759,7 +759,7 @@ class ResourcesWorkspace(QFrame):
         #     # set to enable stylesheet
         #     widget.setStyleSheet(Page_input_input)
 
-        widgets = [self.cpu_gpu, self.machine_name, self.cores, self.ram]
+        widgets = [self.machine_name, self.cores, self.ram]
 
         for widget in widgets:
             # enable input
@@ -884,7 +884,7 @@ class ResourcesList(QFrame):
         self.table.setObjectName("Page_table")
         table_layout.addWidget(self.table)
 
-        table_headers = ["Machine Name", "IP Address", "CPUs/GPUs", "Cores", "Ram (gb)", "Price", "Status"]
+        table_headers = ["Machine Name", "IP Address", "GPUs", "Cores", "Ram (gb)", "Price", "Status"]
         table_headers_width = [150, 150, 100, 100, 100, 120, 150]
 
         self.table.setColumnCount(len(table_headers))

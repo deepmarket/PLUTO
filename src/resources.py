@@ -244,7 +244,7 @@ class Resources(MainView):
                 if status == 500 and isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
                     errmsg = res["error"]["errmsg"]
                     if "E11000 duplicate key error collection" in errmsg:
-                        msg = "Machine under such IP address has already been registered"
+                        msg = "Such IP address is already in use!"
                         self.workspace.verification_hint.setText(msg)
                     # TODO: add more err case to here
                     else:
@@ -272,9 +272,7 @@ class Resources(MainView):
     #         self.ip_check = True
 
     def on_machine_edit(self):
-        self.workspace.verification_hint.setText("")
-        self.workspace.planning_hint.setText("")
-        self.workspace.submission_hint.setText("")
+        self._reset_hint()
 
         if self.if_verify:
             user_input = self.workspace.machine_name.text()
@@ -287,9 +285,7 @@ class Resources(MainView):
 
     # disable for this version
     def on_cpu_edit(self):
-        self.workspace.verification_hint.setText("")
-        self.workspace.planning_hint.setText("")
-        self.workspace.submission_hint.setText("")
+        self._reset_hint()
 
         if self.if_verify:
             user_input = self.workspace.cpu_gpu.text()
@@ -323,9 +319,7 @@ class Resources(MainView):
                     self._check_flag()
 
     def on_core_edit(self):
-        self.workspace.verification_hint.setText("")
-        self.workspace.planning_hint.setText("")
-        self.workspace.submission_hint.setText("")
+        self._reset_hint()
 
         if self.if_verify:
             user_input = self.workspace.cores.text()
@@ -359,9 +353,7 @@ class Resources(MainView):
                     self._check_flag()
 
     def on_ram_edit(self):
-        self.workspace.verification_hint.setText("")
-        self.workspace.planning_hint.setText("")
-        self.workspace.submission_hint.setText("")
+        self._reset_hint()
 
         if self.if_verify:
             user_input = self.workspace.ram.text()
@@ -464,6 +456,11 @@ class Resources(MainView):
         self.workspace.disable_ip_address()
 
         self.if_verify = True
+
+    def _reset_hint(self):
+        self.workspace.verification_hint.setText("")
+        self.workspace.planning_hint.setText("")
+        self.workspace.submission_hint.setText("")
 
     # self-updated function by calling timer in main
     # can be used later on

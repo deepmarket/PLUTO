@@ -213,8 +213,9 @@ class Resources(MainView):
     def on_submit_button_clicked(self):
         machine_name = self.workspace.machine_name.text()
         ip_address = self.workspace.ip_address.text()
-        cpu_gpu = self.workspace.cpu_gpu.text()
-        # cpu_gpu = 0
+        # cpu_gpu = self.workspace.cpu_gpu.text()
+        cpu_gpu = 0
+
         cores = self.workspace.cores.text()
         ram = self.workspace.ram.text()
 
@@ -236,16 +237,26 @@ class Resources(MainView):
             }
 
             status, res = api.post(resources_data)
+
+            # response handle
             if not status == 200:
                 # log(neat error message of some kind?)
-                # And probably notify the user?
-                pass
+                if status == 500 and isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
+                    errmsg = res["error"]["errmsg"]
+                    if "E11000 duplicate key error collection" in errmsg:
+                        msg = "Such IP address is already in use!"
+                        self.workspace.verification_hint.setText(msg)
+                    # TODO: add more err case to here
+                    else:
+                        msg = "Fail due to an implicit reason, please contact the developed team."
+                        self.workspace.submission_hint.setText(msg)
+            else:
 
-        # add data to list
-        self._fetch_job_data()
+                # add data to list
+                self._fetch_job_data()
 
-        # switch page
-        self.on_list_clicked()
+                # switch page
+                self.on_list_clicked()
 
     # def on_ip_address_edit(self):
     #     self.workspace.verification_hint.setText("")
@@ -261,7 +272,8 @@ class Resources(MainView):
     #         self.ip_check = True
 
     def on_machine_edit(self):
-        self.workspace.planning_hint.setText("")
+        self._reset_hint()
+
         if self.if_verify:
             user_input = self.workspace.machine_name.text()
 
@@ -273,7 +285,8 @@ class Resources(MainView):
 
     # disable for this version
     def on_cpu_edit(self):
-        self.workspace.planning_hint.setText("")
+        self._reset_hint()
+
         if self.if_verify:
             user_input = self.workspace.cpu_gpu.text()
 
@@ -306,7 +319,8 @@ class Resources(MainView):
                     self._check_flag()
 
     def on_core_edit(self):
-        self.workspace.planning_hint.setText("")
+        self._reset_hint()
+
         if self.if_verify:
             user_input = self.workspace.cores.text()
 
@@ -339,7 +353,8 @@ class Resources(MainView):
                     self._check_flag()
 
     def on_ram_edit(self):
-        self.workspace.planning_hint.setText("")
+        self._reset_hint()
+
         if self.if_verify:
             user_input = self.workspace.ram.text()
 
@@ -442,6 +457,11 @@ class Resources(MainView):
 
         self.if_verify = True
 
+    def _reset_hint(self):
+        self.workspace.verification_hint.setText("")
+        self.workspace.planning_hint.setText("")
+        self.workspace.submission_hint.setText("")
+
     # self-updated function by calling timer in main
     # can be used later on
     def update(self):
@@ -456,6 +476,7 @@ class ResourcesWorkspace(QFrame):
         # variable
         self.verification_hint = None               # param string
         self.planning_hint = None                   # param string
+        self.submission_hint = None                 # param string
 
         self.current_cpu_box = None                 # frame
         self.current_core_box = None                # frame
@@ -645,6 +666,9 @@ class ResourcesWorkspace(QFrame):
 
         title = add_label(line_frame, "Resource Submission", name="Page_section_title", align=Qt.AlignVCenter)
         line_layout.addWidget(title)
+
+        self.submission_hint = add_label(line_frame, "", name="Page_hint", align=Qt.AlignVCenter)
+        line_layout.addWidget(self.submission_hint)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
         line_layout.addItem(spacer)

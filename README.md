@@ -14,8 +14,16 @@ If you would like to submit changes, please open a pull request.
 * psutil _5.4.7_
 
 #### To install:
+
 ```bash
-$ python -m pip install -r requirements.txt
+$ python3 -m pip install -r requirements.txt
+```
+
+
+#### To launch to the application:
+
+```bash
+$ python3 main.py
 ```
 
 #### Team Members:

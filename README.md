@@ -31,7 +31,8 @@ $ python3 main.py
 
 #### Team Members:
 * [Susham Yerabolu](mailto:yerabolu@pdx.edu)
-* [Haritha Munagala](mailto:mharitha@pdx.edu)
 * [Soyoung Kim](mailto:soyoung@pdx.edu)
 * [Sam Gomena](mailto:gomenas@pdx.edu)
 * [Martin Li](mailto:xuanzhe@pdx.edu)
+* [Shraddha Bhise](mailto:sbhise@pdx.edu)
+* [Rohan Patel](mailto:roh4@pdx.edu)

@@ -248,11 +248,11 @@ class SideBar(QFrame):
         button_frame_01 = QFrame(self)
         button_layout = add_layout(button_frame_01, VERTICAL, t_m=50, space=18)
 
-        self.dashboard = add_button(button_frame_01, "Dashboard", stylesheet=app_sidebar_button_active)
+        self.dashboard = add_button(button_frame_01, "Dashboard", name="dashboard",  stylesheet=app_sidebar_button_active)
 
-        self.resources = add_button(button_frame_01, "Resources", stylesheet=app_sidebar_button)
+        self.resources = add_button(button_frame_01, "Resources", name="resources", stylesheet=app_sidebar_button)
 
-        self.jobs = add_button(button_frame_01, "Jobs", stylesheet=app_sidebar_button)
+        self.jobs = add_button(button_frame_01, "Jobs", name="jobs", stylesheet=app_sidebar_button)
 
         button_layout.addWidget(self.dashboard)
         button_layout.addWidget(self.resources)

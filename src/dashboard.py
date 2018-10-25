@@ -70,8 +70,6 @@ class Dashboard(MainView):
                 self.username = "."
                 self.total_balance = 0
 
-
-
         with Api("/resources") as resources:
             status, res = resources.get()
 
@@ -94,12 +92,9 @@ class Dashboard(MainView):
                     else:
                         self.killed_jobs += 1
 
-
-
-
-
-
     def _init_ui(self):
+        self.setObjectName("Dashboard")
+
         widget_layout = add_layout(self, VERTICAL, t_m=5, b_m=5, space=5)
 
         self._init_overview()

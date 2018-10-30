@@ -14,15 +14,25 @@ If you would like to submit changes, please open a pull request.
 * PyQt _5.10_
 * sip _4.19.7_
 * requests _2.18.4_
+* psutil _5.4.7_
 
 #### To install:
+
 ```bash
-$ pip install -r requirements.txt
+$ python3 -m pip install -r requirements.txt
+```
+
+
+#### To launch to the application:
+
+```bash
+$ python3 main.py
 ```
 
 #### Team Members:
 * [Susham Yerabolu](mailto:yerabolu@pdx.edu)
-* [Haritha Munagala](mailto:mharitha@pdx.edu)
 * [Soyoung Kim](mailto:soyoung@pdx.edu)
 * [Sam Gomena](mailto:gomenas@pdx.edu)
 * [Martin Li](mailto:xuanzhe@pdx.edu)
+* [Shraddha Bhise](mailto:sbhise@pdx.edu)
+* [Rohan Patel](mailto:roh4@pdx.edu)

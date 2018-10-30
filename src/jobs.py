@@ -150,52 +150,51 @@ class Jobs(MainView):
             self.input_check = True
 
     def update_workspace(self):
-        api = Api("/pricing")
-        status, res = api.get()
-
-        if isinstance(res, dict) and "prices" in res:
-            price_dat = res['prices']
-        else:
-            price_dat = []
-
-        # update scheme
-        frames = [self.workspace.scheme_01_frame,
-                  self.workspace.scheme_02_frame,
-                  self.workspace.scheme_03_frame,
-                  self.workspace.scheme_04_frame]
-
-        for i in range(len(frames)):
-            # find all QLabel children within the frame
-            labels = frames[i].findChildren(QLabel)
-
-            # exclude the first label, which is the time label
-            labels.pop(0)
-
-            # TODO: load time scheme
-            if not price_dat:
-                for j in range(len(labels)):
-                    labels[j].setText('Error')
+        with Api("/pricing")as api:
+            status, res = api.get()
+            if isinstance(res, dict) and "prices" in res:
+                price_dat = res['prices']
             else:
-                dat = price_dat[i]
-                dat = [round(dat['cpus'], 6), round(dat['gpus'], 6), round(dat['memory'], 6), round(dat['disk_space'], 6)]
+                price_dat = []
 
-                for j in range(len(labels)):
-                    labels[j].setText(f"{dat[j]} Credit/Hr")
+            # update scheme
+            frames = [self.workspace.scheme_01_frame,
+                      self.workspace.scheme_02_frame,
+                      self.workspace.scheme_03_frame,
+                      self.workspace.scheme_04_frame]
 
-        # TODO: load dat here
-        # format: [cpu, gpu, memory, space], type: int
-        dat = [0, 0, 0, 0]
+            for i in range(len(frames)):
+                # find all QLabel children within the frame
+                labels = frames[i].findChildren(QLabel)
 
-        # update available resources
-        labels = [self.workspace.available_cpu,
-                  self.workspace.available_gpu,
-                  self.workspace.available_memory,
-                  self.workspace.available_disk]
+                # exclude the first label, which is the time label
+                labels.pop(0)
 
-        text = [f"CPU #: {dat[0]}", f"GPU #: {dat[1]}", f"Memory: {dat[2]} GB", f"Disk Space: {dat[3]} GB"]
+                # TODO: load time scheme
+                if not price_dat:
+                    for j in range(len(labels)):
+                        labels[j].setText('Error')
+                else:
+                    dat = price_dat[i]
+                    dat = [round(dat['cpus'], 6), round(dat['gpus'], 6), round(dat['memory'], 6), round(dat['disk_space'], 6)]
 
-        for i in range(len(dat)):
-            labels[i].setText(text[i])
+                    for j in range(len(labels)):
+                        labels[j].setText(f"{dat[j]}\b Credits/Hr")
+
+            # TODO: load dat here
+            # format: [cpu, gpu, memory, space], type: int
+            dat = [0, 0, 0, 0]
+
+            # update available resources
+            labels = [self.workspace.available_cpu,
+                      self.workspace.available_gpu,
+                      self.workspace.available_memory,
+                      self.workspace.available_disk]
+
+            text = [f"CPU #: {dat[0]}", f"GPU #: {dat[1]}", f"Memory: {dat[2]} GB", f"Disk Space: {dat[3]} GB"]
+
+            for i in range(len(dat)):
+                labels[i].setText(text[i])
 
     # input data format: [job_id, workers, cores, memory, price, status, logs]
     def on_submit_clicked(self):
@@ -221,37 +220,42 @@ class Jobs(MainView):
         labels = frame.findChildren(QLabel)
 
         for label in labels:
-            text.append(label.text())
+            text.append(label.text().split('\b')[0])
 
-        # TODO: generate job name here
-        job_id = "My-Job-01"
+        from random import choices
+        from string import ascii_uppercase, digits
+        job_id = "J"
+        job_id += "".join(choices(ascii_uppercase + digits, k=6))
+
         price = "0.005"
 
-        question = f"""Job "{job_id}" will be charged with """
-        question += f"""CPU: {text[1]}, GPU: {text[2]}, Memory: {text[3]}\nDisk Space: {text[4]} """
-        question += f"""and run in the Time slot: {text[0]}\n\n"""
-        question += f"""You are required """
-        question += f"""worker #: {workers}, Cores #: {cores}, Memory: {memory} GB for this submission.\n\n"""
-        question += f"""Do you want to submit this job at the above mentioned rate and time slot?"""
+        question = f"""
+            Job '{job_id}' will be charged for using:
+            {text[1]} per CPU/hr, {text[2]} per GPU/hr, and {text[3]} per GB/hr of memory.
+            \n
+            It will run between {text[0]}.
+            
+            Do you want to submit this job at the aforementioned rate and time?
+        """
 
         question = Question(question)
 
         if question.exec_():
-            # add data to db
-            job_api = Api("/jobs")
 
-            job_data = {
-                "timeslot_id": self.workspace.select_scheme-1,
-                "workers": workers,
-                "cores": cores,
-                "memory": memory,
-                "source_files": [source_files],
-                "input_files": [input_files],
-                "price": price,
-                "customer_id": "customer_id"
-            }
+            with Api("/jobs") as job:
 
-            job_api.post(job_data)
+                job_data = {
+                    "timeslot_id": self.workspace.select_scheme-1,
+                    "workers": workers,
+                    "cores": cores,
+                    "memory": memory,
+                    "source_files": [source_files],
+                    "input_files": [input_files],
+                    "price": price,
+                    "customer_id": "customer_id"
+                }
+
+                job.post(job_data)
 
             # add data to list
             self._fetch_job_data()
@@ -280,9 +284,8 @@ class Jobs(MainView):
             if question.exec_():
                 job_id = self.list.table.item(row, 0).text()
 
-                # delete on the db
-                job_api = Api(f"/jobs/{job_id}")
-                job_api.delete()
+                with Api(f"/jobs/{job_id}") as job_api:
+                    job_api.delete()
 
                 # delete on the list
                 self.list.table.removeRow(row)
@@ -298,22 +301,21 @@ class Jobs(MainView):
     def _fetch_job_data(self):
         self.list.clean_table()
 
-        # connect to db
-        job_api = Api("/jobs")
-        status, res = job_api.get()
+        with Api("/jobs") as job_api:
+            status, res = job_api.get()
 
-        # load data to list
-        # data format: [job_id, workers, cores, memory, price, status, logs]
-        if status == 200 and isinstance(res, dict) and "jobs" in res:
-            for job in res["jobs"]:
-                self.list.add_data([job['_id'],
-                                    job['workers'],
-                                    job['cores'],
-                                    job['memory'],
-                                    str(job['source_files'][0] + "..."),
-                                    str(job['input_files'][0] + "..."),
-                                    str(job['price']),
-                                    job['status'], "-"])
+            # load data to list
+            # data format: [job_id, workers, cores, memory, price, status, logs]
+            if status == 200 and isinstance(res, dict) and "jobs" in res:
+                for job in res["jobs"]:
+                    self.list.add_data([job['_id'],
+                                        job['workers'],
+                                        job['cores'],
+                                        job['memory'],
+                                        str(job['source_files'][0] + "..."),
+                                        str(job['input_files'][0] + "..."),
+                                        str(job['price']),
+                                        job['status'], "-"])
 
     def _check_input(self):
         if self.worker_check and self.core_check and self.memory_check and self.source_check and self.input_check:
@@ -375,11 +377,11 @@ class JobWorkspace(QFrame):
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
         line_layout.addItem(spacer)
 
-        note = add_label(line_frame, "Notice: you have to select time slot.", name="Page_hint", align=Qt.AlignBottom)
-        line_layout.addWidget(note)
-
-        spacer = QSpacerItem(5, 0, QSizePolicy.Fixed, QSizePolicy.Minimum)
-        line_layout.addItem(spacer)
+        # note = add_label(line_frame, "Notice: you have to select time slot.", name="Page_hint", align=Qt.AlignBottom)
+        # line_layout.addWidget(note)
+        #
+        # spacer = QSpacerItem(5, 0, QSizePolicy.Fixed, QSizePolicy.Minimum)
+        # line_layout.addItem(spacer)
 
         # --------- begin sub_section: left_section, right_section ------------
 

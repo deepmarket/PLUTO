@@ -47,27 +47,54 @@ class Dashboard(MainView):
         self.total_balance = 0              # param number
         self.estimated_profit = 0           # param number
         self.estimated_cost = 0             # param number
-        self.running_machine = 0            # param number
-        self.panic_machine = 0              # param number
-        self.finished_job = 0               # param number
-        self.running_job = 0                # param number
-        self.panic_job = 0                  # param number
+        self.running_machines = 0            # param number
+        self.dead_machine = 0              # param number
+        self.finished_jobs = 0               # param number
+        self.running_jobs = 0                # param number
+        self.killed_jobs = 0                  # param number
 
-        account_api = Api("/account")
-        status, res = account_api.get()
-
-        if status == 200 and isinstance(res, dict) and "customer" in res and "firstname" in res['customer']:
-            # Insert comma here so we can default to nameless greeting if api fails.
-            self.username = f", {res['customer']['firstname'].capitalize()}"
-        else:
-            self.username = ", User"
-
-        # TODO: request "Total Balance", "Estimated profit", "Estimated cost" "machine status"from api also
-
+        self.get_dashboard_data()
         self._init_ui()
         self.setStyleSheet(dashboard_style)
 
+    def get_dashboard_data(self):
+
+        with Api("/account") as account:
+            status, res = account.get()
+
+            if status == 200 and isinstance(res, dict) and "customer" in res and "firstname" in res['customer']:
+                # Insert comma here so we can default to nameless greeting if api fails.
+                self.username = f", {res['customer']['firstname'].capitalize()}"
+                self.total_balance = round(res['customer']['credits'], 4)
+            else:
+                self.username = "."
+                self.total_balance = 0
+
+        with Api("/resources") as resources:
+            status, res = resources.get()
+
+            if status == 200 and isinstance(res, dict) and "resources" in res:
+                for rsrc in res["resources"]:
+                    if str(rsrc['status']) == "ALIVE":
+                        self.running_machines += 1
+                    else:
+                        self.dead_machine += 1
+
+        with Api("/jobs") as jobs:
+            status, res = jobs.get()
+
+            if status == 200 and isinstance(res, dict) and "jobs" in res:
+                for job in res["jobs"]:
+                    if str(job['status']) == "FINISHED":
+                        self.finished_jobs += 1
+                    elif str(job['status']) == "RUNNING":
+                        self.running_jobs += 1
+                    else:
+                        self.killed_jobs += 1
+
     def _init_ui(self):
+        self.setObjectName("Dashboard")
+
         widget_layout = add_layout(self, VERTICAL, t_m=5, b_m=5, space=5)
 
         self._init_overview()
@@ -103,12 +130,11 @@ class Dashboard(MainView):
         title_frame = QFrame(left_frame)
         title_layout = add_layout(title_frame, HORIZONTAL, space=10)
 
-        greeting = add_label(left_frame, f"{self.greeting}", name="Dashboard_greeting")
-        username = add_label(left_frame, f"{self.username}", name="Dashboard_username")
+        welcome_user = add_label(left_frame, f"{self.greeting}{self.username}", name="Dashboard_greeting")
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
-        title_layout.addWidget(greeting)
-        title_layout.addWidget(username)
+        title_layout.addWidget(welcome_user)
+
         title_layout.addItem(spacer)
         left_layout.addWidget(title_frame)
 
@@ -122,7 +148,7 @@ class Dashboard(MainView):
         line_frame = QFrame(left_frame)
         line_layout = add_layout(line_frame, HORIZONTAL)
 
-        segment = add_label(line_frame, "Here is some detail about resources / jobs:", name="Dashboard_description")
+        segment = add_label(line_frame, "You have:", name="Dashboard_description")
         line_layout.addWidget(segment)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -135,7 +161,7 @@ class Dashboard(MainView):
         line_frame = QFrame(left_frame)
         line_layout = add_layout(line_frame, HORIZONTAL)
 
-        segment = add_label(line_frame, "Within your last logout,", name="Dashboard_description")
+        segment = add_label(line_frame, "", name="Dashboard_description")
         line_layout.addWidget(segment)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -148,19 +174,24 @@ class Dashboard(MainView):
         line_frame = QFrame(left_frame)
         line_layout = add_layout(line_frame, HORIZONTAL)
 
-        segment = add_label(line_frame, "There are ", name="Dashboard_description")
+        segment = add_label(line_frame, "", name="Dashboard_description")
         line_layout.addWidget(segment)
 
-        segment = add_label(line_frame, f"{self.running_machine}", name="Dashboard_highlight_description")
+        segment = add_label(line_frame, f"{self.running_machines}", name="Dashboard_highlight_description")
         line_layout.addWidget(segment)
 
-        segment = add_label(line_frame, " resources are running, and ", name="Dashboard_description")
+        segment = add_label(line_frame, f" resource{'' if self.running_machines == 1 else 's'} running and",
+                            name="Dashboard_description")
+
         line_layout.addWidget(segment)
 
-        segment = add_label(line_frame, f"{self.panic_machine}", name="Dashboard_highlight_description")
+        segment = add_label(line_frame, f" {self.dead_machine} ", name="Dashboard_highlight_description")
+
         line_layout.addWidget(segment)
 
-        segment = add_label(line_frame, " are panic.", name="Dashboard_description")
+        segment = add_label(line_frame, f"dead resource{'' if self.dead_machine == 1 else 's'}",
+                            name="Dashboard_description")
+
         line_layout.addWidget(segment)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -173,25 +204,25 @@ class Dashboard(MainView):
         line_frame = QFrame(left_frame)
         line_layout = add_layout(line_frame, HORIZONTAL)
 
-        segment = add_label(line_frame, "There are ", name="Dashboard_description")
+        segment = add_label(line_frame, "", name="Dashboard_description")
         line_layout.addWidget(segment)
 
-        segment = add_label(line_frame, f"{self.finished_job}", name="Dashboard_highlight_description")
+        segment = add_label(line_frame, f"{self.finished_jobs}", name="Dashboard_highlight_description")
         line_layout.addWidget(segment)
 
         segment = add_label(line_frame, " jobs are finished, ", name="Dashboard_description")
         line_layout.addWidget(segment)
 
-        segment = add_label(line_frame, f"{self.running_job}", name="Dashboard_highlight_description")
+        segment = add_label(line_frame, f"{self.running_jobs}", name="Dashboard_highlight_description")
         line_layout.addWidget(segment)
 
         segment = add_label(line_frame, " are still running, and ", name="Dashboard_description")
         line_layout.addWidget(segment)
 
-        segment = add_label(line_frame, f"{self.panic_job}", name="Dashboard_highlight_description")
+        segment = add_label(line_frame, f"{self.killed_jobs}", name="Dashboard_highlight_description")
         line_layout.addWidget(segment)
 
-        segment = add_label(line_frame, " jobs are panic.", name="Dashboard_description")
+        segment = add_label(line_frame, " jobs have been killed.", name="Dashboard_description")
         line_layout.addWidget(segment)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)

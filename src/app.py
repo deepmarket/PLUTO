@@ -206,12 +206,12 @@ class App(QMainWindow):
         popup.exec_()
 
     def on_logout_clicked(self):
-        account_api = Api("/auth/logout")
-        status, res = account_api.post()
+        with Api("/auth/logout") as account_api:
+            status, res = account_api.post()
 
-        if status == 200:
-            print("Logging out.")
-        self.close()
+            if status == 200:
+                print("Logging out.")
+            self.close()
 
     def update(self):
         self.main_window.stack_widget.update()
@@ -248,11 +248,11 @@ class SideBar(QFrame):
         button_frame_01 = QFrame(self)
         button_layout = add_layout(button_frame_01, VERTICAL, t_m=50, space=18)
 
-        self.dashboard = add_button(button_frame_01, "Dashboard", stylesheet=app_sidebar_button_active)
+        self.dashboard = add_button(button_frame_01, "Dashboard", name="dashboard",  stylesheet=app_sidebar_button_active)
 
-        self.resources = add_button(button_frame_01, "Resources", stylesheet=app_sidebar_button)
+        self.resources = add_button(button_frame_01, "Resources", name="resources", stylesheet=app_sidebar_button)
 
-        self.jobs = add_button(button_frame_01, "Jobs", stylesheet=app_sidebar_button)
+        self.jobs = add_button(button_frame_01, "Jobs", name="jobs", stylesheet=app_sidebar_button)
 
         button_layout.addWidget(self.dashboard)
         button_layout.addWidget(self.resources)
@@ -270,13 +270,10 @@ class Navigation(QFrame):
     def __init__(self, *args, **kwargs):
         super(QFrame, self).__init__(*args, **kwargs)
 
-        # TODO: isolated from Api until the incomplete handling
-        # account_api = Api("/account")
-        # status, res = account_api.get()
-        #
-        # if status == 200:
-        #     self.credits = "{:.2f}".format(round(res['customer']['credits'], 3))
-        self.credits = 15
+        with Api("/account") as account:
+            status, res = account.get()
+
+            self.credits = round(res['customer']['credits'], 4)
 
         self.head_img = None
         self.menu_button = None
@@ -342,14 +339,17 @@ class Account(QFrame):
         super(QFrame, self).__init__(*args, **kwargs)
 
         self.head_img = None                # image filename string
-        account_api = Api("/account")
-        status, res = account_api.get()
 
-        if status == 200:
-            # Insert comma here so we can default to nameless greeting if api fails.
-            self.username = f"{res['customer']['firstname'].capitalize()}"
-        else:
-            self.username = "USER"
+        with Api("/account") as account_api:
+            status, res = account_api.get()
+
+            if status == 200:
+                # Insert comma here so we can default to nameless greeting if api fails.
+                self.username = f"{res['customer']['firstname'].capitalize()}"
+                self.credits = round(res['customer']['credits'], 4)
+            else:
+                self.username = "New User"
+
         self.credit = 15                    # parameter integer
         self.credit_history = None          # button
         self.notification = None            # button
@@ -379,7 +379,7 @@ class Account(QFrame):
         title_layout = add_layout(title_frame, HORIZONTAL, b_m=15)
 
         username = add_label(title_frame, f"{self.username}", name="App_account_username", align=Qt.AlignVCenter)
-        credit = add_label(title_frame, f"CREDIT:{self.credit}", name="App_account_credit", align=Qt.AlignVCenter)
+        credit = add_label(title_frame, f"Credits: {self.credits}", name="App_account_credit", align=Qt.AlignVCenter)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 

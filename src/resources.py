@@ -432,7 +432,10 @@ class Resources(MainView):
     def _fetch_ip_address(self):
         from socket import socket, AF_INET, SOCK_DGRAM
 
+        # Talk to 8.8.8.8 over https
         server_and_port = ('8.8.8.8', 443)
+
+        # IPv4 address family and single packet UDP protocol
         sock = socket(AF_INET, SOCK_DGRAM)
         sock.connect(server_and_port)
         ip_addr = sock.getsockname()[0]

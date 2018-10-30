@@ -127,7 +127,6 @@ class Login(QDialog):
             })
             if status == 200:
                 self.accept()
-                self.close()
             elif status == 401:
                 self.login.login_hint.setText("The email or password you entered is invalid.")
             # Only other status API will return is an error, so let the user know

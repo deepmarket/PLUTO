@@ -1,6 +1,7 @@
 from os import environ, path
 import sys
 from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QDialog
 
 from src.app import App
 from src.login import Login
@@ -14,14 +15,18 @@ if __name__ == '__main__':
     if environ.get('HEADLESS'):
         argv += ['-platform', 'minimal']
 
+    def show_login():
+        login = Login()
+        # result = login.show()
+
+        # login.exec_() return True if user successfully signed in
+        if login.exec_():
+            main_app = App()  # Instantiate the application
+
+            app.exec_()
+
+
     app = QApplication(argv)
+    app.aboutToQuit.connect(show_login)
 
-    login = Login()
-    login.show()
-
-    # login.exec_() return True if user successfully signed in
-    if login.exec_():
-        main_app = App()  # Instantiate the application
-
-        app.exec_()
-        # exit(app.exec_())  # Return control to original event loop
+    show_login()

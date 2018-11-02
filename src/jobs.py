@@ -335,6 +335,7 @@ class JobWorkspace(QFrame):
         self.memory = None                      # input number
         self.source_file = None                 # input string
         self.input_file = None                  # input string
+        self.expect_time = None                 # input number
 
         self.submission_hint = None             # param string
 
@@ -534,8 +535,12 @@ class JobWorkspace(QFrame):
 
         # --------- line_frame: submission_hint, spacer, submit_button ------------
 
-        line_frame, line_layout = add_frame(section_frame, layout=HORIZONTAL, l_m=8)
+        line_frame, line_layout = add_frame(section_frame, layout=HORIZONTAL)
         sub_section_layout.addWidget(line_frame)
+
+        box, self.expect_time = add_page_input_box(line_frame, "Estimated\ntime:\n", 70, 20,
+                                                   stylesheet=Page_input_input, hint="(Optional)")
+        line_layout.addWidget(box)
 
         self.submission_hint = add_label(line_frame, "", name="Page_hint", align=Qt.AlignVCenter)
         line_layout.addWidget(self.submission_hint)

@@ -13,7 +13,7 @@ If you would like to submit changes, please open a pull request.
 * Python _3.6.5+_
 * PyQt _5.10_
 * sip _4.19.7_
-* requests _2.18.4_
+* requests >= _2.20.0_
 * psutil _5.4.7_
 
 #### To install:

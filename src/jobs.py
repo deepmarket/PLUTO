@@ -203,6 +203,7 @@ class Jobs(MainView):
         memory = self.workspace.memory.text()
         source_files = self.workspace.source_file.text()
         input_files = self.workspace.input_file.text()
+        expected_time = self.workspace.expect_time.text()
         # price = (float(cores) * float(workers)) * PRICING_CONSTANT
 
         # find the selected frame
@@ -252,6 +253,7 @@ class Jobs(MainView):
                     "source_files": [source_files],
                     "input_files": [input_files],
                     "price": price,
+                    "expected_time": expected_time,
                     "customer_id": "customer_id"
                 }
 

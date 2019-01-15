@@ -213,7 +213,7 @@ class Resources(MainView):
     def on_submit_button_clicked(self):
         machine_name = self.workspace.machine_name.text()
         ip_address = self.workspace.ip_address.text()
-        # cpu_gpu = self.workspace.cpu_gpu.text()
+        # pu_gpu = self.workspace.cpu_gpu.text()
         cpu_gpu = 0
 
         cores = self.workspace.cores.text()
@@ -250,8 +250,8 @@ class Resources(MainView):
                     else:
                         msg = "Fail due to an implicit reason, please contact the developed team."
                         self.workspace.submission_hint.setText(msg)
-            else:
 
+            else:
                 # add data to list
                 self._fetch_job_data()
 
@@ -479,7 +479,6 @@ class ResourcesWorkspace(QFrame):
         # variable
         self.verification_hint = None               # param string
         self.planning_hint = None                   # param string
-        self.submission_hint = None                 # param string
 
         self.current_cpu_box = None                 # frame
         self.current_core_box = None                # frame

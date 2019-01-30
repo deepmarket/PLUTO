@@ -1,6 +1,5 @@
 from fbs_runtime.application_context import ApplicationContext
 from os import environ
-from PyQt5.QtWidgets import QApplication
 
 from mainapp import MainApp
 
@@ -10,7 +9,6 @@ from mainapp import MainApp
 
 class AppContext(ApplicationContext):
     def run(self):
-        # app = QApplication(argv)
         # Save reference to main application so it's not garbage collected
         dont_garbage_collect_me = MainApp()
         return self.app.exec_()

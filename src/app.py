@@ -212,7 +212,6 @@ class App(QMainWindow):
             status, res = account_api.post()
 
             if status == 200:
-                print("Logging out")
                 self.close()
                 self.logout_signal.emit()
 

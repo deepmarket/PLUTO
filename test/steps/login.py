@@ -1,4 +1,3 @@
-# from src.mainapp import MainApp
 from PyQt5.QtWidgets import QDialog
 
 from src.login import Login

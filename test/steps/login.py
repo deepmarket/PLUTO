@@ -1,4 +1,6 @@
 # from src.mainapp import MainApp
+from PyQt5.QtWidgets import QDialog
+
 from src.login import Login
 
 from PyQt5.QtTest import QTest
@@ -51,5 +53,4 @@ def verify_login_input_text(context, text):
 
 @then(r'I should be able to log in to the application')
 def verify_can_log_in(context):
-    # assert context.login_window.exec_()
-    pass
+    assert context.login_window.result() == QDialog.Accepted

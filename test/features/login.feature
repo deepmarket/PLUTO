@@ -46,4 +46,4 @@ Feature: # Verify functionality around logging into the application
       And I enter "samgomena@gmail.com" in the username input box
       And I enter "password" in the password input box
       And I click the login button
-#    Then I should be able to log in to the application
+    Then I should be able to log in to the application

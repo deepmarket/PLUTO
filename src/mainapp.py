@@ -9,18 +9,18 @@ class MainApp(QObject):
 
     def __init__(self, *args, **kwargs):
         super(QObject, self).__init__(*args, **kwargs)
-        self.main_app = None
+        self.login = Login()
+        self.app = None
         self.connect_logout()
         self.show_login()
 
     def show_login(self):
-        login = Login()
 
-        login_ok = login.exec_()
+        login_ok = self.login.exec_()
         if login_ok:
             # Instantiate the application
-            self.main_app = App(self.logout)
-            self.main_app.show()
+            self.app = App(self.logout)
+            self.app.show()
         # Do we care about this case?
         # else:
         #     pass

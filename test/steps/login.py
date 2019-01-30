@@ -1,4 +1,5 @@
-from deprecated_main import Login
+# from src.mainapp import MainApp
+from src.login import Login
 
 from PyQt5.QtTest import QTest
 
@@ -10,6 +11,7 @@ use_step_matcher("re")
 
 @when(r'I open the login window')
 def open_login_window(context):
+    # context.login_window = MainApp().login
     context.login_window = Login()
     context.login_window.show()
 

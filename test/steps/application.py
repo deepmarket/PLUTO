@@ -1,7 +1,7 @@
 from src.app import App
 
 from PyQt5.QtTest import QTest
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 
 from behave import use_step_matcher, given, when, then, step
 
@@ -11,7 +11,9 @@ use_step_matcher("re")
 
 @when(r'I open the application window')
 def open_application(context):
-        context.app = App()
+    # Create a fake signal to appease the testing gods
+    fake_signal = pyqtSignal()
+    context.app = App(fake_signal)
 
 
 @when(r'I click on the (dashboard|resources|jobs) tab')

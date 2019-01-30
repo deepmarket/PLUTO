@@ -20,11 +20,11 @@
         self.current_row = 0            # param number
 """
 
-from src.mainview import MainView
-from src.uix.util import *
-from src.uix.config import *
-from src.uix.popup import Question
-from src.api import Api
+from mainview import MainView
+from uix.util import *
+from uix.config import *
+from uix.popup import Question
+from api import Api
 
 
 class Jobs(MainView):

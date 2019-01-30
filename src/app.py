@@ -36,17 +36,19 @@
         self.logout = None                  # button
 
 """
-from src.api import Api
-from src.uix.util import *
-from src.dashboard import Dashboard
-from src.resources import Resources
-from src.jobs import Jobs
-from src.uix.popup import Notification, CreditHistory
+from api import Api
+from uix.util import *
+from dashboard import Dashboard
+from resources import Resources
+from jobs import Jobs
+from uix.popup import Notification, CreditHistory
 
 
 class App(QMainWindow):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, logout_signal, *args, **kwargs):
         super(QMainWindow, self).__init__(*args, **kwargs)
+
+        self.logout_signal = logout_signal
 
         # component
         self.sidebar = None
@@ -62,7 +64,7 @@ class App(QMainWindow):
         self._init_geometry()
         self._init_ui()
         self.setStyleSheet(app_style)
-        self.show()
+        # self.show()
 
         self.on_dashboard_clicked()
 
@@ -210,8 +212,9 @@ class App(QMainWindow):
             status, res = account_api.post()
 
             if status == 200:
-                print("Logging out.")
-            self.close()
+                print("Logging out")
+                self.close()
+                self.logout_signal.emit()
 
     def update(self):
         self.main_window.stack_widget.update()

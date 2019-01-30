@@ -1,4 +1,4 @@
-from main import Login
+from deprecated_main import Login
 
 from PyQt5.QtTest import QTest
 

@@ -20,9 +20,9 @@
         self.to_login_button = None
 """
 
-from src.api import Api
-from src.uix.stylesheet import *
-from src.uix.util import *
+from api import Api
+from uix.stylesheet import *
+from uix.util import *
 
 
 class Login(QDialog):

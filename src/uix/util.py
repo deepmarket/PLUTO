@@ -17,8 +17,8 @@ from PyQt5.QtWidgets import (QDesktopWidget, QPushButton, QLabel, QFrame, QLineE
                              QGraphicsTextItem, QGraphicsDropShadowEffect, QDialog, QMainWindow, QSizePolicy,
                              QSpacerItem, QTableWidget, QHeaderView, QAbstractItemView, QTableWidgetItem, QMessageBox)
 
-from src.uix.stylesheet import *
-from src.uix.config import *
+from uix.stylesheet import *
+from uix.config import *
 
 
 # load icon

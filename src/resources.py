@@ -32,13 +32,13 @@
         self.current_row = 0        # param number
 """
 
-import psutil
+from psutil import cpu_freq, cpu_count, virtual_memory
 
-from src.mainview import MainView
-from src.uix.util import *
-from src.uix.config import *
-from src.uix.popup import Question
-from src.api import Api
+from mainview import MainView
+from uix.util import *
+from uix.config import *
+from uix.popup import Question
+from api import Api
 
 
 class Resources(MainView):
@@ -144,9 +144,9 @@ class Resources(MainView):
         self._fetch_job_data()
 
     def on_verify_button_clicked(self):
-        self.current_cpu = round(psutil.cpu_freq().current/1000, 1)  # Processor's speed in gHz
-        self.current_core = psutil.cpu_count(logical=False)  # Logical cores on the machine
-        self.current_ram = round(psutil.virtual_memory().total/(pow(1024, 3)), 1)  # Total installed RAM
+        self.current_cpu = round(cpu_freq().current/1000, 1)  # Processor's speed in gHz
+        self.current_core = cpu_count(logical=False)  # Logical cores on the machine
+        self.current_ram = round(virtual_memory().total/(pow(1024, 3)), 1)  # Total installed RAM
 
         self.workspace.enable_machine_config(self.current_cpu, self.current_core, self.current_ram)
         self.workspace.enable_planning()

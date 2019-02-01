@@ -2,29 +2,32 @@
 from app import App
 from login import Login
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
+from PyQt5.QtWidgets import QDialog
 
 
 class MainApp(QObject):
-    logout = pyqtSignal()
+    login_signal = pyqtSignal()
+    logout_signal = pyqtSignal()
 
     def __init__(self, *args, **kwargs):
         super(QObject, self).__init__(*args, **kwargs)
-        self.login = Login()
+        self.login = None
         self.app = None
-        self.connect_logout()
         self.show_login()
+        self.connect_login()
+        self.connect_logout()
 
     def show_login(self):
+        self.login = Login(self.login_signal)
+        self.login.show()
 
-        login_ok = self.login.exec_()
-        if login_ok:
-            # Instantiate the application
-            self.app = App(self.logout)
-            self.app.show()
-        # Do we care about this case?
-        # else:
-        #     pass
+    def show_app(self):
+        self.app = App(self.logout_signal)
+        self.app.show()
+
+    def connect_login(self):
+        self.login_signal.connect(self.show_app)
 
     def connect_logout(self):
-        self.logout.connect(self.show_login)
+        self.logout_signal.connect(self.show_login)
 

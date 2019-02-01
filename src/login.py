@@ -26,8 +26,10 @@ from uix.util import *
 
 
 class Login(QDialog):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, login_signal, *args, **kwargs):
         super(QDialog, self).__init__(*args, **kwargs)
+
+        self.login_signal = login_signal
 
         self.login = None
         self.create = None
@@ -127,6 +129,7 @@ class Login(QDialog):
             })
             if status == 200:
                 self.accept()
+                self.login_signal.emit()
             elif status == 401:
                 self.login.login_hint.setText("The email or password you entered is invalid.")
             # Only other status API will return is an error, so let the user know

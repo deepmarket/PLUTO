@@ -1,8 +1,7 @@
 
 from app import App
 from login import Login
-from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
-from PyQt5.QtWidgets import QDialog
+from PyQt5.QtCore import QObject, pyqtSignal
 
 
 class MainApp(QObject):

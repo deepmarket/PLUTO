@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt, pyqtSignal
 
 from behave import use_step_matcher, given, when, then, step
 
-from test.steps.helpers import assert_equal_wrapper as assert_
+from steps.helpers import assert_equal_wrapper as assert_
 use_step_matcher("re")
 
 
@@ -19,28 +19,38 @@ def open_application(context):
 @when(r'I click on the (dashboard|resources|jobs) tab')
 def open_main_tab(context, tab):
     if tab == "dashboard":
-        context.app.on_dashboard_clicked()
+        QTest.mouseClick(context.app.sidebar.dashboard, Qt.LeftButton)
     elif tab == "resources":
-        # context.app.sidebar.resources
         QTest.mouseClick(context.app.sidebar.resources, Qt.LeftButton)
     elif tab == "jobs":
-        context.app.on_jobs_clicked()
+        QTest.mouseClick(context.app.sidebar.jobs, Qt.LeftButton)
 
 
 @then(r'the current tab should be the (dashboard|resources|jobs) tab')
 def verify_main_tab(context, tab):
-    from src.dashboard import Dashboard
-    from src.resources import Resources
-    from src.jobs import Jobs
+    from dashboard import Dashboard
+    from resources import Resources
+    from jobs import Jobs
 
-    check_type = lambda type_: isinstance(context.app.main_window.stack.currentWidget(), type_)
+    check_type = lambda type_: assert_(type(context.app.main_window.stack.currentWidget()), type_)
 
     if tab == "dashboard":
         check_type(Dashboard)
     elif tab == "resources":
-        isinstance(context.app.main_window.stack.currentWidget(), Resources)
+        check_type(Resources)
     elif tab == "jobs":
-        isinstance(context.app.main_window.stack.currentWidget(), Jobs)
+        check_type(Jobs)
+
+
+@when(r'I logout of the application')
+def logout_of_application(context):
+    QTest.mouseClick(context.app.navigation.menu_button, Qt.LeftButton)
+    QTest.mouseClick(context.app.account.logout, Qt.LeftButton)
+
+
+@then(r'the login window should be displayed')
+def verify_logout_of_application(context):
+    pass
 
 
 @when(r'I execute the application')

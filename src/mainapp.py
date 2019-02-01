@@ -12,6 +12,7 @@ class MainApp(QObject):
         super(QObject, self).__init__(*args, **kwargs)
         self.login = None
         self.app = None
+
         self.show_login()
         self.connect_login()
         self.connect_logout()

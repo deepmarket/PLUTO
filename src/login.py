@@ -128,6 +128,7 @@ class Login(QDialog):
                 "password": pwd
             })
             if status == 200:
+                self.setResult(1)
                 self.accept()
                 self.login_signal.emit()
             elif status == 401:
@@ -135,7 +136,6 @@ class Login(QDialog):
             # Only other status API will return is an error, so let the user know
             else:
                 self.login.login_hint.setText("There was an error while trying to log in. Please try again.")
-                print(status)
 
     # pre-check user input before access db
     def create_action(self):

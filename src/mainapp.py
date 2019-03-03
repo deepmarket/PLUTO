@@ -8,8 +8,9 @@ class MainApp(QObject):
     login_signal = pyqtSignal()
     logout_signal = pyqtSignal()
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, dont_boot_for_test=True, *args, **kwargs):
         super(QObject, self).__init__(*args, **kwargs)
+        self.dont_boot_for_test = dont_boot_for_test
         self.login = None
         self.app = None
 
@@ -19,7 +20,8 @@ class MainApp(QObject):
 
     def show_login(self):
         self.login = Login(self.login_signal)
-        self.login.show()
+        if self.dont_boot_for_test:
+            self.login.show()
 
     def show_app(self):
         self.app = App(self.logout_signal)

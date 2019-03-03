@@ -1,19 +1,19 @@
 from src.app import App
+from mainapp import MainApp
 
 from PyQt5.QtTest import QTest
 from PyQt5.QtCore import Qt, pyqtSignal
 
 from behave import use_step_matcher, given, when, then, step
 
-from steps.helpers import assert_equal_wrapper as assert_
+from steps.helpers_step import assert_equal, assert_is_not
 use_step_matcher("re")
 
 
 @when(r'I open the application window')
 def open_application(context):
-    # Create a fake signal to appease the testing gods
-    fake_signal = pyqtSignal()
-    context.app = App(fake_signal)
+    context.app = context.__app.app
+    assert_is_not(context.app, None)
 
 
 @when(r'I click on the (dashboard|resources|jobs) tab')
@@ -32,7 +32,7 @@ def verify_main_tab(context, tab):
     from resources import Resources
     from jobs import Jobs
 
-    check_type = lambda type_: assert_(type(context.app.main_window.stack.currentWidget()), type_)
+    check_type = lambda type_: assert_equal(type(context.app.main_window.stack.currentWidget()), type_)
 
     if tab == "dashboard":
         check_type(Dashboard)
@@ -55,7 +55,7 @@ def verify_logout_of_application(context):
 
 @when(r'I execute the application')
 def execute(context):
-    context.app_.exec_()
+    context._app.exec_()
 
 
 

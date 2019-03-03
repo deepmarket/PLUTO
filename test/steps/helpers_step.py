@@ -6,6 +6,14 @@ from mainapp import MainApp
 use_step_matcher("re")
 
 
+def assert_is_true(lhs):
+    assert lhs is True, f"'{lhs}' is not true"
+
+
+def assert_is_not_true(lhs):
+    assert lhs is not True, f"'{lhs}' is not true"
+
+
 def assert_equal(lhs, rhs):
     assert lhs == rhs, f"'{lhs}' does not equal '{rhs}'"
 
@@ -35,10 +43,8 @@ def start_application_execution(context):
         app = QApplication([])
         context._app = app
 
-    __app = MainApp(False)
+    __app = MainApp()
     context.__app = __app
-    # context.login_window = __app.login
-    # context.app = __app.app
 
 
 @when(r'I wait (\d+) (second|seconds|minute|minutes|hour|hours)')

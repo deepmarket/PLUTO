@@ -7,8 +7,6 @@ Feature: High level application testing
     When I spin up the application
       And I open the login window
       And I login in to the application
-#      And I enter "samgomena@gmail.com" in the username input box
-#      And I enter "password" in the password input box
       And I click the login button
       And I open the application window
     Then the current tab should be the dashboard tab
@@ -18,7 +16,6 @@ Feature: High level application testing
       And I open the login window
       And I login in to the application
       And I open the application window
-      And I wait 1 second
       And I click on the <tab> tab
     Then the current tab should be the <tab> tab
 
@@ -33,6 +30,9 @@ Feature: High level application testing
       And I open the login window
       And I login in to the application
       And I open the application window
-      And I wait 1 second
       And I logout of the application
-    Then the login window should be displayed
+    Then the application window should be hidden
+    When I wait 2 seconds
+      # TODO: Have to 'manually' define the `login_window` object here; it should be done automagically
+      And I open the login window
+    Then the login window should be visible

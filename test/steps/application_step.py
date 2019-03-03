@@ -1,12 +1,10 @@
-from src.app import App
-from mainapp import MainApp
 
 from PyQt5.QtTest import QTest
-from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtCore import Qt
 
 from behave import use_step_matcher, given, when, then, step
 
-from steps.helpers_step import assert_equal, assert_is_not
+from steps.helpers_step import assert_equal, assert_is_not, assert_is_true, assert_is_not_true
 use_step_matcher("re")
 
 
@@ -48,15 +46,13 @@ def logout_of_application(context):
     QTest.mouseClick(context.app.account.logout, Qt.LeftButton)
 
 
-@then(r'the login window should be displayed')
-def verify_logout_of_application(context):
-    pass
+@then(r'the (application|login) window should be (visible|hidden)')
+def verify_window_visibility(context, window, visibility):
+    # Define assertion helper based on visibility request
+    vis_check = assert_is_true if visibility == "visible" else assert_is_not_true
 
-
-@when(r'I execute the application')
-def execute(context):
-    context._app.exec_()
-
-
-
+    if window == "application":
+        vis_check(context.app.isVisible())
+    elif window == "login":
+        vis_check(context.login_window.isVisible())
 

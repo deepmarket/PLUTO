@@ -20,6 +20,7 @@ class MainApp(QObject):
 
     def show_login(self):
         self.login = Login(self.login_signal)
+        # TODO: Candidate for deprecation; tests should handle testing like a user would use the application
         if self.dont_boot_for_test:
             self.login.show()
 

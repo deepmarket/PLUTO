@@ -9,8 +9,11 @@ resources in exchange for tokens or use the resources of others in _the pool_.
 This project is in active development and is being maintained by the [team members](#team-members) listed below.
 If you would like to submit changes, please open a pull request.
 
-#### Required Frontend Dependencies
-* Python _3.6.5+_
+#### Required OS Dependencies
+* MacOS or Linux (Ubuntu 14.04+)
+* Python 3.6
+
+#### Required Application Dependencies
 * PyQt _5.10_
 * sip _4.19.7_
 * requests >= _2.20.0_
@@ -19,14 +22,13 @@ If you would like to submit changes, please open a pull request.
 #### To install:
 
 ```bash
-$ python3 -m pip install -r requirements.txt
+$ python -m pip install -r requirements.txt
 ```
-
 
 #### To launch to the application:
 
 ```bash
-$ python3 main.py
+$ python main.py
 ```
 
 #### Team Members:

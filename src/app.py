@@ -274,8 +274,11 @@ class Navigation(QFrame):
 
         with Api("/account") as account:
             status, res = account.get()
-
-            self.credits = round(res['customer']['credits'], 4)
+            print(status, res)
+            if status == 200:
+                self.credits = round(res['customer']['credits'], 4)
+            else:
+                self.credits = 0.0
 
         self.head_img = None
         self.menu_button = None
@@ -351,6 +354,7 @@ class Account(QFrame):
                 self.credits = round(res['customer']['credits'], 4)
             else:
                 self.username = "New User"
+                self.credits = 0.0
 
         self.credit = 15                    # parameter integer
         self.credit_history = None          # button

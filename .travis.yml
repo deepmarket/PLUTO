@@ -12,15 +12,15 @@ script:
 matrix:
   include:
 
-    # Tests Python 3.6 on Ubuntu Trusty
-    - python: 3.6
-#    - python: 3.7  # as of 8/17.18 3.7 is still being worked on by the travis team
+    # Tests Python 3.6 on Ubuntu Trusty (14.04)
+    - python: "3.6"
+#    - python: 3.7  # as of 8/17/18 3.7 is still being worked on by the travis team
       dist: trusty
       sudo: true
 
-    # Tests Python 3.6 and 3.7 on Ubuntu Xenial
-    - python: 3.6
-    - python: 3.7
+    # Tests Python 3.6 and 3.7 on Ubuntu Xenial (16.04)
+    - python: "3.6"
+    - python: "3.7"
       dist: xenial
       sudo: true
 
@@ -31,6 +31,11 @@ matrix:
     - os: osx
       language: generic
       osx_image: xcode8
+
+    # 10.12.latest
+    - os: osx
+      language: generic
+      osx_image: xcode9.2
 
     # 10.13.latest
     - os: osx
@@ -44,17 +49,11 @@ matrix:
       language: generic
       osx_image: xcode6.4
 
-  # 10.12.latest
-    - os: osx
-      language: generic
-      osx_image: xcode9.2
-
 
 # Perform manual install of 3.6 for OS X
 before_install:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
-    # Don't install pyenv twice
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]] && ! [[ -x "$(command -v pyenv)" ]]; then brew install pyenv ; fi
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pyenv install 3.6.5 ; fi
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then PATH="~/.pyenv/versions/3.6.5/bin:${PATH}" ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pyenv install 3.6.3 ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then PATH="~/.pyenv/versions/3.6.3/bin:$PATH" ; fi
 

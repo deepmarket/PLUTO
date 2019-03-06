@@ -4,7 +4,7 @@ from PyQt5.QtCore import Qt
 
 from behave import use_step_matcher, when, then
 
-from test.steps.helpers_step import assert_equal, assert_is_not, assert_is_true, assert_is_not_true
+from test.steps.step_helpers import assert_equal, assert_is_not, assert_is_true, assert_is_not_true
 use_step_matcher("re")
 
 

@@ -277,6 +277,9 @@ class Navigation(QFrame):
 
             if status == 200:
                 self.credits = round(res['customer']['credits'], 4)
+
+            # TODO: This fails if the api returns a token expired error
+            # (or anything that isn't a customer object response). Also see Account class with same problem
             # TODO: This should never happen and if it does we should report a fatal error
             else:
                 self.credits = 0.0

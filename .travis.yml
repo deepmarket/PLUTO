@@ -12,8 +12,8 @@ install:
   - pip install -r requirements.txt
 
 script:
-  - python -m unittest test/test_api.py
-  - python -m behave test/features
+  - sudo python -m unittest test/test_api.py
+  - sudo python -m behave test/features
 
 matrix:
   include:

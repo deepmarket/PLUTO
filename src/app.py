@@ -274,9 +274,10 @@ class Navigation(QFrame):
 
         with Api("/account") as account:
             status, res = account.get()
-            print(status, res)
+
             if status == 200:
                 self.credits = round(res['customer']['credits'], 4)
+            # TODO: This should never happen and if it does we should report a fatal error
             else:
                 self.credits = 0.0
 
@@ -352,9 +353,9 @@ class Account(QFrame):
                 # Insert comma here so we can default to nameless greeting if api fails.
                 self.username = f"{res['customer']['firstname'].capitalize()}"
                 self.credits = round(res['customer']['credits'], 4)
+            # TODO: This should never happen and if it does we should report a fatal error
             else:
                 self.username = "New User"
-                self.credits = 0.0
 
         self.credit = 15                    # parameter integer
         self.credit_history = None          # button

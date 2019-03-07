@@ -359,6 +359,7 @@ class Account(QFrame):
             # TODO: This should never happen and if it does we should report a fatal error
             else:
                 self.username = "New User"
+                self.credits = 0.0
 
         self.credit = 15                    # parameter integer
         self.credit_history = None          # button

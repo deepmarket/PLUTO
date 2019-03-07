@@ -12,8 +12,8 @@ install:
   - pip install -r requirements.txt
 
 script:
-  - sudo python -m unittest test/test_api.py
-  - sudo python -m behave test/features
+  - python -m unittest test/test_api.py
+  - python -m behave test/features
 
 matrix:
   include:
@@ -47,8 +47,8 @@ matrix:
     - os: osx
       language: generic
       osx_image: xcode10
-  
-  
+
+
   allow_failures:
     # 10.10
     - os: osx

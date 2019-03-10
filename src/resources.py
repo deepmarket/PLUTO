@@ -419,7 +419,13 @@ class Resources(MainView):
 
     # check if flags are all on, enable evaluate button
     def _check_flag(self):
-        if self.if_verify and self.machine_name_check and self.cpu_check and self.core_check and self.ram_check:
+        # if self.if_verify and self.machine_name_check and self.cpu_check and self.core_check and self.ram_check:
+        if all([self.if_verify,
+                self.machine_name_check,
+                self.cpu_check,
+                self.core_check,
+                self.ram_check]):
+
             self.workspace.enable_evaluate_button()
         else:
             self.workspace.disable_evaluate_button()

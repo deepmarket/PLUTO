@@ -1,7 +1,10 @@
 """
     The following items can be interacted:
 
+    TODO
     class SettingsOverview:
+
+    class SettingsWorkspace:
 
 """
 

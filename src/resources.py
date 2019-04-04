@@ -439,7 +439,8 @@ class Resources(MainView):
 
             # load data to list
             # data format: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
-            if status == 200 and isinstance(res, dict) and "resources" in res:
+            # if status == 200 and isinstance(res, dict) and "resources" in res:
+            if status == 200 and "resources" in res:
                 for rsrc in res["resources"]:
                     self.list.add_data([rsrc['machine_name'],
                                         rsrc['ip_address'],
@@ -453,8 +454,8 @@ class Resources(MainView):
     def _fetch_ip_address(self):
         from socket import socket, AF_INET, SOCK_DGRAM
 
-        # Talk to 8.8.8.8 over https
-        server_and_port = ('8.8.8.8', 443)
+        # Talk to 1.1.1.1 over https
+        server_and_port = ('1.1.1.1', 443)
 
         # IPv4 address family and single packet UDP protocol
         sock = socket(AF_INET, SOCK_DGRAM)
@@ -923,8 +924,11 @@ class ResourcesList(QFrame):
         self.table.setHorizontalHeaderLabels(table_headers)
         self.table.verticalHeader().setVisible(False)
 
-        for i in range(len(table_headers_width)):
-            self.table.setColumnWidth(i, table_headers_width[i])
+        # for i in range(len(table_headers_width)):
+
+        for i, table_header_width in enumerate(table_headers_width):
+            self.table.setColumnWidth(i, table_header_width)
+
         self.table.horizontalHeader().setStretchLastSection(True)
 
         # Set table property,

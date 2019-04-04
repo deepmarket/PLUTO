@@ -240,18 +240,6 @@ app_sidebar_button_active = f"""
     border-left: 2px solid {COLOR_01};
 """
 
-# app_sidebar_button_active = f"""
-#     border: None;
-#     border-left: 2px solid {COLOR_01};
-#     height: 20px;
-#     padding-left: 16px;
-#     font-family: "Helvetica Neue";
-#     font-size: 13px;
-#     font-weight: 400;
-#     color: {COLOR_01};
-#     text-align: left;
-# """
-
 dashboard_style = """
 
     #Dashboard_overview {

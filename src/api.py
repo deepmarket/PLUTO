@@ -36,11 +36,10 @@ class Api(object):
     # Set store path globally
     store_path = path.abspath(curdir)
 
-    # def __init__(self, endpoint: str = "/", domain: str = "178.128.8.105", port: int = 8080, auth: bool = False):
     def __init__(self, endpoint: str = "/", domain: str = "pacific.cs.pdx.edu", port: int = 8080, auth: bool = False):
 
-        if environ["DEEPSHARE_API_HOST"]:
-            self.domain = environ["DEEPSHARE_API_HOST"]
+        if environ.get("DEEPSHARE_API_HOST", False):
+            self.domain = environ.get("DEEPSHARE_API_HOST")
         else:
             self.domain = domain
 

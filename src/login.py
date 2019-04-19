@@ -20,14 +20,16 @@
         self.to_login_button = None
 """
 
-from src.api import Api
-from src.uix.stylesheet import *
-from src.uix.util import *
+from api import Api
+from uix.stylesheet import *
+from uix.util import *
 
 
 class Login(QDialog):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, login_signal, *args, **kwargs):
         super(QDialog, self).__init__(*args, **kwargs)
+
+        self.login_signal = login_signal
 
         self.login = None
         self.create = None
@@ -126,13 +128,14 @@ class Login(QDialog):
                 "password": pwd
             })
             if status == 200:
+                self.setResult(1)
                 self.accept()
+                self.login_signal.emit()
             elif status == 401:
                 self.login.login_hint.setText("The email or password you entered is invalid.")
             # Only other status API will return is an error, so let the user know
             else:
                 self.login.login_hint.setText("There was an error while trying to log in. Please try again.")
-                print(status)
 
     # pre-check user input before access db
     def create_action(self):

@@ -24,9 +24,9 @@
         self.resource_list = None           # list of list resource data
 """
 
-from src.mainview import MainView
-from src.uix.util import *
-from src.api import Api
+from mainview import MainView
+from uix.util import *
+from api import Api
 
 
 class Dashboard(MainView):

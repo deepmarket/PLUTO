@@ -20,7 +20,7 @@ def api_is_up(context):
 def api_request_to(context, request_type, endpoint, payload=None):  # -- NOTE: number is converted into integer
     with Api(endpoint) as api:
         # request_type = request_type.uppper()
-        if request_type == 'GET':
+        if request_type == "GET":
             context.res, context.api_status = api.get()
         elif request_type == "POST":
             context.res, context.api_status = api.post(payload)
@@ -32,7 +32,7 @@ def api_request_to(context, request_type, endpoint, payload=None):  # -- NOTE: n
 
 @then(u'the request should reply with a status of {status:d}')
 @then(u'the request should reply with a status of {status:w}')
-def verify_api_request_to(context, request_type, endpoint, status):
+def verify_api_request_to(context, status):
 
     status = status if type(status) == str and status is None else None
 

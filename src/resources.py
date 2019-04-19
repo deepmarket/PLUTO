@@ -32,13 +32,13 @@
         self.current_row = 0        # param number
 """
 
-import psutil
+from psutil import cpu_freq, cpu_count, virtual_memory
 
-from src.mainview import MainView
-from src.uix.util import *
-from src.uix.config import *
-from src.uix.popup import Question
-from src.api import Api
+from mainview import MainView
+from uix.util import *
+from uix.config import *
+from uix.popup import Question
+from api import Api
 
 
 class Resources(MainView):
@@ -144,9 +144,9 @@ class Resources(MainView):
         self._fetch_job_data()
 
     def on_verify_button_clicked(self):
-        self.current_cpu = round(psutil.cpu_freq().current/1000, 1)  # Processor's speed in gHz
-        self.current_core = psutil.cpu_count(logical=False)  # Logical cores on the machine
-        self.current_ram = round(psutil.virtual_memory().total/(pow(1024, 3)), 1)  # Total installed RAM
+        self.current_cpu = round(cpu_freq().current/1000, 1)  # Processor's speed in gHz
+        self.current_core = cpu_count(logical=False)  # Logical cores on the machine
+        self.current_ram = round(virtual_memory().total/(pow(1024, 3)), 1)  # Total installed RAM
 
         self.workspace.enable_machine_config(self.current_cpu, self.current_core, self.current_ram)
         self.workspace.enable_planning()
@@ -213,8 +213,9 @@ class Resources(MainView):
     def on_submit_button_clicked(self):
         machine_name = self.workspace.machine_name.text()
         ip_address = self.workspace.ip_address.text()
-        cpu_gpu = self.workspace.cpu_gpu.text()
-        # cpu_gpu = 0
+        # pu_gpu = self.workspace.cpu_gpu.text()
+        cpu_gpu = 0
+
         cores = self.workspace.cores.text()
         ram = self.workspace.ram.text()
 
@@ -236,16 +237,26 @@ class Resources(MainView):
             }
 
             status, res = api.post(resources_data)
+
+            # response handle
             if not status == 200:
                 # log(neat error message of some kind?)
-                # And probably notify the user?
-                pass
+                if status == 500 and isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
+                    errmsg = res["error"]["errmsg"]
+                    if "E11000 duplicate key error collection" in errmsg:
+                        msg = "Such IP address is already in use!"
+                        self.workspace.verification_hint.setText(msg)
+                    # TODO: add more err case to here
+                    else:
+                        msg = "Fail due to an implicit reason, please contact the developed team."
+                        self.workspace.submission_hint.setText(msg)
 
-        # add data to list
-        self._fetch_job_data()
+            else:
+                # add data to list
+                self._fetch_job_data()
 
-        # switch page
-        self.on_list_clicked()
+                # switch page
+                self.on_list_clicked()
 
     # def on_ip_address_edit(self):
     #     self.workspace.verification_hint.setText("")
@@ -261,7 +272,8 @@ class Resources(MainView):
     #         self.ip_check = True
 
     def on_machine_edit(self):
-        self.workspace.planning_hint.setText("")
+        self._reset_hint()
+
         if self.if_verify:
             user_input = self.workspace.machine_name.text()
 
@@ -273,7 +285,8 @@ class Resources(MainView):
 
     # disable for this version
     def on_cpu_edit(self):
-        self.workspace.planning_hint.setText("")
+        self._reset_hint()
+
         if self.if_verify:
             user_input = self.workspace.cpu_gpu.text()
 
@@ -306,7 +319,8 @@ class Resources(MainView):
                     self._check_flag()
 
     def on_core_edit(self):
-        self.workspace.planning_hint.setText("")
+        self._reset_hint()
+
         if self.if_verify:
             user_input = self.workspace.cores.text()
 
@@ -339,7 +353,8 @@ class Resources(MainView):
                     self._check_flag()
 
     def on_ram_edit(self):
-        self.workspace.planning_hint.setText("")
+        self._reset_hint()
+
         if self.if_verify:
             user_input = self.workspace.ram.text()
 
@@ -444,6 +459,11 @@ class Resources(MainView):
         self.workspace.disable_ip_address()
 
         self.if_verify = True
+
+    def _reset_hint(self):
+        self.workspace.verification_hint.setText("")
+        self.workspace.planning_hint.setText("")
+        self.workspace.submission_hint.setText("")
 
     # self-updated function by calling timer in main
     # can be used later on
@@ -648,6 +668,9 @@ class ResourcesWorkspace(QFrame):
 
         title = add_label(line_frame, "Resource Submission", name="Page_section_title", align=Qt.AlignVCenter)
         line_layout.addWidget(title)
+
+        self.submission_hint = add_label(line_frame, "", name="Page_hint", align=Qt.AlignVCenter)
+        line_layout.addWidget(self.submission_hint)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
         line_layout.addItem(spacer)

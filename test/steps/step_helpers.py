@@ -1,10 +1,33 @@
 
 from behave import use_step_matcher, given, when, then, step
+
+from mainapp import MainApp
+
 use_step_matcher("re")
 
 
-def assert_equal_wrapper(lhs, rhs):
+def assert_is_true(lhs):
+    assert lhs is True, f"'{lhs}' is not true"
+
+
+def assert_is_not_true(lhs):
+    assert lhs is not True, f"'{lhs}' is not true"
+
+
+def assert_equal(lhs, rhs):
     assert lhs == rhs, f"'{lhs}' does not equal '{rhs}'"
+
+
+def assert_not_equal(lhs, rhs):
+    assert lhs != rhs, f"'{lhs}' equal's '{rhs}'"
+
+
+def assert_is(lhs, rhs):
+    assert lhs is rhs, f"'{lhs}' is '{rhs}'"
+
+
+def assert_is_not(lhs, rhs):
+    assert lhs is not rhs, f"'{lhs}' is not '{rhs}'"
 
 
 @given(r'the application is in headless mode')
@@ -18,7 +41,10 @@ def start_application_execution(context):
     from PyQt5.QtWidgets import QApplication
     if QApplication.instance() is None:
         app = QApplication([])
-        context.app_ = app
+        context._app = app
+
+    __app = MainApp()
+    context.__app = __app
 
 
 @when(r'I wait (\d+) (second|seconds|minute|minutes|hour|hours)')

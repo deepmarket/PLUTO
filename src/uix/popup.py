@@ -1,6 +1,6 @@
 # popup widget
 
-from src.uix.util import *
+from uix.util import *
 
 
 # base class

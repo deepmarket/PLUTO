@@ -42,3 +42,8 @@
 #########
 venv
 *.psd
+
+# Environment Related #
+#######################
+.vscode
+env

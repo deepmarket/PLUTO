@@ -476,7 +476,11 @@ def set_frame(widget, num, frame):
 def add_row(widget, column, data, row):
     for i in range(column):
         widget.setItem(row, i, QTableWidgetItem(data[i]))
+
         if widget.item(row, i) is not None:
+
+            if i == 1:
+                widget.item(row, i).setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
             widget.item(row, i).setTextAlignment(Qt.AlignCenter)
             widget.item(row, i).setFont(QFont("Helvetica Neue", 12, QFont.Light))
 

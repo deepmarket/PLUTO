@@ -130,6 +130,7 @@ class Resources(MainView):
 
         self.list.refresh_button.clicked.connect(self.on_refresh_button_clicked)
         self.list.remove_button.clicked.connect(self.on_remove_button_clicked)
+        self.list.update_button.clicked.connect(self.on_update_button_clicked)
 
     def on_workspace_clicked(self):
         self.workspace_button.setStyleSheet(page_menu_button_active)
@@ -436,7 +437,56 @@ class Resources(MainView):
                                     self.table.hint.setText(errmsg)
                             else:
                                 self._fetch_resources_data()
-                            
+
+    def on_update_button_clicked(self):
+        model = self.list.table.selectionModel()
+
+        # check if table has selected row
+        if not model.hasSelection():
+            pass
+        else:
+            row = model.selectedRows()[0].row()
+            column = self.list.table.columnCount()
+
+            # check if row has value
+            if self.list.table.item(row, column-1).text() is not "":
+
+                # ask if user want to delete rows
+                question = Question("Are you sure you want to update this?")
+
+                if question.exec_():
+                    _id = None
+
+                    # remove from backend
+                    with Api("/resources") as api:
+                        # get all resources from api
+                        # TODO: consider to have an endpoint get only resources
+                        # for current user
+                        status, res = api.get()
+
+                        if status == 200 and isinstance(res, dict) and "resources" in res:
+
+                            # consider ip_address would be a unique property for each resources
+                            # use ip_address to get the resource id
+                            # then process delete
+                            ip_address = self.list.table.item(row, 1).text()
+                            for rsrc in res["resources"]:
+                                if rsrc["ip_address"] == ip_address:
+                                    _id = rsrc["_id"]
+                    if _id:
+                        endpoint = "/resources/" + _id
+                        with Api(endpoint) as api:
+                            status, res = api.put()
+
+                            if not status == 200:
+                                if status == 500 and isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
+                                    errmsg = res["error"]["errmsg"]
+                                    self.table.hint.setText(errmsg)
+                            else:
+                                self._fetch_resources_data()
+                    else:
+                        self.table.hint.setText("Fail to update resource, do not change ip_address")
+                        self._fetch_resources_data()
 
     # check if flags are all on, enable evaluate button
     def _check_flag(self):
@@ -897,6 +947,7 @@ class ResourcesList(QFrame):
         self.search_bar = None              # input
         self.refresh_button = None          # button
         self.remove_button = None           # button
+        self.update_button = None           # button
         self.hint = None                    # label
 
         self.current_row = 0                # param number
@@ -927,6 +978,9 @@ class ResourcesList(QFrame):
 
         self.remove_button = add_button(feature, "REMOVE", name="Page_table_workspace_button")
         feature_layout.addWidget(self.remove_button)
+
+        self.update_button = add_button(feature, "UPDATE", name="Page_table_workspace_button")
+        feature_layout.addWidget(self.update_button)
 
         self.hint = add_label(hint_frame, "", name="Page_hint", align=Qt.AlignVCenter)
         hint_layout.addWidget(self.hint)

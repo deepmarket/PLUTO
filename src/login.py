@@ -128,7 +128,7 @@ class Login(QDialog):
                 "password": pwd
             })
 
-            if status == 200:
+            if res['auth']:
                 self.setResult(1)
                 self.accept()
                 self.login_signal.emit()

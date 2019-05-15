@@ -295,7 +295,7 @@ class Navigation(QFrame):
             status, res = account.get()
 
             if status == 200:
-                self.credits = round(res['customer']['credits'], 4)
+                self.credits = round(res['account']['credits'], 4)
 
             # TODO: This fails if the api returns a token expired error
             # (or anything that isn't a customer object response). Also see Account class with same problem
@@ -373,8 +373,8 @@ class Account(QFrame):
 
             if status == 200:
                 # Insert comma here so we can default to nameless greeting if api fails.
-                self.username = f"{res['customer']['firstname'].capitalize()}"
-                self.credits = round(res['customer']['credits'], 4)
+                self.username = f"{res['account']['firstname'].capitalize()}"
+                self.credits = round(res['account']['credits'], 4)
             # TODO: This should never happen and if it does we should report a fatal error
             else:
                 self.username = "New User"

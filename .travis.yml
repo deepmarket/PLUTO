@@ -18,13 +18,6 @@ script:
 matrix:
   include:
 
-<<<<<<< HEAD
-    # Tests Python 3.6 on Ubuntu Trusty
-    - python: "3.6"
-#    - python: 3.7  # as of 8/17.18 3.7 is still being worked on by the travis team
-      dist: trusty
-      sudo: true
-=======
 # As of 3/6/19 Trusty does not work with PyQt5 in CI
 
     # Tests Python 3.6 on Ubuntu Trusty (14.04)
@@ -32,7 +25,6 @@ matrix:
 #    - python: 3.7  # as of 8/17/18 3.7 is still being worked on by the travis team
 #      dist: trusty
 #      sudo: true
->>>>>>> f70ffe9d6abf1bc52fa5204a97629d0ba7fc0923
 
     # Tests Python 3.6 and 3.7 on Ubuntu Xenial
     - python: "3.6"

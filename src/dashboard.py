@@ -62,10 +62,10 @@ class Dashboard(MainView):
         with Api("/account") as account:
             status, res = account.get()
 
-            if status == 200 and isinstance(res, dict) and "customer" in res and "firstname" in res['customer']:
+            if status == 200 and "firstname" in res['account']:
                 # Insert comma here so we can default to nameless greeting if api fails.
-                self.username = f", {res['customer']['firstname'].capitalize()}"
-                self.total_balance = round(res['customer']['credits'], 4)
+                self.username = f", {res['account']['firstname'].capitalize()}"
+                self.total_balance = round(res['account']['credits'], 4)
             else:
                 self.username = "."
                 self.total_balance = 0

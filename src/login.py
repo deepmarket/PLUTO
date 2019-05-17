@@ -128,16 +128,17 @@ class Login(QDialog):
                 "password": pwd
             })
 
-            if res['auth']:
+            # handle connection error first, otherwise it would happen crash
+            if (res or status) is None:
+                self.login.login_hint.setText("There was an error connecting to the authentication servers. "
+                                              "Please try again in a little while.")  
+            elif res['auth']:
                 self.setResult(1)
                 self.accept()
                 self.login_signal.emit()
-            elif status == 401:
-                self.login.login_hint.setText("The email or password you entered is invalid.")
-            elif (res or status) is None:
-                self.login.login_hint.setText("There was an error connecting to the authentication servers. "
-                                              "Please try again in a little while.")
             # Only other status API will return is an error, so let the user know
+            elif status == 401:
+                self.login.login_hint.setText("The email or password you entered is invalid.")            
             else:
                 self.login.login_hint.setText("There was an unknown error while trying to log in. Please try again.")
 

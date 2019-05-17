@@ -1,6 +1,6 @@
 import requests as req
 
-from json import loads, dumps, JSONDecodeError
+from json import JSONDecodeError
 from os import environ, path, curdir, remove
 
 from requests.exceptions import ConnectionError
@@ -36,27 +36,26 @@ class Api(object):
     # Set store path globally
     store_path = path.abspath(curdir)
 
-    def __init__(self, endpoint: str = "/", domain: str = "pacific.cs.pdx.edu", port: int = 8080, auth: bool = False):
+    def __init__(self, endpoint: str = "/", host: str = "pacific.cs.pdx.edu", port: int = 8080, auth: bool = False):
 
-        if environ.get("DEEPSHARE_API_HOST", False):
-            self.domain = environ.get("DEEPSHARE_API_HOST")
-        else:
-            self.domain = domain
+        # Override given domain name/port if defined in the environment
+        # These are intended to be used for development/testing
+        self.host: str = environ.get("_API_HOST", False) or host
+        self.port: int = environ.get("_API_PORT", False) or port
 
-        self.port = port
+        self.endpoint: str = endpoint if endpoint.startswith("/") else f"/{endpoint}"
 
-        self.endpoint = endpoint
-        if not self.endpoint.startswith("/"):
-            self.endpoint = f"/{self.endpoint}"
-
-        self.url: str = f"http://{self.domain}:{self.port}/api/v1{self.endpoint}"
+        self.url: str = f"http://{self.host}:{self.port}/api/v1{self.endpoint}"
 
         self.auth: bool = auth
+        self.store: CredentialManager = None
         self.token: str = None
+        self.headers: dict = {}
 
     def __enter__(self):
         self.store = CredentialManager(self.store_path)
         self.token = self.store.get()
+        self.headers = {"X-access-token": self.token}
 
         return self
 
@@ -66,19 +65,17 @@ class Api(object):
 
     def get(self):
 
-        headers = {"x-access-token": self.token}
         try:
-            res: req.Response = req.get(self.url, headers=headers)
+            res: req.Response = req.get(self.url, headers=self.headers)
             return res.status_code, res.json()
         except (ConnectionError, JSONDecodeError) as err:
-            # log(err)
+
             return None, None
 
     def post(self, payload: dict={}):
 
-        headers = {"x-access-token": self.token}
         try:
-            res: req.Response = req.post(self.url, payload, headers=headers)
+            res: req.Response = req.post(self.url, payload, headers=self.headers)
             res_json: dict = res.json()
 
             if res_json.get('token'):
@@ -87,27 +84,25 @@ class Api(object):
 
             return res.status_code, res_json
         except (ConnectionError, JSONDecodeError) as err:
-            # log(err)
+
             return None, None
 
     def put(self, payload: dict={}):
 
         try:
-            headers = {"x-access-token": self.token}
-            res: req.Response = req.put(self.url, payload, headers=headers)
+            res: req.Response = req.put(self.url, payload, headers=self.headers)
             return res.status_code, res.json()
 
         except (ConnectionError, JSONDecodeError) as err:
-            # log(err)
+
             return None, None
 
     def delete(self):
 
         try:
-            headers = {"x-access-token": self.token}
-            res: req.Response = req.delete(self.url, headers=headers)
+            res: req.Response = req.delete(self.url, headers=self.headers)
             return res.status_code, res.json()
 
         except (ConnectionError, JSONDecodeError) as err:
-            # log(err)
+
             return None, None

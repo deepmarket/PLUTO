@@ -42,11 +42,7 @@ TEXT = "QGraphicsTextItem"
 
 
 login_style = """
-    
-    QPushButton {
-        border-radius: 4px;    
-    }
-    
+
     #Login {
         border: None;
         background: #F4F8F9;
@@ -107,7 +103,7 @@ login_style = """
         font-family: "Helvetica Neue";
         font-size: 16px;
         font-weight: 100;
-        
+        border-radius: 4px;
         font-weight: 200;
         color: white;
     }
@@ -163,7 +159,6 @@ app_style = """
 
     #App_navigation_button {
         border: None;
-        border-radius: 4px;
     }
     
     #App_navigation_credit {
@@ -205,7 +200,6 @@ app_style = """
         font-family: "Helvetica Neue";
         font-size: 10px;
         font-weight: 200;
-        border-radius: 4px;
         color: #6C7E8E;
         text-align: left;
     }
@@ -236,8 +230,15 @@ app_sidebar_button = f"""
 """
 
 app_sidebar_button_active = f"""
-    {app_sidebar_button}
+    border: None;
     border-left: 2px solid {COLOR_01};
+    height: 20px;
+    padding-left: 16px;
+    font-family: "Helvetica Neue";
+    font-size: 13px;
+    font-weight: 400;
+    color: {COLOR_01};
+    text-align: left;
 """
 
 dashboard_style = """
@@ -405,7 +406,6 @@ page_style = """
         font-family: "Helvetica Neue";
         font-size: 12px;
         font-weight: 300;
-        border-radius: 4px;
         color: white;
     }
 
@@ -445,7 +445,6 @@ page_style = """
         font-family: "Helvetica Neue";
         font-size: 13px;
         font-weight: 200;
-        border-radius: 4px;
         color: white;
     }
     
@@ -572,7 +571,6 @@ Page_evaluate_button = f"""
     font-family: "Helvetica Neue";
     font-size: 12px;
     font-weight: 300;
-    border-radius: 4px;
     color: white;   
 """
 
@@ -584,7 +582,6 @@ Page_evaluate_button_disable = f"""
     font-family: "Helvetica Neue";
     font-size: 12px;
     font-weight: 300;
-    border-radius: 4px;
     color: {COLOR_09};
 """
 
@@ -595,7 +592,6 @@ Page_submission_button = f"""
     height: 20px;
     width: 23px;
     font-size: 20px;
-    border-radius: 4px;
     color: {COLOR_01};
 """
 
@@ -606,7 +602,6 @@ Page_submission_button_disable = f"""
     height: 20px;
     width: 23px;
     font-size: 20px;
-    border-radius: 4px;
     color: {COLOR_09};
 """
 
@@ -640,7 +635,6 @@ Page_submission_submit = f"""
     font-family: "Helvetica Neue";
     font-size: 12px;
     font-weight: 300;
-    border-radius: 4px;
     color: white;
 """
 
@@ -652,7 +646,6 @@ Page_submission_submit_disable = f"""
     font-family: "Helvetica Neue";
     font-size: 12px;
     font-weight: 300;
-    border-radius: 4px;
     color: {COLOR_09};
 """
 
@@ -661,7 +654,6 @@ Page_scheme_box = f"""
 """
 
 Page_scheme_box_disable = f"""
-    border-radius: 4px;
     background-color: {COLOR_03};
 """
 
@@ -669,7 +661,7 @@ Page_scheme_button_frame = f"""
     border-color: {COLOR_01};
     border-width: 1px;        
     border-style: solid;
-    border-radius: 4px;
+
     background-color: white;
 """
 
@@ -677,7 +669,6 @@ Page_scheme_label = f"""
     font-family: "Helvetica Neue";
     font-size: 11px;
     font-weight: 400;
-    border-radius: 4px;
     color: white;
 """
 
@@ -710,7 +701,6 @@ question_style = """
         font-family: "Helvetica Neue";
         font-size: 10px;
         font-weight: 500;
-        border-radius: 4px;
         color: white;
     }
     
@@ -722,7 +712,6 @@ question_style = """
         font-family: "Helvetica Neue";
         font-size: 10px;
         font-weight: 500;
-        border-radius: 4px;
         color: white;
     }
 
@@ -809,7 +798,6 @@ Credit_section_button_active = f"""
     font-family: "Helvetica Neue";
     font-size: 11px;
     font-weight: 100;
-    border-radius: 4px;
     color: {COLOR_01};
 """
 
@@ -820,6 +808,5 @@ Credit_section_button = f"""
     font-family: "Helvetica Neue";
     font-size: 11px;
     font-weight: 100;
-    border-radius: 4px;
     color: {COLOR_07};
 """

@@ -130,6 +130,7 @@ class Resources(MainView):
 
         self.list.refresh_button.clicked.connect(self.on_refresh_button_clicked)
         self.list.remove_button.clicked.connect(self.on_remove_button_clicked)
+        self.list.update_button.clicked.connect(self.on_update_button_clicked)
 
     def on_workspace_clicked(self):
         self.workspace_button.setStyleSheet(page_menu_button_active)
@@ -141,7 +142,7 @@ class Resources(MainView):
         self.list_button.setStyleSheet(page_menu_button_active)
         self.stack.setCurrentIndex(1)
 
-        self._fetch_job_data()
+        self._fetch_resources_data()
 
     def on_verify_button_clicked(self):
         self.current_cpu = round(cpu_freq().current/1000, 1)  # Processor's speed in gHz
@@ -253,7 +254,7 @@ class Resources(MainView):
 
             else:
                 # add data to list
-                self._fetch_job_data()
+                self._fetch_resources_data()
 
                 # switch page
                 self.on_list_clicked()
@@ -388,7 +389,7 @@ class Resources(MainView):
                     self._check_flag()
 
     def on_refresh_button_clicked(self):
-        self._fetch_job_data()
+        self._fetch_resources_data()
 
     def on_remove_button_clicked(self):
         model = self.list.table.selectionModel()
@@ -407,15 +408,85 @@ class Resources(MainView):
                 question = Question("Are you sure you want to remove this?")
 
                 if question.exec_():
-                    self.list.table.removeRow(row)
+                    _id = None
 
-                    if row <= 13:
-                        self.list.current_row -= 1
+                    # remove from backend
+                    with Api("/resources") as api:
+                        # get all resources from api
+                        # TODO: consider to have an endpoint get only resources
+                        # for current user
+                        status, res = api.get()
 
-                        row = self.list.table.rowCount()
-                        self.list.table.insertRow(row)
-                        for c in range(column):
-                            self.list.table.setItem(row, c, QTableWidgetItem(""))
+                        if status == 200 and isinstance(res, dict) and "resources" in res:
+
+                            # consider ip_address would be a unique property for each resources
+                            # use ip_address to get the resource id
+                            # then process delete
+                            ip_address = self.list.table.item(row, 1).text()
+                            for rsrc in res["resources"]:
+                                if rsrc["ip_address"] == ip_address:
+                                    _id = rsrc["_id"]
+                    if _id:
+                        endpoint = "/resources/" + _id
+                        with Api(endpoint) as api:
+                            status, res = api.delete()
+
+                            if not status == 200:
+                                if status == 500 and isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
+                                    errmsg = res["error"]["errmsg"]
+                                    self.table.hint.setText(errmsg)
+                            else:
+                                self._fetch_resources_data()
+
+    def on_update_button_clicked(self):
+        model = self.list.table.selectionModel()
+
+        # check if table has selected row
+        if not model.hasSelection():
+            pass
+        else:
+            row = model.selectedRows()[0].row()
+            column = self.list.table.columnCount()
+
+            # check if row has value
+            if self.list.table.item(row, column-1).text() is not "":
+
+                # ask if user want to delete rows
+                question = Question("Are you sure you want to update this?")
+
+                if question.exec_():
+                    _id = None
+
+                    # remove from backend
+                    with Api("/resources") as api:
+                        # get all resources from api
+                        # TODO: consider to have an endpoint get only resources
+                        # for current user
+                        status, res = api.get()
+
+                        if status == 200 and isinstance(res, dict) and "resources" in res:
+
+                            # consider ip_address would be a unique property for each resources
+                            # use ip_address to get the resource id
+                            # then process delete
+                            ip_address = self.list.table.item(row, 1).text()
+                            for rsrc in res["resources"]:
+                                if rsrc["ip_address"] == ip_address:
+                                    _id = rsrc["_id"]
+                    if _id:
+                        endpoint = "/resources/" + _id
+                        with Api(endpoint) as api:
+                            status, res = api.put()
+
+                            if not status == 200:
+                                if status == 500 and isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
+                                    errmsg = res["error"]["errmsg"]
+                                    self.table.hint.setText(errmsg)
+                            else:
+                                self._fetch_resources_data()
+                    else:
+                        self.table.hint.setText("Fail to update resource, do not change ip_address")
+                        self._fetch_resources_data()
 
     # check if flags are all on, enable evaluate button
     def _check_flag(self):
@@ -431,7 +502,7 @@ class Resources(MainView):
             self.workspace.disable_evaluate_button()
 
     # load data from db
-    def _fetch_job_data(self):
+    def _fetch_resources_data(self):
         self.list.clean_table()
 
         with Api("/resources") as api:
@@ -883,6 +954,8 @@ class ResourcesList(QFrame):
         self.search_bar = None              # input
         self.refresh_button = None          # button
         self.remove_button = None           # button
+        self.update_button = None           # button
+        self.hint = None                    # label
 
         self.current_row = 0                # param number
 
@@ -894,23 +967,34 @@ class ResourcesList(QFrame):
 
         # --------- table_workspace ------------
 
-        table_workspace, workspace_layout = add_frame(self, height=72, name="Page_table_workspace",
-                                                      l_m=40, r_m=40, t_m=21, b_m=21, space=32, layout=HORIZONTAL)
+        table_workspace, workspace_layout = add_frame(self, height=102, name="Page_table_workspace", layout=VERTICAL)
         window_layout.addWidget(table_workspace)
 
-        self.search_bar = add_input(table_workspace, height=30, name="Page_table_workspace_search",
+        feature, feature_layout = add_frame(table_workspace, height=72, l_m=40, r_m=40, t_m=26, b_m=11, space=32, layout=HORIZONTAL)
+        workspace_layout.addWidget(feature)
+
+        hint_frame, hint_layout = add_frame(table_workspace, height=30, l_m=40, r_m=40, b_m=5, layout=HORIZONTAL)
+        workspace_layout.addWidget(hint_frame)
+
+        self.search_bar = add_input(feature, height=35, name="Page_table_workspace_search",
                                     hint="Search a machine... (Haven't implemented yet)")
-        workspace_layout.addWidget(self.search_bar)
+        feature_layout.addWidget(self.search_bar)
 
-        self.refresh_button = add_button(table_workspace, "REFRESH", name="Page_table_workspace_button")
-        workspace_layout.addWidget(self.refresh_button)
+        self.refresh_button = add_button(feature, "REFRESH", name="Page_table_workspace_button")
+        feature_layout.addWidget(self.refresh_button)
 
-        self.remove_button = add_button(table_workspace, "REMOVE", name="Page_table_workspace_button")
-        workspace_layout.addWidget(self.remove_button)
+        self.remove_button = add_button(feature, "REMOVE", name="Page_table_workspace_button")
+        feature_layout.addWidget(self.remove_button)
+
+        self.update_button = add_button(feature, "UPDATE", name="Page_table_workspace_button")
+        feature_layout.addWidget(self.update_button)
+
+        self.hint = add_label(hint_frame, "", name="Page_hint", align=Qt.AlignVCenter)
+        hint_layout.addWidget(self.hint)
 
         # --------- table_frame ------------
 
-        table_frame, table_layout = add_frame(self, l_m=5, r_m=5, t_m=5)
+        table_frame, table_layout = add_frame(self, l_m=5, r_m=5, t_m=10, b_m=5)
         window_layout.addWidget(table_frame)
 
         self.table = QTableWidget(table_frame)
@@ -945,9 +1029,9 @@ class ResourcesList(QFrame):
         self.table.setShowGrid(False)
         self.table.verticalHeader().setDefaultSectionSize(40)
 
-        # fill first 10 row with empty line
+        # fill initial # of rows with empty line
         column = self.table.columnCount()
-        for r in range(13):
+        for r in range(RESOURCES_MAX_ROW):
             self.table.insertRow(r)
             for c in range(column):
                 self.table.setItem(r, c, QTableWidgetItem(""))
@@ -960,7 +1044,7 @@ class ResourcesList(QFrame):
         data = data_obj
         # data = data_obj["data"]
 
-        if self.current_row <= 13:
+        if self.current_row <= RESOURCES_MAX_ROW:
             add_row(self.table, column, data, self.current_row)
 
             self.current_row += 1
@@ -976,9 +1060,9 @@ class ResourcesList(QFrame):
         while self.table.rowCount():
             self.table.removeRow(0)
 
-        # fill first 13 row with empty line
+        # fill initial # of rows with empty line
         column = self.table.columnCount()
-        for r in range(13):
+        for r in range(RESOURCES_MAX_ROW):
             self.table.insertRow(r)
             for c in range(column):
                 self.table.setItem(r, c, QTableWidgetItem(""))

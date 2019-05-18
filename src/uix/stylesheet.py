@@ -426,6 +426,10 @@ page_style = """
     #Page_table_workspace {
         background-color: white;
     }
+
+    #Page_table_test {
+        background-color: yellow;
+    }
     
     #Page_table_workspace_search {
         border: None;
@@ -440,7 +444,7 @@ page_style = """
     #Page_table_workspace_button {
         border: None;
         background-color: #6C7E8E;
-        height: 30px;
+        height: 35px;
         width: 90px;
         font-family: "Helvetica Neue";
         font-size: 13px;

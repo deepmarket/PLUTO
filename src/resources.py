@@ -70,6 +70,8 @@ class Resources(MainView):
         self.auto_price = 0                         # flag
         self.offering_price = 0                     # flag
 
+        self.machines = None                         # param list
+
         self._init_ui()
         self.setStyleSheet(page_style)
 
@@ -458,11 +460,10 @@ class Resources(MainView):
                     # remove from backend
                     with Api("/resources") as api:
                         # get all resources from api
-                        # TODO: consider to have an endpoint get only resources
                         # for current user
                         status, res = api.get()
 
-                        if status == 200 and isinstance(res, dict) and "resources" in res:
+                        if res and status == 200:
 
                             # consider ip_address would be a unique property for each resources
                             # use ip_address to get the resource id
@@ -496,14 +497,19 @@ class Resources(MainView):
     # load data from db
     def _fetch_resources_data(self):
         self.list.clean_table()
+        # clean buffer
+        self.machines = []
 
         with Api("/resources") as api:
             status, res = api.get()
 
             # load data to list
             # data format: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
-            if status == 200 and isinstance(res, dict) and "resources" in res:
+            if res and status == 200:
                 for rsrc in res["resources"]:
+                    # store remote machine info locally
+                    self.machines.append(rsrc)
+                    
                     self.list.add_data([rsrc['machine_name'],
                                         rsrc['ip_address'],
                                         str(rsrc['cpus']),

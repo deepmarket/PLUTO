@@ -50,27 +50,27 @@ class Resources(MainView):
         self.workspace = None                       # widget
         self.list = None                            # widget
 
-        self.workspace_button = None                # button
-        self.list_button = None                     # button
-        self.stack = None                           # layout
+        self.workspace_button = None                # button widget
+        self.list_button = None                     # button widget
+        self.stack = None                           # widget layout
 
-        self.current_cpu = 0                        # param number
-        self.current_core = 0                       # param number
-        self.current_ram = 0                        # param number
+        self.current_cpu:int = 0                        # number
+        self.current_core:int = 0                       # number
+        self.current_ram:int = 0                        # number
 
-        # self.if_verify = False                    # flag
-        # self.ip_check = False                     # flag
-        self.machine_name_check = False             # flag
-        # self.cpu_check = False                    # flag
-        self.cpu_check = True                       # cpu check is disable in this version
-        self.core_check = False                     # flag
-        self.ram_check = False                      # flag
-        self.price_selected = 0                     # flag
+        # self.if_verify:bool = False                    # flag
+        # self.ip_check:bool = False                     # flag
+        self.machine_name_check:bool = False             # flag
+        # self.cpu_check:bool = False                    # flag
+        self.cpu_check:bool = True                       # cpu check is disable in this version
+        self.core_check:bool = False                     # flag
+        self.ram_check:bool = False                      # flag
+        self.price_selected:int = 0                     # flag
 
-        self.auto_price = 0                         # flag
-        self.offering_price = 0                     # flag
+        self.auto_price:int = 0                         # flag
+        self.offering_price:int = 0                     # flag
 
-        self.machines = None                         # param list
+        self.machines: list = None                         # list
 
         self._init_ui()
         self.setStyleSheet(page_style)
@@ -536,28 +536,28 @@ class ResourcesWorkspace(QFrame):
         super(QFrame, self).__init__(*args, **kwargs)
 
         # variable
-        self.verification_hint = None               # param string
-        self.planning_hint = None                   # param string
+        self.verification_hint = None               # text widget
+        self.planning_hint = None                   # text widget
 
-        self.current_cpu_box = None                 # frame
-        self.current_core_box = None                # frame
-        self.current_ram_box = None                 # frame
+        self.current_cpu_box = None                 # frame widget
+        self.current_core_box = None                # frame widget
+        self.current_ram_box = None                 # frame widget
 
-        self.auto_price_box = None                  # frame
-        self.offering_price_box = None              # frame
+        self.auto_price_box = None                  # frame widget
+        self.offering_price_box = None              # frame widget
 
-        self.ip_address = None                      # input string
-        self.machine_name = None                    # input string
-        self.cpu_gpu = None                         # input number
-        self.cores = None                           # input number
-        self.ram = None                             # input number
+        self.ip_address = None                      # input widget
+        self.machine_name = None                    # input widget
+        self.cpu_gpu = None                         # input widget
+        self.cores = None                           # input widget
+        self.ram = None                             # input widget
 
-        self.verify_button = None                   # button
-        # self.change_button = None                   # button
-        self.evaluate_button = None                 # button
-        self.auto_price_button = None               # button
-        self.offering_price_button = None           # button
-        self.submit_button = None                   # button
+        self.verify_button = None                   # button widget
+        # self.change_button = None                   # button widget
+        self.evaluate_button = None                 # button widget
+        self.auto_price_button = None               # button widget
+        self.offering_price_button = None           # button widget
+        self.submit_button = None                   # button widget
 
         self._init_ui()
         self.setStyleSheet(page_style)
@@ -932,13 +932,13 @@ class ResourcesList(QFrame):
 
         # variable
         self.table = None                   # widget
-        self.search_bar = None              # input
-        self.refresh_button = None          # button
-        self.remove_button = None           # button
-        self.update_button = None           # button
-        self.hint = None                    # label
+        self.search_bar = None              # input widget
+        self.refresh_button = None          # button widget
+        self.remove_button = None           # button widget
+        self.update_button = None           # button widget
+        self.hint = None                    # text widget
 
-        self.current_row = 0                # param number
+        self.current_row:int = 0                # param number
 
         self._init_ui()
         self.setStyleSheet(page_style)

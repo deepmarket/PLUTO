@@ -36,15 +36,15 @@ class Jobs(MainView):
         self.workspace = None                   # widget
         self.list = None                        # widget
 
-        self.workspace_button = None            # button
-        self.list_button = None                 # button
-        self.stack = None                       # layout
+        self.workspace_button = None            # button widget
+        self.list_button = None                 # button widget
+        self.stack = None                       # widget layout
 
-        self.worker_check = False               # flag
-        self.core_check = False                 # flag
-        self.memory_check = False               # flag
-        self.source_check = False               # flag
-        self.input_check = False                # flag
+        self.worker_check:bool = False               # flag
+        self.core_check:bool = False                 # flag
+        self.memory_check:bool = False               # flag
+        self.source_check:bool = False               # flag
+        self.input_check:bool = False                # flag
 
         self._init_ui()
         self.setStyleSheet(page_style)
@@ -332,28 +332,28 @@ class JobWorkspace(QFrame):
         super(QFrame, self).__init__(*args, **kwargs)
 
         # variable
-        self.workers = None                     # input string
-        self.cores = None                       # input number
-        self.memory = None                      # input number
-        self.source_file = None                 # input string
-        self.input_file = None                  # input string
-        self.expect_time = None                 # input number
+        self.workers = None                     # input widget
+        self.cores = None                       # input widget
+        self.memory = None                      # input widget
+        self.source_file = None                 # input widget
+        self.input_file = None                  # input widget
+        self.expect_time = None                 # input widget
 
-        self.submission_hint = None             # param string
+        self.submission_hint = None             # text widget
 
-        self.available_cpu = None               # param string
-        self.available_gpu = None               # param string
-        self.available_memory = None            # param string
-        self.available_disk = None              # param string
+        self.available_cpu = None               # text widget
+        self.available_gpu = None               # text widget
+        self.available_memory = None            # text widget
+        self.available_disk = None              # text widget
 
-        self.scheme_01_frame = None             # frame
-        self.scheme_02_frame = None             # frame
-        self.scheme_03_frame = None             # frame
-        self.scheme_04_frame = None             # frame
+        self.scheme_01_frame = None             # frame widget
+        self.scheme_02_frame = None             # frame widget
+        self.scheme_03_frame = None             # frame widget
+        self.scheme_04_frame = None             # frame widget
 
-        self.select_scheme = 1                  # flag
+        self.select_scheme:int = 1                  # flag
 
-        self.submit_button = None               # button
+        self.submit_button = None               # button widget
 
         self._init_ui()
         self.setStyleSheet(page_style)
@@ -578,11 +578,11 @@ class JobList(QFrame):
 
         # variable
         self.table = None                   # widget
-        self.search_bar = None              # input
-        self.refresh_button = None          # button
-        self.remove_button = None           # button
+        self.search_bar = None              # input widget
+        self.refresh_button = None          # button widget
+        self.remove_button = None           # button widget
 
-        self.current_row = 0                # param number
+        self.current_row:int = 0                # param number
 
         self._init_ui()
         self.setStyleSheet(page_style)
@@ -679,3 +679,4 @@ class JobList(QFrame):
             self.table.insertRow(r)
             for c in range(column):
                 self.table.setItem(r, c, QTableWidgetItem(""))
+                self.table.item(r, c).setFlags(Qt.NoItemFlags)

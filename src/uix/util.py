@@ -478,7 +478,7 @@ def add_row(widget, column, data, row):
         widget.setItem(row, i, QTableWidgetItem(data[i]))
 
         if widget.item(row, i) is not None:
-
+            # not allow user edit ip address
             if i == 1:
                 widget.item(row, i).setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
             widget.item(row, i).setTextAlignment(Qt.AlignCenter)

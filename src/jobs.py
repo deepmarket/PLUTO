@@ -641,13 +641,8 @@ class JobList(QFrame):
         self.table.setShowGrid(False)
         self.table.verticalHeader().setDefaultSectionSize(40)
 
+        # fill initial # of rows with empty line
         self.clean_table()
-        # # fill first 13 row with empty line
-        # column = self.table.columnCount()
-        # for r in range(13):
-        #     self.table.insertRow(r)
-        #     for c in range(column):
-        #         self.table.setItem(r, c, QTableWidgetItem(""))
 
     # data format: [job_id, workers, cores, memory, price, status, logs]
     def add_data(self, data_obj):
@@ -657,7 +652,7 @@ class JobList(QFrame):
         data = data_obj
         # data = data_obj["data"]
 
-        if self.current_row <= 13:
+        if self.current_row <= TABLE_INIT_ROW:
             add_row(self.table, column, data, self.current_row)
 
             self.current_row += 1
@@ -675,7 +670,7 @@ class JobList(QFrame):
 
         # fill first 13 row with empty line
         column = self.table.columnCount()
-        for r in range(13):
+        for r in range(TABLE_INIT_ROW):
             self.table.insertRow(r)
             for c in range(column):
                 self.table.setItem(r, c, QTableWidgetItem(""))

@@ -1,35 +1,9 @@
 """
-    The following items can be interacted:
 
-    class ResourcesWorkspace:
+    The interface implemented at this file provide the following features:
+    1. ResourcesWorkspace: Allow user add current machine to resources pool
+    2. ResourcesList: View the existing machines that are lent
 
-        self.verification_hint = None               # param string
-        self.planning_hint = None                   # param string
-
-        self.auto_price_box = None                  # frame
-        self.offering_price_box = None              # frame
-
-        self.ip_address = None                      # input string
-        self.machine_name = None                    # input string
-        self.cpu_gpu = None                         # input number
-        self.cores = None                           # input number
-        self.ram = None                             # input number
-
-        self.pricing_constant = PRICING_CONSTANT    # param number
-        self.auto_price = 0                         # param number
-        self.offering_price = 0                     # param number
-
-        self.verify_button = None                   # button
-        self.change_button = None                   # button
-        self.evaluate_button = None                 # button
-        self.auto_price_button = None               # button
-        self.offering_price_button = None           # button
-        self.submit_button = None                   # button
-
-    class ResourcesList:
-
-        self.table = None           # table widget
-        self.current_row = 0        # param number
 """
 
 from psutil import cpu_freq, cpu_count, virtual_memory
@@ -135,16 +109,19 @@ class Resources(MainView):
         self.list.update_button.clicked.connect(self.on_update_button_clicked)
 
     def on_workspace_clicked(self):
-        self.workspace_button.setStyleSheet(page_menu_button_active)
-        self.list_button.setStyleSheet(page_menu_button)
-        self.stack.setCurrentIndex(0)
+        if self.stack.currentIndex() != 0:
+            self.workspace_button.setStyleSheet(page_menu_button_active)
+            self.list_button.setStyleSheet(page_menu_button)
+            self.stack.setCurrentIndex(0)
 
     def on_list_clicked(self):
-        self.workspace_button.setStyleSheet(page_menu_button)
-        self.list_button.setStyleSheet(page_menu_button_active)
-        self.stack.setCurrentIndex(1)
+        if self.stack.currentIndex() != 1:
+            self.workspace_button.setStyleSheet(page_menu_button)
+            self.list_button.setStyleSheet(page_menu_button_active)
+            self.stack.setCurrentIndex(1)
 
-        self._fetch_resources_data()
+            self._reset_list_hint()
+            self._fetch_resources_data()
 
     def on_verify_button_clicked(self):
         self.current_cpu = round(cpu_freq().current/1000, 1)  # Processor's speed in gHz
@@ -153,28 +130,6 @@ class Resources(MainView):
 
         self.workspace.enable_machine_config(self.current_cpu, self.current_core, self.current_ram)
         self.workspace.enable_planning()
-
-    # def on_change_button_clicked(self):
-    #     self.workspace.clean_hint()
-    #
-    #     # reset everything
-    #     if self.if_verify:
-    #         # reset flag
-    #         self.if_verify = False
-    #         self.machine_name_check = False
-    #         self.cpu_check = False
-    #         self.core_check = False
-    #         self.ram_check = False
-    #
-    #         # clean hint
-    #         self.workspace.planning_hint.setText("")
-    #         self.workspace.verification_hint.setText("")
-    #
-    #         # enable ip_address input, disable machine_config, planning
-    #         self.workspace.enable_ip_address()
-    #         self.workspace.disable_machine_config()
-    #         self.workspace.disable_planning()
-    #         self.workspace.disable_evaluate_button()
 
     def on_evaluate_button_clicked(self):
 
@@ -227,44 +182,58 @@ class Resources(MainView):
         else:
             price = self.offering_price
 
-        with Api("/resources") as api:
+        resources_data = {
+            "machine_name": machine_name,
+            "ip_address": ip_address,
+            "ram": ram,
+            "cores": cores,
+            "cpus": cpu_gpu,
+            "price": price,
+            "status": "ALIVE"
+        }
 
-            resources_data = {
-                "machine_name": machine_name,
-                "ip_address": ip_address,
-                "ram": ram,
-                "cores": cores,
-                "cpus": cpu_gpu,
-                "price": price,
-                "status": "ALIVE"
-            }
+        self._api_call("POST", "/resources", dat=resources_data)
 
-            status, res = api.post(resources_data)
+        # TODO: clean up the following comment code, if PR pass
+        # with Api("/resources") as api:
 
-            # response handle
-            if res and status == 200:
-                # add data to list
-                self._fetch_resources_data()
-                # switch page
-                self.on_list_clicked()
+        #     resources_data = {
+        #         "machine_name": machine_name,
+        #         "ip_address": ip_address,
+        #         "ram": ram,
+        #         "cores": cores,
+        #         "cpus": cpu_gpu,
+        #         "price": price,
+        #         "status": "ALIVE"
+        #     }
 
-            elif status == 500:
-                msg = ""
-                if isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
-                    errmsg = res["error"]["errmsg"]
-                    if "E11000 duplicate key error collection" in errmsg:
-                        msg = "Such IP address is already in use!"
-                    else:
-                        msg = errmsg
-                else:
-                    msg = "Code 500: Could not retrive error message."
-                self.workspace.submission_hint.setText(msg)
+        #     status, res = api.post(resources_data)
 
-            else:
-                msg = "Fail due to an implicit reason, please contact the developed team."
-                self.workspace.submission_hint.setText(msg)
+        #     # response handle
+        #     if res and status == 200:
+        #         # add data to list
+        #         self._fetch_resources_data()
+        #         # switch page
+        #         self.on_list_clicked()
+
+        #     elif status == 500:
+        #         msg = ""
+        #         if isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
+        #             errmsg = res["error"]["errmsg"]
+        #             if "E11000 duplicate key error collection" in errmsg:
+        #                 msg = "Such IP address is already in use!"
+        #             else:
+        #                 msg = errmsg
+        #         else:
+        #             msg = "Code 500: Could not retrive error message."
+        #         self.workspace.submission_hint.setText(msg)
+
+        #     else:
+        #         msg = "Fail due to an implicit reason, please contact the developed team."
+        #         self.workspace.submission_hint.setText(msg)
                 
     def on_refresh_button_clicked(self):
+        self._reset_list_hint()
         self._fetch_resources_data()
 
     def on_remove_button_clicked(self):
@@ -284,21 +253,24 @@ class Resources(MainView):
                 if question.exec_():
 
                     endpoint = "/resources/" + self.machines[row]["_id"]
-                    with Api(endpoint) as api:
-                        status, res = api.delete()
+                    self._api_call("DELETE", endpoint)
 
-                        if res and status == 200:
-                            self._fetch_resources_data()
-                        elif res and status == 500:
-                            msg = ""
-                            if isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
-                                msg = res["error"]["errmsg"]
-                            else:
-                                msg = "Code 500: Could not retrive error message."
-                            self.table.hint.setText(msg)
-                        else:
-                            msg = "Fail due to an implicit reason, please contact the developed team."
-                            self.table.hint.setText(msg)
+                    # TODO: clean up the following comment code, if PR pass
+                    # with Api(endpoint) as api:
+                    #     status, res = api.delete()
+
+                    #     if res and status == 200:
+                    #         self._fetch_resources_data()
+                    #     elif res and status == 500:
+                    #         msg = ""
+                    #         if isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
+                    #             msg = res["error"]["errmsg"]
+                    #         else:
+                    #             msg = "Code 500: Could not retrive error message."
+                    #         self.table.hint.setText(msg)
+                    #     else:
+                    #         msg = "Fail due to an implicit reason, please contact the developed team."
+                    #         self.table.hint.setText(msg)
 
     def on_update_button_clicked(self):
         model = self.list.table.selectionModel()
@@ -317,22 +289,24 @@ class Resources(MainView):
                 if question.exec_():
                     endpoint = "/resources/" + self.machines[row]["_id"]
 
-                    with Api(endpoint) as api:
-                        status, res = api.put()
+                    self._api_call("PUT", endpoint)
+                    # TODO: clean up the following comment code, if PR pass
+                    # with Api(endpoint) as api:
+                    #     status, res = api.put()
 
-                        if res and status == 200:
-                            self._fetch_resources_data()
+                    #     if res and status == 200:
+                    #         self._fetch_resources_data()
 
-                        elif res and status == 500:
-                            msg = ""
-                            if isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
-                                msg = res["error"]["errmsg"]
-                            else:
-                                msg = "Code 500: Could not retrive error message."
-                            self.table.hint.setText(msg)
-                        else:
-                            msg = "Fail due to an implicit reason, please contact the developed team."
-                            self.table.hint.setText(msg)
+                    #     elif res and status == 500:
+                    #         msg = ""
+                    #         if isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
+                    #             msg = res["error"]["errmsg"]
+                    #         else:
+                    #             msg = "Code 500: Could not retrive error message."
+                    #         self.table.hint.setText(msg)
+                    #     else:
+                    #         msg = "Fail due to an implicit reason, please contact the developed team."
+                    #         self.table.hint.setText(msg)
 
     # def on_ip_address_edit(self):
     #     self.workspace.verification_hint.setText("")
@@ -348,7 +322,7 @@ class Resources(MainView):
     #         self.ip_check = True
 
     def on_machine_edit(self):
-        self._reset_hint()
+        self._reset_workspace_hint()
 
         if self.if_verify:
             user_input = self.workspace.machine_name.text()
@@ -361,7 +335,7 @@ class Resources(MainView):
 
     # disable for this version
     def on_cpu_edit(self):
-        self._reset_hint()
+        self._reset_workspace_hint()
 
         if self.if_verify:
             user_input = self.workspace.cpu_gpu.text()
@@ -395,7 +369,7 @@ class Resources(MainView):
                     self._check_flag()
 
     def on_core_edit(self):
-        self._reset_hint()
+        self._reset_workspace_hint()
 
         if self.if_verify:
             user_input = self.workspace.cores.text()
@@ -463,7 +437,6 @@ class Resources(MainView):
                     self.ram_check = True
                     self._check_flag()
 
-
     # check if flags are all on, enable evaluate button
     def _check_flag(self):
         if self.if_verify and self.machine_name_check and self.cpu_check and self.core_check and self.ram_check:
@@ -474,26 +447,29 @@ class Resources(MainView):
     # load data from db
     def _fetch_resources_data(self):
         self.list.clean_table()
+
+        self._api_call("GET", "/resources")
+        # TODO: clean up the following comment code, if PR pass
         # clean buffer
-        self.machines = []
+        # self.machines = []
 
-        with Api("/resources") as api:
-            status, res = api.get()
+        # with Api("/resources") as api:
+        #     status, res = api.get()
 
-            # load data to list
-            # data format: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
-            if res and status == 200:
-                for rsrc in res["resources"]:
-                    # store remote machine info locally
-                    self.machines.append(rsrc)
+        #     # load data to list
+        #     # data format: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
+        #     if res and status == 200:
+        #         for rsrc in res["resources"]:
+        #             # store remote machine info locally
+        #             self.machines.append(rsrc)
                     
-                    self.list.add_data([rsrc['machine_name'],
-                                        rsrc['ip_address'],
-                                        str(rsrc['cpus']),
-                                        str(rsrc['cores']),
-                                        str(rsrc['ram']),
-                                        str(rsrc['price']),
-                                        rsrc['status']])
+        #             self.list.add_data([rsrc['machine_name'],
+        #                                 rsrc['ip_address'],
+        #                                 str(rsrc['cpus']),
+        #                                 str(rsrc['cores']),
+        #                                 str(rsrc['ram']),
+        #                                 str(rsrc['price']),
+        #                                 rsrc['status']])
 
     # load the ip address from the running machine
     def _fetch_ip_address(self):
@@ -512,10 +488,73 @@ class Resources(MainView):
 
         self.if_verify = True
 
-    def _reset_hint(self):
+    def _reset_workspace_hint(self):
         self.workspace.verification_hint.setText("")
         self.workspace.planning_hint.setText("")
         self.workspace.submission_hint.setText("")
+    
+    def _reset_list_hint(self):
+        self.list.hint.setText("")
+
+    def _api_call(self, method, endpoint, dat=None):
+        if method in ["GET", "POST", "PUT", "DELETE"]:
+            if method == "POST" and dat is None:
+                pass
+            status, res = None, None
+
+            with Api(endpoint) as api:
+                if method == "GET":
+                    status, res = api.get()
+                elif method == "POST":
+                    status, res = api.post(dat)
+                elif method == "PUT":
+                    status, res = api.put()
+                else:
+                    status, res = api.delete()
+                
+                if res and status == 200:
+                    if method == "GET":
+                        # clean local buffer
+                        self.machines = []
+
+                        for rsrc in res["resources"]:
+                            # store remote machine info locally
+                            self.machines.append(rsrc)
+                            
+                            self.list.add_data([rsrc['machine_name'],
+                                                rsrc['ip_address'],
+                                                str(rsrc['cpus']),
+                                                str(rsrc['cores']),
+                                                str(rsrc['ram']),
+                                                str(rsrc['price']),
+                                                rsrc['status']])
+                    elif method == "POST":
+                        # add data to list
+                        self._fetch_resources_data()
+                        # switch page
+                        self.on_list_clicked()
+                    else: # method == "PUT" or method == "DELETE"
+                        self._fetch_resources_data()
+
+                elif res and status == 500:
+                    msg = ""
+                    if isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
+                        msg = res["error"]["errmsg"]
+                        if "E11000 duplicate key error collection" in msg:
+                          msg = "Such IP address is already in use!"
+                    else:
+                        msg = "Code 500: Could not retrive error message."
+                    
+                    if method == "POST":
+                        self.workspace.submission_hint.setText(msg)
+                    else: # method == "GET" or method == "PUT" or method == "DELETE"
+                        self.list.hint.setText(msg)
+                else:
+                    msg = "Fail due to an implicit reason, please contact the developed team."
+                    if method == "POST":
+                        self.workspace.submission_hint.setText(msg)
+                    else: # method == "GET" or method == "PUT" or method == "DELETE"
+                        self.list.hint.setText(msg)
 
     # self-updated function by calling timer in main
     # can be used later on
@@ -1001,11 +1040,7 @@ class ResourcesList(QFrame):
         self.table.verticalHeader().setDefaultSectionSize(40)
 
         # fill initial # of rows with empty line
-        column = self.table.columnCount()
-        for r in range(RESOURCES_MAX_ROW):
-            self.table.insertRow(r)
-            for c in range(column):
-                self.table.setItem(r, c, QTableWidgetItem(""))
+        self.clean_table()
 
     # data format: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
     def add_data(self, data_obj):
@@ -1015,7 +1050,7 @@ class ResourcesList(QFrame):
         data = data_obj
         # data = data_obj["data"]
 
-        if self.current_row <= RESOURCES_MAX_ROW:
+        if self.current_row <= TABLE_INIT_ROW:
             add_row(self.table, column, data, self.current_row)
 
             self.current_row += 1
@@ -1033,7 +1068,7 @@ class ResourcesList(QFrame):
 
         # fill initial # of rows with empty line
         column = self.table.columnCount()
-        for r in range(RESOURCES_MAX_ROW):
+        for r in range(TABLE_INIT_ROW):
             self.table.insertRow(r)
             for c in range(column):
                 self.table.setItem(r, c, QTableWidgetItem(""))

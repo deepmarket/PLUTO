@@ -46,8 +46,8 @@ class Login(QDialog):
         self._init_ui()
         self._init_property()
 
-        # self.login.username.setText("test@test.com")
-        # self.login.pwd.setText("1234")
+        self.login.username.setText("test@test.com")
+        self.login.pwd.setText("1234")
 
     def _init_geometry(self):
         set_base_geometry(self, 580, 580, fixed=True)

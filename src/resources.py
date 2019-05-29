@@ -242,24 +242,28 @@ class Resources(MainView):
             status, res = api.post(resources_data)
 
             # response handle
-            if not status == 200:
-                # log(neat error message of some kind?)
-                if status == 500 and isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
+            if res and status == 200:
+                # add data to list
+                self._fetch_resources_data()
+                # switch page
+                self.on_list_clicked()
+
+            elif status == 500:
+                msg = ""
+                if isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
                     errmsg = res["error"]["errmsg"]
                     if "E11000 duplicate key error collection" in errmsg:
                         msg = "Such IP address is already in use!"
-                        self.workspace.verification_hint.setText(msg)
-                    # TODO: add more err case to here
                     else:
-                        msg = "Fail due to an implicit reason, please contact the developed team."
-                        self.workspace.submission_hint.setText(msg)
+                        msg = errmsg
+                else:
+                    msg = "Code 500: Could not retrive error message."
+                self.workspace.submission_hint.setText(msg)
 
             else:
-                # add data to list
-                self._fetch_resources_data()
-
-                # switch page
-                self.on_list_clicked()
+                msg = "Fail due to an implicit reason, please contact the developed team."
+                self.workspace.submission_hint.setText(msg)
+                
 
     # def on_ip_address_edit(self):
     #     self.workspace.verification_hint.setText("")
@@ -397,9 +401,7 @@ class Resources(MainView):
         model = self.list.table.selectionModel()
 
         # check if table has selected row
-        if not model.hasSelection():
-            pass
-        else:
+        if model.hasSelection():
             row = model.selectedRows()[0].row()
             column = self.list.table.columnCount()
 
@@ -415,20 +417,24 @@ class Resources(MainView):
                     with Api(endpoint) as api:
                         status, res = api.delete()
 
-                        if not status == 200:
-                            if res and status == 500 and "error" in res and "errmsg" in res["error"]:
-                                errmsg = res["error"]["errmsg"]
-                                self.table.hint.setText(errmsg)
-                        else:
+                        if res and status == 200:
                             self._fetch_resources_data()
+                        elif res and status == 500:
+                            msg = ""
+                            if isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
+                                msg = res["error"]["errmsg"]
+                            else:
+                                msg = "Code 500: Could not retrive error message."
+                            self.table.hint.setText(msg)
+                        else:
+                            msg = "Fail due to an implicit reason, please contact the developed team."
+                            self.table.hint.setText(msg)
 
     def on_update_button_clicked(self):
         model = self.list.table.selectionModel()
 
         # check if table has selected row
-        if not model.hasSelection():
-            pass
-        else:
+        if model.hasSelection():
             row = model.selectedRows()[0].row()
             column = self.list.table.columnCount()
 
@@ -439,37 +445,24 @@ class Resources(MainView):
                 question = Question("Are you sure you want to update this?")
 
                 if question.exec_():
-                    _id = None
+                    endpoint = "/resources/" + self.machines[row]["_id"]
 
-                    # remove from backend
-                    with Api("/resources") as api:
-                        # get all resources from api
-                        # for current user
-                        status, res = api.get()
+                    with Api(endpoint) as api:
+                        status, res = api.put()
 
                         if res and status == 200:
+                            self._fetch_resources_data()
 
-                            # consider ip_address would be a unique property for each resources
-                            # use ip_address to get the resource id
-                            # then process delete
-                            ip_address = self.list.table.item(row, 1).text()
-                            for rsrc in res["resources"]:
-                                if rsrc["ip_address"] == ip_address:
-                                    _id = rsrc["_id"]
-                    if _id:
-                        endpoint = "/resources/" + _id
-                        with Api(endpoint) as api:
-                            status, res = api.put()
-
-                            if not status == 200:
-                                if status == 500 and isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
-                                    errmsg = res["error"]["errmsg"]
-                                    self.table.hint.setText(errmsg)
+                        elif res and status == 500:
+                            msg = ""
+                            if isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
+                                msg = res["error"]["errmsg"]
                             else:
-                                self._fetch_resources_data()
-                    else:
-                        self.table.hint.setText("Fail to update resource, do not change ip_address")
-                        self._fetch_resources_data()
+                                msg = "Code 500: Could not retrive error message."
+                            self.table.hint.setText(msg)
+                        else:
+                            msg = "Fail due to an implicit reason, please contact the developed team."
+                            self.table.hint.setText(msg)
 
     # check if flags are all on, enable evaluate button
     def _check_flag(self):

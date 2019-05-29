@@ -410,33 +410,17 @@ class Resources(MainView):
                 question = Question("Are you sure you want to remove this?")
 
                 if question.exec_():
-                    _id = None
 
-                    # remove from backend
-                    with Api("/resources") as api:
-                        # get all resources from api for current user
-                        status, res = api.get()
+                    endpoint = "/resources/" + self.machines[row]["_id"]
+                    with Api(endpoint) as api:
+                        status, res = api.delete()
 
-                        if res and status == 200 and "resources" in res:
-
-                            # consider ip_address would be a unique property for each resources
-                            # use ip_address to get the resource id
-                            # then process delete
-                            ip_address = self.list.table.item(row, 1).text()
-                            for rsrc in res["resources"]:
-                                if rsrc["ip_address"] == ip_address:
-                                    _id = rsrc["_id"]
-                    if _id:
-                        endpoint = "/resources/" + _id
-                        with Api(endpoint) as api:
-                            status, res = api.delete()
-
-                            if not status == 200:
-                                if res and status == 500 and "error" in res and "errmsg" in res["error"]:
-                                    errmsg = res["error"]["errmsg"]
-                                    self.table.hint.setText(errmsg)
-                            else:
-                                self._fetch_resources_data()
+                        if not status == 200:
+                            if res and status == 500 and "error" in res and "errmsg" in res["error"]:
+                                errmsg = res["error"]["errmsg"]
+                                self.table.hint.setText(errmsg)
+                        else:
+                            self._fetch_resources_data()
 
     def on_update_button_clicked(self):
         model = self.list.table.selectionModel()
@@ -1060,3 +1044,7 @@ class ResourcesList(QFrame):
             self.table.insertRow(r)
             for c in range(column):
                 self.table.setItem(r, c, QTableWidgetItem(""))
+
+                # empty row cannot be interacted with
+                # TODO: need to be discussed later
+                self.table.item(r, c).setFlags(Qt.NoItemFlags)

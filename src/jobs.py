@@ -152,8 +152,7 @@ class Jobs(MainView):
     def update_workspace(self):
         with Api("/pricing")as api:
             status, res = api.get()
-
-            if res['success']:
+            if isinstance(res, dict) and "prices" in res:
                 price_dat = res['prices']
             else:
                 price_dat = []
@@ -173,8 +172,8 @@ class Jobs(MainView):
 
                 # TODO: load time scheme
                 if not price_dat:
-                    for label in labels:
-                        label.setText("Error")
+                    for j in range(len(labels)):
+                        labels[j].setText('Error')
                 else:
                     dat = price_dat[i]
                     dat = [round(dat['cpus'], 6), round(dat['gpus'], 6), round(dat['memory'], 6), round(dat['disk_space'], 6)]

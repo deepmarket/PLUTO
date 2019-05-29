@@ -488,13 +488,7 @@ class Resources(MainView):
 
     # check if flags are all on, enable evaluate button
     def _check_flag(self):
-        # if self.if_verify and self.machine_name_check and self.cpu_check and self.core_check and self.ram_check:
-        if all([self.if_verify,
-                self.machine_name_check,
-                self.cpu_check,
-                self.core_check,
-                self.ram_check]):
-
+        if self.if_verify and self.machine_name_check and self.cpu_check and self.core_check and self.ram_check:
             self.workspace.enable_evaluate_button()
         else:
             self.workspace.disable_evaluate_button()
@@ -508,7 +502,6 @@ class Resources(MainView):
 
             # load data to list
             # data format: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
-            # we have to check if res is dict, it could be None if api call failed
             if status == 200 and isinstance(res, dict) and "resources" in res:
                 for rsrc in res["resources"]:
                     self.list.add_data([rsrc['machine_name'],
@@ -523,8 +516,8 @@ class Resources(MainView):
     def _fetch_ip_address(self):
         from socket import socket, AF_INET, SOCK_DGRAM
 
-        # Talk to 1.1.1.1 over https
-        server_and_port = ('1.1.1.1', 443)
+        # Talk to 8.8.8.8 over https
+        server_and_port = ('8.8.8.8', 443)
 
         # IPv4 address family and single packet UDP protocol
         sock = socket(AF_INET, SOCK_DGRAM)
@@ -1006,11 +999,8 @@ class ResourcesList(QFrame):
         self.table.setHorizontalHeaderLabels(table_headers)
         self.table.verticalHeader().setVisible(False)
 
-        # for i in range(len(table_headers_width)):
-
-        for i, table_header_width in enumerate(table_headers_width):
-            self.table.setColumnWidth(i, table_header_width)
-
+        for i in range(len(table_headers_width)):
+            self.table.setColumnWidth(i, table_headers_width[i])
         self.table.horizontalHeader().setStretchLastSection(True)
 
         # Set table property,

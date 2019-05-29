@@ -264,6 +264,75 @@ class Resources(MainView):
                 msg = "Fail due to an implicit reason, please contact the developed team."
                 self.workspace.submission_hint.setText(msg)
                 
+    def on_refresh_button_clicked(self):
+        self._fetch_resources_data()
+
+    def on_remove_button_clicked(self):
+        model = self.list.table.selectionModel()
+
+        # check if table has selected row
+        if model.hasSelection():
+            row = model.selectedRows()[0].row()
+            column = self.list.table.columnCount()
+
+            # check if row has value
+            if self.list.table.item(row, column-1).text() is not "":
+
+                # ask if user want to delete rows
+                question = Question("Are you sure you want to remove this?")
+
+                if question.exec_():
+
+                    endpoint = "/resources/" + self.machines[row]["_id"]
+                    with Api(endpoint) as api:
+                        status, res = api.delete()
+
+                        if res and status == 200:
+                            self._fetch_resources_data()
+                        elif res and status == 500:
+                            msg = ""
+                            if isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
+                                msg = res["error"]["errmsg"]
+                            else:
+                                msg = "Code 500: Could not retrive error message."
+                            self.table.hint.setText(msg)
+                        else:
+                            msg = "Fail due to an implicit reason, please contact the developed team."
+                            self.table.hint.setText(msg)
+
+    def on_update_button_clicked(self):
+        model = self.list.table.selectionModel()
+
+        # check if table has selected row
+        if model.hasSelection():
+            row = model.selectedRows()[0].row()
+            column = self.list.table.columnCount()
+
+            # check if row has value
+            if self.list.table.item(row, column-1).text() is not "":
+
+                # ask if user want to delete rows
+                question = Question("Are you sure you want to update this?")
+
+                if question.exec_():
+                    endpoint = "/resources/" + self.machines[row]["_id"]
+
+                    with Api(endpoint) as api:
+                        status, res = api.put()
+
+                        if res and status == 200:
+                            self._fetch_resources_data()
+
+                        elif res and status == 500:
+                            msg = ""
+                            if isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
+                                msg = res["error"]["errmsg"]
+                            else:
+                                msg = "Code 500: Could not retrive error message."
+                            self.table.hint.setText(msg)
+                        else:
+                            msg = "Fail due to an implicit reason, please contact the developed team."
+                            self.table.hint.setText(msg)
 
     # def on_ip_address_edit(self):
     #     self.workspace.verification_hint.setText("")
@@ -394,75 +463,6 @@ class Resources(MainView):
                     self.ram_check = True
                     self._check_flag()
 
-    def on_refresh_button_clicked(self):
-        self._fetch_resources_data()
-
-    def on_remove_button_clicked(self):
-        model = self.list.table.selectionModel()
-
-        # check if table has selected row
-        if model.hasSelection():
-            row = model.selectedRows()[0].row()
-            column = self.list.table.columnCount()
-
-            # check if row has value
-            if self.list.table.item(row, column-1).text() is not "":
-
-                # ask if user want to delete rows
-                question = Question("Are you sure you want to remove this?")
-
-                if question.exec_():
-
-                    endpoint = "/resources/" + self.machines[row]["_id"]
-                    with Api(endpoint) as api:
-                        status, res = api.delete()
-
-                        if res and status == 200:
-                            self._fetch_resources_data()
-                        elif res and status == 500:
-                            msg = ""
-                            if isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
-                                msg = res["error"]["errmsg"]
-                            else:
-                                msg = "Code 500: Could not retrive error message."
-                            self.table.hint.setText(msg)
-                        else:
-                            msg = "Fail due to an implicit reason, please contact the developed team."
-                            self.table.hint.setText(msg)
-
-    def on_update_button_clicked(self):
-        model = self.list.table.selectionModel()
-
-        # check if table has selected row
-        if model.hasSelection():
-            row = model.selectedRows()[0].row()
-            column = self.list.table.columnCount()
-
-            # check if row has value
-            if self.list.table.item(row, column-1).text() is not "":
-
-                # ask if user want to delete rows
-                question = Question("Are you sure you want to update this?")
-
-                if question.exec_():
-                    endpoint = "/resources/" + self.machines[row]["_id"]
-
-                    with Api(endpoint) as api:
-                        status, res = api.put()
-
-                        if res and status == 200:
-                            self._fetch_resources_data()
-
-                        elif res and status == 500:
-                            msg = ""
-                            if isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
-                                msg = res["error"]["errmsg"]
-                            else:
-                                msg = "Code 500: Could not retrive error message."
-                            self.table.hint.setText(msg)
-                        else:
-                            msg = "Fail due to an implicit reason, please contact the developed team."
-                            self.table.hint.setText(msg)
 
     # check if flags are all on, enable evaluate button
     def _check_flag(self):

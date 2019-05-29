@@ -412,12 +412,10 @@ class Resources(MainView):
 
                     # remove from backend
                     with Api("/resources") as api:
-                        # get all resources from api
-                        # TODO: consider to have an endpoint get only resources
-                        # for current user
+                        # get all resources from api for current user
                         status, res = api.get()
 
-                        if status == 200 and isinstance(res, dict) and "resources" in res:
+                        if res and status == 200 and "resources" in res:
 
                             # consider ip_address would be a unique property for each resources
                             # use ip_address to get the resource id
@@ -432,7 +430,7 @@ class Resources(MainView):
                             status, res = api.delete()
 
                             if not status == 200:
-                                if status == 500 and isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
+                                if res and status == 500 and "error" in res and "errmsg" in res["error"]:
                                     errmsg = res["error"]["errmsg"]
                                     self.table.hint.setText(errmsg)
                             else:
@@ -510,8 +508,8 @@ class Resources(MainView):
 
             # load data to list
             # data format: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
-            # if status == 200 and isinstance(res, dict) and "resources" in res:
-            if status == 200 and "resources" in res:
+            # we have to check if res is dict, it could be None if api call failed
+            if status == 200 and isinstance(res, dict) and "resources" in res:
                 for rsrc in res["resources"]:
                     self.list.add_data([rsrc['machine_name'],
                                         rsrc['ip_address'],

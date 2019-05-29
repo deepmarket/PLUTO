@@ -199,12 +199,12 @@ class Jobs(MainView):
 
     # input data format: [job_id, workers, cores, memory, price, status, logs]
     def on_submit_clicked(self):
-        workers = self.workspace.workers.text()
-        cores = self.workspace.cores.text()
-        memory = self.workspace.memory.text()
-        source_files = self.workspace.source_file.text()
-        input_files = self.workspace.input_file.text()
-        expected_time = self.workspace.expect_time.text()
+        workers: int = self.workspace.workers.text()
+        cores: int = self.workspace.cores.text()
+        memory: int = self.workspace.memory.text()
+        source_files: str = self.workspace.source_file.text()
+        input_files: str = self.workspace.input_file.text()
+        expected_time: str = self.workspace.expect_time.text()
         # price = (float(cores) * float(workers)) * PRICING_CONSTANT
 
         # find the selected frame

@@ -13,7 +13,9 @@ install:
 
 script:
   - python -m unittest test/test_api.py
-  - behave test/features
+  # xvfb only runs on xenial
+  # See: https://docs.travis-ci.com/user/gui-and-headless-browsers/#using-the-xvfb-run-wrapper
+  - xvfb-run behave test/features
 
 matrix:
   include:
@@ -35,27 +37,27 @@ matrix:
     # MacOs
     # See https://docs.travis-ci.com/user/reference/osx/#os-x-version for details
 
-    # 10.11.latest
-    - os: osx
-      language: generic
-      osx_image: xcode8
-
-    # 10.12.latest
-    - os: osx
-      language: generic
-      osx_image: xcode9.2
-
-    # 10.13.latest
-    - os: osx
-      language: generic
-      osx_image: xcode10
-
-
-  allow_failures:
-    # 10.10
-    - os: osx
-      language: generic
-      osx_image: xcode6.4
+#    # 10.11.latest
+#    - os: osx
+#      language: generic
+#      osx_image: xcode8
+#
+#    # 10.12.latest
+#    - os: osx
+#      language: generic
+#      osx_image: xcode9.2
+#
+#    # 10.13.latest
+#    - os: osx
+#      language: generic
+#      osx_image: xcode10
+#
+#
+#  allow_failures:
+#    # 10.10
+#    - os: osx
+#      language: generic
+#      osx_image: xcode6.4
 
 
 # Perform manual install of 3.6 for OS X

@@ -14,6 +14,7 @@ def api_is_up(context):
     # port = Api().port
 
     from requests import get
+    status_request = str(get(f"http://{domain}:{port}/api/v1/").text.encode('utf-8')).lower()
 
     try:
         status_request = str(get(f"http://{domain}:{port}/api/v1/").text.encode('utf-8')).lower()

@@ -1,7 +1,7 @@
 import requests as req
 
-from json import JSONDecodeError
-from os import environ, path, curdir, remove
+from json import loads, dumps, JSONDecodeError
+from os import path, curdir, remove
 
 from requests.exceptions import ConnectionError
 
@@ -56,7 +56,6 @@ class Api(object):
     def __enter__(self):
         self.store = CredentialManager(self.store_path)
         self.token = self.store.get()
-        self.headers = {"X-access-token": self.token}
 
         return self
 
@@ -66,17 +65,19 @@ class Api(object):
 
     def get(self):
 
+        headers = {"x-access-token": self.token}
         try:
-            res: req.Response = req.get(self.url, headers=self.headers)
+            res: req.Response = req.get(self.url, headers=headers)
             return res.status_code, res.json()
         except (ConnectionError, JSONDecodeError) as err:
-
+            # log(err)
             return None, None
 
     def post(self, payload: dict={}):
 
+        headers = {"x-access-token": self.token}
         try:
-            res: req.Response = req.post(self.url, payload, headers=self.headers)
+            res: req.Response = req.post(self.url, payload, headers=headers)
             res_json: dict = res.json()
 
             if res_json.get('token'):
@@ -85,25 +86,27 @@ class Api(object):
 
             return res.status_code, res_json
         except (ConnectionError, JSONDecodeError) as err:
-
+            # log(err)
             return None, None
 
     def put(self, payload: dict={}):
 
         try:
-            res: req.Response = req.put(self.url, payload, headers=self.headers)
+            headers = {"x-access-token": self.token}
+            res: req.Response = req.put(self.url, payload, headers=headers)
             return res.status_code, res.json()
 
         except (ConnectionError, JSONDecodeError) as err:
-
+            # log(err)
             return None, None
 
     def delete(self):
 
         try:
-            res: req.Response = req.delete(self.url, headers=self.headers)
+            headers = {"x-access-token": self.token}
+            res: req.Response = req.delete(self.url, headers=headers)
             return res.status_code, res.json()
 
         except (ConnectionError, JSONDecodeError) as err:
-
+            # log(err)
             return None, None

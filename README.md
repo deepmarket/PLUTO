@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/shared-systems/PLUTO.svg?branch=develop)](https://travis-ci.org/shared-systems/PLUTO)
+[![Build Status](https://travis-ci.org/deepmarket/PLUTO.svg?branch=develop)](https://travis-ci.org/deepmarket/PLUTO)
 
 #### Synopsis
 **Deep Share** is an open source platform designed to allow 

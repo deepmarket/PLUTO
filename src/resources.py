@@ -1,35 +1,9 @@
 """
-    The following items can be interacted:
 
-    class ResourcesWorkspace:
+    The interface implemented at this file provide the following features:
+    1. ResourcesWorkspace: Allow user add current machine to resources pool
+    2. ResourcesList: View the existing machines that are lent
 
-        self.verification_hint = None               # param string
-        self.planning_hint = None                   # param string
-
-        self.auto_price_box = None                  # frame
-        self.offering_price_box = None              # frame
-
-        self.ip_address = None                      # input string
-        self.machine_name = None                    # input string
-        self.cpu_gpu = None                         # input number
-        self.cores = None                           # input number
-        self.ram = None                             # input number
-
-        self.pricing_constant = PRICING_CONSTANT    # param number
-        self.auto_price = 0                         # param number
-        self.offering_price = 0                     # param number
-
-        self.verify_button = None                   # button
-        self.change_button = None                   # button
-        self.evaluate_button = None                 # button
-        self.auto_price_button = None               # button
-        self.offering_price_button = None           # button
-        self.submit_button = None                   # button
-
-    class ResourcesList:
-
-        self.table = None           # table widget
-        self.current_row = 0        # param number
 """
 
 from psutil import cpu_freq, cpu_count, virtual_memory
@@ -50,25 +24,27 @@ class Resources(MainView):
         self.workspace = None                       # widget
         self.list = None                            # widget
 
-        self.workspace_button = None                # button
-        self.list_button = None                     # button
-        self.stack = None                           # layout
+        self.workspace_button = None                # button widget
+        self.list_button = None                     # button widget
+        self.stack = None                           # widget layout
 
-        self.current_cpu = 0                        # param number
-        self.current_core = 0                       # param number
-        self.current_ram = 0                        # param number
+        self.current_cpu:int = 0                        # number
+        self.current_core:int = 0                       # number
+        self.current_ram:int = 0                        # number
 
-        # self.if_verify = False                    # flag
-        # self.ip_check = False                     # flag
-        self.machine_name_check = False             # flag
-        # self.cpu_check = False                    # flag
-        self.cpu_check = True                       # cpu check is disable in this version
-        self.core_check = False                     # flag
-        self.ram_check = False                      # flag
-        self.price_selected = 0                     # flag
+        # self.if_verify:bool = False                    # flag
+        # self.ip_check:bool = False                     # flag
+        self.machine_name_check:bool = False             # flag
+        # self.cpu_check:bool = False                    # flag
+        self.cpu_check:bool = True                       # cpu check is disable in this version
+        self.core_check:bool = False                     # flag
+        self.ram_check:bool = False                      # flag
+        self.price_selected:int = 0                     # flag
 
-        self.auto_price = 0                         # flag
-        self.offering_price = 0                     # flag
+        self.auto_price:int = 0                         # flag
+        self.offering_price:int = 0                     # flag
+
+        self.machines: list = None                         # list
 
         self._init_ui()
         self.setStyleSheet(page_style)
@@ -133,14 +109,16 @@ class Resources(MainView):
         self.list.update_button.clicked.connect(self.on_update_button_clicked)
 
     def on_workspace_clicked(self):
-        self.workspace_button.setStyleSheet(page_menu_button_active)
-        self.list_button.setStyleSheet(page_menu_button)
-        self.stack.setCurrentIndex(0)
+        if self.stack.currentIndex() != 0:
+            self.workspace_button.setStyleSheet(page_menu_button_active)
+            self.list_button.setStyleSheet(page_menu_button)
+            self.stack.setCurrentIndex(0)
 
     def on_list_clicked(self):
-        self.workspace_button.setStyleSheet(page_menu_button)
-        self.list_button.setStyleSheet(page_menu_button_active)
-        self.stack.setCurrentIndex(1)
+        if self.stack.currentIndex() != 1:
+            self.workspace_button.setStyleSheet(page_menu_button)
+            self.list_button.setStyleSheet(page_menu_button_active)
+            self.stack.setCurrentIndex(1)
 
         self._fetch_resources_data()
 
@@ -151,28 +129,6 @@ class Resources(MainView):
 
         self.workspace.enable_machine_config(self.current_cpu, self.current_core, self.current_ram)
         self.workspace.enable_planning()
-
-    # def on_change_button_clicked(self):
-    #     self.workspace.clean_hint()
-    #
-    #     # reset everything
-    #     if self.if_verify:
-    #         # reset flag
-    #         self.if_verify = False
-    #         self.machine_name_check = False
-    #         self.cpu_check = False
-    #         self.core_check = False
-    #         self.ram_check = False
-    #
-    #         # clean hint
-    #         self.workspace.planning_hint.setText("")
-    #         self.workspace.verification_hint.setText("")
-    #
-    #         # enable ip_address input, disable machine_config, planning
-    #         self.workspace.enable_ip_address()
-    #         self.workspace.disable_machine_config()
-    #         self.workspace.disable_planning()
-    #         self.workspace.disable_evaluate_button()
 
     def on_evaluate_button_clicked(self):
 
@@ -225,39 +181,31 @@ class Resources(MainView):
         else:
             price = self.offering_price
 
-        with Api("/resources") as api:
+        resources_data = {
+            "machine_name": machine_name,
+            "ip_address": ip_address,
+            "ram": ram,
+            "cores": cores,
+            "cpus": cpu_gpu,
+            "price": price,
+            "status": "ALIVE"
+        }
 
-            resources_data = {
-                "machine_name": machine_name,
-                "ip_address": ip_address,
-                "ram": ram,
-                "cores": cores,
-                "cpus": cpu_gpu,
-                "price": price,
-                "status": "ALIVE"
-            }
-
-            status, res = api.post(resources_data)
-
-            # response handle
-            if not status == 200:
-                # log(neat error message of some kind?)
-                if status == 500 and isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
-                    errmsg = res["error"]["errmsg"]
-                    if "E11000 duplicate key error collection" in errmsg:
-                        msg = "Such IP address is already in use!"
-                        self.workspace.verification_hint.setText(msg)
-                    # TODO: add more err case to here
-                    else:
-                        msg = "Fail due to an implicit reason, please contact the developed team."
-                        self.workspace.submission_hint.setText(msg)
+        self._api_call("POST", "/resources", dat=resources_data)
+                
+    def on_refresh_button_clicked(self):
+        self._reset_list_hint()
+        self._fetch_resources_data()
 
             else:
                 # add data to list
                 self._fetch_resources_data()
 
-                # switch page
-                self.on_list_clicked()
+                # ask if user want to delete rows
+                question = Question(f"Are you sure you want to update {self.list.table.item(row, 0).text()}?")
+
+                if question.exec_():
+                    self._api_call("PUT", f"/resources/{self.machines[row]['_id']}", self.machines[row])
 
     # def on_ip_address_edit(self):
     #     self.workspace.verification_hint.setText("")
@@ -273,7 +221,7 @@ class Resources(MainView):
     #         self.ip_check = True
 
     def on_machine_edit(self):
-        self._reset_hint()
+        self._reset_workspace_hint()
 
         if self.if_verify:
             user_input = self.workspace.machine_name.text()
@@ -286,7 +234,7 @@ class Resources(MainView):
 
     # disable for this version
     def on_cpu_edit(self):
-        self._reset_hint()
+        self._reset_workspace_hint()
 
         if self.if_verify:
             user_input = self.workspace.cpu_gpu.text()
@@ -320,7 +268,7 @@ class Resources(MainView):
                     self._check_flag()
 
     def on_core_edit(self):
-        self._reset_hint()
+        self._reset_workspace_hint()
 
         if self.if_verify:
             user_input = self.workspace.cores.text()
@@ -354,7 +302,7 @@ class Resources(MainView):
                     self._check_flag()
 
     def on_ram_edit(self):
-        self._reset_hint()
+        self._reset_workspace_hint()
 
         if self.if_verify:
             user_input = self.workspace.ram.text()
@@ -388,115 +336,9 @@ class Resources(MainView):
                     self.ram_check = True
                     self._check_flag()
 
-    def on_refresh_button_clicked(self):
-        self._fetch_resources_data()
-
-    def on_remove_button_clicked(self):
-        model = self.list.table.selectionModel()
-
-        # check if table has selected row
-        if not model.hasSelection():
-            pass
-        else:
-            row = model.selectedRows()[0].row()
-            column = self.list.table.columnCount()
-
-            # check if row has value
-            if self.list.table.item(row, column-1).text() is not "":
-
-                # ask if user want to delete rows
-                question = Question("Are you sure you want to remove this?")
-
-                if question.exec_():
-                    _id = None
-
-                    # remove from backend
-                    with Api("/resources") as api:
-                        # get all resources from api
-                        # TODO: consider to have an endpoint get only resources
-                        # for current user
-                        status, res = api.get()
-
-                        if status == 200 and isinstance(res, dict) and "resources" in res:
-
-                            # consider ip_address would be a unique property for each resources
-                            # use ip_address to get the resource id
-                            # then process delete
-                            ip_address = self.list.table.item(row, 1).text()
-                            for rsrc in res["resources"]:
-                                if rsrc["ip_address"] == ip_address:
-                                    _id = rsrc["_id"]
-                    if _id:
-                        endpoint = "/resources/" + _id
-                        with Api(endpoint) as api:
-                            status, res = api.delete()
-
-                            if not status == 200:
-                                if status == 500 and isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
-                                    errmsg = res["error"]["errmsg"]
-                                    self.table.hint.setText(errmsg)
-                            else:
-                                self._fetch_resources_data()
-
-    def on_update_button_clicked(self):
-        model = self.list.table.selectionModel()
-
-        # check if table has selected row
-        if not model.hasSelection():
-            pass
-        else:
-            row = model.selectedRows()[0].row()
-            column = self.list.table.columnCount()
-
-            # check if row has value
-            if self.list.table.item(row, column-1).text() is not "":
-
-                # ask if user want to delete rows
-                question = Question("Are you sure you want to update this?")
-
-                if question.exec_():
-                    _id = None
-
-                    # remove from backend
-                    with Api("/resources") as api:
-                        # get all resources from api
-                        # TODO: consider to have an endpoint get only resources
-                        # for current user
-                        status, res = api.get()
-
-                        if status == 200 and isinstance(res, dict) and "resources" in res:
-
-                            # consider ip_address would be a unique property for each resources
-                            # use ip_address to get the resource id
-                            # then process delete
-                            ip_address = self.list.table.item(row, 1).text()
-                            for rsrc in res["resources"]:
-                                if rsrc["ip_address"] == ip_address:
-                                    _id = rsrc["_id"]
-                    if _id:
-                        endpoint = "/resources/" + _id
-                        with Api(endpoint) as api:
-                            status, res = api.put()
-
-                            if not status == 200:
-                                if status == 500 and isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
-                                    errmsg = res["error"]["errmsg"]
-                                    self.table.hint.setText(errmsg)
-                            else:
-                                self._fetch_resources_data()
-                    else:
-                        self.table.hint.setText("Fail to update resource, do not change ip_address")
-                        self._fetch_resources_data()
-
     # check if flags are all on, enable evaluate button
     def _check_flag(self):
-        # if self.if_verify and self.machine_name_check and self.cpu_check and self.core_check and self.ram_check:
-        if all([self.if_verify,
-                self.machine_name_check,
-                self.cpu_check,
-                self.core_check,
-                self.ram_check]):
-
+        if self.if_verify and self.machine_name_check and self.cpu_check and self.core_check and self.ram_check:
             self.workspace.enable_evaluate_button()
         else:
             self.workspace.disable_evaluate_button()
@@ -505,28 +347,14 @@ class Resources(MainView):
     def _fetch_resources_data(self):
         self.list.clean_table()
 
-        with Api("/resources") as api:
-            status, res = api.get()
-
-            # load data to list
-            # data format: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
-            # if status == 200 and isinstance(res, dict) and "resources" in res:
-            if status == 200 and "resources" in res:
-                for rsrc in res["resources"]:
-                    self.list.add_data([rsrc['machine_name'],
-                                        rsrc['ip_address'],
-                                        str(rsrc['cpus']),
-                                        str(rsrc['cores']),
-                                        str(rsrc['ram']),
-                                        str(rsrc['price']),
-                                        rsrc['status']])
+        self._api_call("GET", "/resources")
 
     # load the ip address from the running machine
     def _fetch_ip_address(self):
         from socket import socket, AF_INET, SOCK_DGRAM
 
-        # Talk to 1.1.1.1 over https
-        server_and_port = ('1.1.1.1', 443)
+        # Talk to 8.8.8.8 over https
+        server_and_port = ('8.8.8.8', 443)
 
         # IPv4 address family and single packet UDP protocol
         sock = socket(AF_INET, SOCK_DGRAM)
@@ -538,10 +366,75 @@ class Resources(MainView):
 
         self.if_verify = True
 
-    def _reset_hint(self):
+    def _reset_workspace_hint(self):
         self.workspace.verification_hint.setText("")
         self.workspace.planning_hint.setText("")
         self.workspace.submission_hint.setText("")
+    
+    def _reset_list_hint(self):
+        self.list.hint.setText("")
+
+    def _api_call(self, method, endpoint, dat=None):
+        if method.upper() in ["GET", "POST", "PUT", "DELETE"]:
+            status, res = None, None
+
+            with Api(endpoint) as api:
+                if method == "GET":
+                    status, res = api.get()
+                elif method == "POST":
+                    status, res = api.post(dat)
+                elif method == "PUT":
+                    status, res = api.put(dat)
+                else:
+                    status, res = api.delete()
+                
+                if res and status == 200:
+                    if method == "GET":
+                        # clean local buffer
+                        self.machines = []
+
+                        for rsrc in res["resources"]:
+                            # store remote machine info locally
+                            self.machines.append(rsrc)
+                            
+                            self.list.add_data([rsrc['machine_name'],
+                                                rsrc['ip_address'],
+                                                str(rsrc['cpus']),
+                                                str(rsrc['cores']),
+                                                str(rsrc['ram']),
+                                                str(rsrc['price']),
+                                                rsrc['status']])
+                    elif method == "POST":
+                        # add data to list
+                        self._fetch_resources_data()
+                        # switch page
+                        self.on_list_clicked()
+                    # method == "PUT" or method == "DELETE"
+                    else:
+                        self._fetch_resources_data()
+
+                elif res and status == 500:
+                    msg = ""
+                    if res and "error" in res and "errmsg" in res["error"]:
+                        msg = res["error"]["errmsg"]
+                        if "E11000" in msg:
+                            msg = "This IP address is already in use. Please use a different one."
+                    else:
+                        msg = "There was an unknown error from the server. Please try again."
+                    
+                    if method == "POST":
+                        self.workspace.submission_hint.setText(msg)
+                    # method == "GET" or method == "PUT" or method == "DELETE"
+                    else:
+                        self.list.hint.setText(msg)
+                else:
+                    if method == "POST":
+                        msg = "There was an unknown error while trying to add this resource. Please try again."
+                        self.workspace.submission_hint.setText(msg)
+                    # method == "GET" or method == "PUT" or method == "DELETE"
+                    else:
+                        msg = "There was an unknown error while trying to update this resource. Please try again."
+                        self.list.hint.setText(msg)
 
     # self-updated function by calling timer in main
     # can be used later on
@@ -555,28 +448,28 @@ class ResourcesWorkspace(QFrame):
         super(QFrame, self).__init__(*args, **kwargs)
 
         # variable
-        self.verification_hint = None               # param string
-        self.planning_hint = None                   # param string
+        self.verification_hint = None               # text widget
+        self.planning_hint = None                   # text widget
 
-        self.current_cpu_box = None                 # frame
-        self.current_core_box = None                # frame
-        self.current_ram_box = None                 # frame
+        self.current_cpu_box = None                 # frame widget
+        self.current_core_box = None                # frame widget
+        self.current_ram_box = None                 # frame widget
 
-        self.auto_price_box = None                  # frame
-        self.offering_price_box = None              # frame
+        self.auto_price_box = None                  # frame widget
+        self.offering_price_box = None              # frame widget
 
-        self.ip_address = None                      # input string
-        self.machine_name = None                    # input string
-        self.cpu_gpu = None                         # input number
-        self.cores = None                           # input number
-        self.ram = None                             # input number
+        self.ip_address = None                      # input widget
+        self.machine_name = None                    # input widget
+        self.cpu_gpu = None                         # input widget
+        self.cores = None                           # input widget
+        self.ram = None                             # input widget
 
-        self.verify_button = None                   # button
-        # self.change_button = None                   # button
-        self.evaluate_button = None                 # button
-        self.auto_price_button = None               # button
-        self.offering_price_button = None           # button
-        self.submit_button = None                   # button
+        self.verify_button = None                   # button widget
+        # self.change_button = None                   # button widget
+        self.evaluate_button = None                 # button widget
+        self.auto_price_button = None               # button widget
+        self.offering_price_button = None           # button widget
+        self.submit_button = None                   # button widget
 
         self._init_ui()
         self.setStyleSheet(page_style)
@@ -957,7 +850,7 @@ class ResourcesList(QFrame):
         self.update_button = None           # button
         self.hint = None                    # label
 
-        self.current_row = 0                # param number
+        self.current_row:int = 0                # param number
 
         self._init_ui()
         self.setStyleSheet(page_style)
@@ -1008,11 +901,8 @@ class ResourcesList(QFrame):
         self.table.setHorizontalHeaderLabels(table_headers)
         self.table.verticalHeader().setVisible(False)
 
-        # for i in range(len(table_headers_width)):
-
-        for i, table_header_width in enumerate(table_headers_width):
-            self.table.setColumnWidth(i, table_header_width)
-
+        for i in range(len(table_headers_width)):
+            self.table.setColumnWidth(i, table_headers_width[i])
         self.table.horizontalHeader().setStretchLastSection(True)
 
         # Set table property,
@@ -1030,11 +920,7 @@ class ResourcesList(QFrame):
         self.table.verticalHeader().setDefaultSectionSize(40)
 
         # fill initial # of rows with empty line
-        column = self.table.columnCount()
-        for r in range(RESOURCES_MAX_ROW):
-            self.table.insertRow(r)
-            for c in range(column):
-                self.table.setItem(r, c, QTableWidgetItem(""))
+        self.clean_table()
 
     # data format: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
     def add_data(self, data_obj):
@@ -1066,3 +952,7 @@ class ResourcesList(QFrame):
             self.table.insertRow(r)
             for c in range(column):
                 self.table.setItem(r, c, QTableWidgetItem(""))
+
+                # empty row cannot be interacted with
+                # TODO: need to be discussed later
+                self.table.item(r, c).setFlags(Qt.NoItemFlags)

@@ -193,44 +193,6 @@ class Resources(MainView):
         }
 
         self._api_call("POST", "/resources", dat=resources_data)
-
-        # TODO: clean up the following comment code, if PR pass
-        # with Api("/resources") as api:
-
-        #     resources_data = {
-        #         "machine_name": machine_name,
-        #         "ip_address": ip_address,
-        #         "ram": ram,
-        #         "cores": cores,
-        #         "cpus": cpu_gpu,
-        #         "price": price,
-        #         "status": "ALIVE"
-        #     }
-
-        #     status, res = api.post(resources_data)
-
-        #     # response handle
-        #     if res and status == 200:
-        #         # add data to list
-        #         self._fetch_resources_data()
-        #         # switch page
-        #         self.on_list_clicked()
-
-        #     elif status == 500:
-        #         msg = ""
-        #         if isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
-        #             errmsg = res["error"]["errmsg"]
-        #             if "E11000 duplicate key error collection" in errmsg:
-        #                 msg = "Such IP address is already in use!"
-        #             else:
-        #                 msg = errmsg
-        #         else:
-        #             msg = "Code 500: Could not retrive error message."
-        #         self.workspace.submission_hint.setText(msg)
-
-        #     else:
-        #         msg = "Fail due to an implicit reason, please contact the developed team."
-        #         self.workspace.submission_hint.setText(msg)
                 
     def on_refresh_button_clicked(self):
         self._reset_list_hint()
@@ -247,30 +209,12 @@ class Resources(MainView):
             # check if row has value
             if self.list.table.item(row, column-1).text() is not "":
 
-                # ask if user want to delete rows
-                question = Question("Are you sure you want to remove this?")
+                # Column 0 holds the name of the resource
+                question = Question(f"Are you sure you want to remove {self.list.table.item(row, 0).text()} "
+                                    f"from your resources? This action cannot be undone.")
 
                 if question.exec_():
-
-                    endpoint = "/resources/" + self.machines[row]["_id"]
-                    self._api_call("DELETE", endpoint)
-
-                    # TODO: clean up the following comment code, if PR pass
-                    # with Api(endpoint) as api:
-                    #     status, res = api.delete()
-
-                    #     if res and status == 200:
-                    #         self._fetch_resources_data()
-                    #     elif res and status == 500:
-                    #         msg = ""
-                    #         if isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
-                    #             msg = res["error"]["errmsg"]
-                    #         else:
-                    #             msg = "Code 500: Could not retrive error message."
-                    #         self.table.hint.setText(msg)
-                    #     else:
-                    #         msg = "Fail due to an implicit reason, please contact the developed team."
-                    #         self.table.hint.setText(msg)
+                    self._api_call("DELETE", f"/resources/{self.machines[row]['_id']}")
 
     def on_update_button_clicked(self):
         model = self.list.table.selectionModel()
@@ -284,29 +228,10 @@ class Resources(MainView):
             if self.list.table.item(row, column-1).text() is not "":
 
                 # ask if user want to delete rows
-                question = Question("Are you sure you want to update this?")
+                question = Question(f"Are you sure you want to update {self.list.table.item(row, 0).text()}?")
 
                 if question.exec_():
-                    endpoint = "/resources/" + self.machines[row]["_id"]
-
-                    self._api_call("PUT", endpoint)
-                    # TODO: clean up the following comment code, if PR pass
-                    # with Api(endpoint) as api:
-                    #     status, res = api.put()
-
-                    #     if res and status == 200:
-                    #         self._fetch_resources_data()
-
-                    #     elif res and status == 500:
-                    #         msg = ""
-                    #         if isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
-                    #             msg = res["error"]["errmsg"]
-                    #         else:
-                    #             msg = "Code 500: Could not retrive error message."
-                    #         self.table.hint.setText(msg)
-                    #     else:
-                    #         msg = "Fail due to an implicit reason, please contact the developed team."
-                    #         self.table.hint.setText(msg)
+                    self._api_call("PUT", f"/resources/{self.machines[row]['_id']}", self.machines[row])
 
     # def on_ip_address_edit(self):
     #     self.workspace.verification_hint.setText("")
@@ -403,7 +328,7 @@ class Resources(MainView):
                     self._check_flag()
 
     def on_ram_edit(self):
-        self._reset_hint()
+        self._reset_workspace_hint()
 
         if self.if_verify:
             user_input = self.workspace.ram.text()
@@ -449,27 +374,6 @@ class Resources(MainView):
         self.list.clean_table()
 
         self._api_call("GET", "/resources")
-        # TODO: clean up the following comment code, if PR pass
-        # clean buffer
-        # self.machines = []
-
-        # with Api("/resources") as api:
-        #     status, res = api.get()
-
-        #     # load data to list
-        #     # data format: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
-        #     if res and status == 200:
-        #         for rsrc in res["resources"]:
-        #             # store remote machine info locally
-        #             self.machines.append(rsrc)
-                    
-        #             self.list.add_data([rsrc['machine_name'],
-        #                                 rsrc['ip_address'],
-        #                                 str(rsrc['cpus']),
-        #                                 str(rsrc['cores']),
-        #                                 str(rsrc['ram']),
-        #                                 str(rsrc['price']),
-        #                                 rsrc['status']])
 
     # load the ip address from the running machine
     def _fetch_ip_address(self):
@@ -497,9 +401,7 @@ class Resources(MainView):
         self.list.hint.setText("")
 
     def _api_call(self, method, endpoint, dat=None):
-        if method in ["GET", "POST", "PUT", "DELETE"]:
-            if method == "POST" and dat is None:
-                pass
+        if method.upper() in ["GET", "POST", "PUT", "DELETE"]:
             status, res = None, None
 
             with Api(endpoint) as api:
@@ -508,7 +410,7 @@ class Resources(MainView):
                 elif method == "POST":
                     status, res = api.post(dat)
                 elif method == "PUT":
-                    status, res = api.put()
+                    status, res = api.put(dat)
                 else:
                     status, res = api.delete()
                 
@@ -533,27 +435,31 @@ class Resources(MainView):
                         self._fetch_resources_data()
                         # switch page
                         self.on_list_clicked()
-                    else: # method == "PUT" or method == "DELETE"
+                    # method == "PUT" or method == "DELETE"
+                    else:
                         self._fetch_resources_data()
 
                 elif res and status == 500:
                     msg = ""
-                    if isinstance(res, dict) and "error" in res and "errmsg" in res["error"]:
+                    if res and "error" in res and "errmsg" in res["error"]:
                         msg = res["error"]["errmsg"]
-                        if "E11000 duplicate key error collection" in msg:
-                          msg = "Such IP address is already in use!"
+                        if "E11000" in msg:
+                            msg = "This IP address is already in use. Please use a different one."
                     else:
-                        msg = "Code 500: Could not retrive error message."
+                        msg = "There was an unknown error from the server. Please try again."
                     
                     if method == "POST":
                         self.workspace.submission_hint.setText(msg)
-                    else: # method == "GET" or method == "PUT" or method == "DELETE"
+                    # method == "GET" or method == "PUT" or method == "DELETE"
+                    else:
                         self.list.hint.setText(msg)
                 else:
-                    msg = "Fail due to an implicit reason, please contact the developed team."
                     if method == "POST":
+                        msg = "There was an unknown error while trying to add this resource. Please try again."
                         self.workspace.submission_hint.setText(msg)
-                    else: # method == "GET" or method == "PUT" or method == "DELETE"
+                    # method == "GET" or method == "PUT" or method == "DELETE"
+                    else:
+                        msg = "There was an unknown error while trying to update this resource. Please try again."
                         self.list.hint.setText(msg)
 
     # self-updated function by calling timer in main

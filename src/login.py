@@ -137,8 +137,6 @@ class Login(QDialog):
             elif status == 401:
                 self.login.login_hint.setText("The email or password you entered is invalid.")
             # Only other status API will return is an error, so let the user know
-            elif status == 401:
-                self.login.login_hint.setText("The email or password you entered is invalid.")            
             else:
                 self.login.login_hint.setText("There was an error while trying to log in. Please try again.")
 

@@ -36,9 +36,7 @@ class Api(object):
     # Set store path globally
     store_path = path.abspath(curdir)
 
-    def __init__(self, endpoint: str = "/", domain: str = "pacific.cs.pdx.edu", port: int = 8080, auth: bool = False):
-    # def __init__(self, endpoint: str = "/", domain: str = "localhost", port: int = 8080, auth: bool = False):
-  
+    def __init__(self, endpoint: str = "/", domain: str = "atlantic.cs.pdx.edu", port: int = 8080, auth: bool = False):
         self.domain = domain
         self.port = port
 

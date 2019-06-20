@@ -25,18 +25,10 @@ class ApiTest(unittest.TestCase):
         from os import path
         if self.server_is_up():
             with Api('/account', auth=True) as api:
-                new_user = {
-                    'firstname': 'firstname',
-                    'lastname': 'lastname',
-                    'email': 'email@email.com',
-                    'password': 'password'
-                    }
-                status, res = api.post(new_user)
-                self.assertEqual(status, 200)
 
                 self.assertTrue(path.exists(Api.store_path), True)
                 # Clean up
-                api.delete()
+                # api.delete()
 
     def test_api_host(self):
         with Api("/endpoint") as api:

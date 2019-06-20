@@ -36,15 +36,15 @@ class Jobs(MainView):
         self.workspace = None                   # widget
         self.list = None                        # widget
 
-        self.workspace_button = None            # button
-        self.list_button = None                 # button
-        self.stack = None                       # layout
+        self.workspace_button = None            # button widget
+        self.list_button = None                 # button widget
+        self.stack = None                       # widget layout
 
-        self.worker_check = False               # flag
-        self.core_check = False                 # flag
-        self.memory_check = False               # flag
-        self.source_check = False               # flag
-        self.input_check = False                # flag
+        self.worker_check:bool = False               # flag
+        self.core_check:bool = False                 # flag
+        self.memory_check:bool = False               # flag
+        self.source_check:bool = False               # flag
+        self.input_check:bool = False                # flag
 
         self._init_ui()
         self.setStyleSheet(page_style)
@@ -199,12 +199,12 @@ class Jobs(MainView):
 
     # input data format: [job_id, workers, cores, memory, price, status, logs]
     def on_submit_clicked(self):
-        workers = self.workspace.workers.text()
-        cores = self.workspace.cores.text()
-        memory = self.workspace.memory.text()
-        source_files = self.workspace.source_file.text()
-        input_files = self.workspace.input_file.text()
-        expected_time = self.workspace.expect_time.text()
+        workers: int = self.workspace.workers.text()
+        cores: int = self.workspace.cores.text()
+        memory: int = self.workspace.memory.text()
+        source_files: str = self.workspace.source_file.text()
+        input_files: str = self.workspace.input_file.text()
+        expected_time: str = self.workspace.expect_time.text()
         # price = (float(cores) * float(workers)) * PRICING_CONSTANT
 
         # find the selected frame
@@ -333,28 +333,28 @@ class JobWorkspace(QFrame):
         super(QFrame, self).__init__(*args, **kwargs)
 
         # variable
-        self.workers = None                     # input string
-        self.cores = None                       # input number
-        self.memory = None                      # input number
-        self.source_file = None                 # input string
-        self.input_file = None                  # input string
-        self.expect_time = None                 # input number
+        self.workers = None                     # input widget
+        self.cores = None                       # input widget
+        self.memory = None                      # input widget
+        self.source_file = None                 # input widget
+        self.input_file = None                  # input widget
+        self.expect_time = None                 # input widget
 
-        self.submission_hint = None             # param string
+        self.submission_hint = None             # text widget
 
-        self.available_cpu = None               # param string
-        self.available_gpu = None               # param string
-        self.available_memory = None            # param string
-        self.available_disk = None              # param string
+        self.available_cpu = None               # text widget
+        self.available_gpu = None               # text widget
+        self.available_memory = None            # text widget
+        self.available_disk = None              # text widget
 
-        self.scheme_01_frame = None             # frame
-        self.scheme_02_frame = None             # frame
-        self.scheme_03_frame = None             # frame
-        self.scheme_04_frame = None             # frame
+        self.scheme_01_frame = None             # frame widget
+        self.scheme_02_frame = None             # frame widget
+        self.scheme_03_frame = None             # frame widget
+        self.scheme_04_frame = None             # frame widget
 
-        self.select_scheme = 1                  # flag
+        self.select_scheme:int = 1                  # flag
 
-        self.submit_button = None               # button
+        self.submit_button = None               # button widget
 
         self._init_ui()
         self.setStyleSheet(page_style)
@@ -579,11 +579,11 @@ class JobList(QFrame):
 
         # variable
         self.table = None                   # widget
-        self.search_bar = None              # input
-        self.refresh_button = None          # button
-        self.remove_button = None           # button
+        self.search_bar = None              # input widget
+        self.refresh_button = None          # button widget
+        self.remove_button = None           # button widget
 
-        self.current_row = 0                # param number
+        self.current_row:int = 0                # param number
 
         self._init_ui()
         self.setStyleSheet(page_style)
@@ -642,6 +642,7 @@ class JobList(QFrame):
         self.table.setShowGrid(False)
         self.table.verticalHeader().setDefaultSectionSize(40)
 
+        # fill initial # of rows with empty line
         self.clean_table()
         # # fill first 13 row with empty line
         # column = self.table.columnCount()
@@ -658,7 +659,7 @@ class JobList(QFrame):
         data = data_obj
         # data = data_obj["data"]
 
-        if self.current_row <= 13:
+        if self.current_row <= TABLE_INIT_ROW:
             add_row(self.table, column, data, self.current_row)
 
             self.current_row += 1
@@ -676,7 +677,8 @@ class JobList(QFrame):
 
         # fill first 13 row with empty line
         column = self.table.columnCount()
-        for r in range(13):
+        for r in range(TABLE_INIT_ROW):
             self.table.insertRow(r)
             for c in range(column):
                 self.table.setItem(r, c, QTableWidgetItem(""))
+                self.table.item(r, c).setFlags(Qt.NoItemFlags)

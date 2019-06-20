@@ -6,7 +6,7 @@ env:
   # Tell Qt not to require bringing up a GUI
   - QT_QPA_PLATFORM="offscreen"
   # This is a workaround baked into the application if the former doesn't work
-  - HEADLESS="true"
+#  - HEADLESS="true"
 
 install:
   - pip install -r requirements.txt

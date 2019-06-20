@@ -659,7 +659,7 @@ class JobList(QFrame):
         data = data_obj
         # data = data_obj["data"]
 
-        if self.current_row <= TABLE_INIT_ROW:
+        if self.current_row <= RESOURCES_MAX_ROW:
             add_row(self.table, column, data, self.current_row)
 
             self.current_row += 1
@@ -677,7 +677,7 @@ class JobList(QFrame):
 
         # fill first 13 row with empty line
         column = self.table.columnCount()
-        for r in range(TABLE_INIT_ROW):
+        for r in range(RESOURCES_MAX_ROW):
             self.table.insertRow(r)
             for c in range(column):
                 self.table.setItem(r, c, QTableWidgetItem(""))

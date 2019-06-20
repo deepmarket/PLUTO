@@ -7,14 +7,17 @@ use_step_matcher("parse")
 @given(r'the api is up')
 def api_is_up(context):
 
-    domain = Api().host
-    port = Api().port
+    api = Api()
+    domain, port = api.host, api.port
+
+    # domain = Api().host
+    # port = Api().port
 
     from requests import get
 
     try:
         status_request = str(get(f"http://{domain}:{port}/api/v1/").text.encode('utf-8')).lower()
-    except ConnectionError:
+    except (ConnectionError, ConnectionRefusedError):
         assert False, "The api is not online"
     else:
         # Quasi check for server status

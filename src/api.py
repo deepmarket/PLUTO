@@ -15,7 +15,7 @@ class CredentialManager(object):
             self.credential_store = path.join(path.abspath(self.file_path), ".credential_store")
 
             # Create file
-            with open(self.credential_store, "w+") as credential_store:
+            with open(self.credential_store, "w+"):
                 pass
 
         else:
@@ -36,7 +36,7 @@ class Api(object):
     # Set store path globally
     store_path = path.abspath(curdir)
 
-    def __init__(self, endpoint: str = "/", host: str = "pacific.cs.pdx.edu", port: int = 8080, auth: bool = False):
+    def __init__(self, endpoint: str = "/", host: str = "atlantic.cs.pdx.edu", port: int = 8080, auth: bool = False):
 
         # Override given domain name/port if defined in the environment
         # These are intended to be used for development/testing
@@ -47,7 +47,8 @@ class Api(object):
 
         self.url: str = f"http://{self.host}:{self.port}/api/v1{self.endpoint}"
 
-        self.auth: bool = auth
+        # self.auth: bool = auth
+        self.auth: bool = ("auth" in self.endpoint)
         self.store: CredentialManager = None
         self.token: str = None
         self.headers: dict = {}

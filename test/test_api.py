@@ -88,19 +88,19 @@ class ApiTest(unittest.TestCase):
 
     def test_api_get(self):
         # self.assertTrue(self.server_is_up())
-        with Api('/', host='255.255.255.256') as api:
+        with Api('/', host='thishostdoesnotexist.com') as api:
             self.assertTupleEqual(api.get(), (None, None))
 
     def test_api_post(self):
-        with Api('/', host='255.255.255.256') as api:
+        with Api('/', host='thishostdoesnotexist.com') as api:
             self.assertTupleEqual(api.post(), (None, None))
 
     def test_api_put(self):
-        with Api('/', host='255.255.255.256') as api:
+        with Api('/', host='thishostdoesnotexist.com') as api:
             self.assertTupleEqual(api.put(), (None, None))
 
     def test_api_delete(self):
-        with Api('/', host='255.255.255.256') as api:
+        with Api('/', host='thishostdoesnotexist.com') as api:
             self.assertTupleEqual(api.delete(), (None, None))
 
 

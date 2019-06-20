@@ -119,7 +119,6 @@ class Login(QDialog):
         else:
             self.attempt_login(username, pwd)
 
-    # verified user input on db
     def attempt_login(self, username, pwd):
 
         with Api("/auth/login") as api:
@@ -128,15 +127,14 @@ class Login(QDialog):
                 "password": pwd
             })
 
-            if res['auth']:
-                self.setResult(1)
+            if (res or status) is None:
+                self.login.login_hint.setText("There was an error connecting to the authentication servers. "
+                                              "Please try again in a little while.")
+            elif res.get("auth"):
                 self.accept()
                 self.login_signal.emit()
             elif status == 401:
-                self.login.login_hint.setText("The email or password you entered is invalid.")
-            elif (res or status) is None:
-                self.login.login_hint.setText("There was an error connecting to the authentication servers. "
-                                              "Please try again in a little while.")
+                self.login.login_hint.setText("The email or password you entered is not recognized.")
             # Only other status API will return is an error, so let the user know
             else:
                 self.login.login_hint.setText("There was an unknown error while trying to log in. Please try again.")

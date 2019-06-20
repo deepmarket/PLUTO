@@ -24,6 +24,7 @@ Feature: High level application testing
       | dashboard |
       | resources |
       | jobs      |
+      | settings  |
 
   Scenario: Verify can logout and login again
     When I spin up the application
@@ -33,6 +34,6 @@ Feature: High level application testing
       And I logout of the application
     Then the application window should be hidden
     When I wait 2 seconds
-      # TODO: Have to 'manually' define the `login_window` object here; it should be done automagically
+      # TODO: Have to 'manually' define the `login_window` object here; it should be done automatically
       And I open the login window
     Then the login window should be visible

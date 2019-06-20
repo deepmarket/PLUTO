@@ -14,21 +14,19 @@ def open_application(context):
     assert_is_not(context.app, None)
 
 
-@when(r'I click on the (dashboard|resources|jobs) tab')
+@when(r'I click on the (dashboard|resources|jobs|settings) tab')
 def open_main_tab(context, tab):
-    if tab == "dashboard":
-        QTest.mouseClick(context.app.sidebar.dashboard, Qt.LeftButton)
-    elif tab == "resources":
-        QTest.mouseClick(context.app.sidebar.resources, Qt.LeftButton)
-    elif tab == "jobs":
-        QTest.mouseClick(context.app.sidebar.jobs, Qt.LeftButton)
+    # Get tab by attribute name; if the attribute name changes, this will fail
+    tab = getattr(context.app.sidebar, tab, None)
+    QTest.mouseClick(tab, Qt.LeftButton)
 
 
-@then(r'the current tab should be the (dashboard|resources|jobs) tab')
+@then(r'the current tab should be the (dashboard|resources|jobs|settings) tab')
 def verify_main_tab(context, tab):
     from dashboard import Dashboard
     from resources import Resources
     from jobs import Jobs
+    from settings import Settings
 
     check_type = lambda type_: assert_equal(type(context.app.main_window.stack.currentWidget()), type_)
 
@@ -38,6 +36,8 @@ def verify_main_tab(context, tab):
         check_type(Resources)
     elif tab == "jobs":
         check_type(Jobs)
+    elif tab == "settings":
+        check_type(Settings)
 
 
 @when(r'I logout of the application')

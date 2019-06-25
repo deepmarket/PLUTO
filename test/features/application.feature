@@ -7,7 +7,7 @@ Feature: High level application testing
     When I spin up the application
       And I open the login window
       And I login in to the application
-      And I click the login button
+      And I click the log in button
       And I open the application window
     Then the current tab should be the dashboard tab
 

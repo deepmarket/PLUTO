@@ -31,6 +31,10 @@ class CredentialManager(object):
             # store = loads(store.read())
             return store.read()
 
+    def remove(self):
+        from os import remove
+        remove(self.credential_store)
+
 
 class Api(object):
     # Set store path globally

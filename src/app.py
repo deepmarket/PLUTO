@@ -228,6 +228,9 @@ class App(QMainWindow):
             status, res = account_api.post()
 
             if status == 200:
+                # Delete file storing token
+                account_api.store.remove()
+
                 self.close()
                 self.logout_signal.emit()
 

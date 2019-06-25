@@ -3,7 +3,7 @@
 
     LoginPage:
         self.username = None
-        self.pwd = None
+        self.password = None
         self.login_button = None
         self.login_hint = None
         self.remember_check = None
@@ -14,11 +14,13 @@
         self.first = None
         self.last = None
         self.username = None
-        self.pwd = None
+        self.password = None
         self.create_hint = None
         self.create_button = None
         self.to_login_button = None
 """
+from PyQt5.QtCore import QEventLoop
+from PyQt5.QtWidgets import QGraphicsOpacityEffect
 
 from api import Api
 from uix.stylesheet import *
@@ -80,17 +82,30 @@ class Login(QDialog):
         # Graciously borrowed from http://emailregex.com/
         self.email_verification_regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", re.IGNORECASE)
 
-        # add more on later build...
+    def fade_out(self, widget, duration=5000):
+        effect = QGraphicsOpacityEffect()
+        widget.setGraphicsEffect(effect)
 
-    # # mouse graping and window moves
-    # def mousePressEvent(self, event):
-    #     self.pos = event.globalPos()
-    #
-    # # mouse graping and window moves
-    # def mouseMoveEvent(self, event):
-    #     delta = QPoint(event.globalPos() - self.pos)
-    #     self.move(self.x() + delta.x(), self.y() + delta.y())
-    #     self.pos = event.globalPos()
+        self.animation = QPropertyAnimation(effect, b"opacity")
+        self.animation.setDuration(duration)
+        self.animation.setStartValue(1)
+        self.animation.setEndValue(0)
+        self.animation.start()
+
+    def fade_in(self, widget, duration=5000):
+        effect = QGraphicsOpacityEffect()
+        widget.setGraphicsEffect(effect)
+
+        self.animation = QPropertyAnimation(effect, b"opacity")
+        self.animation.setDuration(500)
+        self.animation.setStartValue(0)
+        self.animation.setEndValue(1)
+        self.animation.start()
+
+        loop = QEventLoop()
+        self.animation.finished.connect(loop.quit)
+        loop.exec_()
+        QTimer.singleShot(duration, self.clean_login_page)
 
     # pre-check user input before access db
     def login_action(self):
@@ -98,19 +113,22 @@ class Login(QDialog):
         self.login.login_hint.setText("")
 
         username = self.login.username.text()
-        pwd = self.login.pwd.text()
+        pwd = self.login.password.text()
 
         # Both empty
         if not username and not pwd:
             self.login.login_hint.setText("Please enter your email and password.")
+            self.fade_in(self.login.login_hint)
 
         # Empty username
         elif not username and pwd:
             self.login.login_hint.setText("Please enter your email.")
+            self.fade_in(self.login.login_hint)
 
         # Empty password
         elif not pwd and username:
             self.login.login_hint.setText("Please enter your password.")
+            self.fade_in(self.login.login_hint)
 
         # elif not re.match(self.username_regex, username):
         #     self.login.login_hint.setText("Invalid username. Please login with email address.")
@@ -147,8 +165,8 @@ class Login(QDialog):
         first = self.create.first.text()
         last = self.create.last.text()
         email = self.create.username.text()
-        pwd = self.create.pwd.text()
-        confirm_pwd = self.create.confirm_pwd.text()
+        pwd = self.create.password.text()
+        confirm_pwd = self.create.confirm_password.text()
 
         # First name empty
         if not first:
@@ -166,8 +184,6 @@ class Login(QDialog):
 
         # otherwise, check pass
         else:
-            print(f"Creating account with:\n\tFirst name: '{first}'\n\tLast name: '{last}'\n"
-                  f"\tEmail:'{email}'\n\tPassword: '{pwd}''")
             self.attempt_create(first, last, email, pwd)
 
     # verified user input and load into db
@@ -186,12 +202,7 @@ class Login(QDialog):
             if (res or status) is None:
                 self.create.create_hint.setText("Could not connect to the server")
             elif status == 200:
-                # timer = QTimer()
-                # timer.timeout.connect(self.cancel_action)
-                # timer.start(900)
-
-                # if timer:
-                    # Accept and close parent window
+                # Accept and close parent window
                 self.attempt_login(username, pwd)
             else:
                 self.create.create_hint.setText("That email and password combination is already in use")
@@ -219,7 +230,7 @@ class Login(QDialog):
     # gui interact function
     def clean_login_page(self):
         self.login.username.setText("")
-        self.login.pwd.setText("")
+        self.login.password.setText("")
         self.login.login_hint.setText("")
 
     # gui interact function
@@ -227,7 +238,7 @@ class Login(QDialog):
         self.create.first.setText("")
         self.create.last.setText("")
         self.create.username.setText("")
-        self.create.pwd.setText("")
+        self.create.password.setText("")
         self.create.create_hint.setText("")
 
 
@@ -238,7 +249,7 @@ class LoginPage(QFrame):
 
         # variable
         self.username = None                # input string
-        self.pwd = None                     # input string
+        self.password = None                     # input string
         self.login_button = None            # button
         self.login_hint = None              # param string
         self.remember_check = None          # checkbox
@@ -293,8 +304,8 @@ class LoginPage(QFrame):
                                                  hint="Enter your email address...")
         login_layout.addWidget(box)
 
-        box, self.pwd = add_login_input_box(login_frame, "P A S S W O R D", title_width=150,
-                                            hint="Enter your password...", echo=True)
+        box, self.password = add_login_input_box(login_frame, "P A S S W O R D", title_width=150,
+                                                 hint="Enter your password...", echo=True)
         login_layout.addWidget(box)
 
         button_frame = QFrame(self)
@@ -337,8 +348,8 @@ class CreatePage(QFrame):
         self.first = None                   # input string
         self.last = None                    # input string
         self.username = None                # input string
-        self.pwd = None                     # input string
-        self.confirm_pwd = None             # input string
+        self.password = None                     # input string
+        self.confirm_password = None             # input string
         self.create_hint = None             # param string
         self.create_button = None           # button
         self.to_login_button = None         # button
@@ -393,11 +404,11 @@ class CreatePage(QFrame):
                                                  hint="Please enter an email address as your username...")
         input_layout.addWidget(box)
 
-        box, self.pwd = add_login_input_box(input_frame, "PASSWORD", hint="Please enter your password...", echo=True)
+        box, self.password = add_login_input_box(input_frame, "PASSWORD", hint="Please enter your password...", echo=True)
         input_layout.addWidget(box)
 
-        box, self.confirm_pwd = add_login_input_box(input_frame, "CONFIRM PASSWORD",
-                                                    hint="Please re-enter your password...", echo=True)
+        box, self.confirm_password = add_login_input_box(input_frame, "CONFIRM PASSWORD",
+                                                         hint="Please re-enter your password...", echo=True)
         input_layout.addWidget(box)
 
         # button_frame: hint, create_button

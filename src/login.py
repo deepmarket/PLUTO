@@ -46,9 +46,6 @@ class Login(QDialog):
         self._init_ui()
         self._init_property()
 
-        # self.login.username.setText("test@test.com")
-        # self.login.pwd.setText("1234")
-
     def _init_geometry(self):
         set_base_geometry(self, 580, 580, fixed=True)
 
@@ -122,7 +119,6 @@ class Login(QDialog):
         else:
             self.attempt_login(username, pwd)
 
-    # verified user input on db
     def attempt_login(self, username, pwd):
 
         with Api("/auth/login") as api:
@@ -130,15 +126,18 @@ class Login(QDialog):
                 "email": username,
                 "password": pwd
             })
-            if status == 200:
-                self.setResult(1)
+
+            if (res or status) is None:
+                self.login.login_hint.setText("There was an error connecting to the authentication servers. "
+                                              "Please try again in a little while.")
+            elif res.get("auth"):
                 self.accept()
                 self.login_signal.emit()
             elif status == 401:
-                self.login.login_hint.setText("The email or password you entered is invalid.")
+                self.login.login_hint.setText("The email or password you entered is not recognized.")
             # Only other status API will return is an error, so let the user know
             else:
-                self.login.login_hint.setText("There was an error while trying to log in. Please try again.")
+                self.login.login_hint.setText("There was an unknown error while trying to log in. Please try again.")
 
     # pre-check user input before access db
     def create_action(self):
@@ -183,28 +182,19 @@ class Login(QDialog):
                 "password": pwd
             }
 
-            # try:
-            #     status, res = api.post(auth_dict)
-            # except ConnectionRefusedError:
-            #     self.create.create_hint.setText("Connection refused, please contact your system administrator")
-            # except ConnectionError:  # From requests library
-            #     self.create.create_hint.setText("Could not connect to the share resources server")
-            # finally:
-
             status, res = api.post(auth_dict)
             if (res or status) is None:
-                self.create.create_hint.setText("Could not connect to the share resources server")
-            else:
-                if status == 200:
-                    # timer = QTimer()
-                    # timer.timeout.connect(self.cancel_action)
-                    # timer.start(900)
+                self.create.create_hint.setText("Could not connect to the server")
+            elif status == 200:
+                # timer = QTimer()
+                # timer.timeout.connect(self.cancel_action)
+                # timer.start(900)
 
-                    # if timer:
-                        # Accept and close parent window
-                    self.attempt_login(username, pwd)
-                else:
-                    self.create.create_hint.setText("Email/password combination already in use")
+                # if timer:
+                    # Accept and close parent window
+                self.attempt_login(username, pwd)
+            else:
+                self.create.create_hint.setText("That email and password combination is already in use")
 
     # gui interact function
     def to_create(self):

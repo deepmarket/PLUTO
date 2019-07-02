@@ -38,7 +38,7 @@ Feature: # Verify functionality around logging into the application
       And I enter "test_user@test_email.com" in the username input box
       And I enter "test_password" in the password input box
       And I click the login button
-    Then the login hint text should be "The email or password you entered is invalid."
+    Then the login hint text should be "The email or password you entered is not recognized."
 
   Scenario: Verify incorrect credentials hint
     When I spin up the application

@@ -6,13 +6,22 @@ use_step_matcher("parse")
 
 @given(r'the api is up')
 def api_is_up(context):
-    domain = Api().domain
-    port = Api().port
+
+    api = Api()
+    domain, port = api.host, api.port
+
+    # domain = Api().host
+    # port = Api().port
 
     from requests import get
-    status_request = str(get(f"http://{domain}:{port}/api/v1/").text.encode('utf-8')).lower()
 
-    assert all([bool(txt) for txt in ['api', 'is', 'online'] if txt in str(status_request)]), f"The api is not up"
+    try:
+        status_request = str(get(f"http://{domain}:{port}/api/v1/").text.encode('utf-8')).lower()
+    except (ConnectionError, ConnectionRefusedError):
+        assert False, "The api is not online"
+    else:
+        # Quasi check for server status
+        assert all([bool(txt) for txt in ['api', 'is', 'online'] if txt in str(status_request)]), f"The api is not up"
 
 
 @when(u'I send a "{request_type}" request to "{endpoint}"')

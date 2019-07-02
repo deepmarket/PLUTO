@@ -152,8 +152,9 @@ class Jobs(MainView):
     def update_workspace(self):
         with Api("/pricing")as api:
             status, res = api.get()
-            if isinstance(res, dict) and "prices" in res:
-                price_dat = res['prices']
+
+            if res.get("success"):
+                price_dat = res.get("data")
             else:
                 price_dat = []
 
@@ -172,8 +173,8 @@ class Jobs(MainView):
 
                 # TODO: load time scheme
                 if not price_dat:
-                    for j in range(len(labels)):
-                        labels[j].setText('Error')
+                    for label in labels:
+                        label.setText("Error")
                 else:
                     dat = price_dat[i]
                     dat = [round(dat['cpus'], 6), round(dat['gpus'], 6), round(dat['memory'], 6), round(dat['disk_space'], 6)]
@@ -643,6 +644,12 @@ class JobList(QFrame):
 
         # fill initial # of rows with empty line
         self.clean_table()
+        # # fill first 13 row with empty line
+        # column = self.table.columnCount()
+        # for r in range(13):
+        #     self.table.insertRow(r)
+        #     for c in range(column):
+        #         self.table.setItem(r, c, QTableWidgetItem(""))
 
     # data format: [job_id, workers, cores, memory, price, status, logs]
     def add_data(self, data_obj):
@@ -652,7 +659,7 @@ class JobList(QFrame):
         data = data_obj
         # data = data_obj["data"]
 
-        if self.current_row <= TABLE_INIT_ROW:
+        if self.current_row <= RESOURCES_MAX_ROW:
             add_row(self.table, column, data, self.current_row)
 
             self.current_row += 1
@@ -670,7 +677,7 @@ class JobList(QFrame):
 
         # fill first 13 row with empty line
         column = self.table.columnCount()
-        for r in range(TABLE_INIT_ROW):
+        for r in range(RESOURCES_MAX_ROW):
             self.table.insertRow(r)
             for c in range(column):
                 self.table.setItem(r, c, QTableWidgetItem(""))

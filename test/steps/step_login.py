@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt
 
 from behave import use_step_matcher, when, then
 
-from test.steps.step_helpers import assert_equal, assert_is_not
+from test.steps.step_helpers import assert_equal, assert_is_not, assert_is
 use_step_matcher("re")
 
 
@@ -26,7 +26,7 @@ def login(context):
 
 @when(r'I enter "(.*)" in the (username|password) input box')
 def enter_login_input_text(context, text, dialog_box):
-    assert_is_not(context.login_window, not None)
+    assert_is_not(context.login_window, None)
 
     if dialog_box == "username":
         QTest.keyClicks(context.login_window.login.username, text)

@@ -401,66 +401,65 @@ class Resources(MainView):
         self.list.hint.setText("")
 
     def _api_call(self, method, endpoint, dat=None):
-        if method.upper() in ["GET", "POST", "PUT", "DELETE"]:
-            status, res = None, None
+        if method.upper() not in ["GET", "POST", "PUT", "DELETE"]:
+            return
 
-            with Api(endpoint) as api:
+        with Api(endpoint) as api:
+            if method == "GET":
+                status, res = api.get()
+            elif method == "POST":
+                status, res = api.post(dat)
+            elif method == "PUT":
+                status, res = api.put(dat)
+            else:
+                status, res = api.delete()
+            
+            if not res:
+                msg = "Server fail to response request. Please try again later."
+                if method == "POST":
+                    self.workspace.submission_hint.setText(msg)
+                else: # method in ["GET", "PUT", "DELETE"]
+                    self.list.hint.setText(msg)
+                return
+
+            if status == 200:
                 if method == "GET":
-                    status, res = api.get()
+                    # clean local buffer
+                    self.machines = []
+
+                    for rsrc in res["resources"]:
+                        # store remote machine info locally
+                        self.machines.append(rsrc)
+                        
+                        self.list.add_data([rsrc['machine_name'],
+                                            rsrc['ip_address'],
+                                            str(rsrc['cpus']),
+                                            str(rsrc['cores']),
+                                            str(rsrc['ram']),
+                                            str(rsrc['price']),
+                                            rsrc['status']])
                 elif method == "POST":
-                    status, res = api.post(dat)
-                elif method == "PUT":
-                    status, res = api.put(dat)
+                    # add data to list
+                    self._fetch_resources_data()
+                    # switch page
+                    self.on_list_clicked()
+                else: # method in ["PUT", "DELETE"]
+                    self._fetch_resources_data()
+
+            else:
+                if "error" in res and "errmsg" in res["error"]:
+                    msg = res["error"]["errmsg"]
+                    # E11000 might no longer exist if mongo team could update their error message
+                    # Remove this special case if necessary
+                    if "E11000" in msg:
+                        msg = "This IP address is already in use. Please use a different one."
                 else:
-                    status, res = api.delete()
+                    msg = "There was an unknown error from the server. Please try again."
                 
-                if res and status == 200:
-                    if method == "GET":
-                        # clean local buffer
-                        self.machines = []
-
-                        for rsrc in res["resources"]:
-                            # store remote machine info locally
-                            self.machines.append(rsrc)
-                            
-                            self.list.add_data([rsrc['machine_name'],
-                                                rsrc['ip_address'],
-                                                str(rsrc['cpus']),
-                                                str(rsrc['cores']),
-                                                str(rsrc['ram']),
-                                                str(rsrc['price']),
-                                                rsrc['status']])
-                    elif method == "POST":
-                        # add data to list
-                        self._fetch_resources_data()
-                        # switch page
-                        self.on_list_clicked()
-                    # method == "PUT" or method == "DELETE"
-                    else:
-                        self._fetch_resources_data()
-
-                elif res and status == 500:
-                    msg = ""
-                    if res and "error" in res and "errmsg" in res["error"]:
-                        msg = res["error"]["errmsg"]
-                        if "E11000" in msg:
-                            msg = "This IP address is already in use. Please use a different one."
-                    else:
-                        msg = "There was an unknown error from the server. Please try again."
-                    
-                    if method == "POST":
-                        self.workspace.submission_hint.setText(msg)
-                    # method == "GET" or method == "PUT" or method == "DELETE"
-                    else:
-                        self.list.hint.setText(msg)
-                else:
-                    if method == "POST":
-                        msg = "There was an unknown error while trying to add this resource. Please try again."
-                        self.workspace.submission_hint.setText(msg)
-                    # method == "GET" or method == "PUT" or method == "DELETE"
-                    else:
-                        msg = "There was an unknown error while trying to update this resource. Please try again."
-                        self.list.hint.setText(msg)
+                if method == "POST":
+                    self.workspace.submission_hint.setText(msg)
+                else: # method in ["GET", "PUT", "DELETE"]
+                    self.list.hint.setText(msg)
 
     # self-updated function by calling timer in main
     # can be used later on

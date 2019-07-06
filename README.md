@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/deepmarket/PLUTO.svg?branch=develop)](https://travis-ci.org/deepmarket/PLUTO)
 
-#### Pluto
+## Overview
 
 PLUTO is a cross platform desktop application that can be used to connect to the deepmarket network.
 

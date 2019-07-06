@@ -17,13 +17,13 @@ First you'll need to install the required dependencies
 $ python -m pip install -r requirements.txt
 ```
 
-Next, you can read the [getting set up to develop locally](link tbd) guide.
+Next, you can read the [getting set up to develop locally](https://github.com/deepmarket/PLUTO/wiki/Setting-up-deepmarket's-api-backend-for-local-development) guide.
 
 Testing is done using two libraries: Python's builtin `Unittest` for unit testing and `behave` for functional BDD tests.
 
 They can be ran independently
 ```bash
-$ python -m  unittest tests/*.test.py
+$ python -m  unittest tests/*.py
 
 $ python -m behave tests/features
 ```

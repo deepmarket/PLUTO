@@ -135,6 +135,7 @@ def add_button(widget, text=None, name=None, stylesheet=None, icon=None, icon_si
     return button
 
 
+# check
 # create a QLabel object
 def add_label(widget, text, width=0, height=0, name=None, align=None, stylesheet= None):
 

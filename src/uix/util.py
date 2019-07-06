@@ -184,6 +184,7 @@ def add_paragraph(widget, text_list, name=None, align=None, space=0):
     return box
 
 
+# check
 # create an image object (QLabel)
 def add_image(widget, img_name, img_type, width=0, height=0, name=None, align=None):
 

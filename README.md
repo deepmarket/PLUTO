@@ -22,7 +22,7 @@ Next, you can read the [getting set up to develop locally](link tbd) guide.
 Testing is done using two libraries: Python's builtin `Unittest` for unit testing and `behave` for functional BDD tests.
 
 They can be ran independently
-```python
+```bash
 $ python -m  unittest tests/*.test.py
 
 $ python -m behave tests/features

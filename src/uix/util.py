@@ -167,6 +167,7 @@ def add_label(widget, text, width=0, height=0, name=None, align=None, stylesheet
     return label
 
 
+# check
 # create a widget with a list of text to QLabel object
 def add_paragraph(widget, text_list, name=None, align=None, space=0):
 

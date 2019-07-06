@@ -45,5 +45,6 @@ venv
 
 # Environment Related #
 #######################
+*.code-workspace
 .vscode
 env

@@ -1,6 +1,6 @@
 """
 
-    Create a Qt layout wrapper object to arrange child widgets
+    This module generate a Qt layout wrapper object to arrange child widgets
     within a widget to ensure that they make good use of the available space.
 
 """
@@ -11,14 +11,12 @@ from PyQt5 import QtWidgets
 class Layout(QtWidgets.QLayout):
 
     def __init__(self, widget, **kwargs):
-        super(Layout, self).__init__(widget) #, **kwargs)
+        super(Layout, self).__init__(widget)
         
-        if not kwargs:
-            pass
-        else:
-            # Lambda func greb input args
-            get_num = lambda x : kwargs[x] if x in kwargs else 0
-            get_param = lambda x : kwargs[x] if x in kwargs else None
+        if kwargs:
+            # Lambda func grab input args
+            get_num = lambda x : kwargs.get(x, 0)
+            get_param = lambda x : kwargs.get(x)
 
             l_m = get_num("l_m")
             t_m = get_num("t_m")

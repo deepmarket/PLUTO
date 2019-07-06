@@ -14,6 +14,8 @@ from uix.config import *
 from uix.popup import Question
 from api import Api
 
+from interfaces.widgets import *
+
 
 class Resources(MainView):
 
@@ -524,10 +526,13 @@ class ResourcesWorkspace(QFrame):
 
         # --------- line_frame: ip_address, verify_button, change_button ------------
 
-        line_frame, line_layout = add_frame(section_frame, height=30, space=30, layout=HORIZONTAL)
+        # TODO: testing new proj struct, remove completely later on
+        line_frame = Frame(section_frame, height=30)
+        line_layout = HorizontalLayout(line_frame, space=30)
+        # line_frame, line_layout = add_frame(section_frame, height=30, space=30, layout=HORIZONTAL)
         section_layout.addWidget(line_frame)
 
-        box, self.ip_address = add_page_input_box(line_frame, "IP Address:", 65, 21, fix_width=False)
+        box, self.ip_address = add_page_input_box(line_frame, "IP Address:", 66, 21, fix_width=False)
         line_layout.addWidget(box)
 
         # self.verify_button = add_button(line_frame, "VERIFY", name="Page_button")
@@ -646,7 +651,9 @@ class ResourcesWorkspace(QFrame):
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
         line_layout.addItem(spacer)
 
-        self.evaluate_button = add_button(line_frame, "EVALUATE")
+        # TODO: testing new proj struct, remove completely later on
+        self.evaluate_button = Button(line_frame, text="EVALUATE", cursor=True)
+        # self.evaluate_button = add_button(line_frame, "EVALUATE")
         line_layout.addWidget(self.evaluate_button)
 
         self.disable_planning()

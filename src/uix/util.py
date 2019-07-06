@@ -75,6 +75,7 @@ def set_base_geometry(widget, width, height, x=None, y=None, title=None, fixed=F
         widget.move(x, y)
 
 
+# check
 # create a layout object
 def add_layout(widget, layout_type, l_m=0, t_m=0, r_m=0, b_m=0, space=0, name=None, align=None):
 
@@ -103,6 +104,7 @@ def add_layout(widget, layout_type, l_m=0, t_m=0, r_m=0, b_m=0, space=0, name=No
     return layout
 
 
+# check
 # create a QPushbutton object
 def add_button(widget, text=None, name=None, stylesheet=None, icon=None, icon_size=None, change_cursor=True):
 
@@ -367,6 +369,7 @@ def add_menu_icon(width):
     return QIcon(pix)
 
 
+# check
 # add a section, return frame, and frame_layout
 def add_frame(widget, layout=VERTICAL, height=None, width=None, name=None, stylesheet=None,
               t_m=0, b_m=0, l_m=0, r_m=0, space=0):

@@ -1,3 +1,7 @@
+# old implementation
+# keep it util the whole refacting finished
+
+
 class Resources(MainView):
   
     def __init__(self, *args, **kwargs):

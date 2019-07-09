@@ -21,12 +21,14 @@ from uix.stylesheet import *
 from uix.config import *
 
 
+# check
 # load icon
 def load_image(filename, image_type):
     icon_path = os.getcwd() + "/src/img/"
     return icon_path + filename + image_type
 
 
+# check
 # load font
 def load_font():
     dir_path = os.getcwd() + "/src/font/"

@@ -16,6 +16,14 @@ from api import Api
 
 from interfaces.widgets import *
 
+from interfaces.resourcesUI import ResourceUI
+
+# class Resources(ResourceUI):
+
+#     def __init__(self, *args, **kwargs):
+#         super(Resources, self).__init__()
+
+
 
 class Resources(MainView):
 

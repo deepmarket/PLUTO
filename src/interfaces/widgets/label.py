@@ -6,14 +6,15 @@
 """
 
 import os
-from PyQt5 import QtWidgets, QtGui
+from PyQt5.QtWidgets import QLabel
+from PyQt5.QtGui import QPixmap
 
 from .frame import Frame
 from .layout import VerticalLayout
 from ..util import load_path
 
 
-class Label(QtWidgets.QLabel):
+class Label(QLabel):
 
     def __init__(self, widget, **kwargs):
         super(Label, self).__init__(widget)
@@ -41,7 +42,7 @@ class Label(QtWidgets.QLabel):
         align and self.setAlignment(align)
 
 
-class Paragraph(QtWidgets.QFrame):
+class Paragraph(Frame):
 
     def __init__(self, widget, text_list:list, **kwargs):
         super(Paragraph, self).__init__(widget)
@@ -92,9 +93,9 @@ class Image(Label):
         pix_map = None
 
         if file:
-            pix_map = QtGui.QPixmap(file)
+            pix_map = QPixmap(file)
         elif default:
-            pix_map = QtGui.QPixmap(default)
+            pix_map = QPixmap(default)
 
         if pix_map:
             # scale to the greatest number

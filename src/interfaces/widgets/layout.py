@@ -5,10 +5,10 @@
 
 """
 
-from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QLayout, QHBoxLayout, QVBoxLayout, QStackedLayout
 
 
-class Layout(QtWidgets.QLayout):
+class Layout(QLayout):
 
     def __init__(self, widget, **kwargs):
         super(Layout, self).__init__(widget)
@@ -35,16 +35,16 @@ class Layout(QtWidgets.QLayout):
         align and self.setAlignment(align)
 
 
-class HorizontalLayout(QtWidgets.QHBoxLayout, Layout):
+class HorizontalLayout(QHBoxLayout, Layout):
     def __init__(self, widget, **kwargs):
         super(HorizontalLayout, self).__init__(widget, **kwargs)
 
 
-class VerticalLayout(QtWidgets.QVBoxLayout, Layout):
+class VerticalLayout(QVBoxLayout, Layout):
     def __init__(self, widget, **kwargs):
         super(VerticalLayout, self).__init__(widget, **kwargs)
 
 
-class StackLayout(QtWidgets.QStackedLayout, Layout):
+class StackLayout(QStackedLayout, Layout):
     def __init__(self, widget, **kwargs):
         super(StackLayout, self).__init__(widget, **kwargs)

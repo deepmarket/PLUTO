@@ -4,10 +4,10 @@
  
 """
 
-from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QFrame
 
 
-class Frame(QtWidgets.QFrame):
+class Frame(QFrame):
 
     def __init__(self, widget, **kwargs):
         super(Frame, self).__init__(widget)

@@ -4,10 +4,12 @@
  
 """
 
-from PyQt5 import QtWidgets, QtGui, QtCore
+from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import QSize, Qt
 
 
-class Button(QtWidgets.QPushButton):
+class Button(QPushButton):
 
     def __init__(self, widget, **kwargs):
         super(Button, self).__init__(widget)
@@ -26,10 +28,10 @@ class Button(QtWidgets.QPushButton):
         text and self.setText(text)
         name and self.setObjectName(name)
         stylesheet and self.setObjectName(name)
-        cursor is True and self.setCursor(QtCore.Qt.PointingHandCursor)
+        cursor is True and self.setCursor(Qt.PointingHandCursor)
 
         # Set icon if given
         if icon:
-            self.setIcon(QtGui.QIcon(icon))
+            self.setIcon(QIcon(icon))
             if icon_size:
-                self.setIconSize(QtCore.QSize(icon_size, icon_size))
+                self.setIconSize(QSize(icon_size, icon_size))

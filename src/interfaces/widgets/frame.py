@@ -9,8 +9,8 @@ from PyQt5.QtWidgets import QFrame
 
 class Frame(QFrame):
 
-    def __init__(self, widget, **kwargs):
-        super(Frame, self).__init__(widget)
+    def __init__(self, *args, **kwargs):
+        super(Frame, self).__init__(*args, **kwargs)
 
         # Lambda func grab input args
         get_num = lambda x : kwargs.get(x, 0)

@@ -5,13 +5,12 @@
 
 """
 
-from PyQt5.QtWidgets import QFrame
 from PyQt5.QtCore import pyqtSignal
 
-from ..widgets import StackLayout
+from ..widgets import StackLayout, Frame
 
 
-class ResourcesUI(QFrame):
+class ResourcesUI(Frame):
 
     _stack = None
     _to_controller_signal = pyqtSignal()

@@ -5,16 +5,15 @@
 
 """
 
-from PyQt5.QtWidgets import QFrame
 from PyQt5.QtCore import pyqtSignal
 
-from ..widgets import Button, VerticalLayout
+from ..widgets import Button, VerticalLayout, Frame
 
 
-class ResourcesControllerUI(QFrame):
-    
+class ResourcesControllerUI(Frame):
+
     def __init__(self, signal:pyqtSignal, *args, **kwargs):
-        super(ResourcesControllerUI, self).__init__()
+        super(ResourcesControllerUI, self).__init__(*args, **kwargs)
 
         self.signal = signal
 

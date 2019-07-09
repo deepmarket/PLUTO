@@ -11,7 +11,7 @@ from PyQt5 import QtWidgets, QtCore
 from .widgets import Button, VerticalLayout, StackLayout
 
 
-class ResourceUI(QtWidgets.QFrame):
+class ResourcesUI(QtWidgets.QFrame):
 
     _controler_signal = QtCore.pyqtSignal()
     _add_view_signal = QtCore.pyqtSignal()

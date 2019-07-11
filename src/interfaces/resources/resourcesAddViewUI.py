@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import QFrame, QLineEdit
 from PyQt5.QtCore import pyqtSignal
 
 from ..widgets import (Frame, SectionTitleFrame, ConfigFrame, TabsInputFrame,
-                        Button, Label, 
+                        Button, Label,
                         HorizontalLayout, VerticalLayout, StackLayout,
                         HorizontalSpacer, VerticalSpacer)
 
@@ -68,7 +68,7 @@ class ResourcesAddViewUI(Frame):
         window_layout.addWidget(self.button_view)
 
         # --------- stack_view ---------
-        
+
         self.stack = StackLayout(self.stack_view)
 
         self.tech_sections = Frame(self.stack_view)
@@ -79,9 +79,9 @@ class ResourcesAddViewUI(Frame):
 
         self._init_tech_sections()
         self._init_eco_sections()
-        
+
         # --------- button_view ---------
-        
+
         layout = HorizontalLayout(self.button_view)
 
         self.cancel = Button(self.button_view, text="CANCEL")
@@ -100,7 +100,7 @@ class ResourcesAddViewUI(Frame):
         layout.addWidget(self.submit)
 
         # --------- binding event to function ---------
-        
+
         self.cancel.clicked.connect(self.on_cancel_clicked)
         self.back.clicked.connect(self.on_back_clicked)
         self.next_page.clicked.connect(self.on_next_page_clicked)
@@ -126,32 +126,32 @@ class ResourcesAddViewUI(Frame):
         sections_layout.addItem(spacer)
 
         # --------- verification section ---------
-        
+
         section_layout = VerticalLayout(verification_section, space=30)
 
         # title frame
-        frame = SectionTitleFrame(verification_section, 
+        frame = SectionTitleFrame(verification_section,
                                   label_one_text="Resource Verification",
                                   label_two_text="ip verification hint test")
 
         section_layout.addWidget(frame)
         self.verification_hint = frame.get_label_two()
 
-        # ip_address 
-        frame = TabsInputFrame(verification_section, 
-                               title="IP Addess:", title_width=66, space=21)
+        # ip_address
+        frame = TabsInputFrame(verification_section,
+                               title="IP Address:", title_width=66, space=21)
 
         section_layout.addWidget(frame)
         self.ip_address = frame.get_input()
 
         # --------- configuration section ---------
 
-        section_layout = VerticalLayout(configuration_section, 
+        section_layout = VerticalLayout(configuration_section,
                                         t_m=21, b_m=21, l_m=27, r_m=27, space=30)
 
         # title frame
         frame = SectionTitleFrame(configuration_section,
-                                  label_one_text="Machine Configuration", 
+                                  label_one_text="Machine Configuration",
                                   label_two_text="config hint test")
 
         section_layout.addWidget(frame)
@@ -196,17 +196,17 @@ class ResourcesAddViewUI(Frame):
 
         line_layout = HorizontalLayout(line_frame)
 
-        frame = TabsInputFrame(line_frame, title="Machine Name:", 
+        frame = TabsInputFrame(line_frame, title="Machine Name:",
                                 title_width=113, space=18, width=285,
                                 fix_width=True)
 
         line_layout.addWidget(frame)
         self.machine_name = frame.get_input()
-        
-        frame = TabsInputFrame(line_frame, title="GPUs #:", 
+
+        frame = TabsInputFrame(line_frame, title="GPUs #:",
                                 title_width=113, space=18, width=285,
                                 fix_width=True)
-        
+
         line_layout.addWidget(frame)
         self.cpu_gpu = frame.get_input()
 
@@ -220,22 +220,22 @@ class ResourcesAddViewUI(Frame):
 
         line_layout = HorizontalLayout(line_frame)
 
-        frame = TabsInputFrame(line_frame, title="Cores:", 
+        frame = TabsInputFrame(line_frame, title="Cores:",
                                 title_width=113, space=18, width=285,
                                 fix_width=True)
 
         line_layout.addWidget(frame)
         self.cores = frame.get_input()
-        
-        frame = TabsInputFrame(line_frame, title="RAM (Gb):", 
+
+        frame = TabsInputFrame(line_frame, title="RAM (Gb):",
                                 title_width=113, space=18, width=285,
                                 fix_width=True)
 
         line_layout.addWidget(frame)
         self.ram = frame.get_input()
-        
+
     def _init_eco_sections(self):
-        
+
         # --------- eco sections ---------
 
         sections_layout = VerticalLayout(self.eco_sections, space=30)
@@ -289,7 +289,7 @@ class ResourcesAddViewUI(Frame):
 
     def on_next_page_clicked(self):
         self.stack.setCurrentIndex(1)
-    
+
     def on_submit_clicked(self):
         self.signal.emit()
 

@@ -1,9 +1,3 @@
-/*
-    'css' stylesheet for ui interface
-    old version
-    TODO: refactor the structure to be more organized.
-*/
-
 #Page_sub_page {
     background-color: white;
 }

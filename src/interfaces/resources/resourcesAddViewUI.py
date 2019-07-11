@@ -13,6 +13,8 @@ from ..widgets import (Frame, SectionTitleFrame, ConfigFrame, TabsInputFrame,
                         HorizontalLayout, VerticalLayout, StackLayout,
                         HorizontalSpacer, VerticalSpacer)
 
+from ..stylesheet import resources_style
+
 class ResourcesAddViewUI(Frame):
 
     signal:         pyqtSignal = None
@@ -51,6 +53,8 @@ class ResourcesAddViewUI(Frame):
 
         self.signal = signal
         self._init_ui()
+
+        self.setStyleSheet(resources_style)
 
     def _init_ui(self):
         # --------- self/resource ---------

@@ -1,3 +1,4 @@
+# TODO: find a way to dynamiclly pass this variable into stylesheet
 WHITE = "#FFFFFF"
 BLACK = "#000000"
 

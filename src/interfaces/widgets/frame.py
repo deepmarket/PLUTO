@@ -6,11 +6,10 @@
 
 from PyQt5.QtWidgets import QFrame
 
-
 class Frame(QFrame):
 
     def __init__(self, *args, **kwargs):
-        super(Frame, self).__init__(*args, **kwargs)
+        super(Frame, self).__init__(*args)
 
         # Lambda func grab input args
         get_num = lambda x : kwargs.get(x, 0)

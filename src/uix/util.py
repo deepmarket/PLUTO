@@ -218,6 +218,7 @@ def add_image(widget, img_name, img_type, width=0, height=0, name=None, align=No
     return label
 
 
+# check
 def add_input(widget, height=0, name=None, hint=None, echo=False):
     input_bar = QLineEdit(widget)
 
@@ -242,6 +243,7 @@ def add_input(widget, height=0, name=None, hint=None, echo=False):
     return input_bar
 
 
+# check
 # helper function to add input box
 def add_input_box(widget, title, space=0, l_m=0, r_m=0, align=None, hint=None, echo=False):
 
@@ -260,6 +262,7 @@ def add_input_box(widget, title, space=0, l_m=0, r_m=0, align=None, hint=None, e
     return box, box_title, box_input
 
 
+# check
 # input box for login
 def add_login_input_box(widget, title, title_width=160, hint=None, echo=False):
 
@@ -279,6 +282,7 @@ def add_login_input_box(widget, title, title_width=160, hint=None, echo=False):
     return box, box_input
 
 
+# check
 # type 02 input box for jobs
 def add_page_input_box(widget, title, title_width, space, width=258, stylesheet=None, hint=None,
                        echo=False, fix_width=True):

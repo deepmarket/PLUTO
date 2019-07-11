@@ -1,0 +1,142 @@
+/*
+    'css' stylesheet for ui interface
+    old version
+    TODO: refactor the structure to be more organized.
+*/
+
+#Page_sub_page {
+    background-color: white;
+}
+    
+#Page_machine_config {
+    background-color: #D6EFEF;
+}
+    
+#Page_resource_planning {
+    background-color: #F4F8F9;
+}
+    
+#Page_resource_submission {
+    background-color: #F4F8F9;
+}
+
+#Page_scheme {
+    background-color: #F4F8F9;
+}
+
+#Page_available_resources {
+    background-color: #D6EFEF;
+}
+
+#Page_job_submission {
+    background-color: #F4F8F9;
+}
+
+#Page_section_title {
+    font-family: "Helvetica Neue";
+    font-size: 20px;
+    font-weight: 100;
+    color: #6C7E8E;
+}
+
+#Page_section_title_small {
+    font-family: "Helvetica Neue";
+    font-size: 16px;
+    font-weight: 300;
+    color: #6C7E8E;
+}
+
+#Page_hint {
+    font-family: "Helvetica Neue";
+    font-size: 12px;
+    font-weight: 300;
+    color: red;
+}
+
+#Page_hint_small {
+    font-family: "Helvetica Neue";
+    font-size: 11px;
+    font-weight: 300;
+    color: red;
+}
+
+#Page_input_frame {
+    background-color: white;
+}
+
+#Page_input_title {
+    font-family: "Helvetica Neue";
+    font-size: 13px;
+    font-weight: 300;
+    color: #6C7E8E;
+}
+
+#Page_button {
+    border: None;
+    background-color: #6C7E8E;
+    height: 30px;
+    width: 120px;
+    font-family: "Helvetica Neue";
+    font-size: 12px;
+    font-weight: 300;
+    color: white;
+}
+
+#Page_available_title {
+    font-family: "Helvetica Neue";
+    font-size: 12px;
+    font-weight: 500;
+    color: #6C7E8E;
+}
+
+#Page_available_label {
+    font-family: "Helvetica Neue";
+    font-size: 11px;
+    font-weight: 500;
+    color: #6C7E8E;
+}
+
+#Page_table_workspace {
+    background-color: white;
+}
+
+#Page_table_test {
+    background-color: yellow;
+}
+
+#Page_table_workspace_search {
+    border: None;
+    background-color: #F7F7F7;
+    padding: 0 20px;
+    font-family: "Helvetica Neue";
+    font-size: 13px;
+    font-weight: 200;
+    color: black;
+}
+
+#Page_table_workspace_button {
+    border: None;
+    background-color: #6C7E8E;
+    height: 35px;
+    width: 90px;
+    font-family: "Helvetica Neue";
+    font-size: 13px;
+    font-weight: 200;
+    color: white;
+}
+
+#Page_table {
+    border: none;
+    background-color: white;
+    alternate-background-color: #FAFAFA;
+}
+
+#Page_table QHeaderView::section {
+    border: none;
+    background-color: #6C7E8E;
+    height: 35px;
+    font-family: "Helvetica Neue";
+    font-size:13px;
+    font-weight: 100;
+    color: white;
+}

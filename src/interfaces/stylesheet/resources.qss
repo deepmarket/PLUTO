@@ -19,16 +19,18 @@
 
 #view_stack_frame {
     background-color: #FFFFFF;
-    padding-top: 30px;
+    padding-top: 42px;
 }
 
 #view_buttons_frame {
-    background-color: #FFFFFF;
+    /* TODO: test code */
+    /* background-color: #FFFFFF; */
+    background-color: red;
     min-height: 50px;
 }
 
 QFrame#section {
-    margin-bottom: 30px;
+    margin-bottom: 42px;
 }
 
 QFrame#section_title_frame {
@@ -42,17 +44,23 @@ QFrame#verification_content_frame {
 }
 
 QFrame#configuration_content_frame {
-    max-height: 108px;
+    min-height: 85px;
     background-color: #D6EFEF;
     margin-bottom: 30px;
     padding: 21px 27px;
+}
+
+QFrame#planning_content_frame {
+    max-height: 145px;
+    background-color: #E8F3F7;
+    padding: 27px 32px;
 }
 
 QFrame#config_frame,
 QFrame#config_frame_red,
 QFrame#config_frame_green,
 QFrame#config_frame_disable {
-    min-height: 30px;
+    max-height: 30px;
     max-width: 200px;
     padding: 0 11px;
     background-color: white;
@@ -62,26 +70,23 @@ QFrame#config_frame_disable {
     background-color: #C6CDDB;
 }
 
-QFrame#config_frame QLabel {
+QFrame#config_frame > QLabel {
     color: #6C7E8E;
 }
 
-QFrame#config_frame_red QLabel {
+QFrame#config_frame_red > QLabel {
     color: #FF0000;
 }
 
-QFrame#config_frame_green QLabel {
+QFrame#config_frame_green > QLabel {
     color: #95E637;
 }
 
-QFrame#config_frame_disable QLabel {
+QFrame#config_frame_disable > QLabel {
     color: #F2F2F2;
 }
 
-QFrame#planning_content_frame {
-    background-color: #E8F3F7;
-    padding: 27px 32px;
-}
+
 
 QLabel#view_title {
     font-size: 17px;
@@ -98,63 +103,35 @@ QLabel#section_hint {
     color: #FF0000;
 }
 
-
-
-
-
-
-
-#Page_machine_config {
-    background-color: #D6EFEF;
-}
-
-#Page_resource_planning {
-    background-color: #F4F8F9;
-}
-
-#Page_resource_submission {
-    background-color: #F4F8F9;
-}
-
-#Page_scheme {
-    background-color: #F4F8F9;
-}
-
-#Page_available_resources {
-    background-color: #D6EFEF;
-}
-
-#Page_job_submission {
-    background-color: #F4F8F9;
-}
-
-#Page_section_title {
-    font-family: "Helvetica Neue";
-    font-size: 20px;
-    font-weight: 100;
+QFrame#view_input > QLabel,
+QFrame#view_input_disable > QLabel {
+    font-size: 13px;
     color: #6C7E8E;
 }
 
-#Page_section_title_small {
-    font-family: "Helvetica Neue";
-    font-size: 16px;
-    font-weight: 300;
-    color: #6C7E8E;
-}
-
-#Page_hint {
-    font-family: "Helvetica Neue";
+QFrame#view_input > QLineEdit,
+QFrame#view_input_disable > QLineEdit {
+    border: None;
+    padding: 0 2px;
     font-size: 12px;
-    font-weight: 300;
-    color: red;
 }
 
-#Page_hint_small {
-    font-family: "Helvetica Neue";
-    font-size: 11px;
-    font-weight: 300;
-    color: red;
+QFrame#view_input > QLineEdit {
+    background-color: #FFFFFF;
+    color: #000000;
 }
+
+QFrame#view_input_disable > QLineEdit {
+    background-color: #C6CDDB;
+    color: #F2F2F2;
+}
+
+
+
+
+
+
+
 
 #Page_input_frame {
     background-color: white;

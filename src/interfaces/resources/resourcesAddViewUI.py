@@ -158,10 +158,11 @@ class ResourcesAddViewUI(Frame):
         layout = VerticalLayout(frame)
 
         frame = TabsInputFrame(frame,
-                               title="IP Address:", title_width=66, space=21)
+                               title="IP Address:", title_width=66)
 
         layout.addWidget(frame)
         self.ip_address = frame.get_input()
+        # self.ip_address.setText("127.0.0.1") # TODO: test code
 
         # --------- configuration section ---------
 
@@ -183,15 +184,15 @@ class ResourcesAddViewUI(Frame):
 
         self.current_cpu = ConfigFrame(frame, label_one_text="Compute:", label_two_text="8GB")
         layout.addWidget(self.current_cpu)
-        # self.current_cpu.setObjectName("config_frame_disable")
+        # self.current_cpu.setObjectName("config_frame_disable") # TODO: test code
 
         self.current_core = ConfigFrame(frame, label_one_text="Cores:", label_two_text="4")
         layout.addWidget(self.current_core)
-        # self.current_core.setObjectName("config_frame_green")
+        # self.current_core.setObjectName("config_frame_green") # TODO: test code
 
         self.current_ram = ConfigFrame(frame, label_one_text="RAM:", label_two_text="4GB")
         layout.addWidget(self.current_ram)
-        # self.current_ram.setObjectName("config_frame_red")
+        # self.current_ram.setObjectName("config_frame_red") # TODO: test code
 
         # --------- planning section ---------
 
@@ -209,7 +210,7 @@ class ResourcesAddViewUI(Frame):
         frame = Frame(planning_section, name="planning_content_frame")
         section_layout.addWidget(frame)
 
-        layout = VerticalLayout(frame)
+        layout = VerticalLayout(frame, space=18)
 
         # line_frame: machine_name, cpu_gpu
         line_frame = Frame(frame)
@@ -217,23 +218,13 @@ class ResourcesAddViewUI(Frame):
 
         line_layout = HorizontalLayout(line_frame)
 
-        frame = TabsInputFrame(line_frame, title="Machine Name:",
-                                title_width=113, space=18, width=285,
-                                fix_width=True)
-
+        frame = TabsInputFrame(line_frame, title="Machine Name:", title_width=113, fix_width=True)
         line_layout.addWidget(frame)
         self.machine_name = frame.get_input()
 
-        frame = TabsInputFrame(line_frame, title="GPUs #:",
-                                title_width=113, space=18, width=285,
-                                fix_width=True)
-
+        frame = TabsInputFrame(line_frame, title="GPUs #:", title_width=113, fix_width=True)
         line_layout.addWidget(frame)
         self.cpu_gpu = frame.get_input()
-
-        # spacer
-        spacer = VerticalSpacer()
-        layout.addItem(spacer)
 
         # line_frame: cores, ram, spacer, evaluate_button
         line_frame = Frame(frame)
@@ -241,17 +232,11 @@ class ResourcesAddViewUI(Frame):
 
         line_layout = HorizontalLayout(line_frame)
 
-        frame = TabsInputFrame(line_frame, title="Cores:",
-                                title_width=113, space=18, width=285,
-                                fix_width=True)
-
+        frame = TabsInputFrame(line_frame, title="Cores:", title_width=113, fix_width=True)
         line_layout.addWidget(frame)
         self.cores = frame.get_input()
 
-        frame = TabsInputFrame(line_frame, title="RAM (Gb):",
-                                title_width=113, space=18, width=285,
-                                fix_width=True)
-
+        frame = TabsInputFrame(line_frame, title="RAM (Gb):", title_width=113, fix_width=True)
         line_layout.addWidget(frame)
         self.ram = frame.get_input()
 

@@ -82,37 +82,29 @@ class BaseInputFrame(Frame):
 
         super(BaseInputFrame, self).__init__(widget, **kwargs)
 
+        kwargs.pop('name', None)
+        kwargs.pop('width', None)
+
         # Lambda func grab input args
         get_num = lambda x : kwargs.get(x, 0)
         get_param = lambda x : kwargs.get(x)
 
-        height = get_num("height")
-        width = get_num("width")
-        name = get_param("name")
-
-        title_width = get_num("title_width")
         title = get_param("title")
-        align = get_param("align")
+        title_width = get_num("title_width")
         title_name = get_param("title_name")
 
         input_width = get_num("input_width")
-        hint = get_param("hint")
-        echo = get_param("echo")
         input_name = get_param("input_name")
-        input_stylesheet = get_param("input_stylesheet")
 
         # set layout
         layout = HorizontalLayout(self, **kwargs)
 
         # title
-        self.title = Label(self, height=height, width=title_width,
-                            text=title, align=align, name=title_name)
+        self.title = Label(self, width=title_width, text=title, name=title_name, **kwargs)
         layout.addWidget(self.title)
 
         # input
-        self.input_field = LineEdit(self, height=height, width=input_width,
-                                    hint=hint, echo=echo, name=input_name,
-                                    stylesheet=input_stylesheet)
+        self.input_field = LineEdit(self, width=input_width, name=input_name, **kwargs)
         layout.addWidget(self.input_field)
 
     def get_input(self):
@@ -137,8 +129,8 @@ class LoginInputFrame(BaseInputFrame):
 class TabsInputFrame(BaseInputFrame):
 
     def __init__(self, widget, **kwargs):
-        super(TabsInputFrame, self).__init__(widget, height=30,
-                                            title_name="Page_input_title",
+        super(TabsInputFrame, self).__init__(widget, height=30, space=18,
+                                            name="view_input",
                                             align=(Qt.AlignRight | Qt.AlignVCenter),
                                             **kwargs)
 
@@ -151,6 +143,6 @@ class TabsInputFrame(BaseInputFrame):
 
         if fix_width is True:
             if not width:
-                self.setFixedWidth(258)
+                self.setFixedWidth(285)
             else:
                 self.setFixedWidth(width)

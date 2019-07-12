@@ -30,7 +30,7 @@ class Resources(ResourcesUI):
 
     def _to_controller(self):
         super()._to_controller()
-    
+
     def _to_add_view(self):
         super()._to_add_view()
 
@@ -39,8 +39,8 @@ class ResourcesController(ResourcesControllerUI):
 
     def __init__(self, *args, **kwargs):
         super(ResourcesController, self).__init__(*args, **kwargs)
-        
-        
+
+
 class ResourcesAddView(ResourcesAddViewUI):
 
     def __init__(self, *args, **kwargs):

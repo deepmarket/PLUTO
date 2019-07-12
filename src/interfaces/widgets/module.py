@@ -1,7 +1,7 @@
 """
- 
+
     This module generate serveral combination frame based object.
- 
+
 """
 
 from PyQt5.QtWidgets import QLineEdit
@@ -14,7 +14,7 @@ from .lineedit import LineEdit
 from .spacer import HorizontalSpacer
 
 class BaseTwoLabelFrame(Frame):
-  
+
     label_one : Label = None
     label_two : Label = None
 
@@ -45,36 +45,36 @@ class BaseTwoLabelFrame(Frame):
 
     def set_label_one_text(self, text:str):
         self.label_one.setText(text)
-    
+
     def set_label_two_text(self, text:str):
         self.label_two.setText(text)
-    
+
     def get_label_one(self):
         return self.label_one
-    
+
     def get_label_two(self):
         return self.label_two
 
 
 class SectionTitleFrame(BaseTwoLabelFrame):
-    
+
     def __init__(self, widget, **kwargs):
-        super(SectionTitleFrame, self).__init__(widget, align=Qt.AlignVCenter, **kwargs)
-
-        get_param = lambda x : kwargs.get(x)
-
-
+        super(SectionTitleFrame, self).__init__(widget,
+                                                name="section_title_frame",
+                                                label_one_name="section_title",
+                                                label_two_name="section_hint",
+                                                align=Qt.AlignVCenter, **kwargs)
 
 
 class ConfigFrame(BaseTwoLabelFrame):
 
     def __init__(self, widget, **kwargs):
-        super(ConfigFrame, self).__init__(widget, width=200, l_m=11, r_m=11,
+        super(ConfigFrame, self).__init__(widget, name="config_frame",
                                           align=Qt.AlignVCenter, **kwargs)
 
 
 class BaseInputFrame(Frame):
-  
+
     title       : Label = None
     input_field : QLineEdit = None
 
@@ -105,13 +105,13 @@ class BaseInputFrame(Frame):
         layout = HorizontalLayout(self, **kwargs)
 
         # title
-        self.title = Label(self, height=height, width=title_width, 
+        self.title = Label(self, height=height, width=title_width,
                             text=title, align=align, name=title_name)
         layout.addWidget(self.title)
 
         # input
-        self.input_field = LineEdit(self, height=height, width=input_width, 
-                                    hint=hint, echo=echo, name=input_name, 
+        self.input_field = LineEdit(self, height=height, width=input_width,
+                                    hint=hint, echo=echo, name=input_name,
                                     stylesheet=input_stylesheet)
         layout.addWidget(self.input_field)
 

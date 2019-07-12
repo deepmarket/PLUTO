@@ -53,8 +53,9 @@ class ResourcesAddViewUI(Frame):
 
         self.signal = signal
         self._init_ui()
-
         self.setStyleSheet(resources_style)
+
+        self._to_tech_section()
 
     def _init_ui(self):
         # --------- self/resource ---------
@@ -95,21 +96,21 @@ class ResourcesAddViewUI(Frame):
 
         # --------- button_view ---------
 
-        layout = HorizontalLayout(self.button_view)
+        layout = HorizontalLayout(self.button_view, space=15)
 
-        self.cancel = Button(self.button_view, text="CANCEL")
+        self.cancel = Button(self.button_view, text="CANCEL", name="view_button", cursor=True)
         layout.addWidget(self.cancel)
 
         spacer = HorizontalSpacer()
         layout.addItem(spacer)
 
-        self.back = Button(self.button_view, text="BACK")
+        self.back = Button(self.button_view, text="BACK", name="view_button", cursor=True)
         layout.addWidget(self.back)
 
-        self.next_page = Button(self.button_view, text="NEXT")
+        self.next_page = Button(self.button_view, text="NEXT", name="view_button", cursor=True)
         layout.addWidget(self.next_page)
 
-        self.submit = Button(self.button_view, text="SUBMIT")
+        self.submit = Button(self.button_view, text="SUBMIT", name="view_button", cursor=True)
         layout.addWidget(self.submit)
 
         # --------- binding event to function ---------
@@ -129,8 +130,7 @@ class ResourcesAddViewUI(Frame):
         verification_section = Frame(self.tech_sections, name="section")
         sections_layout.addWidget(verification_section)
 
-        configuration_section = Frame(self.tech_sections,
-                                      name="configuration_content_frame")
+        configuration_section = Frame(self.tech_sections, name="section")
         sections_layout.addWidget(configuration_section)
 
         planning_section = Frame(self.tech_sections, name="section")
@@ -143,52 +143,56 @@ class ResourcesAddViewUI(Frame):
 
         section_layout = VerticalLayout(verification_section)
 
-        # title frame
-        frame = SectionTitleFrame(verification_section,
-                                  label_one_text="Resource Verification",
-                                  label_two_text="ip verification hint test")
+        # title_frame
+        title_frame = SectionTitleFrame(verification_section,
+                                        label_one_text="Resource Verification",
+                                        label_two_text="ip verification hint test")
 
-        section_layout.addWidget(frame)
-        self.verification_hint = frame.get_label_two()
+        section_layout.addWidget(title_frame)
+        self.verification_hint = title_frame.get_label_two()
+
+        # content_frame
+        content_frame = Frame(verification_section, name="verification_content_frame")
+        section_layout.addWidget(content_frame)
+
+        content_layout = VerticalLayout(content_frame)
 
         # ip_address
-        frame = Frame(verification_section, name="verification_content_frame")
-        section_layout.addWidget(frame)
+        input_frame = TabsInputFrame(content_frame, title="IP Address:", title_width=66)
 
-        layout = VerticalLayout(frame)
-
-        frame = TabsInputFrame(frame,
-                               title="IP Address:", title_width=66)
-
-        layout.addWidget(frame)
-        self.ip_address = frame.get_input()
+        content_layout.addWidget(input_frame)
+        self.ip_address = input_frame.get_input()
         # self.ip_address.setText("127.0.0.1") # TODO: test code
 
         # --------- configuration section ---------
 
         section_layout = VerticalLayout(configuration_section)
 
-        # title frame
-        frame = SectionTitleFrame(configuration_section,
-                                  label_one_text="Machine Configuration",
-                                  label_two_text="config hint test")
+        content_frame = Frame(configuration_section, name="configuration_content_frame")
+        section_layout.addWidget(content_frame)
 
-        section_layout.addWidget(frame)
-        self.configuration_hint = frame.get_label_two()
+        content_layout = VerticalLayout(content_frame)
+
+        # title frame
+        title_frame = SectionTitleFrame(content_frame,
+                                        label_one_text="Machine Configuration",
+                                        label_two_text="config hint test")
+
+        content_layout.addWidget(title_frame)
+        self.configuration_hint = title_frame.get_label_two()
 
         # frame: three config frame
-        frame = Frame(configuration_section)
-        section_layout.addWidget(frame)
-
+        frame = Frame(content_frame)
+        content_layout.addWidget(frame)
         layout = HorizontalLayout(frame)
 
         self.current_cpu = ConfigFrame(frame, label_one_text="Compute:", label_two_text="8GB")
         layout.addWidget(self.current_cpu)
-        # self.current_cpu.setObjectName("config_frame_disable") # TODO: test code
+        # # self.current_cpu.setObjectName("config_frame_disable") # TODO: test code
 
         self.current_core = ConfigFrame(frame, label_one_text="Cores:", label_two_text="4")
         layout.addWidget(self.current_core)
-        # self.current_core.setObjectName("config_frame_green") # TODO: test code
+        # # self.current_core.setObjectName("config_frame_green") # TODO: test code
 
         self.current_ram = ConfigFrame(frame, label_one_text="RAM:", label_two_text="4GB")
         layout.addWidget(self.current_ram)
@@ -244,12 +248,12 @@ class ResourcesAddViewUI(Frame):
 
         # --------- eco sections ---------
 
-        sections_layout = VerticalLayout(self.eco_sections, space=30)
+        sections_layout = VerticalLayout(self.eco_sections)
 
-        attendance_section = Frame(self.eco_sections)
+        attendance_section = Frame(self.eco_sections, name="section")
         sections_layout.addWidget(attendance_section)
 
-        price_section = Frame(self.eco_sections)
+        price_section = Frame(self.eco_sections, name="section")
         sections_layout.addWidget(price_section)
 
         spacer = VerticalSpacer()
@@ -257,45 +261,69 @@ class ResourcesAddViewUI(Frame):
 
         # --------- attendance section ---------
 
-        section_layout = VerticalLayout(attendance_section, space=30)
+        section_layout = VerticalLayout(attendance_section)
 
-        # title frame
-        frame = SectionTitleFrame(attendance_section,
-                                  label_one_text="Attendance",
-                                  label_two_text="attendance hint test")
+        # title_frame
+        title_frame = SectionTitleFrame(attendance_section,
+                                        label_one_text="Attendance",
+                                        label_two_text="attendance hint test")
 
-        section_layout.addWidget(frame)
-        self.attendance_hint = frame.get_label_two()
+        section_layout.addWidget(title_frame)
+        self.attendance_hint = title_frame.get_label_two()
+
+        # content_frame
+        content_frame = Frame(attendance_section, name="attendance_content_frame")
+        section_layout.addWidget(content_frame)
+
+        content_layout = VerticalLayout(content_frame)
 
         # TODO: fill the implementation here
-        label = Label(attendance_section, text="attendance section here")
-        section_layout.addWidget(label)
+        label = Label(attendance_section, text="Attendance implementation here.")
+        content_layout.addWidget(label)
 
         # --------- price section ---------
 
-        section_layout = VerticalLayout(price_section, space=30)
+        section_layout = VerticalLayout(price_section)
 
         # title frame
-        frame = SectionTitleFrame(price_section,
-                                  label_one_text="Resource Price",
-                                  label_two_text="price hint test")
+        title_frame = SectionTitleFrame(price_section,
+                                        label_one_text="Resource Price",
+                                        label_two_text="price hint test")
 
-        section_layout.addWidget(frame)
-        self.price_hint = frame.get_label_two()
+        section_layout.addWidget(title_frame)
+        self.price_hint = title_frame.get_label_two()
+
+        content_frame = Frame(price_section, name="price_content_frame")
+        section_layout.addWidget(content_frame)
+
+        content_layout = VerticalLayout(content_frame)
 
         # TODO: fill the implementation here
-        label = Label(attendance_section, text="price section here")
-        section_layout.addWidget(label)
+        label = Label(attendance_section, text="Price implementation here.")
+        content_layout.addWidget(label)
 
     def on_cancel_clicked(self):
         self.signal.emit()
 
     def on_back_clicked(self):
-        self.stack.setCurrentIndex(0)
+        self._to_tech_section()
 
     def on_next_page_clicked(self):
-        self.stack.setCurrentIndex(1)
+        self._to_eco_section()
 
     def on_submit_clicked(self):
         self.signal.emit()
 
+    def _to_tech_section(self):
+        self.stack.setCurrentWidget(self.tech_sections)
+
+        self.next_page.setVisible(True)
+        self.submit.setVisible(False)
+        self.back.setVisible(False)
+
+    def _to_eco_section(self):
+        self.stack.setCurrentWidget(self.eco_sections)
+
+        self.next_page.setVisible(False)
+        self.submit.setVisible(True)
+        self.back.setVisible(True)

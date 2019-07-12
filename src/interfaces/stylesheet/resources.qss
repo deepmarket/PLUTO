@@ -19,18 +19,17 @@
 
 #view_stack_frame {
     background-color: #FFFFFF;
-    padding-top: 42px;
 }
 
 #view_buttons_frame {
-    /* TODO: test code */
-    /* background-color: #FFFFFF; */
-    background-color: red;
-    min-height: 50px;
+    background-color: #FFFFFF;
+    /* background-color: red; */
+    padding-bottom: 10px;
+    min-height: 75px;
 }
 
 QFrame#section {
-    margin-bottom: 42px;
+    margin-top: 35px;
 }
 
 QFrame#section_title_frame {
@@ -46,14 +45,25 @@ QFrame#verification_content_frame {
 QFrame#configuration_content_frame {
     min-height: 85px;
     background-color: #D6EFEF;
-    margin-bottom: 30px;
     padding: 21px 27px;
 }
 
 QFrame#planning_content_frame {
-    max-height: 145px;
+    min-height: 78px;
     background-color: #E8F3F7;
     padding: 27px 32px;
+}
+
+QFrame#attendance_content_frame {
+    min-height: 100px;
+    background-color: #DEEFF5;
+    padding: 25px 20px;
+}
+
+QFrame#price_content_frame {
+    min-height: 30px;
+    background-color: #E1ECF0;
+    padding: 20px 25px;
 }
 
 QFrame#config_frame,
@@ -63,7 +73,7 @@ QFrame#config_frame_disable {
     max-height: 30px;
     max-width: 200px;
     padding: 0 11px;
-    background-color: white;
+    background-color: #FFFFFF;
 }
 
 QFrame#config_frame_disable {
@@ -86,15 +96,13 @@ QFrame#config_frame_disable > QLabel {
     color: #F2F2F2;
 }
 
-
-
 QLabel#view_title {
-    font-size: 17px;
+    font-size: 18px;
     color: #FFFFFF;
 }
 
 QLabel#section_title {
-    font-size: 15px;
+    font-size: 16px;
     color: #6C7E8E;
 }
 
@@ -126,90 +134,20 @@ QFrame#view_input_disable > QLineEdit {
     color: #F2F2F2;
 }
 
-
-
-
-
-
-
-
-#Page_input_frame {
-    background-color: white;
-}
-
-#Page_input_title {
-    font-family: "Helvetica Neue";
-    font-size: 13px;
-    font-weight: 300;
-    color: #6C7E8E;
-}
-
-#Page_button {
+QPushButton#view_button,
+QPushButton#view_button_disable {
     border: None;
-    background-color: #6C7E8E;
-    height: 30px;
-    width: 120px;
-    font-family: "Helvetica Neue";
+    min-width: 115px;
+    min-height: 30px;
     font-size: 12px;
-    font-weight: 300;
-    color: white;
 }
 
-#Page_available_title {
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 500;
-    color: #6C7E8E;
-}
-
-#Page_available_label {
-    font-family: "Helvetica Neue";
-    font-size: 11px;
-    font-weight: 500;
-    color: #6C7E8E;
-}
-
-#Page_table_workspace {
-    background-color: white;
-}
-
-#Page_table_test {
-    background-color: yellow;
-}
-
-#Page_table_workspace_search {
-    border: None;
-    background-color: #F7F7F7;
-    padding: 0 20px;
-    font-family: "Helvetica Neue";
-    font-size: 13px;
-    font-weight: 200;
-    color: black;
-}
-
-#Page_table_workspace_button {
-    border: None;
+QPushButton#view_button {
     background-color: #6C7E8E;
-    height: 35px;
-    width: 90px;
-    font-family: "Helvetica Neue";
-    font-size: 13px;
-    font-weight: 200;
-    color: white;
+    color: #FFFFFF;
 }
 
-#Page_table {
-    border: none;
-    background-color: white;
-    alternate-background-color: #FAFAFA;
-}
-
-#Page_table QHeaderView::section {
-    border: none;
-    background-color: #6C7E8E;
-    height: 35px;
-    font-family: "Helvetica Neue";
-    font-size:13px;
-    font-weight: 100;
-    color: white;
+QPushButton#view_button_disable {
+    background-color: #C6CDDB;
+    color: #F2F2F2;
 }

@@ -397,6 +397,7 @@ def add_frame(widget, layout=VERTICAL, height=None, width=None, name=None, style
     return section_frame, section_layout
 
 
+# check
 # return config box
 def add_config_box(widget, title, box_width=200):
     box = QFrame(widget)
@@ -440,6 +441,7 @@ def add_price_box(widget, title, box_width=307, box_height=37, space=28):
     return frame, box, button
 
 
+# check
 # helper function to add widgets in _init_ui() in JobWorkspace() class
 def add_labels(layout, frame, texts, style, alignment):
     for text in texts:
@@ -497,6 +499,7 @@ def add_row(widget, column, data, row):
             widget.item(row, i).setFont(QFont("Helvetica Neue", 12, QFont.Light))
 
 
+# check
 def verify_ip_address(ip_address):
     # get data from master json
     with urllib.request.urlopen("http://" + MASTER_IP + ":8443/json/") as url:

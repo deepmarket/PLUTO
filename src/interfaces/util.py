@@ -22,3 +22,20 @@ def load_path(path, file):
     if os.path.exists(candidate) and os.path.isfile(candidate):
         return candidate
     return False
+
+"""
+    Find all child widgets belong to the type (or with given object name)
+    Replace old object name to given new object name.
+
+    :param widget: parent widget
+    :param child_type: destinated child widgets type
+    :param new_name: the object name that would be set the matched children
+    :param old_name: optional, the name that child widgets currently have
+    :return None
+"""
+def change_objects_name(widget, child_type, new_name:str, *args):
+    # if None, children = []
+    children = [child for child in widget.findChildren(child_type, *args)]
+
+    for child in children:
+        child.setObjectName(new_name)

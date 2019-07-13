@@ -14,6 +14,7 @@
 # from uix.popup import Question
 # from api import Api
 
+import util as util
 from interfaces.resources import ResourcesUI, ResourcesControllerUI, ResourcesAddViewUI
 
 
@@ -43,5 +44,22 @@ class ResourcesController(ResourcesControllerUI):
 
 class ResourcesAddView(ResourcesAddViewUI):
 
+    class flag:
+        verification        : bool = False
+        planning            : bool = False
+        attendance          : bool = False
+        price               : bool = False
+
+        valid_cpu_input     : bool = False
+        valid_core_input    : bool = False
+        valid_ram_input     : bool = False
+
     def __init__(self, *args, **kwargs):
         super(ResourcesAddView, self).__init__(*args, **kwargs)
+
+        self._fetch_ip_address()
+
+    def _fetch_ip_address(self):
+        ip_address = util.get_ip_address()
+        self.ip_address.setText(ip_address)
+        self.disable_section(self.verification_section)

@@ -13,40 +13,48 @@ from ..widgets import (Frame, SectionTitleFrame, ConfigFrame, TabsInputFrame,
                         HorizontalLayout, VerticalLayout, StackLayout,
                         HorizontalSpacer, VerticalSpacer)
 
+from ..util import change_objects_name
 from ..stylesheet import resources_style
 
 class ResourcesAddViewUI(Frame):
 
-    signal:         pyqtSignal = None
+    signal                  :pyqtSignal = None
 
-    stack:              StackLayout = None
-    stack_view:         Frame = None
-    button_view:        Frame = None
+    stack                   :StackLayout = None
+    stack_view              :Frame = None
+    button_view             :Frame = None
 
-    tech_sections:       Frame = None
-    eco_sections:        Frame = None
+    tech_sections           :Frame = None
+    eco_sections            :Frame = None
 
-    cancel:             Button = None
-    back:               Button = None
-    next_page:          Button = None
-    submit:             Button = None
+    verification_section    :Frame = None
+    configuration_section   :Frame = None
+    planning_section        :Frame = None
 
-    current_cpu:        ConfigFrame = None
-    current_core:       ConfigFrame = None
-    current_ram:        ConfigFrame = None
+    attendance_section      :Frame = None
+    price_section           :Frame = None
 
-    ip_address:         QLineEdit = None
-    machine_name:       QLineEdit = None
-    cpu_gpu:            QLineEdit = None
-    cores:              QLineEdit = None
-    ram:                QLineEdit = None
+    cancel                  :Button = None
+    back                    :Button = None
+    next_page               :Button = None
+    submit                  :Button = None
 
-    verification_hint:  Label = None
-    configuration_hint: Label = None
-    planning_hint:      Label = None
-    attendance_hint:    Label = None
-    price_hint:         Label = None
-    global_hint:        Label = None
+    current_cpu             :ConfigFrame = None
+    current_core            :ConfigFrame = None
+    current_ram             :ConfigFrame = None
+
+    ip_address              :QLineEdit = None
+    machine_name            :QLineEdit = None
+    cpu_gpu                 :QLineEdit = None
+    cores                   :QLineEdit = None
+    ram                     :QLineEdit = None
+
+    verification_hint       :Label = None
+    configuration_hint      :Label = None
+    planning_hint           :Label = None
+    attendance_hint         :Label = None
+    price_hint              :Label = None
+    global_hint             :Label = None
 
     def __init__(self, signal:pyqtSignal, *args, **kwargs):
         super(ResourcesAddViewUI, self).__init__(*args, name="view", **kwargs)
@@ -56,6 +64,35 @@ class ResourcesAddViewUI(Frame):
         self.setStyleSheet(resources_style)
 
         self._to_tech_section()
+
+    def on_cancel_clicked(self):
+        self.signal.emit()
+
+    def on_back_clicked(self):
+        self._to_tech_section()
+
+    def on_next_page_clicked(self):
+        self._to_eco_section()
+
+    def on_submit_clicked(self):
+        self.signal.emit()
+
+    def _to_tech_section(self):
+        self.stack.setCurrentWidget(self.tech_sections)
+
+        self.next_page.setVisible(True)
+        self.submit.setVisible(False)
+        self.back.setVisible(False)
+
+    def _to_eco_section(self):
+        self.stack.setCurrentWidget(self.eco_sections)
+
+        self.next_page.setVisible(False)
+        self.submit.setVisible(True)
+        self.back.setVisible(True)
+
+    def disable_section(self, widget):
+        change_objects_name(widget, QFrame, "view_input_disable", "view_input")
 
     def _init_ui(self):
         # --------- self/resource ---------
@@ -120,31 +157,31 @@ class ResourcesAddViewUI(Frame):
         self.next_page.clicked.connect(self.on_next_page_clicked)
         self.submit.clicked.connect(self.on_submit_clicked)
 
-
     def _init_tech_sections(self):
-
-        # --------- tech sections ---------
 
         sections_layout = VerticalLayout(self.tech_sections)
 
-        verification_section = Frame(self.tech_sections, name="section")
-        sections_layout.addWidget(verification_section)
+        self.verification_section = Frame(self.tech_sections, name="section")
+        sections_layout.addWidget(self.verification_section)
+        self._init_verification_section()
 
-        configuration_section = Frame(self.tech_sections, name="section")
-        sections_layout.addWidget(configuration_section)
+        self.configuration_section = Frame(self.tech_sections, name="section")
+        sections_layout.addWidget(self.configuration_section)
+        self._init_configuration_section()
 
-        planning_section = Frame(self.tech_sections, name="section")
-        sections_layout.addWidget(planning_section)
+        self.planning_section = Frame(self.tech_sections, name="section")
+        sections_layout.addWidget(self.planning_section)
+        self._init_planning_section()
 
         spacer = VerticalSpacer()
         sections_layout.addItem(spacer)
 
-        # --------- verification section ---------
+    def _init_verification_section(self):
 
-        section_layout = VerticalLayout(verification_section)
+        section_layout = VerticalLayout(self.verification_section)
 
         # title_frame
-        title_frame = SectionTitleFrame(verification_section,
+        title_frame = SectionTitleFrame(self.verification_section,
                                         label_one_text="Resource Verification",
                                         label_two_text="ip verification hint test")
 
@@ -152,7 +189,7 @@ class ResourcesAddViewUI(Frame):
         self.verification_hint = title_frame.get_label_two()
 
         # content_frame
-        content_frame = Frame(verification_section, name="verification_content_frame")
+        content_frame = Frame(self.verification_section, name="verification_content_frame")
         section_layout.addWidget(content_frame)
 
         content_layout = VerticalLayout(content_frame)
@@ -164,11 +201,11 @@ class ResourcesAddViewUI(Frame):
         self.ip_address = input_frame.get_input()
         # self.ip_address.setText("127.0.0.1") # TODO: test code
 
-        # --------- configuration section ---------
+    def _init_configuration_section(self):
 
-        section_layout = VerticalLayout(configuration_section)
+        section_layout = VerticalLayout(self.configuration_section)
 
-        content_frame = Frame(configuration_section, name="configuration_content_frame")
+        content_frame = Frame(self.configuration_section, name="configuration_content_frame")
         section_layout.addWidget(content_frame)
 
         content_layout = VerticalLayout(content_frame)
@@ -198,28 +235,27 @@ class ResourcesAddViewUI(Frame):
         layout.addWidget(self.current_ram)
         # self.current_ram.setObjectName("config_frame_red") # TODO: test code
 
-        # --------- planning section ---------
+    def _init_planning_section(self):
 
-        section_layout = VerticalLayout(planning_section)
+        section_layout = VerticalLayout(self.planning_section)
 
         # title frame
-        frame = SectionTitleFrame(planning_section,
-                                  label_one_text="Resource Planning",
-                                  label_two_text="planning hint test")
+        title_frame = SectionTitleFrame(self.planning_section,
+                                        label_one_text="Resource Planning",
+                                        label_two_text="planning hint test")
 
-        section_layout.addWidget(frame)
-        self.planning_hint = frame.get_label_two()
+        section_layout.addWidget(title_frame)
+        self.planning_hint = title_frame.get_label_two()
 
         # frame: two line frame contains inputs
-        frame = Frame(planning_section, name="planning_content_frame")
-        section_layout.addWidget(frame)
+        content_frame = Frame(self.planning_section, name="planning_content_frame")
+        section_layout.addWidget(content_frame)
 
-        layout = VerticalLayout(frame, space=18)
+        content_layout = VerticalLayout(content_frame, space=18)
 
         # line_frame: machine_name, cpu_gpu
-        line_frame = Frame(frame)
-        layout.addWidget(line_frame)
-
+        line_frame = Frame(content_frame)
+        content_layout.addWidget(line_frame)
         line_layout = HorizontalLayout(line_frame)
 
         frame = TabsInputFrame(line_frame, title="Machine Name:", title_width=113, fix_width=True)
@@ -231,9 +267,8 @@ class ResourcesAddViewUI(Frame):
         self.cpu_gpu = frame.get_input()
 
         # line_frame: cores, ram, spacer, evaluate_button
-        line_frame = Frame(frame)
-        layout.addWidget(line_frame)
-
+        line_frame = Frame(content_frame)
+        content_layout.addWidget(line_frame)
         line_layout = HorizontalLayout(line_frame)
 
         frame = TabsInputFrame(line_frame, title="Cores:", title_width=113, fix_width=True)
@@ -246,25 +281,25 @@ class ResourcesAddViewUI(Frame):
 
     def _init_eco_sections(self):
 
-        # --------- eco sections ---------
-
         sections_layout = VerticalLayout(self.eco_sections)
 
-        attendance_section = Frame(self.eco_sections, name="section")
-        sections_layout.addWidget(attendance_section)
+        self.attendance_section = Frame(self.eco_sections, name="section")
+        sections_layout.addWidget(self.attendance_section)
+        self._init_attendance_section()
 
-        price_section = Frame(self.eco_sections, name="section")
-        sections_layout.addWidget(price_section)
+        self.price_section = Frame(self.eco_sections, name="section")
+        sections_layout.addWidget(self.price_section)
+        self._init_price_section()
 
         spacer = VerticalSpacer()
         sections_layout.addItem(spacer)
 
-        # --------- attendance section ---------
+    def _init_attendance_section(self):
 
-        section_layout = VerticalLayout(attendance_section)
+        section_layout = VerticalLayout(self.attendance_section)
 
         # title_frame
-        title_frame = SectionTitleFrame(attendance_section,
+        title_frame = SectionTitleFrame(self.attendance_section,
                                         label_one_text="Attendance",
                                         label_two_text="attendance hint test")
 
@@ -272,58 +307,34 @@ class ResourcesAddViewUI(Frame):
         self.attendance_hint = title_frame.get_label_two()
 
         # content_frame
-        content_frame = Frame(attendance_section, name="attendance_content_frame")
+        content_frame = Frame(self.attendance_section, name="attendance_content_frame")
         section_layout.addWidget(content_frame)
 
         content_layout = VerticalLayout(content_frame)
 
         # TODO: fill the implementation here
-        label = Label(attendance_section, text="Attendance implementation here.")
+        label = Label(content_frame, text="Attendance implementation here.")
         content_layout.addWidget(label)
 
-        # --------- price section ---------
+    def _init_price_section(self):
 
-        section_layout = VerticalLayout(price_section)
+        section_layout = VerticalLayout(self.price_section)
 
         # title frame
-        title_frame = SectionTitleFrame(price_section,
+        title_frame = SectionTitleFrame(self.price_section,
                                         label_one_text="Resource Price",
                                         label_two_text="price hint test")
 
         section_layout.addWidget(title_frame)
         self.price_hint = title_frame.get_label_two()
 
-        content_frame = Frame(price_section, name="price_content_frame")
+        # content_frame
+        content_frame = Frame(self.price_section, name="price_content_frame")
         section_layout.addWidget(content_frame)
 
         content_layout = VerticalLayout(content_frame)
 
         # TODO: fill the implementation here
-        label = Label(attendance_section, text="Price implementation here.")
+        label = Label(content_frame, text="Price implementation here.")
         content_layout.addWidget(label)
 
-    def on_cancel_clicked(self):
-        self.signal.emit()
-
-    def on_back_clicked(self):
-        self._to_tech_section()
-
-    def on_next_page_clicked(self):
-        self._to_eco_section()
-
-    def on_submit_clicked(self):
-        self.signal.emit()
-
-    def _to_tech_section(self):
-        self.stack.setCurrentWidget(self.tech_sections)
-
-        self.next_page.setVisible(True)
-        self.submit.setVisible(False)
-        self.back.setVisible(False)
-
-    def _to_eco_section(self):
-        self.stack.setCurrentWidget(self.eco_sections)
-
-        self.next_page.setVisible(False)
-        self.submit.setVisible(True)
-        self.back.setVisible(True)

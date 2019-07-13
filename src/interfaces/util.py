@@ -37,19 +37,3 @@ def load_path(path, file):
 def get_children(widget, child_type, *args):
     # if None, children = []
     return [child for child in widget.findChildren(child_type, *args)]
-
-
-# """
-#     Enable/Dsiable all lineedit belong to widget.
-
-#     :param widget: parent widget
-#     :param enable: bool var set enable/disable
-#     :args: optional, the name that child widgets currently have
-#     :return None
-# """
-# def swtich_children_input(widget, enable:bool,*args):
-
-#     children = [child for child in widget.findChildren(QLineEdit, *args)]
-
-#     for child in children:
-#         child.setEnabled(enable)

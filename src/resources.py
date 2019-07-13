@@ -45,14 +45,42 @@ class ResourcesController(ResourcesControllerUI):
 class ResourcesAddView(ResourcesAddViewUI):
 
     class flag:
+
+        # tech sections flag
         verification        : bool = False
         planning            : bool = False
+
+        # eco sections flag
         attendance          : bool = False
         price               : bool = False
 
+        # planning input flag
         valid_cpu_input     : bool = False
         valid_core_input    : bool = False
         valid_ram_input     : bool = False
+
+        def if_tech_valid(self):
+            tech_sections = [
+                self.verification,
+                self.planning
+            ]
+            return all(tech_sections)
+
+        def if_eco_valid(self):
+            eco_sections = [
+                self.attendance,
+                self.price
+            ]
+            return all(eco_sections)
+
+        def if_planning_valid(self):
+            planning_input = [
+                self.valid_cpu_input,
+                self.valid_core_input,
+                self.valid_ram_input
+            ]
+            return all(planning_input)
+
 
     def __init__(self, *args, **kwargs):
         super(ResourcesAddView, self).__init__(*args, **kwargs)
@@ -68,3 +96,7 @@ class ResourcesAddView(ResourcesAddViewUI):
 
         # disable input field
         self.disable_section(self.verification_section)
+
+        # turn on verification flag
+        self.flag.verification = True
+

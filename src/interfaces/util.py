@@ -7,6 +7,8 @@
 
 import os
 
+from PyQt5.QtWidgets import QLineEdit
+
 
 """
     Find a file in a given path string
@@ -23,19 +25,31 @@ def load_path(path, file):
         return candidate
     return False
 
+
 """
-    Find all child widgets belong to the type (or with given object name)
-    Replace old object name to given new object name.
+    Find all matched child widgets belong to the type (or with given object name)
 
     :param widget: parent widget
     :param child_type: destinated child widgets type
-    :param new_name: the object name that would be set the matched children
-    :param old_name: optional, the name that child widgets currently have
-    :return None
+    :args: optional, the name that child widgets currently have
+    :return: list of all matched child widgets
 """
-def change_objects_name(widget, child_type, new_name:str, *args):
+def get_children(widget, child_type, *args):
     # if None, children = []
-    children = [child for child in widget.findChildren(child_type, *args)]
+    return [child for child in widget.findChildren(child_type, *args)]
 
-    for child in children:
-        child.setObjectName(new_name)
+
+# """
+#     Enable/Dsiable all lineedit belong to widget.
+
+#     :param widget: parent widget
+#     :param enable: bool var set enable/disable
+#     :args: optional, the name that child widgets currently have
+#     :return None
+# """
+# def swtich_children_input(widget, enable:bool,*args):
+
+#     children = [child for child in widget.findChildren(QLineEdit, *args)]
+
+#     for child in children:
+#         child.setEnabled(enable)

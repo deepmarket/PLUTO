@@ -13,7 +13,7 @@ from ..widgets import (Frame, SectionTitleFrame, ConfigFrame, TabsInputFrame,
                         HorizontalLayout, VerticalLayout, StackLayout,
                         HorizontalSpacer, VerticalSpacer)
 
-from ..util import change_objects_name
+from ..util import get_children
 from ..stylesheet import resources_style
 
 class ResourcesAddViewUI(Frame):
@@ -91,8 +91,29 @@ class ResourcesAddViewUI(Frame):
         self.submit.setVisible(True)
         self.back.setVisible(True)
 
-    def disable_section(self, widget):
-        change_objects_name(widget, QFrame, "view_input_disable", "view_input")
+    def disable_section(self, section):
+        if not section in vars(self).values():
+            return
+
+        input_frame = get_children(section, QFrame, "view_input")
+        for frame in input_frame:
+            frame.setObjectName("view_input_disable")
+
+        qlineedit = get_children(section, QLineEdit)
+        for edit in qlineedit:
+            edit.setEnabled(False)
+
+    def enable_section(self, section):
+        if not section in vars(self).values():
+            return
+
+        input_frame = get_children(section, QFrame, "view_input_disable")
+        for frame in input_frame:
+            frame.setObjectName("view_input")
+
+        qlineedit = get_children(section, QLineEdit)
+        for edit in qlineedit:
+            edit.setEnabled(True)
 
     def _init_ui(self):
         # --------- self/resource ---------

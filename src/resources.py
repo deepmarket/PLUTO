@@ -60,6 +60,11 @@ class ResourcesAddView(ResourcesAddViewUI):
         self._fetch_ip_address()
 
     def _fetch_ip_address(self):
+        # get ip address for local machine
         ip_address = util.get_ip_address()
+
+        # insert ip address to input field
         self.ip_address.setText(ip_address)
+
+        # disable input field
         self.disable_section(self.verification_section)

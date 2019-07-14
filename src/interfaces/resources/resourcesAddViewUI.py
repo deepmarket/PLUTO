@@ -97,6 +97,10 @@ class ResourcesAddViewUI(Frame):
     def on_ram_edit(self):
         pass
 
+    def reset(self):
+        # TODO: implment later
+        pass
+
     def _to_tech_section(self):
         self.stack.setCurrentWidget(self.tech_sections)
 

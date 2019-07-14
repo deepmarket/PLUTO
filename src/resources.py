@@ -73,6 +73,15 @@ class ResourcesAddView(ResourcesAddViewUI):
             return
         super().on_next_page_clicked()
 
+    def reset(self):
+        super().reset()
+        self.available_cpu_gpu = 0
+        self.available_cores = 0
+        self.available_ram = 0
+
+        self._fetch_ip_address()
+        self._fetch_machine_config()
+
     def _fetch_ip_address(self):
         # get ip address for local machine
         ip_address = util.get_ip_address()

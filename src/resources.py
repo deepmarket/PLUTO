@@ -6,7 +6,8 @@
 
 """
 
-# from psutil import cpu_freq, cpu_count, virtual_memory
+from enum import Enum, auto
+from psutil import cpu_freq, cpu_count, virtual_memory
 
 # from mainview import MainView
 # from uix.util import *
@@ -44,48 +45,32 @@ class ResourcesController(ResourcesControllerUI):
 
 class ResourcesAddView(ResourcesAddViewUI):
 
-    class flag:
+    available_cpu_gpu               : int = 0
+    available_cores                 : int = 0
+    available_ram                   : int = 0
 
-        # tech sections flag
-        verification        : bool = False
-        planning            : bool = False
+    # class flag:
 
-        # eco sections flag
-        attendance          : bool = False
-        price               : bool = False
+    #     # tech sections flag
+    #     verification                : bool = False
+    #     planning                    : bool = False
 
-        # planning input flag
-        valid_cpu_input     : bool = False
-        valid_core_input    : bool = False
-        valid_ram_input     : bool = False
+    #     # eco sections flag
+    #     attendance                  : bool = False
+    #     price                       : bool = False
 
-        def if_tech_valid(self):
-            tech_sections = [
-                self.verification,
-                self.planning
-            ]
-            return all(tech_sections)
-
-        def if_eco_valid(self):
-            eco_sections = [
-                self.attendance,
-                self.price
-            ]
-            return all(eco_sections)
-
-        def if_planning_valid(self):
-            planning_input = [
-                self.valid_cpu_input,
-                self.valid_core_input,
-                self.valid_ram_input
-            ]
-            return all(planning_input)
+    #     # planning input flag
+    #     valid_machine_name_input    : bool = False
+    #     valid_cpu_gpu_input         : bool = False
+    #     valid_cores_input            : bool = False
+    #     valid_ram_input             : bool = False
 
 
     def __init__(self, *args, **kwargs):
         super(ResourcesAddView, self).__init__(*args, **kwargs)
 
         self._fetch_ip_address()
+        self._fetch_machine_config()
 
     def _fetch_ip_address(self):
         # get ip address for local machine
@@ -97,6 +82,122 @@ class ResourcesAddView(ResourcesAddViewUI):
         # disable input field
         self.disable_section(self.verification_section)
 
-        # turn on verification flag
-        self.flag.verification = True
+    def _fetch_machine_config(self):
 
+        # Processor's speed in gHz
+        self.available_cpu_gpu = round(cpu_freq().current/1000, 1)
+
+        # Logical cores on the machine
+        self.available_cores = cpu_count(logical=False)
+
+        # Total installed RAM
+        self.available_ram = round(virtual_memory().total/(pow(1024, 3)), 1)
+
+        self.set_config_text(self.current_cpu_gpu, f"{self.available_cpu_gpu} GHz")
+        self.set_config_text(self.current_cores, f"{self.available_cores}")
+        self.set_config_text(self.current_ram, f"{self.available_ram} GB")
+
+    def on_machine_name_edit(self):
+        self._machine_name_check()
+
+    def on_cpu_gpu_edit(self):
+        self._cpu_gpu_check()
+
+    def on_cores_edit(self):
+        self._cores_check()
+
+    def on_ram_edit(self):
+        self._ram_check()
+
+    def on_next_page_clicked(self):
+
+        if not self._planning_check():
+            return
+        super().on_next_page_clicked()
+
+    def _planning_check(self):
+        # clean up hint
+        self.reset_hint()
+
+        # have to call function individually in order to raise hint
+        if not self._machine_name_check(): return False
+        if not self._cpu_gpu_check(): return False
+        if not self._cores_check(): return False
+        if not self._ram_check(): return False
+
+        return True
+
+    def _machine_name_check(self):
+        # clean up hint
+        self.reset_hint()
+
+        if self.machine_name.text() is "":
+            self.set_hint(self.planning_hint, "Please enter a machine name.")
+            return False
+        return True
+
+    def _cpu_gpu_check(self):
+        # clean up hint
+        self.reset_hint()
+
+        # set error message
+        class Res(Enum):
+            EMPTY_ERROR = "Please enter number of GPUs."
+            RANGE_ERROR = "Input for GPUs is out of range."
+            INT_ERROR = "Please enter an interger input"
+            SUCCESS = auto()
+
+        # check if input is acceptable
+        res = util.config_input_check(self.cpu_gpu.text(), self.available_cpu_gpu, Res)
+
+        if res is not Res.SUCCESS:
+            self.set_hint(self.planning_hint, res.value)
+            self.set_config_red(self.current_cpu_gpu)
+            return False
+
+        self.set_config_green(self.current_cpu_gpu)
+        return True
+
+    def _cores_check(self):
+        # clean up hint
+        self.reset_hint()
+
+        # set error message
+        class Res(Enum):
+            EMPTY_ERROR = "Invalid number of cores."
+            RANGE_ERROR = "Cores is out of range."
+            INT_ERROR = "Please enter an interger input"
+            SUCCESS = auto()
+
+        # check if input is acceptable
+        res = util.config_input_check(self.cores.text(), self.available_cores, Res)
+
+        if res is not Res.SUCCESS:
+            self.set_hint(self.planning_hint, res.value)
+            self.set_config_red(self.current_cores)
+            return False
+
+        self.set_config_green(self.current_cores)
+        return True
+
+    def _ram_check(self):
+        # clean up hint
+        self.reset_hint()
+
+        # set error message
+        class Res(Enum):
+            EMPTY_ERROR = "Please enter number of RAM."
+            RANGE_ERROR = "Amount of RAM is out of range."
+            INT_ERROR = "Please enter an interger input"
+            SUCCESS = auto()
+
+        # check if input is acceptable
+        res = util.config_input_check(self.ram.text(), self.available_ram, Res)
+
+        if res is not Res.SUCCESS:
+            self.set_hint(self.planning_hint, res.value)
+            self.set_config_red(self.current_ram)
+            return False
+
+        self.set_config_green(self.current_ram)
+        return True

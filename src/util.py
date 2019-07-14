@@ -1,6 +1,13 @@
-import socket
 import errno
+import re
+import socket
+
+from enum import Enum
 from socket import error as socket_error
+
+
+# regex
+num_regex = re.compile(r"(\d+)")
 
 
 # load the ip address from the running machine
@@ -19,3 +26,19 @@ def get_ip_address():
     s.close()
 
   return ip_address
+
+
+def config_input_check(text:str, available:int, res:Enum):
+
+    if text is "" or not num_regex.match(text):
+        return res.EMPTY_ERROR
+    else:
+        try:
+            num = int(text)
+
+            if num > available:
+                return res.RANGE_ERROR
+            else:
+                return res.SUCCESS
+        except ValueError:
+            return res.INT_ERROR

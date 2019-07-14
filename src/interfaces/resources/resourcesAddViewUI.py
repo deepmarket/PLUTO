@@ -5,7 +5,9 @@
 
 """
 
-from PyQt5.QtWidgets import QFrame, QLineEdit
+from abc import ABCMeta, abstractmethod
+
+from PyQt5.QtWidgets import QFrame, QLineEdit, QLabel
 from PyQt5.QtCore import pyqtSignal
 
 from ..widgets import (Frame, SectionTitleFrame, ConfigFrame, TabsInputFrame,
@@ -17,6 +19,9 @@ from ..util import get_children
 from ..stylesheet import resources_style
 
 class ResourcesAddViewUI(Frame):
+
+    # metaclass for defining abstract base classes
+    __metaclass__ = ABCMeta
 
     signal                  :pyqtSignal = None
 
@@ -39,8 +44,8 @@ class ResourcesAddViewUI(Frame):
     next_page               :Button = None
     submit                  :Button = None
 
-    current_cpu             :ConfigFrame = None
-    current_core            :ConfigFrame = None
+    current_cpu_gpu         :ConfigFrame = None
+    current_cores           :ConfigFrame = None
     current_ram             :ConfigFrame = None
 
     ip_address              :QLineEdit = None
@@ -54,7 +59,6 @@ class ResourcesAddViewUI(Frame):
     planning_hint           :Label = None
     attendance_hint         :Label = None
     price_hint              :Label = None
-    global_hint             :Label = None
 
     def __init__(self, signal:pyqtSignal, *args, **kwargs):
         super(ResourcesAddViewUI, self).__init__(*args, name="view", **kwargs)
@@ -77,6 +81,22 @@ class ResourcesAddViewUI(Frame):
     def on_submit_clicked(self):
         self.signal.emit()
 
+    @abstractmethod
+    def on_machine_name_edit(self):
+        pass
+
+    @abstractmethod
+    def on_cpu_gpu_edit(self):
+        pass
+
+    @abstractmethod
+    def on_cores_edit(self):
+        pass
+
+    @abstractmethod
+    def on_ram_edit(self):
+        pass
+
     def _to_tech_section(self):
         self.stack.setCurrentWidget(self.tech_sections)
 
@@ -92,54 +112,92 @@ class ResourcesAddViewUI(Frame):
         self.back.setVisible(True)
 
     def disable_section(self, section):
-        if not section in vars(self).values():
-            return
+        if section in vars(self).values():
+            input_frame = get_children(section, QFrame, "view_input")
 
-        input_frame = get_children(section, QFrame, "view_input")
-        for frame in input_frame:
-            frame.setObjectName("view_input_disable")
+            # change style
+            for frame in input_frame:
+                frame.setObjectName("view_input_disable")
 
-        qlineedit = get_children(section, QLineEdit)
-        for edit in qlineedit:
-            edit.setEnabled(False)
+            # enable input
+            qlineedit = get_children(section, QLineEdit)
+            for edit in qlineedit:
+                edit.setEnabled(False)
 
     def enable_section(self, section):
-        if not section in vars(self).values():
-            return
+        if section in vars(self).values():
+            input_frame = get_children(section, QFrame, "view_input_disable")
 
-        input_frame = get_children(section, QFrame, "view_input_disable")
-        for frame in input_frame:
-            frame.setObjectName("view_input")
+            # change style
+            for frame in input_frame:
+                frame.setObjectName("view_input")
 
-        qlineedit = get_children(section, QLineEdit)
-        for edit in qlineedit:
-            edit.setEnabled(True)
+            # enable input
+            qlineedit = get_children(section, QLineEdit)
+            for edit in qlineedit:
+                edit.setEnabled(True)
+
+    def disable_button(self, button):
+        if button in vars(self).values():
+            button.setObjectName("view_button_disable")
+            button.setEnabled(False)
+
+    def enable_button(self, button):
+        if button in vars(self).values():
+            button.setObjectName("view_button")
+            button.setEnabled(True)
+
+    def set_config_text(self, config:ConfigFrame, text:str):
+        if config in vars(self).values():
+            config.set_label_two_text(text)
+
+    def set_config_green(self, config:ConfigFrame):
+        if config in vars(self).values():
+            # update object name
+            config.setObjectName("config_frame_green")
+
+            # reload stylesheet
+            self.setStyleSheet(resources_style)
+
+    def set_config_red(self, config:ConfigFrame):
+        if config in vars(self).values():
+            # update object name
+            config.setObjectName("config_frame_red")
+
+            # reload stylesheet
+            self.setStyleSheet(resources_style)
+
+    def set_hint(self, hint:QLabel, text:str):
+        if hint in vars(self).values():
+            hint.setText(text)
+
+    def reset_hint(self):
+        self.verification_hint.setText("")
+        self.configuration_hint.setText("")
+        self.planning_hint.setText("")
+        self.attendance_hint.setText("")
+        self.price_hint.setText("")
 
     def _init_ui(self):
-        # --------- self/resource ---------
 
         window_layout = VerticalLayout(self)
 
         title_frame = Frame(self, name="view_title_frame")
         window_layout.addWidget(title_frame)
 
-        self.stack_view = Frame(self, name="view_stack_frame")
-        window_layout.addWidget(self.stack_view)
-
-        self.button_view = Frame(self, name="view_buttons_frame")
-        window_layout.addWidget(self.button_view)
-
-        # --------- title_frame ---------
-
         title_layout = HorizontalLayout(title_frame)
-
         title = Label(title_frame, name="view_title", text="Add New Resource")
         title_layout.addWidget(title)
 
-        spacer = HorizontalSpacer()
-        title_layout.addItem(spacer)
+        self.stack_view = Frame(self, name="view_stack_frame")
+        window_layout.addWidget(self.stack_view)
+        self._init_stack_view()
 
-        # --------- stack_view ---------
+        self.button_view = Frame(self, name="view_buttons_frame")
+        window_layout.addWidget(self.button_view)
+        self._init_button_view()
+
+    def _init_stack_view(self):
 
         self.stack = StackLayout(self.stack_view)
 
@@ -152,7 +210,7 @@ class ResourcesAddViewUI(Frame):
         self._init_tech_sections()
         self._init_eco_sections()
 
-        # --------- button_view ---------
+    def _init_button_view(self):
 
         layout = HorizontalLayout(self.button_view, space=15)
 
@@ -197,14 +255,17 @@ class ResourcesAddViewUI(Frame):
         spacer = VerticalSpacer()
         sections_layout.addItem(spacer)
 
+        self.machine_name.textChanged.connect(self.on_machine_name_edit)
+        self.cpu_gpu.textChanged.connect(self.on_cpu_gpu_edit)
+        self.cores.textChanged.connect(self.on_cores_edit)
+        self.ram.textChanged.connect(self.on_ram_edit)
+
     def _init_verification_section(self):
 
         section_layout = VerticalLayout(self.verification_section)
 
         # title_frame
-        title_frame = SectionTitleFrame(self.verification_section,
-                                        label_one_text="Resource Verification",
-                                        label_two_text="ip verification hint test")
+        title_frame = SectionTitleFrame(self.verification_section, label_one_text="Resource Verification")
 
         section_layout.addWidget(title_frame)
         self.verification_hint = title_frame.get_label_two()
@@ -232,9 +293,7 @@ class ResourcesAddViewUI(Frame):
         content_layout = VerticalLayout(content_frame)
 
         # title frame
-        title_frame = SectionTitleFrame(content_frame,
-                                        label_one_text="Machine Configuration",
-                                        label_two_text="config hint test")
+        title_frame = SectionTitleFrame(content_frame, label_one_text="Machine Configuration")
 
         content_layout.addWidget(title_frame)
         self.configuration_hint = title_frame.get_label_two()
@@ -244,26 +303,21 @@ class ResourcesAddViewUI(Frame):
         content_layout.addWidget(frame)
         layout = HorizontalLayout(frame)
 
-        self.current_cpu = ConfigFrame(frame, label_one_text="Compute:", label_two_text="8GB")
-        layout.addWidget(self.current_cpu)
-        # # self.current_cpu.setObjectName("config_frame_disable") # TODO: test code
+        self.current_cpu_gpu = ConfigFrame(frame, label_one_text="Compute:", label_two_text="-")
+        layout.addWidget(self.current_cpu_gpu)
 
-        self.current_core = ConfigFrame(frame, label_one_text="Cores:", label_two_text="4")
-        layout.addWidget(self.current_core)
-        # # self.current_core.setObjectName("config_frame_green") # TODO: test code
+        self.current_cores = ConfigFrame(frame, label_one_text="Cores:", label_two_text="-")
+        layout.addWidget(self.current_cores)
 
-        self.current_ram = ConfigFrame(frame, label_one_text="RAM:", label_two_text="4GB")
+        self.current_ram = ConfigFrame(frame, label_one_text="RAM:", label_two_text="-")
         layout.addWidget(self.current_ram)
-        # self.current_ram.setObjectName("config_frame_red") # TODO: test code
 
     def _init_planning_section(self):
 
         section_layout = VerticalLayout(self.planning_section)
 
         # title frame
-        title_frame = SectionTitleFrame(self.planning_section,
-                                        label_one_text="Resource Planning",
-                                        label_two_text="planning hint test")
+        title_frame = SectionTitleFrame(self.planning_section, label_one_text="Resource Planning")
 
         section_layout.addWidget(title_frame)
         self.planning_hint = title_frame.get_label_two()

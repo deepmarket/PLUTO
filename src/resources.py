@@ -49,23 +49,6 @@ class ResourcesAddView(ResourcesAddViewUI):
     available_cores                 : int = 0
     available_ram                   : int = 0
 
-    # class flag:
-
-    #     # tech sections flag
-    #     verification                : bool = False
-    #     planning                    : bool = False
-
-    #     # eco sections flag
-    #     attendance                  : bool = False
-    #     price                       : bool = False
-
-    #     # planning input flag
-    #     valid_machine_name_input    : bool = False
-    #     valid_cpu_gpu_input         : bool = False
-    #     valid_cores_input            : bool = False
-    #     valid_ram_input             : bool = False
-
-
     def __init__(self, *args, **kwargs):
         super(ResourcesAddView, self).__init__(*args, **kwargs)
 

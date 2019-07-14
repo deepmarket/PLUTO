@@ -3,7 +3,7 @@
 
 
 class Resources(MainView):
-  
+
     def __init__(self, *args, **kwargs):
         super(Resources, self).__init__(*args, **kwargs)
 
@@ -180,7 +180,7 @@ class Resources(MainView):
         }
 
         self._api_call("POST", "/resources", dat=resources_data)
-                
+
     def on_refresh_button_clicked(self):
         self._reset_list_hint()
         self._fetch_resources_data()
@@ -220,19 +220,7 @@ class Resources(MainView):
                 if question.exec_():
                     self._api_call("PUT", f"/resources/{self.machines[row]['_id']}", self.machines[row])
 
-    # def on_ip_address_edit(self):
-    #     self.workspace.verification_hint.setText("")
-    #     ip_address = self.workspace.ip_address.text()
-    #
-    #     if ip_address == "":
-    #         self.workspace.verification_hint.setText("Please enter an IP address.")
-    #         self.ip_check = False
-    #     elif not self.ip_regex.match(ip_address):
-    #         self.workspace.verification_hint.setText("Invalid IP address format. Please check your input. " +
-    #                                                  "(i.e 127.0.0.1)")
-    #     else:
-    #         self.ip_check = True
-
+    # check
     def on_machine_edit(self):
         self._reset_workspace_hint()
 
@@ -245,6 +233,7 @@ class Resources(MainView):
                 self.machine_name_check = True
                 self._check_flag()
 
+    # check
     # disable for this version
     def on_cpu_edit(self):
         self._reset_workspace_hint()
@@ -280,6 +269,7 @@ class Resources(MainView):
                     self.cpu_check = True
                     self._check_flag()
 
+    # check
     def on_core_edit(self):
         self._reset_workspace_hint()
 
@@ -314,6 +304,7 @@ class Resources(MainView):
                     self.core_check = True
                     self._check_flag()
 
+    # check
     def on_ram_edit(self):
         self._reset_workspace_hint()
 
@@ -383,7 +374,7 @@ class Resources(MainView):
         self.workspace.verification_hint.setText("")
         self.workspace.planning_hint.setText("")
         self.workspace.submission_hint.setText("")
-    
+
     def _reset_list_hint(self):
         self.list.hint.setText("")
 
@@ -400,7 +391,7 @@ class Resources(MainView):
                 status, res = api.put(dat)
             else:
                 status, res = api.delete()
-            
+
             if not res:
                 msg = "Server fail to response request. Please try again later."
                 if method == "POST":
@@ -417,7 +408,7 @@ class Resources(MainView):
                     for rsrc in res["resources"]:
                         # store remote machine info locally
                         self.machines.append(rsrc)
-                        
+
                         self.list.add_data([rsrc['machine_name'],
                                             rsrc['ip_address'],
                                             str(rsrc['cpus']),
@@ -442,7 +433,7 @@ class Resources(MainView):
                         msg = "This IP address is already in use. Please use a different one."
                 else:
                     msg = "There was an unknown error from the server. Please try again."
-                
+
                 if method == "POST":
                     self.workspace.submission_hint.setText(msg)
                 else: # method in ["GET", "PUT", "DELETE"]

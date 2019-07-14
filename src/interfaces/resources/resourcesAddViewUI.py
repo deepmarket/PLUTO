@@ -98,35 +98,19 @@ class ResourcesAddViewUI(Frame):
         pass
 
     def reset(self):
-        # TODO: implment later
-        pass
+        self.reset_section(self.verification_section)
+        self.reset_section(self.configuration_section)
+        self.reset_section(self.planning_section)
+        self.reset_section(self.attendance_section)
+        self.reset_section(self.price_section)
 
-    def _to_tech_section(self):
-        self.stack.setCurrentWidget(self.tech_sections)
+        self.reset_config(self.current_cpu_gpu)
+        self.reset_config(self.current_cores)
+        self.reset_config(self.current_ram)
 
-        self.next_page.setVisible(True)
-        self.submit.setVisible(False)
-        self.back.setVisible(False)
+        self.reset_hint()
 
-    def _to_eco_section(self):
-        self.stack.setCurrentWidget(self.eco_sections)
-
-        self.next_page.setVisible(False)
-        self.submit.setVisible(True)
-        self.back.setVisible(True)
-
-    def disable_section(self, section):
-        if section in vars(self).values():
-            input_frame = get_children(section, QFrame, "view_input")
-
-            # change style
-            for frame in input_frame:
-                frame.setObjectName("view_input_disable")
-
-            # enable input
-            qlineedit = get_children(section, QLineEdit)
-            for edit in qlineedit:
-                edit.setEnabled(False)
+        self._to_tech_section()
 
     def enable_section(self, section):
         if section in vars(self).values():
@@ -141,15 +125,28 @@ class ResourcesAddViewUI(Frame):
             for edit in qlineedit:
                 edit.setEnabled(True)
 
-    def disable_button(self, button):
-        if button in vars(self).values():
-            button.setObjectName("view_button_disable")
-            button.setEnabled(False)
+    def disable_section(self, section):
+        if section in vars(self).values():
+            input_frame = get_children(section, QFrame, "view_input")
+
+            # change style
+            for frame in input_frame:
+                frame.setObjectName("view_input_disable")
+
+            # enable input
+            qlineedit = get_children(section, QLineEdit)
+            for edit in qlineedit:
+                edit.setEnabled(False)
 
     def enable_button(self, button):
         if button in vars(self).values():
             button.setObjectName("view_button")
             button.setEnabled(True)
+
+    def disable_button(self, button):
+        if button in vars(self).values():
+            button.setObjectName("view_button_disable")
+            button.setEnabled(False)
 
     def set_config_text(self, config:ConfigFrame, text:str):
         if config in vars(self).values():
@@ -175,12 +172,39 @@ class ResourcesAddViewUI(Frame):
         if hint in vars(self).values():
             hint.setText(text)
 
+    def reset_section(self, section):
+        if section in vars(self).values():
+            qlineedit = get_children(section, QLineEdit)
+            for edit in qlineedit:
+                edit.setText("")
+                edit.clearFocus()
+
+    def reset_config(self, config):
+        if config in vars(self).values():
+            self.set_config_text(config, "-")
+            config.setObjectName("config_frame")
+            self.setStyleSheet(resources_style)
+
     def reset_hint(self):
         self.verification_hint.setText("")
         self.configuration_hint.setText("")
         self.planning_hint.setText("")
         self.attendance_hint.setText("")
         self.price_hint.setText("")
+
+    def _to_tech_section(self):
+        self.stack.setCurrentWidget(self.tech_sections)
+
+        self.next_page.setVisible(True)
+        self.submit.setVisible(False)
+        self.back.setVisible(False)
+
+    def _to_eco_section(self):
+        self.stack.setCurrentWidget(self.eco_sections)
+
+        self.next_page.setVisible(False)
+        self.submit.setVisible(True)
+        self.back.setVisible(True)
 
     def _init_ui(self):
 

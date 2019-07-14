@@ -72,6 +72,24 @@ class ResourcesAddView(ResourcesAddViewUI):
         self._fetch_ip_address()
         self._fetch_machine_config()
 
+    def on_machine_name_edit(self):
+        self._machine_name_check()
+
+    def on_cpu_gpu_edit(self):
+        self._cpu_gpu_check()
+
+    def on_cores_edit(self):
+        self._cores_check()
+
+    def on_ram_edit(self):
+        self._ram_check()
+
+    def on_next_page_clicked(self):
+
+        if not self._planning_check():
+            return
+        super().on_next_page_clicked()
+
     def _fetch_ip_address(self):
         # get ip address for local machine
         ip_address = util.get_ip_address()
@@ -96,24 +114,6 @@ class ResourcesAddView(ResourcesAddViewUI):
         self.set_config_text(self.current_cpu_gpu, f"{self.available_cpu_gpu} GHz")
         self.set_config_text(self.current_cores, f"{self.available_cores}")
         self.set_config_text(self.current_ram, f"{self.available_ram} GB")
-
-    def on_machine_name_edit(self):
-        self._machine_name_check()
-
-    def on_cpu_gpu_edit(self):
-        self._cpu_gpu_check()
-
-    def on_cores_edit(self):
-        self._cores_check()
-
-    def on_ram_edit(self):
-        self._ram_check()
-
-    def on_next_page_clicked(self):
-
-        if not self._planning_check():
-            return
-        super().on_next_page_clicked()
 
     def _planning_check(self):
         # clean up hint

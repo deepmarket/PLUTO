@@ -16,7 +16,7 @@ from ..widgets import (Frame, SectionTitleFrame, ConfigFrame, TabsInputFrame,
                         HorizontalSpacer, VerticalSpacer)
 
 from ..util import get_children
-from ..stylesheet import resources_style
+from ..stylesheet import resources_add_view_style
 
 class ResourcesAddViewUI(Frame):
 
@@ -25,8 +25,9 @@ class ResourcesAddViewUI(Frame):
 
     signal                  :pyqtSignal = None
 
-    stack                   :StackLayout = None
+    title_view              :Frame = None
     stack_view              :Frame = None
+    stack                   :StackLayout = None
     button_view             :Frame = None
 
     tech_sections           :Frame = None
@@ -54,6 +55,7 @@ class ResourcesAddViewUI(Frame):
     cores                   :QLineEdit = None
     ram                     :QLineEdit = None
 
+    global_hint             :Label = None
     verification_hint       :Label = None
     configuration_hint      :Label = None
     planning_hint           :Label = None
@@ -65,7 +67,7 @@ class ResourcesAddViewUI(Frame):
 
         self.signal = signal
         self._init_ui()
-        self.setStyleSheet(resources_style)
+        self.setStyleSheet(resources_add_view_style)
 
         self._to_tech_section()
 
@@ -158,7 +160,7 @@ class ResourcesAddViewUI(Frame):
             config.setObjectName("config_frame_green")
 
             # reload stylesheet
-            self.setStyleSheet(resources_style)
+            self.setStyleSheet(resources_add_view_style)
 
     def set_config_red(self, config:ConfigFrame):
         if config in vars(self).values():
@@ -166,7 +168,7 @@ class ResourcesAddViewUI(Frame):
             config.setObjectName("config_frame_red")
 
             # reload stylesheet
-            self.setStyleSheet(resources_style)
+            self.setStyleSheet(resources_add_view_style)
 
     def set_hint(self, hint:QLabel, text:str):
         if hint in vars(self).values():
@@ -183,7 +185,7 @@ class ResourcesAddViewUI(Frame):
         if config in vars(self).values():
             self.set_config_text(config, "-")
             config.setObjectName("config_frame")
-            self.setStyleSheet(resources_style)
+            self.setStyleSheet(resources_add_view_style)
 
     def reset_hint(self):
         self.verification_hint.setText("")
@@ -210,12 +212,9 @@ class ResourcesAddViewUI(Frame):
 
         window_layout = VerticalLayout(self)
 
-        title_frame = Frame(self, name="view_title_frame")
-        window_layout.addWidget(title_frame)
-
-        title_layout = HorizontalLayout(title_frame)
-        title = Label(title_frame, name="view_title", text="Add New Resource")
-        title_layout.addWidget(title)
+        self.title_view = Frame(self, name="view_title_frame")
+        window_layout.addWidget(self.title_view)
+        self._init_title_view()
 
         self.stack_view = Frame(self, name="view_stack_frame")
         window_layout.addWidget(self.stack_view)
@@ -224,6 +223,19 @@ class ResourcesAddViewUI(Frame):
         self.button_view = Frame(self, name="view_buttons_frame")
         window_layout.addWidget(self.button_view)
         self._init_button_view()
+
+    def _init_title_view(self):
+
+        layout = HorizontalLayout(self.title_view)
+
+        title = Label(self.title_view, name="view_title", text="Add New Resource")
+        layout.addWidget(title)
+
+        spacer = HorizontalSpacer()
+        layout.addItem(spacer)
+
+        self.global_hint = Label(self.title_view, name="section_hint")
+        layout.addWidget(self.global_hint)
 
     def _init_stack_view(self):
 

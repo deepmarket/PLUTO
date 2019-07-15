@@ -1,5 +1,10 @@
-# old implementation
-# keep it util the whole refacting finished
+from psutil import cpu_freq, cpu_count, virtual_memory
+
+from mainview import MainView
+from uix.util import *
+from uix.config import *
+from uix.popup import Question
+from api import Api
 
 
 class Resources(MainView):
@@ -220,7 +225,19 @@ class Resources(MainView):
                 if question.exec_():
                     self._api_call("PUT", f"/resources/{self.machines[row]['_id']}", self.machines[row])
 
-    # check
+    # def on_ip_address_edit(self):
+    #     self.workspace.verification_hint.setText("")
+    #     ip_address = self.workspace.ip_address.text()
+    #
+    #     if ip_address == "":
+    #         self.workspace.verification_hint.setText("Please enter an IP address.")
+    #         self.ip_check = False
+    #     elif not self.ip_regex.match(ip_address):
+    #         self.workspace.verification_hint.setText("Invalid IP address format. Please check your input. " +
+    #                                                  "(i.e 127.0.0.1)")
+    #     else:
+    #         self.ip_check = True
+
     def on_machine_edit(self):
         self._reset_workspace_hint()
 
@@ -233,7 +250,6 @@ class Resources(MainView):
                 self.machine_name_check = True
                 self._check_flag()
 
-    # check
     # disable for this version
     def on_cpu_edit(self):
         self._reset_workspace_hint()
@@ -269,7 +285,6 @@ class Resources(MainView):
                     self.cpu_check = True
                     self._check_flag()
 
-    # check
     def on_core_edit(self):
         self._reset_workspace_hint()
 
@@ -304,7 +319,6 @@ class Resources(MainView):
                     self.core_check = True
                     self._check_flag()
 
-    # check
     def on_ram_edit(self):
         self._reset_workspace_hint()
 
@@ -379,65 +393,66 @@ class Resources(MainView):
         self.list.hint.setText("")
 
     def _api_call(self, method, endpoint, dat=None):
-        if method.upper() not in ["GET", "POST", "PUT", "DELETE"]:
-            return
+        if method.upper() in ["GET", "POST", "PUT", "DELETE"]:
+            status, res = None, None
 
-        with Api(endpoint) as api:
-            if method == "GET":
-                status, res = api.get()
-            elif method == "POST":
-                status, res = api.post(dat)
-            elif method == "PUT":
-                status, res = api.put(dat)
-            else:
-                status, res = api.delete()
-
-            if not res:
-                msg = "Server fail to response request. Please try again later."
-                if method == "POST":
-                    self.workspace.submission_hint.setText(msg)
-                else: # method in ["GET", "PUT", "DELETE"]
-                    self.list.hint.setText(msg)
-                return
-
-            if status == 200:
+            with Api(endpoint) as api:
                 if method == "GET":
-                    # clean local buffer
-                    self.machines = []
-
-                    for rsrc in res["resources"]:
-                        # store remote machine info locally
-                        self.machines.append(rsrc)
-
-                        self.list.add_data([rsrc['machine_name'],
-                                            rsrc['ip_address'],
-                                            str(rsrc['cpus']),
-                                            str(rsrc['cores']),
-                                            str(rsrc['ram']),
-                                            str(rsrc['price']),
-                                            rsrc['status']])
+                    status, res = api.get()
                 elif method == "POST":
-                    # add data to list
-                    self._fetch_resources_data()
-                    # switch page
-                    self.on_list_clicked()
-                else: # method in ["PUT", "DELETE"]
-                    self._fetch_resources_data()
-
-            else:
-                if "error" in res and "errmsg" in res["error"]:
-                    msg = res["error"]["errmsg"]
-                    # E11000 might no longer exist if mongo team could update their error message
-                    # Remove this special case if necessary
-                    if "E11000" in msg:
-                        msg = "This IP address is already in use. Please use a different one."
+                    status, res = api.post(dat)
+                elif method == "PUT":
+                    status, res = api.put(dat)
                 else:
-                    msg = "There was an unknown error from the server. Please try again."
+                    status, res = api.delete()
 
-                if method == "POST":
-                    self.workspace.submission_hint.setText(msg)
-                else: # method in ["GET", "PUT", "DELETE"]
-                    self.list.hint.setText(msg)
+                if res and status == 200:
+                    if method == "GET":
+                        # clean local buffer
+                        self.machines = []
+
+                        for rsrc in res["resources"]:
+                            # store remote machine info locally
+                            self.machines.append(rsrc)
+
+                            self.list.add_data([rsrc['machine_name'],
+                                                rsrc['ip_address'],
+                                                str(rsrc['cpus']),
+                                                str(rsrc['cores']),
+                                                str(rsrc['ram']),
+                                                str(rsrc['price']),
+                                                rsrc['status']])
+                    elif method == "POST":
+                        # add data to list
+                        self._fetch_resources_data()
+                        # switch page
+                        self.on_list_clicked()
+                    # method == "PUT" or method == "DELETE"
+                    else:
+                        self._fetch_resources_data()
+
+                elif res and status == 500:
+                    msg = ""
+                    if res and "error" in res and "errmsg" in res["error"]:
+                        msg = res["error"]["errmsg"]
+                        if "E11000" in msg:
+                            msg = "This IP address is already in use. Please use a different one."
+                    else:
+                        msg = "There was an unknown error from the server. Please try again."
+
+                    if method == "POST":
+                        self.workspace.submission_hint.setText(msg)
+                    # method == "GET" or method == "PUT" or method == "DELETE"
+                    else:
+                        self.list.hint.setText(msg)
+                else:
+                    if method == "POST":
+                        msg = "There was an unknown error while trying to add this resource. Please try again."
+                        self.workspace.submission_hint.setText(msg)
+                    # method == "GET" or method == "PUT" or method == "DELETE"
+                    else:
+                        msg = "There was an unknown error while trying to update this resource. Please try again."
+                        self.list.hint.setText(msg)
 
     # self-updated function by calling timer in main
     # can be used later on
@@ -502,13 +517,10 @@ class ResourcesWorkspace(QFrame):
 
         # --------- line_frame: ip_address, verify_button, change_button ------------
 
-        # TODO: testing new proj struct, remove completely later on
-        line_frame = Frame(section_frame, height=30)
-        line_layout = HorizontalLayout(line_frame, space=30)
-        # line_frame, line_layout = add_frame(section_frame, height=30, space=30, layout=HORIZONTAL)
+        line_frame, line_layout = add_frame(section_frame, height=30, space=30, layout=HORIZONTAL)
         section_layout.addWidget(line_frame)
 
-        box, self.ip_address = add_page_input_box(line_frame, "IP Address:", 66, 21, fix_width=False)
+        box, self.ip_address = add_page_input_box(line_frame, "IP Address:", 65, 21, fix_width=False)
         line_layout.addWidget(box)
 
         # self.verify_button = add_button(line_frame, "VERIFY", name="Page_button")
@@ -627,9 +639,7 @@ class ResourcesWorkspace(QFrame):
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
         line_layout.addItem(spacer)
 
-        # TODO: testing new proj struct, remove completely later on
-        self.evaluate_button = Button(line_frame, text="EVALUATE", cursor=True)
-        # self.evaluate_button = add_button(line_frame, "EVALUATE")
+        self.evaluate_button = add_button(line_frame, "EVALUATE")
         line_layout.addWidget(self.evaluate_button)
 
         self.disable_planning()

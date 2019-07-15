@@ -1,0 +1,53 @@
+* {
+    font-family: "Helvetica Neue";
+}
+
+#view {
+    margin: 7px;
+}
+
+QFrame#view_title_frame {
+    background-color: #FFFFFF;
+    min-height: 45px;
+    margin-bottom: 1px;
+    padding: 0 30px;
+}
+
+QFrame#view_buttons_frame {
+    background-color: #FFFFFF;
+    margin-bottom: 1px;
+    min-height: 95px;
+    padding: 0 45px;
+}
+
+QFrame#view_table_frame {
+    background-color:#FFFFFF;
+}
+
+QLabel#view_title {
+    font-size: 19px;
+    color: #6C7E8E;
+}
+
+QLabel#section_hint {
+    font-size: 12px;
+    color: #FF0000;
+}
+
+QPushButton#view_button,
+QPushButton#view_button_disable {
+    border: None;
+    min-width: 95px;
+    min-height: 30px;
+    font-size: 12px;
+}
+
+QPushButton#view_button {
+    background-color: #6C7E8E;
+    color: #FFFFFF;
+}
+
+QPushButton#view_button_disable {
+    background-color: #C6CDDB;
+    color: #F2F2F2;
+}

@@ -3,33 +3,32 @@
 }
 
 #view {
-    margin-top: 8px;
-    margin-bottom: 8px;
+    margin: 7px;
 }
 
 #view > QFrame {
-    padding-left: 50px;
-    padding-right: 50px;
+    padding: 0 50px;
 }
 
-#view_title_frame {
-    background-color: #6C7E8E;
-    min-height: 50px;
+QFrame#view_title_frame {
+    background-color: #FFFFFF;
+    min-height: 45px;
+    margin-bottom: 1px;
+    padding: 0 30px;
 }
 
-#view_stack_frame {
+QFrame#view_stack_frame {
     background-color: #FFFFFF;
 }
 
-#view_buttons_frame {
+QFrame#view_buttons_frame {
     background-color: #FFFFFF;
-    /* background-color: red; */
     padding-bottom: 10px;
     min-height: 75px;
 }
 
 QFrame#section {
-    margin-top: 35px;
+    margin-top: 40px;
 }
 
 QFrame#section_title_frame {
@@ -97,8 +96,8 @@ QFrame#config_frame_disable > QLabel {
 }
 
 QLabel#view_title {
-    font-size: 18px;
-    color: #FFFFFF;
+    font-size: 19px;
+    color: #6C7E8E;
 }
 
 QLabel#section_title {

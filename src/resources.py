@@ -34,7 +34,7 @@ class Resources(ResourcesUI):
         super()._to_controller()
 
     def _to_add_view(self):
-        self.add_view.reset()
+        self.add_view.reset
         super()._to_add_view()
 
 

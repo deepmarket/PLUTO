@@ -486,6 +486,7 @@ def set_frame(widget, num, frame):
             label.setStyleSheet(Page_scheme_label)
 
 
+# check
 # helper function for add_data() in JobList() class
 def add_row(widget, column, data, row):
     for i in range(column):

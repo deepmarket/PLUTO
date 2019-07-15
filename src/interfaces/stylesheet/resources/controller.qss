@@ -51,3 +51,22 @@ QPushButton#view_button_disable {
     background-color: #C6CDDB;
     color: #F2F2F2;
 }
+
+QTableWidget#table {
+    border: none;
+    background-color: #FFFFFF;
+    alternate-background-color: #FAFAFA;
+}
+
+QTableWidget#table QHeaderView::section {
+    border: none;
+    background-color: #A2B5C5;
+    height: 39px;
+    font-size: 13px;
+    color: #FFFFFF;
+}
+
+QTableView::item {
+    font-size: 12px;
+    color: #324352;
+}

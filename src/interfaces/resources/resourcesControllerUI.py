@@ -5,14 +5,17 @@
 
 """
 
+from collections import OrderedDict
+
 from PyQt5.QtCore import pyqtSignal
 
 from ..widgets import (Frame, SectionTitleFrame,
-                        Button, Label,
+                        Button, Label, Table,
                         HorizontalLayout, VerticalLayout,
                         HorizontalSpacer, VerticalSpacer)
 
 from ..stylesheet import resources_controller_style
+from ..stylesheet.config import RESOURCES_MAX_ROW
 
 class ResourcesControllerUI(Frame):
 
@@ -24,6 +27,8 @@ class ResourcesControllerUI(Frame):
     refresh         :Button = None
     edit            :Button = None
     remove          :Button = None
+
+    table           :Table = None
 
     global_hint     :Label = None
 
@@ -100,5 +105,19 @@ class ResourcesControllerUI(Frame):
 
         layout = VerticalLayout(self.table_view)
 
-        spacer = VerticalSpacer()
-        layout.addItem(spacer)
+        header = OrderedDict()
+
+        header["Machine Name"] = 150
+        header["IP Address"] = 180
+        header["GPUs"] = 100
+        header["Cores"] = 100
+        header["Ram (GB)"] = 100
+        header["Price"] = 120
+        header["Status"] = 150
+
+        self.table = Table(self.table_view, RESOURCES_MAX_ROW, header, name="table")
+        layout.addWidget(self.table)
+
+        # TODO: test code, remove it later on
+        # for i in range(14):
+            # self.table.add(["mac", "127.0.0.1", "1", "1", "1", "$15/hr", "ACTIVE"])

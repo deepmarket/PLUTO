@@ -3,6 +3,6 @@ from .frame     import Frame
 from .label     import Label, Paragraph, Image
 from .layout    import HorizontalLayout, VerticalLayout, StackLayout
 from .lineedit  import LineEdit
-from .module    import SectionTitleFrame, ConfigFrame, LoginInputFrame, TabsInputFrame
+from .module    import SectionTitleFrame, ConfigFrame, LoginInputFrame, TabsInputFrame, SearchInputFrame
 from .spacer    import Spacer, HorizontalSpacer, VerticalSpacer
 from .table     import Table

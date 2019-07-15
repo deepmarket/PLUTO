@@ -4,14 +4,15 @@
 
 """
 
-from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtCore import Qt
 
+from .button import Button
 from .frame import Frame
 from .label import Label
 from .layout import HorizontalLayout
 from .lineedit import LineEdit
 from .spacer import HorizontalSpacer
+
 
 class BaseTwoLabelFrame(Frame):
 
@@ -76,7 +77,8 @@ class ConfigFrame(BaseTwoLabelFrame):
 class BaseInputFrame(Frame):
 
     title       : Label = None
-    input_field : QLineEdit = None
+    input_field : LineEdit = None
+    layout      : HorizontalLayout = None
 
     def __init__(self, widget, **kwargs):
 
@@ -97,15 +99,15 @@ class BaseInputFrame(Frame):
         input_name = get_param("input_name")
 
         # set layout
-        layout = HorizontalLayout(self, **kwargs)
+        self.layout = HorizontalLayout(self, **kwargs)
 
         # title
         self.title = Label(self, width=title_width, text=title, name=title_name, **kwargs)
-        layout.addWidget(self.title)
+        self.layout.addWidget(self.title)
 
         # input
         self.input_field = LineEdit(self, width=input_width, name=input_name, **kwargs)
-        layout.addWidget(self.input_field)
+        self.layout.addWidget(self.input_field)
 
     def get_input(self):
         return self.input_field
@@ -146,3 +148,18 @@ class TabsInputFrame(BaseInputFrame):
                 self.setFixedWidth(285)
             else:
                 self.setFixedWidth(width)
+
+
+class SearchInputFrame(BaseInputFrame):
+
+    def __init__(self, widget, **kwargs):
+        super(SearchInputFrame, self).__init__(widget, height=30,
+                                                name="view_search",
+                                                **kwargs)
+
+        get_num = lambda x : kwargs.get(x, 0)
+        get_param = lambda x : kwargs.get(x)
+
+        # set default title width if not given
+        input_width = get_num("input_width")
+        not input_width and self.input_field.setFixedWidth(210)

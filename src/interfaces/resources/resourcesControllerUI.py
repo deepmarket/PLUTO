@@ -5,19 +5,24 @@
 
 """
 
+from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
 
 from PyQt5.QtCore import pyqtSignal
 
-from ..widgets import (Frame, SectionTitleFrame,
-                        Button, Label, Table,
+from ..widgets import (Frame, SectionTitleFrame, SearchInputFrame,
+                        Button, Label, Table, LineEdit,
                         HorizontalLayout, VerticalLayout,
                         HorizontalSpacer, VerticalSpacer)
 
 from ..stylesheet import resources_controller_style
 from ..stylesheet.config import RESOURCES_MAX_ROW
 
+
 class ResourcesControllerUI(Frame):
+
+    # metaclass for defining abstract base classes
+    __metaclass__ = ABCMeta
 
     title_view      :Frame = None
     button_view     :Frame = None
@@ -27,6 +32,7 @@ class ResourcesControllerUI(Frame):
     refresh         :Button = None
     edit            :Button = None
     remove          :Button = None
+    search          :LineEdit = None
 
     table           :Table = None
 
@@ -43,13 +49,20 @@ class ResourcesControllerUI(Frame):
     def on_add_button_clicked(self):
         self.signal.emit()
 
+    @abstractmethod
+    def on_refresh_button_clicked(self):
+        pass
+
+    @abstractmethod
     def on_edit_button_clicked(self):
         pass
 
+    @abstractmethod
     def on_remove_button_clicked(self):
         pass
 
-    def on_refresh_button_clicked(self):
+    @abstractmethod
+    def on_search_edited(self):
         pass
 
     def _init_ui(self):
@@ -84,22 +97,30 @@ class ResourcesControllerUI(Frame):
 
         layout = HorizontalLayout(self.button_view, space=15)
 
-        self.add = Button(self, text="ADD", name="view_button", cursor=True)
+        self.add = Button(self.button_view, text="ADD", name="view_button", cursor=True)
         layout.addWidget(self.add)
 
-        self.refresh = Button(self, text="REFRESH", name="view_button", cursor=True)
+        self.refresh = Button(self.button_view, text="REFRESH", name="view_button", cursor=True)
         layout.addWidget(self.refresh)
 
-        self.edit = Button(self, text="EDIT", name="view_button", cursor=True)
+        self.edit = Button(self.button_view, text="EDIT", name="view_button", cursor=True)
         layout.addWidget(self.edit)
 
-        self.remove = Button(self, text="REMOVE", name="view_button", cursor=True)
+        self.remove = Button(self.button_view, text="REMOVE", name="view_button", cursor=True)
         layout.addWidget(self.remove)
 
         spacer = HorizontalSpacer()
         layout.addItem(spacer)
 
+        search_frame = SearchInputFrame(self.button_view, hint="Search a machine...")
+        layout.addWidget(search_frame)
+        self.search = search_frame.get_input()
+
         self.add.clicked.connect(self.on_add_button_clicked)
+        self.refresh.clicked.connect(self.on_refresh_button_clicked)
+        self.edit.clicked.connect(self.on_edit_button_clicked)
+        self.remove.clicked.connect(self.on_remove_button_clicked)
+        self.search.textChanged.connect(self.on_search_edited)
 
     def _init_table_view(self):
 

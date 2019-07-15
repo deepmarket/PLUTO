@@ -323,6 +323,7 @@ def add_move_animation(widget, start_x, start_y, end_x, end_y, duration=230):
     return animation
 
 
+# check
 # add graph scene for drawing
 def add_graph_scene(widget, width=None, height=None, name=None):
     view = QGraphicsView(widget)
@@ -520,6 +521,7 @@ def verify_ip_address(ip_address):
     return True
 
 
+# check
 # this function ask fro the machine config by using ip_address
 def load_machine_config(ip_address):
     # get data from master json

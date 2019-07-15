@@ -118,7 +118,7 @@ QFrame#view_input_disable > QLabel {
 
 QFrame#view_input > QLineEdit,
 QFrame#view_input_disable > QLineEdit {
-    border: None;
+    border: none;
     padding: 0 2px;
     font-size: 12px;
 }

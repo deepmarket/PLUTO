@@ -1,7 +1,7 @@
 """
- 
+
     This module generate a QPushButton object.
- 
+
 """
 
 from PyQt5.QtWidgets import QPushButton

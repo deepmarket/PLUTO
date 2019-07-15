@@ -31,10 +31,11 @@ class Resources(ResourcesUI):
         self.set_add_view(self.add_view)
 
     def _to_controller(self):
+        self.controller.reset()
         super()._to_controller()
 
     def _to_add_view(self):
-        self.add_view.reset
+        self.add_view.reset()
         super()._to_add_view()
 
 
@@ -42,6 +43,21 @@ class ResourcesController(ResourcesControllerUI):
 
     def __init__(self, *args, **kwargs):
         super(ResourcesController, self).__init__(*args, **kwargs)
+
+    def on_refresh_button_clicked(self):
+        pass
+
+    def on_edit_button_clicked(self):
+        pass
+
+    def on_remove_button_clicked(self):
+        pass
+
+    def on_search_edited(self):
+        pass
+
+    def reset(self):
+        pass
 
 
 class ResourcesAddView(ResourcesAddViewUI):

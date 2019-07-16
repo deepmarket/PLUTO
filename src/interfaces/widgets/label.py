@@ -51,16 +51,12 @@ class Paragraph(Frame):
         get_num = lambda x : kwargs.get(x, 0)
         get_param = lambda x : kwargs.get(x)
 
-        text_list = get_param("text_list")
-
         space = get_num("space")
-        name = get_param("name")
-        align = get_param("align")
 
         layout = VerticalLayout(self, space=space)
 
         for text in text_list:
-            label = Label(self, text, name=name, align=align)
+            label = Label(self, text=text, **kwargs)
             layout.addWidget(label)
 
 

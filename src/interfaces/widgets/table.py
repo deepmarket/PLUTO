@@ -94,8 +94,10 @@ class Table(QTableWidget):
             # insert cell
             self.setItem(self.current_row, i, QTableWidgetItem(dat[i]))
 
-            # disable editing ip address
-            i == 1 and self.item(self.current_row, i).setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+            # disable editing
+            self.item(self.current_row, i).setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+
+            # set cell align
             self.item(self.current_row, i).setTextAlignment(Qt.AlignCenter)
 
         self.current_row += 1
@@ -117,3 +119,21 @@ class Table(QTableWidget):
 
                 # disable interaction
                 self.item(i, j).setFlags(Qt.NoItemFlags)
+
+    def if_select(self):
+        model = self.selectionModel()
+
+        if model.hasSelection():
+            row = model.selectedRows()[0].row()
+
+            text = self.get_cell(row, self.count_column-1)
+            return row if text is not -1 else None
+        else:
+            return -1
+
+    def get_cell(self, row:int, column:int):
+        return self.item(row, column).text()
+
+    # TODO, when implement edit feature, cont work on this function
+    def allow_edit(self, row:int):
+        pass

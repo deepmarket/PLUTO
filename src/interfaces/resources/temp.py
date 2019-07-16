@@ -186,6 +186,7 @@ class Resources(MainView):
 
         self._api_call("POST", "/resources", dat=resources_data)
 
+    # check
     def on_refresh_button_clicked(self):
         self._reset_list_hint()
         self._fetch_resources_data()
@@ -225,19 +226,7 @@ class Resources(MainView):
                 if question.exec_():
                     self._api_call("PUT", f"/resources/{self.machines[row]['_id']}", self.machines[row])
 
-    # def on_ip_address_edit(self):
-    #     self.workspace.verification_hint.setText("")
-    #     ip_address = self.workspace.ip_address.text()
-    #
-    #     if ip_address == "":
-    #         self.workspace.verification_hint.setText("Please enter an IP address.")
-    #         self.ip_check = False
-    #     elif not self.ip_regex.match(ip_address):
-    #         self.workspace.verification_hint.setText("Invalid IP address format. Please check your input. " +
-    #                                                  "(i.e 127.0.0.1)")
-    #     else:
-    #         self.ip_check = True
-
+    # check
     def on_machine_edit(self):
         self._reset_workspace_hint()
 
@@ -250,6 +239,7 @@ class Resources(MainView):
                 self.machine_name_check = True
                 self._check_flag()
 
+    # check
     # disable for this version
     def on_cpu_edit(self):
         self._reset_workspace_hint()
@@ -285,6 +275,7 @@ class Resources(MainView):
                     self.cpu_check = True
                     self._check_flag()
 
+    # check
     def on_core_edit(self):
         self._reset_workspace_hint()
 
@@ -319,6 +310,7 @@ class Resources(MainView):
                     self.core_check = True
                     self._check_flag()
 
+    # check
     def on_ram_edit(self):
         self._reset_workspace_hint()
 
@@ -354,6 +346,7 @@ class Resources(MainView):
                     self.ram_check = True
                     self._check_flag()
 
+    # check
     # check if flags are all on, enable evaluate button
     def _check_flag(self):
         if self.if_verify and self.machine_name_check and self.cpu_check and self.core_check and self.ram_check:
@@ -367,6 +360,7 @@ class Resources(MainView):
 
         self._api_call("GET", "/resources")
 
+    # check
     # load the ip address from the running machine
     def _fetch_ip_address(self):
         from socket import socket, AF_INET, SOCK_DGRAM
@@ -384,11 +378,13 @@ class Resources(MainView):
 
         self.if_verify = True
 
+    # check
     def _reset_workspace_hint(self):
         self.workspace.verification_hint.setText("")
         self.workspace.planning_hint.setText("")
         self.workspace.submission_hint.setText("")
 
+    # check
     def _reset_list_hint(self):
         self.list.hint.setText("")
 

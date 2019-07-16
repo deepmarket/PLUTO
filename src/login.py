@@ -46,6 +46,10 @@ class Login(QDialog):
         self._init_ui()
         self._init_property()
 
+        # TODO: remove test code when commit
+        self.login.username.setText("lixphilosophy@gmail.com")
+        self.login.pwd.setText("1234")
+
 
     def _init_geometry(self):
         set_base_geometry(self, 580, 580, fixed=True)

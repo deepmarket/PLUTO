@@ -12,5 +12,7 @@ def read_icon(file_name):
 
 
 # stylesheets
+popup_style = read_stylesheet("popup.qss")
+
 resources_add_view_style = read_stylesheet("resources/add_view.qss")
 resources_controller_style = read_stylesheet("resources/controller.qss")

@@ -9,14 +9,11 @@
 from enum import Enum, auto
 from psutil import cpu_freq, cpu_count, virtual_memory
 
-# from mainview import MainView
-# from uix.util import *
-# from uix.config import *
-# from uix.popup import Question
-# from api import Api
+from api import Api
 
 import util as util
 from interfaces.resources import ResourcesUI, ResourcesControllerUI, ResourcesAddViewUI
+from interfaces.widgets import Question
 
 
 class Resources(ResourcesUI):
@@ -38,27 +35,110 @@ class Resources(ResourcesUI):
         self.add_view.reset()
         super()._to_add_view()
 
+        self.add_view.machine_name.setText("mac")
+        self.add_view.cpu_gpu.setText("1")
+        self.add_view.cores.setText("1")
+        self.add_view.ram.setText("1")
+
 
 class ResourcesController(ResourcesControllerUI):
+
+    machines : list = None
 
     def __init__(self, *args, **kwargs):
         super(ResourcesController, self).__init__(*args, **kwargs)
 
+        self._fetch_resources_data()
+
     def on_refresh_button_clicked(self):
-        pass
+        self.reset()
 
     def on_edit_button_clicked(self):
         pass
 
     def on_remove_button_clicked(self):
-        pass
+
+        # check if table has selection
+        # if it does, get the row info
+        row = self.table.if_select()
+
+        if row != -1:
+            machine_name = self.table.get_cell(row, 0)
+
+            question = f"Are you sure you want to remove <u>{machine_name}</u> from your resources?\n"
+            question += "** This action cannot be undone. **"
+
+            dialog = Question(question)
+
+            if dialog.exec_():
+                res = self._api_remove_call(f"/resources/{self.machines[row]['_id']}")
+                if res:
+                    # refresh widget
+                    self.reset()
+
+                    # raise success message
+                    msg = f"Machine {machine_name} has been removed sucessfully."
+                    self.set_hint(self.global_hint, msg)
 
     def on_search_edited(self):
         pass
 
     def reset(self):
-        pass
+        super().reset()
+        self._fetch_resources_data()
 
+    def _fetch_resources_data(self):
+        self.machines = self._api_get_call("/resources")
+        for machine in self.machines:
+            self.table.add([machine["machine_name"],
+                            machine["ip_address"],
+                            str(machine["cpus"]),
+                            str(machine["cores"]),
+                            str(machine["ram"]),
+                            str(machine["price"]),
+                            machine["status"]])
+
+    def _api_get_call(self, endpoint:str):
+
+        # TODO: move Error to config later on
+        class Error:
+            CONNECT_ERR = "Fail to communicate with server. Please try later."
+            UNKOWN_ERR = "There was an unknown error from the server. Please try again."
+
+        with Api(endpoint) as api:
+            status, res = api.get()
+
+            if not res:
+                self.set_hint(self.global_hint, Error.CONNECT_ERR)
+                return []
+
+            if status == 200:
+                return res["resources"]
+
+            if status == 500:
+                self.set_hint(self.global_hint, Error.UNKOWN_ERR)
+                return []
+
+    # TODO: combine api call helper function together later on
+    def _api_remove_call(self, endpoint:str):
+        # TODO: move Error to config later on
+        class Error:
+            CONNECT_ERR = "Fail to communicate with server. Please try later."
+            UNKOWN_ERR = "There was an unknown error from the server. Please try again."
+
+        with Api(endpoint) as api:
+            status, res = api.delete()
+
+            if not res:
+                self.set_hint(self.global_hint, Error.CONNECT_ERR)
+                return False
+
+            if status == 200:
+                return True
+
+            if status == 500:
+                self.set_hint(self.global_hint, Error.UNKOWN_ERR)
+                return False
 
 class ResourcesAddView(ResourcesAddViewUI):
 
@@ -89,6 +169,38 @@ class ResourcesAddView(ResourcesAddViewUI):
         if not self._planning_check():
             return
         super().on_next_page_clicked()
+
+    def on_submit_clicked(self):
+
+        # fetch user input
+        machine_name = self.machine_name.text()
+        ip_address = self.ip_address.text()
+        cpu_gpu = self.cpu_gpu.text()
+        cores = self.cores.text()
+        ram = self.ram.text()
+
+        # TODO: replace this when price section finished
+        price = 0
+
+        # pack data
+        dat = {
+            "machine_name": machine_name,
+            "ip_address": ip_address,
+            "cpus": cpu_gpu,
+            "cores": cores,
+            "ram": ram,
+            "price": price,
+            "status": "ALIVE"
+        }
+
+        # api call
+        res = self._api_post_call("/resources", dat)
+
+        if res:
+            # TODO: fill helper function to run docker here
+
+            # emit signal, back to controller
+            super().on_submit_clicked()
 
     def reset(self):
         super().reset()
@@ -123,6 +235,37 @@ class ResourcesAddView(ResourcesAddViewUI):
         self.set_config_text(self.current_cpu_gpu, f"{self.available_cpu_gpu} GHz")
         self.set_config_text(self.current_cores, f"{self.available_cores}")
         self.set_config_text(self.current_ram, f"{self.available_ram} GB")
+
+    def _api_post_call(self, endpoint:str, dat:dict):
+
+        # TODO: move Error to config later on
+        class Error:
+            E11000_ERR = "This IP address is already in use. Please use a different one."
+            UNKOWN_ERR = "There was an unknown error from the server. Please try again."
+            CONNECT_ERR = "Fail to communicate with server. Please try later."
+
+        with Api(endpoint) as api:
+            status, res = api.post(dat)
+
+            if not res:
+                self.set_hint(self.submit_hint, Error.CONNECT_ERR)
+                return False
+
+            if status == 200:
+                return True
+
+            if status == 500:
+                msg = ""
+                if res and "error" in res and "errmsg" in res["error"]:
+                    msg = res["error"]["errmsg"]
+                    if "E11000" in msg:
+                            msg = Error.E11000_ERR
+                else:
+                    msg = Error.UNKOWN_ERR
+
+                self.set_hint(self.submit_hint, msg)
+                return False
+
 
     def _planning_check(self):
         # clean up hint

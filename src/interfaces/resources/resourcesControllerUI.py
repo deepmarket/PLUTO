@@ -65,6 +65,17 @@ class ResourcesControllerUI(Frame):
     def on_search_edited(self):
         pass
 
+    def reset(self):
+        self.table.clean()
+        self.reset_hint()
+
+    def set_hint(self, hint:Label, text:str):
+        if hint in vars(self).values():
+            hint.setText(text)
+
+    def reset_hint(self):
+        self.global_hint.setText("")
+
     def _init_ui(self):
 
         window_layout = VerticalLayout(self)
@@ -138,7 +149,3 @@ class ResourcesControllerUI(Frame):
 
         self.table = Table(self.table_view, RESOURCES_MAX_ROW, header, name="table")
         layout.addWidget(self.table)
-
-        # TODO: test code, remove it later on
-        # for i in range(14):
-            # self.table.add(["mac", "127.0.0.1", "1", "1", "1", "$15/hr", "ACTIVE"])

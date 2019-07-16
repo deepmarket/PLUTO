@@ -105,9 +105,14 @@ QLabel#section_title {
     color: #6C7E8E;
 }
 
-QLabel#section_hint {
+QLabel#section_hint,
+QLabel#submit_hint {
     font-size: 12px;
     color: #FF0000;
+}
+
+QLabel#submit_hint {
+    margin-bottom: 40px;
 }
 
 QFrame#view_input > QLabel,

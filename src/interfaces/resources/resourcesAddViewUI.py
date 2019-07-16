@@ -8,7 +8,7 @@
 from abc import ABCMeta, abstractmethod
 
 from PyQt5.QtWidgets import QFrame, QLineEdit, QLabel
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal, Qt
 
 from ..widgets import (Frame, SectionTitleFrame, ConfigFrame, TabsInputFrame,
                         Button, Label,
@@ -61,6 +61,7 @@ class ResourcesAddViewUI(Frame):
     planning_hint           :Label = None
     attendance_hint         :Label = None
     price_hint              :Label = None
+    submit_hint             :Label = None
 
     def __init__(self, signal:pyqtSignal, *args, **kwargs):
         super(ResourcesAddViewUI, self).__init__(*args, name="view", **kwargs)
@@ -408,6 +409,10 @@ class ResourcesAddViewUI(Frame):
 
         spacer = VerticalSpacer()
         sections_layout.addItem(spacer)
+
+        self.submit_hint = Label(self.eco_sections, name="section_hint",
+                                 align=(Qt.AlignRight | Qt.AlignVCenter))
+        sections_layout.addWidget(self.submit_hint)
 
     def _init_attendance_section(self):
 

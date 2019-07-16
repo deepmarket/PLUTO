@@ -35,11 +35,6 @@ class Resources(ResourcesUI):
         self.add_view.reset()
         super()._to_add_view()
 
-        self.add_view.machine_name.setText("mac")
-        self.add_view.cpu_gpu.setText("1")
-        self.add_view.cores.setText("1")
-        self.add_view.ram.setText("1")
-
 
 class ResourcesController(ResourcesControllerUI):
 

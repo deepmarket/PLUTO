@@ -41,6 +41,8 @@ class Label(QLabel):
         stylesheet and self.setObjectName(name)
         align and self.setAlignment(align)
 
+    def reset(self):
+        self.setText("")
 
 class Paragraph(Frame):
 

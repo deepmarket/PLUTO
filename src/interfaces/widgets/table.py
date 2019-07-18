@@ -75,7 +75,7 @@ class Table(QTableWidget):
         self.setShowGrid(False)
 
         # initially fill table with empty line
-        self.clean()
+        self.reset()
 
     """
         :param dat: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
@@ -102,7 +102,7 @@ class Table(QTableWidget):
 
         self.current_row += 1
 
-    def clean(self):
+    def reset(self):
         self.current_row = 0
 
         # remove all existing row

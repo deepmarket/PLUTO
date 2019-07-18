@@ -1,5 +1,6 @@
 """
     helper functions on construct GUI
+    TODO: this file is going to be removed when refactor finished
 """
 
 import os
@@ -417,6 +418,7 @@ def add_config_box(widget, title, box_width=200):
     return box
 
 
+# check
 # return outer frame, label box and button
 def add_price_box(widget, title, box_width=307, box_height=37, space=28):
     frame = QFrame(widget)

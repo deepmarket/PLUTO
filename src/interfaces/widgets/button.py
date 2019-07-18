@@ -4,14 +4,14 @@
 
 """
 
-from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QPushButton, QRadioButton, QWidget
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize, Qt
 
 
 class Button(QPushButton):
 
-    def __init__(self, widget, **kwargs):
+    def __init__(self, widget:QWidget, **kwargs):
         super(Button, self).__init__(widget)
 
         # Lambda func grab input args
@@ -35,3 +35,23 @@ class Button(QPushButton):
             self.setIcon(QIcon(icon))
             if icon_size:
                 self.setIconSize(QSize(icon_size, icon_size))
+
+    def enable(self):
+        self.setEnabled(True)
+
+    def disable(self):
+        self.setEnabled(False)
+
+
+class RadioButton(QRadioButton):
+
+    def __init__(self, widget:QWidget, *args, **kwargs):
+        super(RadioButton, self).__init__(widget, *args)
+
+        # Lambda func grab input args
+        get_param = lambda x : kwargs.get(x)
+
+        name = get_param("name")
+
+        # Set property if given
+        name and self.setObjectName(name)

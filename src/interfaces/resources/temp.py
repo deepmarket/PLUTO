@@ -9,6 +9,7 @@ from api import Api
 
 class Resources(MainView):
 
+    # check
     def __init__(self, *args, **kwargs):
         super(Resources, self).__init__(*args, **kwargs)
 
@@ -44,6 +45,7 @@ class Resources(MainView):
         self.on_workspace_clicked()
         self._fetch_ip_address()
 
+    # check
     def _init_ui(self):
         self.setObjectName("resources")
 
@@ -100,12 +102,14 @@ class Resources(MainView):
         self.list.remove_button.clicked.connect(self.on_remove_button_clicked)
         self.list.update_button.clicked.connect(self.on_update_button_clicked)
 
+    # check
     def on_workspace_clicked(self):
         if self.stack.currentIndex() != 0:
             self.workspace_button.setStyleSheet(page_menu_button_active)
             self.list_button.setStyleSheet(page_menu_button)
             self.stack.setCurrentIndex(0)
 
+    # check
     def on_list_clicked(self):
         if self.stack.currentIndex() != 1:
             self.workspace_button.setStyleSheet(page_menu_button)
@@ -115,6 +119,7 @@ class Resources(MainView):
             self._reset_list_hint()
             self._fetch_resources_data()
 
+    # check
     def on_verify_button_clicked(self):
         self.current_cpu = round(cpu_freq().current/1000, 1)  # Processor's speed in gHz
         self.current_core = cpu_count(logical=False)  # Logical cores on the machine
@@ -160,6 +165,7 @@ class Resources(MainView):
             # deselect auto price box
             self.workspace.disable_auto_price_box()
 
+    # check
     def on_submit_button_clicked(self):
         machine_name = self.workspace.machine_name.text()
         ip_address = self.workspace.ip_address.text()
@@ -191,6 +197,7 @@ class Resources(MainView):
         self._reset_list_hint()
         self._fetch_resources_data()
 
+    # check
     def on_remove_button_clicked(self):
         model = self.list.table.selectionModel()
 
@@ -354,6 +361,7 @@ class Resources(MainView):
         else:
             self.workspace.disable_evaluate_button()
 
+    # check
     # load data from db
     def _fetch_resources_data(self):
         self.list.clean_table()
@@ -388,6 +396,7 @@ class Resources(MainView):
     def _reset_list_hint(self):
         self.list.hint.setText("")
 
+    # check
     def _api_call(self, method, endpoint, dat=None):
         if method.upper() in ["GET", "POST", "PUT", "DELETE"]:
             status, res = None, None

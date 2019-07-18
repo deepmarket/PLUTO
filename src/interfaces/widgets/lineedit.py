@@ -18,7 +18,7 @@ class LineEdit(QLineEdit):
 
         # Lambda func grab input args
         get_num = lambda x : kwargs.get(x, 0)
-        get_param = lambda x : kwargs.get(x)        
+        get_param = lambda x : kwargs.get(x)
 
         height = get_num("height")
         width = get_num("width")
@@ -26,13 +26,26 @@ class LineEdit(QLineEdit):
         name = get_param("name")
         hint = get_param("hint")
         echo = get_param("echo")
+        align = get_param("align")
         stylesheet = get_param("stylesheet")
 
         # Set size
         height and self.setFixedHeight(height)
         width and self.setFixedWidth(width)
+        align and self.setAlignment(align)
 
         # Set property if given
         name and self.setObjectName(name)
         hint and self.setPlaceholderText(hint)
         echo is True and self.setEchoMode(QLineEdit.Password)
+
+    def enable(self):
+        self.setEnabled(True)
+
+    def disable(self):
+        self.setEnabled(False)
+
+    def reset(self):
+        self.setText("")
+        self.clearFocus()
+        self.enable()

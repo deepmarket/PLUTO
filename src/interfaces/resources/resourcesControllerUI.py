@@ -11,7 +11,7 @@ from collections import OrderedDict
 from PyQt5.QtCore import pyqtSignal
 
 from ..widgets import (Frame, SectionTitleFrame, SearchInputFrame,
-                        Button, Label, Table, LineEdit,
+                        ViewButton, Label, Table, LineEdit,
                         HorizontalLayout, VerticalLayout,
                         HorizontalSpacer, VerticalSpacer)
 
@@ -28,11 +28,11 @@ class ResourcesControllerUI(Frame):
     button_view     :Frame = None
     table_view      :Frame = None
 
-    add             :Button = None
-    refresh         :Button = None
-    edit            :Button = None
-    remove          :Button = None
-    search          :LineEdit = None
+    add             :ViewButton = None
+    refresh         :ViewButton = None
+    edit            :ViewButton = None
+    remove          :ViewButton = None
+    search          :SearchInputFrame = None
 
     table           :Table = None
 
@@ -66,15 +66,17 @@ class ResourcesControllerUI(Frame):
         pass
 
     def reset(self):
-        self.table.clean()
+        # reset input
+        self.search.reset()
+
+        # reset table
+        self.table.reset()
+
+        # reset hint
         self.reset_hint()
 
-    def set_hint(self, hint:Label, text:str):
-        if hint in vars(self).values():
-            hint.setText(text)
-
     def reset_hint(self):
-        self.global_hint.setText("")
+        self.global_hint.reset()
 
     def _init_ui(self):
 
@@ -108,30 +110,29 @@ class ResourcesControllerUI(Frame):
 
         layout = HorizontalLayout(self.button_view, space=15)
 
-        self.add = Button(self.button_view, text="ADD", name="view_button", cursor=True)
+        self.add = ViewButton(self.button_view, text="ADD", cursor=True)
         layout.addWidget(self.add)
 
-        self.refresh = Button(self.button_view, text="REFRESH", name="view_button", cursor=True)
+        self.refresh = ViewButton(self.button_view, text="REFRESH", cursor=True)
         layout.addWidget(self.refresh)
 
-        self.edit = Button(self.button_view, text="EDIT", name="view_button", cursor=True)
+        self.edit = ViewButton(self.button_view, text="EDIT", cursor=True)
         layout.addWidget(self.edit)
 
-        self.remove = Button(self.button_view, text="REMOVE", name="view_button", cursor=True)
+        self.remove = ViewButton(self.button_view, text="REMOVE", cursor=True)
         layout.addWidget(self.remove)
 
         spacer = HorizontalSpacer()
         layout.addItem(spacer)
 
-        search_frame = SearchInputFrame(self.button_view, hint="Search a machine...")
-        layout.addWidget(search_frame)
-        self.search = search_frame.get_input()
+        self.search = SearchInputFrame(self.button_view, hint="Search a machine...")
+        layout.addWidget(self.search)
 
         self.add.clicked.connect(self.on_add_button_clicked)
         self.refresh.clicked.connect(self.on_refresh_button_clicked)
         self.edit.clicked.connect(self.on_edit_button_clicked)
         self.remove.clicked.connect(self.on_remove_button_clicked)
-        self.search.textChanged.connect(self.on_search_edited)
+        self.search.input_field.textChanged.connect(self.on_search_edited)
 
     def _init_table_view(self):
 

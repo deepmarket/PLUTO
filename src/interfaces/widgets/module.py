@@ -4,10 +4,12 @@
 
 """
 
+from PyQt5.QtWidgets import QWidget
 from PyQt5.QtCore import Qt
 
-from .button import Button
+from .button import Button, RadioButton
 from .frame import Frame
+from .groupbox import GroupBox
 from .label import Label
 from .layout import HorizontalLayout
 from .lineedit import LineEdit
@@ -73,6 +75,28 @@ class ConfigFrame(BaseTwoLabelFrame):
         super(ConfigFrame, self).__init__(widget, name="config_frame",
                                           align=Qt.AlignVCenter, **kwargs)
 
+    def setTitle(self, text:str):
+        super().set_label_one_text(text)
+
+    def title(self):
+        return self.label_one.text()
+
+    def setText(self, text:str):
+        super().set_label_two_text(text)
+
+    def text(self):
+        return self.label_two.text()
+
+    def green(self):
+        self.setObjectName("config_frame_green")
+
+    def red(self):
+        self.setObjectName("config_frame_red")
+
+    def reset(self):
+        super().set_label_two_text("-")
+        self.setObjectName("config_frame")
+
 
 class BaseInputFrame(Frame):
 
@@ -84,9 +108,6 @@ class BaseInputFrame(Frame):
 
         super(BaseInputFrame, self).__init__(widget, **kwargs)
 
-        kwargs.pop('name', None)
-        kwargs.pop('width', None)
-
         # Lambda func grab input args
         get_num = lambda x : kwargs.get(x, 0)
         get_param = lambda x : kwargs.get(x)
@@ -97,20 +118,40 @@ class BaseInputFrame(Frame):
 
         input_width = get_num("input_width")
         input_name = get_param("input_name")
+        input_align = get_param("input_align")
 
         # set layout
         self.layout = HorizontalLayout(self, **kwargs)
+
+        kwargs.pop('name', None)
+        kwargs.pop('width', None)
+        kwargs.pop('align', None)
 
         # title
         self.title = Label(self, width=title_width, text=title, name=title_name, **kwargs)
         self.layout.addWidget(self.title)
 
         # input
-        self.input_field = LineEdit(self, width=input_width, name=input_name, **kwargs)
+        self.input_field = LineEdit(self, width=input_width, name=input_name, align=input_align, **kwargs)
         self.layout.addWidget(self.input_field)
 
     def get_input(self):
         return self.input_field
+
+    def setText(self, text:str):
+        self.input_field.setText(text)
+
+    def text(self):
+        return self.input_field.text()
+
+    def enable(self):
+        self.input_field.enable()
+
+    def disable(self):
+        self.input_field.disable()
+
+    def reset(self):
+        self.input_field.reset()
 
 
 class LoginInputFrame(BaseInputFrame):
@@ -131,35 +172,129 @@ class LoginInputFrame(BaseInputFrame):
 class TabsInputFrame(BaseInputFrame):
 
     def __init__(self, widget, **kwargs):
-        super(TabsInputFrame, self).__init__(widget, height=30, space=18,
+
+        # lambda func grab if given
+        get_num = lambda x : kwargs.get(x, 0)
+        get_param = lambda x : kwargs.get(x)
+
+        height = get_num("height")
+        height = 30 if not height else height
+        kwargs.pop('height', None)
+
+        super(TabsInputFrame, self).__init__(widget, height=height, space=18,
                                             name="view_input",
                                             align=(Qt.AlignRight | Qt.AlignVCenter),
                                             **kwargs)
-
-        # set default frame width if given
-        get_num = lambda x : kwargs.get(x, 0)
-        get_param = lambda x : kwargs.get(x)
 
         fix_width = get_param("fix_width")
         width = get_num("width")
 
         if fix_width is True:
-            if not width:
-                self.setFixedWidth(285)
-            else:
-                self.setFixedWidth(width)
+            width = 285 if not width else width
+            self.setFixedWidth(width)
+
+
+    def enable(self):
+        self.setObjectName("view_input")
+        super().enable()
+
+    def disable(self):
+        self.setObjectName("view_input_disable")
+        super().disable()
+
+    def reset(self):
+        self.setObjectName("view_input")
+        super().reset()
 
 
 class SearchInputFrame(BaseInputFrame):
 
     def __init__(self, widget, **kwargs):
-        super(SearchInputFrame, self).__init__(widget, height=30,
-                                                name="view_search",
-                                                **kwargs)
 
+        # lambda func grab if given
         get_num = lambda x : kwargs.get(x, 0)
         get_param = lambda x : kwargs.get(x)
+
+        height = get_num("height")
+        height = 30 if not height else height
+
+        super(SearchInputFrame, self).__init__(widget, height=height,
+                                                name="view_search",
+                                                **kwargs)
 
         # set default title width if not given
         input_width = get_num("input_width")
         not input_width and self.input_field.setFixedWidth(210)
+
+    def reset(self):
+        self.setObjectName("view_search")
+        super().reset()
+
+class PriceBox(GroupBox):
+
+    layout : HorizontalLayout = None
+    button : RadioButton = None
+    label  : Label = None
+    input_field : TabsInputFrame = None
+
+    def __init__(self, widget:QWidget, *args, **kwargs):
+
+        # lambda func grab if given
+        get_num = lambda x : kwargs.get(x, 0)
+        get_param = lambda x : kwargs.get(x)
+
+        super(PriceBox, self).__init__(widget, *args,
+                                       name="price_box",
+                                       align=(Qt.AlignRight | Qt.AlignVCenter))
+
+        # get param
+        label = get_num("label")
+        height = get_num("height")
+
+        height = 38 if not height else height
+        kwargs.pop('height', None)
+
+        self.layout = HorizontalLayout(self)
+
+        self.button = Button(self, name="check_button")
+        self.layout.addWidget(self.button)
+
+        self.input_field = TabsInputFrame(self, height=height, input_align=Qt.AlignRight, **kwargs)
+        self.layout.addWidget(self.input_field)
+
+        self.label = Label(self, text=label, height=height, **kwargs)
+        self.layout.addWidget(self.label)
+
+    def check(self):
+        self.setChecked(True)
+        self.button.setText("•")
+
+    def uncheck(self):
+        self.setChecked(False)
+        self.button.setText("")
+
+    def disable(self):
+        self.setObjectName("price_box_disable")
+        self.setChecked(False)
+
+        self.button.setText("")
+        self.button.disable()
+
+        self.input_field.disable()
+        self.input_field.setText("-")
+
+    def setText(self, price:int):
+        self.input_field.setText(str(price))
+
+class ViewButton(Button):
+
+    def __init__(self, widget:QWidget, **kwargs):
+        super(ViewButton, self).__init__(widget, name="view_button", **kwargs)
+
+    def enable(self):
+        self.setObjectName("view_button")
+        super().enable()
+
+    def disable(self):
+        self.setObjectName("view_button_disable")
+        super().disable()

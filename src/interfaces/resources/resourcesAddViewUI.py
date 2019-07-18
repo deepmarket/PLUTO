@@ -7,11 +7,11 @@
 
 from abc import ABCMeta, abstractmethod
 
-from PyQt5.QtWidgets import QFrame, QLineEdit, QLabel
+from PyQt5.QtWidgets import QFrame, QLineEdit, QLabel, QRadioButton
 from PyQt5.QtCore import pyqtSignal, Qt
 
 from ..widgets import (Frame, SectionTitleFrame, ConfigFrame, TabsInputFrame,
-                        Button, Label,
+                        ViewButton, Label, PriceBox,
                         HorizontalLayout, VerticalLayout, StackLayout,
                         HorizontalSpacer, VerticalSpacer)
 
@@ -40,20 +40,23 @@ class ResourcesAddViewUI(Frame):
     attendance_section      :Frame = None
     price_section           :Frame = None
 
-    cancel                  :Button = None
-    back                    :Button = None
-    next_page               :Button = None
-    submit                  :Button = None
+    cancel                  :ViewButton = None
+    back                    :ViewButton = None
+    next_page               :ViewButton = None
+    submit                  :ViewButton = None
 
     current_cpu_gpu         :ConfigFrame = None
     current_cores           :ConfigFrame = None
     current_ram             :ConfigFrame = None
 
-    ip_address              :QLineEdit = None
-    machine_name            :QLineEdit = None
-    cpu_gpu                 :QLineEdit = None
-    cores                   :QLineEdit = None
-    ram                     :QLineEdit = None
+    ip_address              :TabsInputFrame = None
+    machine_name            :TabsInputFrame = None
+    cpu_gpu                 :TabsInputFrame = None
+    cores                   :TabsInputFrame = None
+    ram                     :TabsInputFrame = None
+
+    auto_price_box          :PriceBox = None
+    offer_price_box         :PriceBox = None
 
     global_hint             :Label = None
     verification_hint       :Label = None
@@ -84,6 +87,14 @@ class ResourcesAddViewUI(Frame):
     def on_submit_clicked(self):
         self.signal.emit()
 
+    def on_auto_price_clicked(self):
+        self.auto_price_box.check()
+        self.offer_price_box.uncheck()
+
+    def on_offer_price_clicked(self):
+        self.auto_price_box.uncheck()
+        self.offer_price_box.check()
+
     @abstractmethod
     def on_machine_name_edit(self):
         pass
@@ -101,99 +112,41 @@ class ResourcesAddViewUI(Frame):
         pass
 
     def reset(self):
-        self.reset_section(self.verification_section)
-        self.reset_section(self.configuration_section)
-        self.reset_section(self.planning_section)
-        self.reset_section(self.attendance_section)
-        self.reset_section(self.price_section)
+        # reset input
+        self.ip_address.reset()
+        self.machine_name.reset()
+        self.cpu_gpu.reset()
+        self.cores.reset()
+        self.ram.reset()
 
-        self.reset_config(self.current_cpu_gpu)
-        self.reset_config(self.current_cores)
-        self.reset_config(self.current_ram)
+        # reset config
+        self.current_cpu_gpu.reset()
+        self.current_cores.reset()
+        self.current_ram.reset()
 
+        # reset price box
+        self.auto_price_box.check()
+
+        # reset hint
         self.reset_hint()
 
+        # reload stylesheet
+        self.reload_stylesheet()
+
+        # redirect to default page
         self._to_tech_section()
 
-    def enable_section(self, section):
-        if section in vars(self).values():
-            input_frame = get_children(section, QFrame, "view_input_disable")
-
-            # change style
-            for frame in input_frame:
-                frame.setObjectName("view_input")
-
-            # enable input
-            qlineedit = get_children(section, QLineEdit)
-            for edit in qlineedit:
-                edit.setEnabled(True)
-
-    def disable_section(self, section):
-        if section in vars(self).values():
-            input_frame = get_children(section, QFrame, "view_input")
-
-            # change style
-            for frame in input_frame:
-                frame.setObjectName("view_input_disable")
-
-            # enable input
-            qlineedit = get_children(section, QLineEdit)
-            for edit in qlineedit:
-                edit.setEnabled(False)
-
-    def enable_button(self, button):
-        if button in vars(self).values():
-            button.setObjectName("view_button")
-            button.setEnabled(True)
-
-    def disable_button(self, button):
-        if button in vars(self).values():
-            button.setObjectName("view_button_disable")
-            button.setEnabled(False)
-
-    def set_config_text(self, config:ConfigFrame, text:str):
-        if config in vars(self).values():
-            config.set_label_two_text(text)
-
-    def set_config_green(self, config:ConfigFrame):
-        if config in vars(self).values():
-            # update object name
-            config.setObjectName("config_frame_green")
-
-            # reload stylesheet
-            self.setStyleSheet(resources_add_view_style)
-
-    def set_config_red(self, config:ConfigFrame):
-        if config in vars(self).values():
-            # update object name
-            config.setObjectName("config_frame_red")
-
-            # reload stylesheet
-            self.setStyleSheet(resources_add_view_style)
-
-    def set_hint(self, hint:QLabel, text:str):
-        if hint in vars(self).values():
-            hint.setText(text)
-
-    def reset_section(self, section):
-        if section in vars(self).values():
-            qlineedit = get_children(section, QLineEdit)
-            for edit in qlineedit:
-                edit.setText("")
-                edit.clearFocus()
-
-    def reset_config(self, config):
-        if config in vars(self).values():
-            self.set_config_text(config, "-")
-            config.setObjectName("config_frame")
-            self.setStyleSheet(resources_add_view_style)
-
     def reset_hint(self):
-        self.verification_hint.setText("")
-        self.configuration_hint.setText("")
-        self.planning_hint.setText("")
-        self.attendance_hint.setText("")
-        self.price_hint.setText("")
+        self.global_hint.reset()
+        self.verification_hint.reset()
+        self.configuration_hint.reset()
+        self.planning_hint.reset()
+        self.attendance_hint.reset()
+        self.price_hint.reset()
+        self.submit_hint.reset()
+
+    def reload_stylesheet(self):
+        self.setStyleSheet(resources_add_view_style)
 
     def _to_tech_section(self):
         self.stack.setCurrentWidget(self.tech_sections)
@@ -255,19 +208,19 @@ class ResourcesAddViewUI(Frame):
 
         layout = HorizontalLayout(self.button_view, space=15)
 
-        self.cancel = Button(self.button_view, text="CANCEL", name="view_button", cursor=True)
+        self.cancel = ViewButton(self.button_view, text="CANCEL", cursor=True)
         layout.addWidget(self.cancel)
 
         spacer = HorizontalSpacer()
         layout.addItem(spacer)
 
-        self.back = Button(self.button_view, text="BACK", name="view_button", cursor=True)
+        self.back = ViewButton(self.button_view, text="BACK", cursor=True)
         layout.addWidget(self.back)
 
-        self.next_page = Button(self.button_view, text="NEXT", name="view_button", cursor=True)
+        self.next_page = ViewButton(self.button_view, text="NEXT", cursor=True)
         layout.addWidget(self.next_page)
 
-        self.submit = Button(self.button_view, text="SUBMIT", name="view_button", cursor=True)
+        self.submit = ViewButton(self.button_view, text="SUBMIT", cursor=True)
         layout.addWidget(self.submit)
 
         # --------- binding event to function ---------
@@ -296,10 +249,10 @@ class ResourcesAddViewUI(Frame):
         spacer = VerticalSpacer()
         sections_layout.addItem(spacer)
 
-        self.machine_name.textChanged.connect(self.on_machine_name_edit)
-        self.cpu_gpu.textChanged.connect(self.on_cpu_gpu_edit)
-        self.cores.textChanged.connect(self.on_cores_edit)
-        self.ram.textChanged.connect(self.on_ram_edit)
+        self.machine_name.input_field.textChanged.connect(self.on_machine_name_edit)
+        self.cpu_gpu.input_field.textChanged.connect(self.on_cpu_gpu_edit)
+        self.cores.input_field.textChanged.connect(self.on_cores_edit)
+        self.ram.input_field.textChanged.connect(self.on_ram_edit)
 
     def _init_verification_section(self):
 
@@ -318,11 +271,8 @@ class ResourcesAddViewUI(Frame):
         content_layout = VerticalLayout(content_frame)
 
         # ip_address
-        input_frame = TabsInputFrame(content_frame, title="IP Address:", title_width=66)
-
-        content_layout.addWidget(input_frame)
-        self.ip_address = input_frame.get_input()
-        # self.ip_address.setText("127.0.0.1") # TODO: test code
+        self.ip_address = TabsInputFrame(content_frame, title="IP Address:", title_width=66)
+        content_layout.addWidget(self.ip_address)
 
     def _init_configuration_section(self):
 
@@ -374,26 +324,22 @@ class ResourcesAddViewUI(Frame):
         content_layout.addWidget(line_frame)
         line_layout = HorizontalLayout(line_frame)
 
-        frame = TabsInputFrame(line_frame, title="Machine Name:", title_width=113, fix_width=True)
-        line_layout.addWidget(frame)
-        self.machine_name = frame.get_input()
+        self.machine_name = TabsInputFrame(line_frame, title="Machine Name:", title_width=113, fix_width=True)
+        line_layout.addWidget(self.machine_name)
 
-        frame = TabsInputFrame(line_frame, title="GPUs #:", title_width=113, fix_width=True)
-        line_layout.addWidget(frame)
-        self.cpu_gpu = frame.get_input()
+        self.cpu_gpu = TabsInputFrame(line_frame, title="GPUs #:", title_width=113, fix_width=True)
+        line_layout.addWidget(self.cpu_gpu)
 
         # line_frame: cores, ram, spacer, evaluate_button
         line_frame = Frame(content_frame)
         content_layout.addWidget(line_frame)
         line_layout = HorizontalLayout(line_frame)
 
-        frame = TabsInputFrame(line_frame, title="Cores:", title_width=113, fix_width=True)
-        line_layout.addWidget(frame)
-        self.cores = frame.get_input()
+        self.cores = TabsInputFrame(line_frame, title="Cores:", title_width=113, fix_width=True)
+        line_layout.addWidget(self.cores)
 
-        frame = TabsInputFrame(line_frame, title="RAM (Gb):", title_width=113, fix_width=True)
-        line_layout.addWidget(frame)
-        self.ram = frame.get_input()
+        self.ram = TabsInputFrame(line_frame, title="RAM (Gb):", title_width=113, fix_width=True)
+        line_layout.addWidget(self.ram)
 
     def _init_eco_sections(self):
 
@@ -413,6 +359,9 @@ class ResourcesAddViewUI(Frame):
         self.submit_hint = Label(self.eco_sections, name="section_hint",
                                  align=(Qt.AlignRight | Qt.AlignVCenter))
         sections_layout.addWidget(self.submit_hint)
+
+        self.auto_price_box.button.clicked.connect(self.on_auto_price_clicked)
+        self.offer_price_box.button.clicked.connect(self.on_offer_price_clicked)
 
     def _init_attendance_section(self):
 
@@ -452,9 +401,11 @@ class ResourcesAddViewUI(Frame):
         content_frame = Frame(self.price_section, name="price_content_frame")
         section_layout.addWidget(content_frame)
 
-        content_layout = VerticalLayout(content_frame)
+        content_layout = HorizontalLayout(content_frame, space=18)
 
-        # TODO: fill the implementation here
-        label = Label(content_frame, text="Price implementation here.")
-        content_layout.addWidget(label)
+        self.auto_price_box = PriceBox(self.price_section, title="Automated Price:", label="Credit / Hr")
+        content_layout.addWidget(self.auto_price_box)
+        self.auto_price_box.input_field.setEnabled(False)
 
+        self.offer_price_box = PriceBox(self.price_section, title="Offering Price:", label="Credit / Hr")
+        content_layout.addWidget(self.offer_price_box)

@@ -72,8 +72,7 @@ class ResourcesController(ResourcesControllerUI):
                     self.reset()
 
                     # raise success message
-                    msg = f"Machine {machine_name} has been removed sucessfully."
-                    self.set_hint(self.global_hint, msg)
+                    self.global_hint.setText(f"Machine {machine_name} has been removed sucessfully.")
 
     def on_search_edited(self):
         pass
@@ -104,14 +103,14 @@ class ResourcesController(ResourcesControllerUI):
             status, res = api.get()
 
             if not res:
-                self.set_hint(self.global_hint, Error.CONNECT_ERR)
+                self.global_hint.setText(Error.CONNECT_ERR)
                 return []
 
             if status == 200:
                 return res["resources"]
 
             if status == 500:
-                self.set_hint(self.global_hint, Error.UNKOWN_ERR)
+                self.global_hint.setText(Error.UNKOWN_ERR)
                 return []
 
     # TODO: combine api call helper function together later on
@@ -125,14 +124,14 @@ class ResourcesController(ResourcesControllerUI):
             status, res = api.delete()
 
             if not res:
-                self.set_hint(self.global_hint, Error.CONNECT_ERR)
+                self.global_hint.setText(Error.CONNECT_ERR)
                 return False
 
             if status == 200:
                 return True
 
             if status == 500:
-                self.set_hint(self.global_hint, Error.UNKOWN_ERR)
+                self.global_hint.setText(Error.UNKOWN_ERR)
                 return False
 
 class ResourcesAddView(ResourcesAddViewUI):
@@ -141,8 +140,13 @@ class ResourcesAddView(ResourcesAddViewUI):
     available_cores                 : int = 0
     available_ram                   : int = 0
 
+    auto_price                      : int = 0
+    offer_price                     : int = 0
+
     def __init__(self, *args, **kwargs):
         super(ResourcesAddView, self).__init__(*args, **kwargs)
+
+        self.offer_price_box.disable()
 
         self._fetch_ip_address()
         self._fetch_machine_config()
@@ -163,6 +167,14 @@ class ResourcesAddView(ResourcesAddViewUI):
 
         if not self._planning_check():
             return
+
+        cores = self.cores.text()
+        #TODO: calculated auto price here
+        # Amount per (core * worker) / hour
+        PRICING_CONSTANT = 0.005
+        self.auto_price = float(cores) * PRICING_CONSTANT
+        self.auto_price_box.setText(self.auto_price)
+
         super().on_next_page_clicked()
 
     def on_submit_clicked(self):
@@ -174,8 +186,11 @@ class ResourcesAddView(ResourcesAddViewUI):
         cores = self.cores.text()
         ram = self.ram.text()
 
-        # TODO: replace this when price section finished
         price = 0
+        if self.offer_price_box.isChecked():
+            price = self.offer_price
+        else:
+            price =self.auto_price
 
         # pack data
         dat = {
@@ -188,6 +203,7 @@ class ResourcesAddView(ResourcesAddViewUI):
             "status": "ALIVE"
         }
 
+        print(dat)
         # api call
         res = self._api_post_call("/resources", dat)
 
@@ -206,6 +222,10 @@ class ResourcesAddView(ResourcesAddViewUI):
         self._fetch_ip_address()
         self._fetch_machine_config()
 
+        self.offer_price_box.disable()
+        self.reload_stylesheet()
+
+
     def _fetch_ip_address(self):
         # get ip address for local machine
         ip_address = util.get_ip_address()
@@ -214,7 +234,9 @@ class ResourcesAddView(ResourcesAddViewUI):
         self.ip_address.setText(ip_address)
 
         # disable input field
-        self.disable_section(self.verification_section)
+        self.ip_address.disable()
+
+        self.reload_stylesheet()
 
     def _fetch_machine_config(self):
 
@@ -227,9 +249,9 @@ class ResourcesAddView(ResourcesAddViewUI):
         # Total installed RAM
         self.available_ram = round(virtual_memory().total/(pow(1024, 3)), 1)
 
-        self.set_config_text(self.current_cpu_gpu, f"{self.available_cpu_gpu} GHz")
-        self.set_config_text(self.current_cores, f"{self.available_cores}")
-        self.set_config_text(self.current_ram, f"{self.available_ram} GB")
+        self.current_cpu_gpu.setText(f"{self.available_cpu_gpu} GHz")
+        self.current_cores.setText(f"{self.available_cores}")
+        self.current_ram.setText(f"{self.available_ram} GB")
 
     def _api_post_call(self, endpoint:str, dat:dict):
 
@@ -243,7 +265,7 @@ class ResourcesAddView(ResourcesAddViewUI):
             status, res = api.post(dat)
 
             if not res:
-                self.set_hint(self.submit_hint, Error.CONNECT_ERR)
+                self.submit_hint.setText(Error.CONNECT_ERR)
                 return False
 
             if status == 200:
@@ -258,7 +280,7 @@ class ResourcesAddView(ResourcesAddViewUI):
                 else:
                     msg = Error.UNKOWN_ERR
 
-                self.set_hint(self.submit_hint, msg)
+                self.submit_hint.setText(msg)
                 return False
 
 
@@ -279,7 +301,7 @@ class ResourcesAddView(ResourcesAddViewUI):
         self.reset_hint()
 
         if self.machine_name.text() is "":
-            self.set_hint(self.planning_hint, "Please enter a machine name.")
+            self.planning_hint.setText("Please enter a machine name.")
             return False
         return True
 
@@ -298,11 +320,13 @@ class ResourcesAddView(ResourcesAddViewUI):
         res = util.config_input_check(self.cpu_gpu.text(), self.available_cpu_gpu, Res)
 
         if res is not Res.SUCCESS:
-            self.set_hint(self.planning_hint, res.value)
-            self.set_config_red(self.current_cpu_gpu)
+            self.planning_hint.setText(res.value)
+            self.current_cpu_gpu.red()
+            self.reload_stylesheet()
             return False
 
-        self.set_config_green(self.current_cpu_gpu)
+        self.current_cpu_gpu.green()
+        self.reload_stylesheet()
         return True
 
     def _cores_check(self):
@@ -320,11 +344,14 @@ class ResourcesAddView(ResourcesAddViewUI):
         res = util.config_input_check(self.cores.text(), self.available_cores, Res)
 
         if res is not Res.SUCCESS:
-            self.set_hint(self.planning_hint, res.value)
-            self.set_config_red(self.current_cores)
+            self.planning_hint.setText(res.value)
+            self.current_cores.red()
+            self.reload_stylesheet()
+
             return False
 
-        self.set_config_green(self.current_cores)
+        self.current_cores.green()
+        self.reload_stylesheet()
         return True
 
     def _ram_check(self):
@@ -342,9 +369,11 @@ class ResourcesAddView(ResourcesAddViewUI):
         res = util.config_input_check(self.ram.text(), self.available_ram, Res)
 
         if res is not Res.SUCCESS:
-            self.set_hint(self.planning_hint, res.value)
-            self.set_config_red(self.current_ram)
+            self.planning_hint.setText(res.value)
+            self.current_ram.red()
+            self.reload_stylesheet()
             return False
 
-        self.set_config_green(self.current_ram)
+        self.current_ram.green()
+        self.reload_stylesheet()
         return True

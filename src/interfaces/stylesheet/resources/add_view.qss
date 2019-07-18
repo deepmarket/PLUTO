@@ -60,9 +60,9 @@ QFrame#attendance_content_frame {
 }
 
 QFrame#price_content_frame {
-    min-height: 30px;
+    min-height: 75px;
     background-color: #E1ECF0;
-    padding: 20px 25px;
+    padding: 25px 30px;
 }
 
 QFrame#config_frame,
@@ -95,6 +95,25 @@ QFrame#config_frame_disable > QLabel {
     color: #F2F2F2;
 }
 
+QGroupBox#price_box,
+QGroupBox#price_box_disable {
+    border: none;
+    max-width: 320px;
+}
+
+QGroupBox#price_box > QFrame,
+QGroupBox#price_box_disable > QFrame {
+    padding-left: 10px;
+}
+
+QGroupBox#price_box > QFrame {
+    background-color: #FFFFFF;
+}
+
+QGroupBox#price_box_disable > QFrame {
+    background-color: #C6CDDB;
+}
+
 QLabel#view_title {
     font-size: 19px;
     color: #6C7E8E;
@@ -121,6 +140,20 @@ QFrame#view_input_disable > QLabel {
     color: #6C7E8E;
 }
 
+QGroupBox#price_box > QLabel,
+QGroupBox#price_box_disable > QLabel {
+    padding-right: 10px;
+    font-size: 13px;
+}
+
+QGroupBox#price_box QLabel {
+    color: #6C7E8E;
+}
+
+QGroupBox#price_box_disable QLabel {
+    color: #F2F2F2;
+}
+
 QFrame#view_input > QLineEdit,
 QFrame#view_input_disable > QLineEdit {
     border: none;
@@ -138,9 +171,17 @@ QFrame#view_input_disable > QLineEdit {
     color: #F2F2F2;
 }
 
+QGroupBox#price_box QLineEdit {
+    color: #6C7E8E;
+}
+
+QGroupBox#price_box_disable QLineEdit {
+    color: #F2F2F2;
+}
+
 QPushButton#view_button,
 QPushButton#view_button_disable {
-    border: None;
+    border: none;
     min-width: 115px;
     min-height: 30px;
     font-size: 12px;
@@ -154,4 +195,25 @@ QPushButton#view_button {
 QPushButton#view_button_disable {
     background-color: #C6CDDB;
     color: #F2F2F2;
+}
+
+QGroupBox#price_box > QPushButton,
+QGroupBox#price_box_disable > QPushButton {
+    border: none;
+    max-width: 18px;
+    max-height: 18px;
+    min-width: 18px;
+    min-width: 18px;
+    border-radius: 9px;
+    font-size: 30px;
+    margin-right: 22px;
+}
+
+QGroupBox#price_box > QPushButton {
+    background-color: #FFFFFF;
+    color: #6C7E8E;
+}
+
+QGroupBox#price_box_disable > QPushButton {
+    background-color: #C6CDDB;
 }

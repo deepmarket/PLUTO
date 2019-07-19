@@ -27,21 +27,13 @@ class Table(QTableWidget):
 
         self.count_row = count_row
 
-        count_column = 0
-        header_label = []
-        header_width = []
-        for label, width in header.items():
-            header_label.append(label)
-            header_width.append(width)
-            count_column += 1
-
         # set the number of column in table
-        self.count_column = count_column
+        self.count_column = len(header)
         self.setColumnCount(self.count_column)
 
         # set horizontal header label and width
-        self.setHorizontalHeaderLabels(header_label)
-        for i, width in enumerate(header_width):
+        self.setHorizontalHeaderLabels(header.keys())
+        for i, width in enumerate(header.values()):
             self.setColumnWidth(i, width)
         self.horizontalHeader().setStretchLastSection(True)
 

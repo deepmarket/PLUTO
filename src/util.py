@@ -30,7 +30,7 @@ def get_ip_address():
 
 def config_input_check(text:str, available:int, res:Enum):
 
-    if text is "" or not num_regex.match(text):
+    if not text or not num_regex.match(text):
         return res.EMPTY_ERROR
     else:
         try:

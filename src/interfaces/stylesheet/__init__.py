@@ -4,7 +4,10 @@ from ..util import load_path
 
 def read_stylesheet(file_name):
     path = load_path(os.getcwd() + "/interfaces/stylesheet/", file_name)
-    return open(path).read() if path else None
+    ret = None
+    with open(path) as file:
+        ret = file.read()
+    return ret
 
 
 def read_icon(file_name):

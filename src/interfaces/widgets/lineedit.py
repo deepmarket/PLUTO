@@ -17,12 +17,10 @@ class LineEdit(QLineEdit):
         self.setAttribute(Qt.WA_MacShowFocusRect, 0)
 
         # Lambda func grab input args
-        get_num = lambda x : kwargs.get(x, 0)
         get_param = lambda x : kwargs.get(x)
 
-        height = get_num("height")
-        width = get_num("width")
-
+        height = get_param("height")
+        width = get_param("width")
         name = get_param("name")
         hint = get_param("hint")
         echo = get_param("echo")

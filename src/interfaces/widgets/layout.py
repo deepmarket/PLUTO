@@ -12,16 +12,15 @@ class Layout(QLayout):
 
     def __init__(self, widget, **kwargs):
         super(Layout, self).__init__(widget)
-        
+
         # Lambda func grab input args
-        get_num = lambda x : kwargs.get(x, 0)
         get_param = lambda x : kwargs.get(x)
 
-        l_m = get_num("l_m")
-        t_m = get_num("t_m")
-        r_m = get_num("r_m")
-        b_m = get_num("b_m")
-        space = get_num("space")
+        l_m = get_param("l_m")
+        t_m = get_param("t_m")
+        r_m = get_param("r_m")
+        b_m = get_param("b_m")
+        space = get_param("space")
 
         name = get_param("name")
         align = get_param("align")

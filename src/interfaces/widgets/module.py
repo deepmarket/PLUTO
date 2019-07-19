@@ -109,14 +109,13 @@ class BaseInputFrame(Frame):
         super(BaseInputFrame, self).__init__(widget, **kwargs)
 
         # Lambda func grab input args
-        get_num = lambda x : kwargs.get(x, 0)
         get_param = lambda x : kwargs.get(x)
 
         title = get_param("title")
-        title_width = get_num("title_width")
+        title_width = get_param("title_width")
         title_name = get_param("title_name")
 
-        input_width = get_num("input_width")
+        input_width = get_param("input_width")
         input_name = get_param("input_name")
         input_align = get_param("input_align")
 
@@ -164,8 +163,8 @@ class LoginInputFrame(BaseInputFrame):
                                             **kwargs)
 
         # set default title width if not given
-        get_num = lambda x : kwargs.get(x, 0)
-        title_width = get_num("title_width")
+        get_param = lambda x : kwargs.get(x, 0)
+        title_width = get_param("title_width")
         not title_width and self.title.setFixedWidth(160)
 
 
@@ -174,10 +173,9 @@ class TabsInputFrame(BaseInputFrame):
     def __init__(self, widget, **kwargs):
 
         # lambda func grab if given
-        get_num = lambda x : kwargs.get(x, 0)
         get_param = lambda x : kwargs.get(x)
 
-        height = get_num("height")
+        height = get_param("height")
         height = 30 if not height else height
         kwargs.pop('height', None)
 
@@ -187,7 +185,7 @@ class TabsInputFrame(BaseInputFrame):
                                             **kwargs)
 
         fix_width = get_param("fix_width")
-        width = get_num("width")
+        width = get_param("width")
 
         if fix_width is True:
             width = 285 if not width else width
@@ -212,10 +210,9 @@ class SearchInputFrame(BaseInputFrame):
     def __init__(self, widget, **kwargs):
 
         # lambda func grab if given
-        get_num = lambda x : kwargs.get(x, 0)
         get_param = lambda x : kwargs.get(x)
 
-        height = get_num("height")
+        height = get_param("height")
         height = 30 if not height else height
 
         super(SearchInputFrame, self).__init__(widget, height=height,
@@ -223,7 +220,7 @@ class SearchInputFrame(BaseInputFrame):
                                                 **kwargs)
 
         # set default title width if not given
-        input_width = get_num("input_width")
+        input_width = get_param("input_width")
         not input_width and self.input_field.setFixedWidth(210)
 
     def reset(self):
@@ -240,7 +237,6 @@ class PriceBox(GroupBox):
     def __init__(self, widget:QWidget, *args, **kwargs):
 
         # lambda func grab if given
-        get_num = lambda x : kwargs.get(x, 0)
         get_param = lambda x : kwargs.get(x)
 
         super(PriceBox, self).__init__(widget, *args,
@@ -248,8 +244,8 @@ class PriceBox(GroupBox):
                                        align=(Qt.AlignRight | Qt.AlignVCenter))
 
         # get param
-        label = get_num("label")
-        height = get_num("height")
+        label = get_param("label")
+        height = get_param("height")
 
         height = 38 if not height else height
         kwargs.pop('height', None)

@@ -1,7 +1,7 @@
 """
- 
+
     This module generate a simple placeholder frame without any contents.
- 
+
 """
 
 from PyQt5.QtWidgets import QFrame
@@ -12,12 +12,10 @@ class Frame(QFrame):
         super(Frame, self).__init__(*args)
 
         # Lambda func grab input args
-        get_num = lambda x : kwargs.get(x, 0)
         get_param = lambda x : kwargs.get(x)
 
-        height = get_num("height")
-        width = get_num("width")
-
+        height = get_param("height")
+        width = get_param("width")
         name = get_param("name")
         stylesheet = get_param("stylesheet")
 

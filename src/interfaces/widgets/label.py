@@ -20,12 +20,10 @@ class Label(QLabel):
         super(Label, self).__init__(widget)
 
         # Lambda func grab input args
-        get_num = lambda x : kwargs.get(x, 0)
         get_param = lambda x : kwargs.get(x)
 
-        height = get_num("height")
-        width = get_num("width")
-
+        height = get_param("height")
+        width = get_param("width")
         text = get_param("text")
         name = get_param("name")
         stylesheet = get_param("stylesheet")
@@ -50,10 +48,9 @@ class Paragraph(Frame):
         super(Paragraph, self).__init__(widget)
 
         # Lambda func grab input args
-        get_num = lambda x : kwargs.get(x, 0)
         get_param = lambda x : kwargs.get(x)
 
-        space = get_num("space")
+        space = get_param("space")
 
         layout = VerticalLayout(self, space=space)
 
@@ -71,11 +68,10 @@ class Image(Label):
         path = os.getcwd() + "/src/img/"
 
         # Lambda func grab input args
-        get_num = lambda x : kwargs.get(x, 0)
         get_param = lambda x : kwargs.get(x)
 
-        height = get_num("height")
-        width = get_num("width")
+        height = get_param("height")
+        width = get_param("width")
 
         img = get_param("img")
         name = get_param("name")

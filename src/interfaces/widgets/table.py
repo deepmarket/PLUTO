@@ -1,9 +1,3 @@
-"""
-
-    This file provide a table widget.
-
-"""
-
 from collections import OrderedDict
 
 from PyQt5.QtCore import Qt
@@ -11,6 +5,9 @@ from PyQt5.QtWidgets import QTableWidget, QAbstractItemView, QTableWidgetItem
 
 
 class Table(QTableWidget):
+    """
+    This file provide a table widget.
+    """
 
     current_row     : int = 0
     count_row       : int = 0
@@ -37,11 +34,9 @@ class Table(QTableWidget):
         self.horizontalHeader().setStretchLastSection(True)
 
         # Lambda func grab input args
-        get_num = lambda x : kwargs.get(x, 0)
         get_param = lambda x : kwargs.get(x)
 
-        row_height = get_num("row_height")
-
+        row_height = get_param("row_height")
         name = get_param("name")
         if_vertical = get_param("if_vertical")
 

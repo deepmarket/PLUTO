@@ -1,6 +1,6 @@
 """
 
-    This module generate a table widget.
+    This file provide a table widget.
 
 """
 
@@ -10,19 +10,18 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QTableWidget, QAbstractItemView, QTableWidgetItem
 
 
-
 class Table(QTableWidget):
 
     current_row     : int = 0
     count_row       : int = 0
     count_column    : int = 0
 
-    """
+    def __init__(self, widget, count_row:int, header:OrderedDict, **kwargs):
+        """
         :param widget: parent widget
         :param count_row: max row in table
         :param header: dictionary, key is the column label, value is the column width
-    """
-    def __init__(self, widget, count_row:int, header:OrderedDict, **kwargs):
+        """
         super(Table, self).__init__(widget)
 
         self.count_row = count_row
@@ -69,10 +68,10 @@ class Table(QTableWidget):
         # initially fill table with empty line
         self.reset()
 
-    """
-        :param dat: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
-    """
     def add(self, dat:list):
+        """
+        :param dat: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
+        """
 
         if len(dat) > self.count_column:
             dat = dat[:self.count_column]

@@ -21,6 +21,7 @@ from ..stylesheet import resources_add_view_style
 class ResourcesAddViewUI(Frame):
 
     # metaclass for defining abstract base classes
+    # Reference can be found here: https://docs.python.org/2/library/abc.html#abc.abstractmethod
     __metaclass__ = ABCMeta
 
     signal                  :pyqtSignal = None

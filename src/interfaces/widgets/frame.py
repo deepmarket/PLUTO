@@ -6,14 +6,15 @@
 
 from PyQt5.QtWidgets import QFrame
 
-class Frame(QFrame):
 
-    def __init__(self,
+class Frame(QFrame):
+    def __init__(
+        self,
         *args,
         height: int = 0,
         width: int = 0,
         name: str = "",
-        stylesheet = None,
+        stylesheet=None,
         **kwargs
     ):
         super(Frame, self).__init__(*args)
@@ -25,5 +26,3 @@ class Frame(QFrame):
         # Set property if given
         name and self.setObjectName(name)
         stylesheet and self.setObjectName(name)
-
-

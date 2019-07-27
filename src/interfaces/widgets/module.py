@@ -18,8 +18,8 @@ from .spacer import HorizontalSpacer
 
 class BaseTwoLabelFrame(Frame):
 
-    label_one : Label = None
-    label_two : Label = None
+    label_one: Label = None
+    label_two: Label = None
 
     def __init__(
         self,
@@ -32,7 +32,7 @@ class BaseTwoLabelFrame(Frame):
     ):
         super(BaseTwoLabelFrame, self).__init__(widget, **kwargs)
 
-        kwargs.pop('name', None)
+        kwargs.pop("name", None)
 
         layout = HorizontalLayout(self)
 
@@ -47,10 +47,10 @@ class BaseTwoLabelFrame(Frame):
         self.set_label_two_text(label_two_text)
         layout.addWidget(self.label_two)
 
-    def set_label_one_text(self, text:str):
+    def set_label_one_text(self, text: str):
         self.label_one.setText(text)
 
-    def set_label_two_text(self, text:str):
+    def set_label_two_text(self, text: str):
         self.label_two.setText(text)
 
     def get_label_one(self):
@@ -61,36 +61,30 @@ class BaseTwoLabelFrame(Frame):
 
 
 class SectionTitleFrame(BaseTwoLabelFrame):
-
-    def __init__(
-        self,
-        widget:QWidget,
-        **kwargs
-    ):
-        super(SectionTitleFrame, self).__init__(widget,
-                                                name="section_title_frame",
-                                                label_one_name="section_title",
-                                                label_two_name="section_hint",
-                                                align=Qt.AlignVCenter, **kwargs)
+    def __init__(self, widget: QWidget, **kwargs):
+        super(SectionTitleFrame, self).__init__(
+            widget,
+            name="section_title_frame",
+            label_one_name="section_title",
+            label_two_name="section_hint",
+            align=Qt.AlignVCenter,
+            **kwargs
+        )
 
 
 class ConfigFrame(BaseTwoLabelFrame):
+    def __init__(self, widget: QWidget, **kwargs):
+        super(ConfigFrame, self).__init__(
+            widget, name="config_frame", align=Qt.AlignVCenter, **kwargs
+        )
 
-    def __init__(
-        self,
-        widget:QWidget,
-        **kwargs
-    ):
-        super(ConfigFrame, self).__init__(widget, name="config_frame",
-                                          align=Qt.AlignVCenter, **kwargs)
-
-    def setTitle(self, text:str):
+    def setTitle(self, text: str):
         super().set_label_one_text(text)
 
     def title(self):
         return self.label_one.text()
 
-    def setText(self, text:str):
+    def setText(self, text: str):
         super().set_label_two_text(text)
 
     def text(self):
@@ -109,9 +103,9 @@ class ConfigFrame(BaseTwoLabelFrame):
 
 class BaseInputFrame(Frame):
 
-    title       : Label = None
-    input_field : LineEdit = None
-    layout      : HorizontalLayout = None
+    title: Label = None
+    input_field: LineEdit = None
+    layout: HorizontalLayout = None
 
     def __init__(
         self,
@@ -130,23 +124,27 @@ class BaseInputFrame(Frame):
         # set layout
         self.layout = HorizontalLayout(self, **kwargs)
 
-        kwargs.pop('name', None)
-        kwargs.pop('width', None)
-        kwargs.pop('align', None)
-        kwargs.pop('space', None)
+        kwargs.pop("name", None)
+        kwargs.pop("width", None)
+        kwargs.pop("align", None)
+        kwargs.pop("space", None)
 
         # title
-        self.title = Label(self, width=title_width, text=title, name=title_name, **kwargs)
+        self.title = Label(
+            self, width=title_width, text=title, name=title_name, **kwargs
+        )
         self.layout.addWidget(self.title)
 
         # input
-        self.input_field = LineEdit(self, width=input_width, name=input_name, align=input_align, **kwargs)
+        self.input_field = LineEdit(
+            self, width=input_width, name=input_name, align=input_align, **kwargs
+        )
         self.layout.addWidget(self.input_field)
 
     def get_input(self):
         return self.input_field
 
-    def setText(self, text:str):
+    def setText(self, text: str):
         self.input_field.setText(text)
 
     def text(self):
@@ -163,18 +161,18 @@ class BaseInputFrame(Frame):
 
 
 class LoginInputFrame(BaseInputFrame):
-
-    def __init__(
-        self,
-        widget:QWidget,
-        title_width: int = 160,
-        **kwargs
-    ):
-        super(LoginInputFrame, self).__init__(widget, l_m=30, r_m=30, space=9, height=52,
-                                            name="Login_input_box",
-                                            title_name="Login_input_title",
-                                            input_name="Login_input_input",
-                                            **kwargs)
+    def __init__(self, widget: QWidget, title_width: int = 160, **kwargs):
+        super(LoginInputFrame, self).__init__(
+            widget,
+            l_m=30,
+            r_m=30,
+            space=9,
+            height=52,
+            name="Login_input_box",
+            title_name="Login_input_title",
+            input_name="Login_input_input",
+            **kwargs
+        )
 
 
 class ViewInputFrame(BaseInputFrame):
@@ -191,14 +189,17 @@ class ViewInputFrame(BaseInputFrame):
         fix_width: bool = False,
         **kwargs
     ):
-        super(ViewInputFrame, self).__init__(widget, height=height, space=18,
-                                            name="view_input",
-                                            align=(Qt.AlignRight | Qt.AlignVCenter),
-                                            **kwargs)
+        super(ViewInputFrame, self).__init__(
+            widget,
+            height=height,
+            space=18,
+            name="view_input",
+            align=(Qt.AlignRight | Qt.AlignVCenter),
+            **kwargs
+        )
 
         if fix_width is True:
             self.setFixedWidth(width)
-
 
     def enable(self):
         self.setObjectName("view_input")
@@ -214,52 +215,43 @@ class ViewInputFrame(BaseInputFrame):
 
 
 class SearchInputFrame(BaseInputFrame):
-
     def __init__(
-        self,
-        widget: QWidget,
-        height: int = 30,
-        input_width: int = 210,
-        **kwargs
+        self, widget: QWidget, height: int = 30, input_width: int = 210, **kwargs
     ):
-        super(SearchInputFrame, self).__init__(widget,
-                                                height=height,
-                                                input_width = input_width,
-                                                name="view_search",
-                                                **kwargs)
+        super(SearchInputFrame, self).__init__(
+            widget, height=height, input_width=input_width, name="view_search", **kwargs
+        )
 
     def reset(self):
         self.setObjectName("view_search")
         super().reset()
 
+
 class PriceBox(GroupBox):
 
-    layout : HorizontalLayout = None
-    button : RadioButton = None
-    label  : Label = None
-    input_field : ViewInputFrame = None
+    layout: HorizontalLayout = None
+    button: RadioButton = None
+    label: Label = None
+    input_field: ViewInputFrame = None
 
     def __init__(
-        self,
-        widget:QWidget,
-        *args,
-        label: str = "",
-        height: int = 38,
-        **kwargs
+        self, widget: QWidget, *args, label: str = "", height: int = 38, **kwargs
     ):
 
         # lambda func grab if given
 
-        super(PriceBox, self).__init__(widget, *args,
-                                       name="price_box",
-                                       align=(Qt.AlignRight | Qt.AlignVCenter))
+        super(PriceBox, self).__init__(
+            widget, *args, name="price_box", align=(Qt.AlignRight | Qt.AlignVCenter)
+        )
 
         self.layout = HorizontalLayout(self)
 
         self.button = Button(self, name="check_button")
         self.layout.addWidget(self.button)
 
-        self.input_field = ViewInputFrame(self, height=height, input_align=Qt.AlignRight, **kwargs)
+        self.input_field = ViewInputFrame(
+            self, height=height, input_align=Qt.AlignRight, **kwargs
+        )
         self.layout.addWidget(self.input_field)
 
         self.label = Label(self, text=label, height=height, **kwargs)
@@ -283,16 +275,12 @@ class PriceBox(GroupBox):
         self.input_field.disable()
         self.input_field.setText("-")
 
-    def setText(self, price:int):
+    def setText(self, price: int):
         self.input_field.setText(str(price))
 
-class ViewButton(Button):
 
-    def __init__(
-        self,
-        widget:QWidget,
-        **kwargs
-    ):
+class ViewButton(Button):
+    def __init__(self, widget: QWidget, **kwargs):
         super(ViewButton, self).__init__(widget, name="view_button", **kwargs)
 
     def enable(self):

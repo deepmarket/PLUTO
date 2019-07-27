@@ -9,14 +9,8 @@ from PyQt5.QtWidgets import QGroupBox, QWidget
 
 
 class GroupBox(QGroupBox):
-
     def __init__(
-        self,
-        widget:QWidget,
-        *args,
-        name: str = "",
-        align: Qt = None,
-        **kwargs
+        self, widget: QWidget, *args, name: str = "", align: Qt = None, **kwargs
     ):
         super(GroupBox, self).__init__(widget, *args)
 

@@ -9,15 +9,15 @@ class Table(QTableWidget):
     This file provide a table widget.
     """
 
-    current_row     : int = 0
-    count_row       : int = 0
-    count_column    : int = 0
+    current_row: int = 0
+    count_row: int = 0
+    count_column: int = 0
 
     def __init__(
         self,
         widget: QWidget,
-        count_row:int,
-        header:OrderedDict,
+        count_row: int,
+        header: OrderedDict,
         row_height: int = 0,
         name: str = "",
         if_vertical: bool = False,
@@ -66,13 +66,13 @@ class Table(QTableWidget):
         # initially fill table with empty line
         self.reset()
 
-    def add(self, dat:list):
+    def add(self, dat: list):
         """
         :param dat: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
         """
 
         if len(dat) > self.count_column:
-            dat = dat[:self.count_column]
+            dat = dat[: self.count_column]
 
         # if enough row has been inserted to table
         # insert new row
@@ -84,7 +84,9 @@ class Table(QTableWidget):
             self.setItem(self.current_row, i, QTableWidgetItem(dat[i]))
 
             # disable editing
-            self.item(self.current_row, i).setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+            self.item(self.current_row, i).setFlags(
+                Qt.ItemIsSelectable | Qt.ItemIsEnabled
+            )
 
             # set cell align
             self.item(self.current_row, i).setTextAlignment(Qt.AlignCenter)
@@ -115,14 +117,14 @@ class Table(QTableWidget):
         if model.hasSelection():
             row = model.selectedRows()[0].row()
 
-            text = self.get_cell(row, self.count_column-1)
+            text = self.get_cell(row, self.count_column - 1)
             return row if text is not -1 else None
         else:
             return -1
 
-    def get_cell(self, row:int, column:int):
+    def get_cell(self, row: int, column: int):
         return self.item(row, column).text()
 
     # TODO, when implement edit feature, cont work on this function
-    def allow_edit(self, row:int):
+    def allow_edit(self, row: int):
         pass

@@ -10,15 +10,14 @@ from PyQt5.QtCore import QSize, Qt
 
 
 class Button(QPushButton):
-
     def __init__(
         self,
-        widget:QWidget,
+        widget: QWidget,
         text: str = "",
         name: str = "",
         cursor: bool = False,
-        stylesheet = None,
-        icon = None,
+        stylesheet=None,
+        icon=None,
         icon_size: int = 0,
         **kwargs
     ):
@@ -44,14 +43,7 @@ class Button(QPushButton):
 
 
 class RadioButton(QRadioButton):
-
-    def __init__(
-        self,
-        widget:QWidget,
-        *args,
-        name: str = "",
-        **kwargs
-    ):
+    def __init__(self, widget: QWidget, *args, name: str = "", **kwargs):
         super(RadioButton, self).__init__(widget, *args)
 
         # Set property if given

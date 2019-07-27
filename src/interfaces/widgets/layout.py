@@ -10,7 +10,6 @@ from PyQt5.QtWidgets import QLayout, QHBoxLayout, QVBoxLayout, QStackedLayout, Q
 
 
 class Layout(QLayout):
-
     def __init__(
         self,
         widget: QWidget,

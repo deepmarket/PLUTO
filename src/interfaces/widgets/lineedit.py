@@ -9,17 +9,16 @@ from PyQt5.QtCore import Qt
 
 
 class LineEdit(QLineEdit):
-
     def __init__(
         self,
         widget: QWidget,
         height: int = 0,
         width: int = 0,
         name: str = "",
-        hint:str = "",
+        hint: str = "",
         echo: bool = False,
         align: Qt = None,
-        stylesheet = None,
+        stylesheet=None,
         **kwargs
     ):
         super(LineEdit, self).__init__(widget)

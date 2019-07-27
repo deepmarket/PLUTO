@@ -10,13 +10,24 @@ from abc import ABCMeta, abstractmethod
 from PyQt5.QtWidgets import QFrame, QLineEdit, QLabel, QRadioButton
 from PyQt5.QtCore import pyqtSignal, Qt
 
-from ..widgets import (Frame, SectionTitleFrame, ConfigFrame, ViewInputFrame,
-                        ViewButton, Label, PriceBox,
-                        HorizontalLayout, VerticalLayout, StackLayout,
-                        HorizontalSpacer, VerticalSpacer)
+from ..widgets import (
+    Frame,
+    SectionTitleFrame,
+    ConfigFrame,
+    ViewInputFrame,
+    ViewButton,
+    Label,
+    PriceBox,
+    HorizontalLayout,
+    VerticalLayout,
+    StackLayout,
+    HorizontalSpacer,
+    VerticalSpacer,
+)
 
 from ..util import get_children
 from ..stylesheet import resources_add_view_style
+
 
 class ResourcesAddViewUI(Frame):
 
@@ -24,50 +35,50 @@ class ResourcesAddViewUI(Frame):
     # Reference can be found here: https://docs.python.org/2/library/abc.html#abc.abstractmethod
     __metaclass__ = ABCMeta
 
-    signal                  :pyqtSignal = None
+    signal: pyqtSignal = None
 
-    title_view              :Frame = None
-    stack_view              :Frame = None
-    stack                   :StackLayout = None
-    button_view             :Frame = None
+    title_view: Frame = None
+    stack_view: Frame = None
+    stack: StackLayout = None
+    button_view: Frame = None
 
-    tech_sections           :Frame = None
-    eco_sections            :Frame = None
+    tech_sections: Frame = None
+    eco_sections: Frame = None
 
-    verification_section    :Frame = None
-    configuration_section   :Frame = None
-    planning_section        :Frame = None
+    verification_section: Frame = None
+    configuration_section: Frame = None
+    planning_section: Frame = None
 
-    attendance_section      :Frame = None
-    price_section           :Frame = None
+    attendance_section: Frame = None
+    price_section: Frame = None
 
-    cancel                  :ViewButton = None
-    back                    :ViewButton = None
-    next_page               :ViewButton = None
-    submit                  :ViewButton = None
+    cancel: ViewButton = None
+    back: ViewButton = None
+    next_page: ViewButton = None
+    submit: ViewButton = None
 
-    current_cpu_gpu         :ConfigFrame = None
-    current_cores           :ConfigFrame = None
-    current_ram             :ConfigFrame = None
+    current_cpu_gpu: ConfigFrame = None
+    current_cores: ConfigFrame = None
+    current_ram: ConfigFrame = None
 
-    ip_address              :ViewInputFrame = None
-    machine_name            :ViewInputFrame = None
-    cpu_gpu                 :ViewInputFrame = None
-    cores                   :ViewInputFrame = None
-    ram                     :ViewInputFrame = None
+    ip_address: ViewInputFrame = None
+    machine_name: ViewInputFrame = None
+    cpu_gpu: ViewInputFrame = None
+    cores: ViewInputFrame = None
+    ram: ViewInputFrame = None
 
-    auto_price_box          :PriceBox = None
-    offer_price_box         :PriceBox = None
+    auto_price_box: PriceBox = None
+    offer_price_box: PriceBox = None
 
-    global_hint             :Label = None
-    verification_hint       :Label = None
-    configuration_hint      :Label = None
-    planning_hint           :Label = None
-    attendance_hint         :Label = None
-    price_hint              :Label = None
-    submit_hint             :Label = None
+    global_hint: Label = None
+    verification_hint: Label = None
+    configuration_hint: Label = None
+    planning_hint: Label = None
+    attendance_hint: Label = None
+    price_hint: Label = None
+    submit_hint: Label = None
 
-    def __init__(self, signal:pyqtSignal, *args, **kwargs):
+    def __init__(self, signal: pyqtSignal, *args, **kwargs):
         super(ResourcesAddViewUI, self).__init__(*args, name="view", **kwargs)
 
         self.signal = signal
@@ -260,32 +271,42 @@ class ResourcesAddViewUI(Frame):
         section_layout = VerticalLayout(self.verification_section)
 
         # title_frame
-        title_frame = SectionTitleFrame(self.verification_section, label_one_text="Resource Verification")
+        title_frame = SectionTitleFrame(
+            self.verification_section, label_one_text="Resource Verification"
+        )
 
         section_layout.addWidget(title_frame)
         self.verification_hint = title_frame.get_label_two()
 
         # content_frame
-        content_frame = Frame(self.verification_section, name="verification_content_frame")
+        content_frame = Frame(
+            self.verification_section, name="verification_content_frame"
+        )
         section_layout.addWidget(content_frame)
 
         content_layout = VerticalLayout(content_frame)
 
         # ip_address
-        self.ip_address = ViewInputFrame(content_frame, title="IP Address:", title_width=66)
+        self.ip_address = ViewInputFrame(
+            content_frame, title="IP Address:", title_width=66
+        )
         content_layout.addWidget(self.ip_address)
 
     def _init_configuration_section(self):
 
         section_layout = VerticalLayout(self.configuration_section)
 
-        content_frame = Frame(self.configuration_section, name="configuration_content_frame")
+        content_frame = Frame(
+            self.configuration_section, name="configuration_content_frame"
+        )
         section_layout.addWidget(content_frame)
 
         content_layout = VerticalLayout(content_frame)
 
         # title frame
-        title_frame = SectionTitleFrame(content_frame, label_one_text="Machine Configuration")
+        title_frame = SectionTitleFrame(
+            content_frame, label_one_text="Machine Configuration"
+        )
 
         content_layout.addWidget(title_frame)
         self.configuration_hint = title_frame.get_label_two()
@@ -295,10 +316,14 @@ class ResourcesAddViewUI(Frame):
         content_layout.addWidget(frame)
         layout = HorizontalLayout(frame)
 
-        self.current_cpu_gpu = ConfigFrame(frame, label_one_text="Compute:", label_two_text="-")
+        self.current_cpu_gpu = ConfigFrame(
+            frame, label_one_text="Compute:", label_two_text="-"
+        )
         layout.addWidget(self.current_cpu_gpu)
 
-        self.current_cores = ConfigFrame(frame, label_one_text="Cores:", label_two_text="-")
+        self.current_cores = ConfigFrame(
+            frame, label_one_text="Cores:", label_two_text="-"
+        )
         layout.addWidget(self.current_cores)
 
         self.current_ram = ConfigFrame(frame, label_one_text="RAM:", label_two_text="-")
@@ -309,7 +334,9 @@ class ResourcesAddViewUI(Frame):
         section_layout = VerticalLayout(self.planning_section)
 
         # title frame
-        title_frame = SectionTitleFrame(self.planning_section, label_one_text="Resource Planning")
+        title_frame = SectionTitleFrame(
+            self.planning_section, label_one_text="Resource Planning"
+        )
 
         section_layout.addWidget(title_frame)
         self.planning_hint = title_frame.get_label_two()
@@ -325,10 +352,14 @@ class ResourcesAddViewUI(Frame):
         content_layout.addWidget(line_frame)
         line_layout = HorizontalLayout(line_frame)
 
-        self.machine_name = ViewInputFrame(line_frame, title="Machine Name:", title_width=113, fix_width=True)
+        self.machine_name = ViewInputFrame(
+            line_frame, title="Machine Name:", title_width=113, fix_width=True
+        )
         line_layout.addWidget(self.machine_name)
 
-        self.cpu_gpu = ViewInputFrame(line_frame, title="GPUs #:", title_width=113, fix_width=True)
+        self.cpu_gpu = ViewInputFrame(
+            line_frame, title="GPUs #:", title_width=113, fix_width=True
+        )
         line_layout.addWidget(self.cpu_gpu)
 
         # line_frame: cores, ram, spacer, evaluate_button
@@ -336,10 +367,14 @@ class ResourcesAddViewUI(Frame):
         content_layout.addWidget(line_frame)
         line_layout = HorizontalLayout(line_frame)
 
-        self.cores = ViewInputFrame(line_frame, title="Cores:", title_width=113, fix_width=True)
+        self.cores = ViewInputFrame(
+            line_frame, title="Cores:", title_width=113, fix_width=True
+        )
         line_layout.addWidget(self.cores)
 
-        self.ram = ViewInputFrame(line_frame, title="RAM (Gb):", title_width=113, fix_width=True)
+        self.ram = ViewInputFrame(
+            line_frame, title="RAM (Gb):", title_width=113, fix_width=True
+        )
         line_layout.addWidget(self.ram)
 
     def _init_eco_sections(self):
@@ -357,8 +392,11 @@ class ResourcesAddViewUI(Frame):
         spacer = VerticalSpacer()
         sections_layout.addItem(spacer)
 
-        self.submit_hint = Label(self.eco_sections, name="section_hint",
-                                 align=(Qt.AlignRight | Qt.AlignVCenter))
+        self.submit_hint = Label(
+            self.eco_sections,
+            name="section_hint",
+            align=(Qt.AlignRight | Qt.AlignVCenter),
+        )
         sections_layout.addWidget(self.submit_hint)
 
         self.auto_price_box.button.clicked.connect(self.on_auto_price_clicked)
@@ -369,9 +407,11 @@ class ResourcesAddViewUI(Frame):
         section_layout = VerticalLayout(self.attendance_section)
 
         # title_frame
-        title_frame = SectionTitleFrame(self.attendance_section,
-                                        label_one_text="Attendance",
-                                        label_two_text="attendance hint test")
+        title_frame = SectionTitleFrame(
+            self.attendance_section,
+            label_one_text="Attendance",
+            label_two_text="attendance hint test",
+        )
 
         section_layout.addWidget(title_frame)
         self.attendance_hint = title_frame.get_label_two()
@@ -391,9 +431,11 @@ class ResourcesAddViewUI(Frame):
         section_layout = VerticalLayout(self.price_section)
 
         # title frame
-        title_frame = SectionTitleFrame(self.price_section,
-                                        label_one_text="Resource Price",
-                                        label_two_text="price hint test")
+        title_frame = SectionTitleFrame(
+            self.price_section,
+            label_one_text="Resource Price",
+            label_two_text="price hint test",
+        )
 
         section_layout.addWidget(title_frame)
         self.price_hint = title_frame.get_label_two()
@@ -404,9 +446,13 @@ class ResourcesAddViewUI(Frame):
 
         content_layout = HorizontalLayout(content_frame, space=18)
 
-        self.auto_price_box = PriceBox(self.price_section, title="Automated Price:", label="Credit / Hr")
+        self.auto_price_box = PriceBox(
+            self.price_section, title="Automated Price:", label="Credit / Hr"
+        )
         content_layout.addWidget(self.auto_price_box)
         self.auto_price_box.input_field.setEnabled(False)
 
-        self.offer_price_box = PriceBox(self.price_section, title="Offering Price:", label="Credit / Hr")
+        self.offer_price_box = PriceBox(
+            self.price_section, title="Offering Price:", label="Credit / Hr"
+        )
         content_layout.addWidget(self.offer_price_box)

@@ -10,10 +10,19 @@ from collections import OrderedDict
 
 from PyQt5.QtCore import pyqtSignal
 
-from ..widgets import (Frame, SectionTitleFrame, SearchInputFrame,
-                        ViewButton, Label, Table, LineEdit,
-                        HorizontalLayout, VerticalLayout,
-                        HorizontalSpacer, VerticalSpacer)
+from ..widgets import (
+    Frame,
+    SectionTitleFrame,
+    SearchInputFrame,
+    ViewButton,
+    Label,
+    Table,
+    LineEdit,
+    HorizontalLayout,
+    VerticalLayout,
+    HorizontalSpacer,
+    VerticalSpacer,
+)
 
 from ..stylesheet import resources_controller_style
 from ..stylesheet.config import RESOURCES_MAX_ROW
@@ -24,27 +33,26 @@ class ResourcesControllerUI(Frame):
     # metaclass for defining abstract base classes
     __metaclass__ = ABCMeta
 
-    title_view      :Frame = None
-    button_view     :Frame = None
-    table_view      :Frame = None
+    title_view: Frame = None
+    button_view: Frame = None
+    table_view: Frame = None
 
-    add             :ViewButton = None
-    refresh         :ViewButton = None
-    edit            :ViewButton = None
-    remove          :ViewButton = None
-    search          :SearchInputFrame = None
+    add: ViewButton = None
+    refresh: ViewButton = None
+    edit: ViewButton = None
+    remove: ViewButton = None
+    search: SearchInputFrame = None
 
-    table           :Table = None
+    table: Table = None
 
-    global_hint     :Label = None
+    global_hint: Label = None
 
-    def __init__(self, signal:pyqtSignal, *args, **kwargs):
+    def __init__(self, signal: pyqtSignal, *args, **kwargs):
         super(ResourcesControllerUI, self).__init__(*args, name="view", **kwargs)
 
         self.signal = signal
         self._init_ui()
         self.setStyleSheet(resources_controller_style)
-
 
     def on_add_button_clicked(self):
         self.signal.emit()

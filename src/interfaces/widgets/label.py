@@ -17,7 +17,6 @@ from ..util import load_path
 
 
 class Label(QLabel):
-
     def __init__(
         self,
         widget: QWidget,
@@ -26,7 +25,7 @@ class Label(QLabel):
         text: int = 0,
         name: str = "",
         align: Qt = None,
-        stylesheet = None,
+        stylesheet=None,
         **kwargs
     ):
         super(Label, self).__init__(widget)
@@ -44,15 +43,9 @@ class Label(QLabel):
     def reset(self):
         self.setText("")
 
-class Paragraph(Frame):
 
-    def __init__(
-        self,
-        widget: QWidget,
-        text_list:list,
-        space: int = 0,
-        **kwargs
-    ):
+class Paragraph(Frame):
+    def __init__(self, widget: QWidget, text_list: list, space: int = 0, **kwargs):
         super(Paragraph, self).__init__(widget)
 
         layout = VerticalLayout(self, space=space)
@@ -63,34 +56,16 @@ class Paragraph(Frame):
 
 
 class Image(Label):
-
     def __init__(
-        self,
-        widget: QWidget,
-        img:str,
-        **kwargs
+        self, widget: QWidget, img: str, height: int = 0, width: int = 0, **kwargs
     ):
-        super(Image, self).__init__(widget)
+        super(Image, self).__init__(widget, height=height, width=width, **kwargs)
 
         # TODO: move this path to config file later on
         path = os.getcwd() + "/src/img/"
 
-        # Lambda func grab input args
-        get_param = lambda x : kwargs.get(x)
-
-        height = get_param("height")
-        width = get_param("width")
-
-        img = get_param("img")
-        name = get_param("name")
-        align = get_param("align")
-
-        # Set property if given
-        name and self.setObjectName(name)
-        align and self.setAlignment(align)
-
-        file = load_path(path+img)
-        default = load_path(path+"default.jpg")
+        file = load_path(path + img)
+        default = load_path(path + "default.jpg")
 
         pix_map = None
 
@@ -101,9 +76,11 @@ class Image(Label):
 
         if pix_map:
             # scale to the greatest number
-            if width and height: # both param given
-                pix_map.scaledToWidth(width) if width >= height else pix_map.scaledToHeight(height)
-            else: # either or none param given
+            if width and height:  # both param given
+                pix_map.scaledToWidth(
+                    width
+                ) if width >= height else pix_map.scaledToHeight(height)
+            else:  # either or none param given
                 width and pix_map.scaledToWidth(width)
                 height and pix_map.scaledToHeight(height)
             self.setPixmap(pix_map)

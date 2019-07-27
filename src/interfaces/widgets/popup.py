@@ -18,14 +18,12 @@ from ..stylesheet import popup_style
 
 class BaseDialog(QDialog):
 
-    def __init__(self, *args, **kwargs):
-
-        # lambda fetch given argument
-        get_param = lambda x : kwargs.get(x)
-
-        name = get_param("name")
-
-        kwargs.pop('name', None)
+    def __init__(
+        self,
+        *args,
+        name: str = "",
+        **kwargs
+    ):
 
         super(BaseDialog, self).__init__(*args, **kwargs)
 
@@ -44,7 +42,12 @@ class Question(BaseDialog):
     confirm : Button = None
     cancel  : Button = None
 
-    def __init__(self, question:str, *args, **kwargs):
+    def __init__(
+        self,
+        question:str,
+        *args,
+        **kwargs
+    ):
         super(Question, self).__init__(*args, name="question", **kwargs)
 
         window_layout = VerticalLayout(self, t_m=35, b_m=35, l_m=65, r_m=65, space=20)

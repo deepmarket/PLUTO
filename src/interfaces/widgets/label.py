@@ -6,7 +6,9 @@
 """
 
 import os
-from PyQt5.QtWidgets import QLabel
+
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QLabel, QWidget
 from PyQt5.QtGui import QPixmap
 
 from .frame import Frame
@@ -16,18 +18,18 @@ from ..util import load_path
 
 class Label(QLabel):
 
-    def __init__(self, widget, **kwargs):
+    def __init__(
+        self,
+        widget: QWidget,
+        height: int = 0,
+        width: int = 0,
+        text: int = 0,
+        name: str = "",
+        align: Qt = None,
+        stylesheet = None,
+        **kwargs
+    ):
         super(Label, self).__init__(widget)
-
-        # Lambda func grab input args
-        get_param = lambda x : kwargs.get(x)
-
-        height = get_param("height")
-        width = get_param("width")
-        text = get_param("text")
-        name = get_param("name")
-        stylesheet = get_param("stylesheet")
-        align = get_param("align")
 
         # Set size
         height and self.setFixedHeight(height)
@@ -44,13 +46,14 @@ class Label(QLabel):
 
 class Paragraph(Frame):
 
-    def __init__(self, widget, text_list:list, **kwargs):
+    def __init__(
+        self,
+        widget: QWidget,
+        text_list:list,
+        space: int = 0,
+        **kwargs
+    ):
         super(Paragraph, self).__init__(widget)
-
-        # Lambda func grab input args
-        get_param = lambda x : kwargs.get(x)
-
-        space = get_param("space")
 
         layout = VerticalLayout(self, space=space)
 
@@ -61,7 +64,12 @@ class Paragraph(Frame):
 
 class Image(Label):
 
-    def __init__(self, widget, img:str, **kwargs):
+    def __init__(
+        self,
+        widget: QWidget,
+        img:str,
+        **kwargs
+    ):
         super(Image, self).__init__(widget)
 
         # TODO: move this path to config file later on

@@ -1,7 +1,7 @@
 from collections import OrderedDict
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QTableWidget, QAbstractItemView, QTableWidgetItem
+from PyQt5.QtWidgets import QTableWidget, QAbstractItemView, QTableWidgetItem, QWidget
 
 
 class Table(QTableWidget):
@@ -13,7 +13,16 @@ class Table(QTableWidget):
     count_row       : int = 0
     count_column    : int = 0
 
-    def __init__(self, widget, count_row:int, header:OrderedDict, **kwargs):
+    def __init__(
+        self,
+        widget: QWidget,
+        count_row:int,
+        header:OrderedDict,
+        row_height: int = 0,
+        name: str = "",
+        if_vertical: bool = False,
+        **kwargs
+    ):
         """
         :param widget: parent widget
         :param count_row: max row in table
@@ -33,13 +42,7 @@ class Table(QTableWidget):
             self.setColumnWidth(i, width)
         self.horizontalHeader().setStretchLastSection(True)
 
-        # Lambda func grab input args
-        get_param = lambda x : kwargs.get(x)
-
-        row_height = get_param("row_height")
-        name = get_param("name")
-        if_vertical = get_param("if_vertical")
-
+        # set name
         name and self.setObjectName(name)
 
         # set row height
@@ -48,7 +51,7 @@ class Table(QTableWidget):
 
         if_vertical is not True and self.verticalHeader().setVisible(False)
 
-         # selected entire row
+        # selected entire row
         self.setSelectionBehavior(QAbstractItemView.SelectRows)
 
         # single rows selected each time

@@ -8,16 +8,15 @@ from PyQt5.QtWidgets import QFrame
 
 class Frame(QFrame):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self,
+        *args,
+        height: int = 0,
+        width: int = 0,
+        name: str = "",
+        stylesheet = None,
+        **kwargs
+    ):
         super(Frame, self).__init__(*args)
-
-        # Lambda func grab input args
-        get_param = lambda x : kwargs.get(x)
-
-        height = get_param("height")
-        width = get_param("width")
-        name = get_param("name")
-        stylesheet = get_param("stylesheet")
 
         # Set size
         height and self.setFixedHeight(height)

@@ -5,25 +5,25 @@
 
 """
 
-from PyQt5.QtWidgets import QLayout, QHBoxLayout, QVBoxLayout, QStackedLayout
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QLayout, QHBoxLayout, QVBoxLayout, QStackedLayout, QWidget
 
 
 class Layout(QLayout):
 
-    def __init__(self, widget, **kwargs):
+    def __init__(
+        self,
+        widget: QWidget,
+        l_m: int = 0,
+        r_m: int = 0,
+        t_m: int = 0,
+        b_m: int = 0,
+        space: int = 0,
+        name: str = "",
+        align: Qt = None,
+        **kwargs
+    ):
         super(Layout, self).__init__(widget)
-
-        # Lambda func grab input args
-        get_param = lambda x : kwargs.get(x)
-
-        l_m = get_param("l_m") or 0
-        t_m = get_param("t_m") or 0
-        r_m = get_param("r_m") or 0
-        b_m = get_param("b_m") or 0
-        space = get_param("space") or 0
-
-        name = get_param("name")
-        align = get_param("align")
 
         # Set margin and spacing
         self.setContentsMargins(l_m, t_m, r_m, b_m)

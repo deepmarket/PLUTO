@@ -10,7 +10,7 @@ from abc import ABCMeta, abstractmethod
 from PyQt5.QtWidgets import QFrame, QLineEdit, QLabel, QRadioButton
 from PyQt5.QtCore import pyqtSignal, Qt
 
-from ..widgets import (Frame, SectionTitleFrame, ConfigFrame, TabsInputFrame,
+from ..widgets import (Frame, SectionTitleFrame, ConfigFrame, ViewInputFrame,
                         ViewButton, Label, PriceBox,
                         HorizontalLayout, VerticalLayout, StackLayout,
                         HorizontalSpacer, VerticalSpacer)
@@ -50,11 +50,11 @@ class ResourcesAddViewUI(Frame):
     current_cores           :ConfigFrame = None
     current_ram             :ConfigFrame = None
 
-    ip_address              :TabsInputFrame = None
-    machine_name            :TabsInputFrame = None
-    cpu_gpu                 :TabsInputFrame = None
-    cores                   :TabsInputFrame = None
-    ram                     :TabsInputFrame = None
+    ip_address              :ViewInputFrame = None
+    machine_name            :ViewInputFrame = None
+    cpu_gpu                 :ViewInputFrame = None
+    cores                   :ViewInputFrame = None
+    ram                     :ViewInputFrame = None
 
     auto_price_box          :PriceBox = None
     offer_price_box         :PriceBox = None
@@ -272,7 +272,7 @@ class ResourcesAddViewUI(Frame):
         content_layout = VerticalLayout(content_frame)
 
         # ip_address
-        self.ip_address = TabsInputFrame(content_frame, title="IP Address:", title_width=66)
+        self.ip_address = ViewInputFrame(content_frame, title="IP Address:", title_width=66)
         content_layout.addWidget(self.ip_address)
 
     def _init_configuration_section(self):
@@ -325,10 +325,10 @@ class ResourcesAddViewUI(Frame):
         content_layout.addWidget(line_frame)
         line_layout = HorizontalLayout(line_frame)
 
-        self.machine_name = TabsInputFrame(line_frame, title="Machine Name:", title_width=113, fix_width=True)
+        self.machine_name = ViewInputFrame(line_frame, title="Machine Name:", title_width=113, fix_width=True)
         line_layout.addWidget(self.machine_name)
 
-        self.cpu_gpu = TabsInputFrame(line_frame, title="GPUs #:", title_width=113, fix_width=True)
+        self.cpu_gpu = ViewInputFrame(line_frame, title="GPUs #:", title_width=113, fix_width=True)
         line_layout.addWidget(self.cpu_gpu)
 
         # line_frame: cores, ram, spacer, evaluate_button
@@ -336,10 +336,10 @@ class ResourcesAddViewUI(Frame):
         content_layout.addWidget(line_frame)
         line_layout = HorizontalLayout(line_frame)
 
-        self.cores = TabsInputFrame(line_frame, title="Cores:", title_width=113, fix_width=True)
+        self.cores = ViewInputFrame(line_frame, title="Cores:", title_width=113, fix_width=True)
         line_layout.addWidget(self.cores)
 
-        self.ram = TabsInputFrame(line_frame, title="RAM (Gb):", title_width=113, fix_width=True)
+        self.ram = ViewInputFrame(line_frame, title="RAM (Gb):", title_width=113, fix_width=True)
         line_layout.addWidget(self.ram)
 
     def _init_eco_sections(self):

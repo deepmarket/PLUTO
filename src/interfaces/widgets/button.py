@@ -11,18 +11,18 @@ from PyQt5.QtCore import QSize, Qt
 
 class Button(QPushButton):
 
-    def __init__(self, widget:QWidget, **kwargs):
+    def __init__(
+        self,
+        widget:QWidget,
+        text: str = "",
+        name: str = "",
+        cursor: bool = False,
+        stylesheet = None,
+        icon = None,
+        icon_size: int = 0,
+        **kwargs
+    ):
         super(Button, self).__init__(widget)
-
-        # Lambda func grab input args
-        get_param = lambda x : kwargs.get(x)
-
-        text = get_param("text")
-        name = get_param("name")
-        stylesheet = get_param("stylesheet")
-        cursor = get_param("cursor")
-        icon = get_param("icon")
-        icon_size = get_param("icon_size")
 
         # Set property if given
         text and self.setText(text)
@@ -45,13 +45,14 @@ class Button(QPushButton):
 
 class RadioButton(QRadioButton):
 
-    def __init__(self, widget:QWidget, *args, **kwargs):
+    def __init__(
+        self,
+        widget:QWidget,
+        *args,
+        name: str = "",
+        **kwargs
+    ):
         super(RadioButton, self).__init__(widget, *args)
-
-        # Lambda func grab input args
-        get_param = lambda x : kwargs.get(x)
-
-        name = get_param("name")
 
         # Set property if given
         name and self.setObjectName(name)

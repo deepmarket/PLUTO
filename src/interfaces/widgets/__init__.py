@@ -8,6 +8,6 @@ from .popup     import Question
 from .spacer    import Spacer, HorizontalSpacer, VerticalSpacer
 from .table     import Table
 
-from .module    import (SectionTitleFrame, ConfigFrame, LoginInputFrame, TabsInputFrame, SearchInputFrame,
+from .module    import (SectionTitleFrame, ConfigFrame, LoginInputFrame, ViewInputFrame, SearchInputFrame,
                         ViewButton,
                         PriceBox)

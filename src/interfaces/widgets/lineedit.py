@@ -4,28 +4,28 @@
 
 """
 
-from PyQt5.QtWidgets import QLineEdit
+from PyQt5.QtWidgets import QLineEdit, QWidget
 from PyQt5.QtCore import Qt
 
 
 class LineEdit(QLineEdit):
 
-    def __init__(self, widget, **kwargs):
+    def __init__(
+        self,
+        widget: QWidget,
+        height: int = 0,
+        width: int = 0,
+        name: str = "",
+        hint:str = "",
+        echo: bool = False,
+        align: Qt = None,
+        stylesheet = None,
+        **kwargs
+    ):
         super(LineEdit, self).__init__(widget)
 
         # disable focus frame (blue outline)
         self.setAttribute(Qt.WA_MacShowFocusRect, 0)
-
-        # Lambda func grab input args
-        get_param = lambda x : kwargs.get(x)
-
-        height = get_param("height")
-        width = get_param("width")
-        name = get_param("name")
-        hint = get_param("hint")
-        echo = get_param("echo")
-        align = get_param("align")
-        stylesheet = get_param("stylesheet")
 
         # Set size
         height and self.setFixedHeight(height)

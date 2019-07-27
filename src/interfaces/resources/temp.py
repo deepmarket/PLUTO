@@ -1,3 +1,7 @@
+# TODO, this is the old version implementation,
+# as a reference to refactor the project architecture
+# consider remove it at a proper time
+
 from psutil import cpu_freq, cpu_count, virtual_memory
 
 from mainview import MainView

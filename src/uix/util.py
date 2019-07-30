@@ -1,5 +1,6 @@
 """
     helper functions on construct GUI
+    TODO: this file is going to be removed when refactor finished
 """
 
 import os
@@ -21,12 +22,14 @@ from uix.stylesheet import *
 from uix.config import *
 
 
+# check
 # load icon
 def load_image(filename, image_type):
     icon_path = os.getcwd() + "/src/img/"
     return icon_path + filename + image_type
 
 
+# check
 # load font
 def load_font():
     dir_path = os.getcwd() + "/src/font/"
@@ -75,6 +78,7 @@ def set_base_geometry(widget, width, height, x=None, y=None, title=None, fixed=F
         widget.move(x, y)
 
 
+# check
 # create a layout object
 def add_layout(widget, layout_type, l_m=0, t_m=0, r_m=0, b_m=0, space=0, name=None, align=None):
 
@@ -103,6 +107,7 @@ def add_layout(widget, layout_type, l_m=0, t_m=0, r_m=0, b_m=0, space=0, name=No
     return layout
 
 
+# check
 # create a QPushbutton object
 def add_button(widget, text=None, name=None, stylesheet=None, icon=None, icon_size=None, change_cursor=True):
 
@@ -133,6 +138,7 @@ def add_button(widget, text=None, name=None, stylesheet=None, icon=None, icon_si
     return button
 
 
+# check
 # create a QLabel object
 def add_label(widget, text, width=0, height=0, name=None, align=None, stylesheet= None):
 
@@ -164,6 +170,7 @@ def add_label(widget, text, width=0, height=0, name=None, align=None, stylesheet
     return label
 
 
+# check
 # create a widget with a list of text to QLabel object
 def add_paragraph(widget, text_list, name=None, align=None, space=0):
 
@@ -180,6 +187,7 @@ def add_paragraph(widget, text_list, name=None, align=None, space=0):
     return box
 
 
+# check
 # create an image object (QLabel)
 def add_image(widget, img_name, img_type, width=0, height=0, name=None, align=None):
 
@@ -211,6 +219,7 @@ def add_image(widget, img_name, img_type, width=0, height=0, name=None, align=No
     return label
 
 
+# check
 def add_input(widget, height=0, name=None, hint=None, echo=False):
     input_bar = QLineEdit(widget)
 
@@ -235,6 +244,7 @@ def add_input(widget, height=0, name=None, hint=None, echo=False):
     return input_bar
 
 
+# check
 # helper function to add input box
 def add_input_box(widget, title, space=0, l_m=0, r_m=0, align=None, hint=None, echo=False):
 
@@ -253,6 +263,7 @@ def add_input_box(widget, title, space=0, l_m=0, r_m=0, align=None, hint=None, e
     return box, box_title, box_input
 
 
+# check
 # input box for login
 def add_login_input_box(widget, title, title_width=160, hint=None, echo=False):
 
@@ -272,6 +283,7 @@ def add_login_input_box(widget, title, title_width=160, hint=None, echo=False):
     return box, box_input
 
 
+# check
 # type 02 input box for jobs
 def add_page_input_box(widget, title, title_width, space, width=258, stylesheet=None, hint=None,
                        echo=False, fix_width=True):
@@ -312,6 +324,7 @@ def add_move_animation(widget, start_x, start_y, end_x, end_y, duration=230):
     return animation
 
 
+# check
 # add graph scene for drawing
 def add_graph_scene(widget, width=None, height=None, name=None):
     view = QGraphicsView(widget)
@@ -367,6 +380,7 @@ def add_menu_icon(width):
     return QIcon(pix)
 
 
+# check
 # add a section, return frame, and frame_layout
 def add_frame(widget, layout=VERTICAL, height=None, width=None, name=None, stylesheet=None,
               t_m=0, b_m=0, l_m=0, r_m=0, space=0):
@@ -385,6 +399,7 @@ def add_frame(widget, layout=VERTICAL, height=None, width=None, name=None, style
     return section_frame, section_layout
 
 
+# check
 # return config box
 def add_config_box(widget, title, box_width=200):
     box = QFrame(widget)
@@ -403,6 +418,7 @@ def add_config_box(widget, title, box_width=200):
     return box
 
 
+# check
 # return outer frame, label box and button
 def add_price_box(widget, title, box_width=307, box_height=37, space=28):
     frame = QFrame(widget)
@@ -428,6 +444,7 @@ def add_price_box(widget, title, box_width=307, box_height=37, space=28):
     return frame, box, button
 
 
+# check
 # helper function to add widgets in _init_ui() in JobWorkspace() class
 def add_labels(layout, frame, texts, style, alignment):
     for text in texts:
@@ -472,6 +489,7 @@ def set_frame(widget, num, frame):
             label.setStyleSheet(Page_scheme_label)
 
 
+# check
 # helper function for add_data() in JobList() class
 def add_row(widget, column, data, row):
     for i in range(column):
@@ -485,6 +503,7 @@ def add_row(widget, column, data, row):
             widget.item(row, i).setFont(QFont("Helvetica Neue", 12, QFont.Light))
 
 
+# check
 def verify_ip_address(ip_address):
     # get data from master json
     with urllib.request.urlopen("http://" + MASTER_IP + ":8443/json/") as url:
@@ -504,6 +523,7 @@ def verify_ip_address(ip_address):
     return True
 
 
+# check
 # this function ask fro the machine config by using ip_address
 def load_machine_config(ip_address):
     # get data from master json

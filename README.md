@@ -1,40 +1,36 @@
 [![Build Status](https://travis-ci.org/deepmarket/PLUTO.svg?branch=develop)](https://travis-ci.org/deepmarket/PLUTO)
 
-#### Synopsis
-**Deep Share** is an open source platform designed to allow 
-dynamic contribution and consumption of distributed computing resources.
-Using a barter based system it allows a user to offer their own computational 
-resources in exchange for tokens or use the resources of others in _the pool_.
+## Overview
+
+PLUTO is a cross platform desktop application that can be used to connect to the deepmarket network.
 
 This project is in active development and is being maintained by the [team members](#team-members) listed below.
 If you would like to submit changes, please open a pull request.
 
-#### Required OS Dependencies
-* MacOS or Linux (Ubuntu 14.04+)
-* Python 3.6
+**Note**: This project requires Python 3.6+
 
-#### Required Application Dependencies
-* PyQt _5.10_
-* sip _4.19.7_
-* requests >= _2.20.0_
-* psutil _5.4.7_
+#### Installing, Developing, and Testing:
 
-#### To install:
+First you'll need to install the required dependencies
 
 ```bash
 $ python -m pip install -r requirements.txt
 ```
 
-#### To launch to the application:
+Next, you can read the [getting set up to develop locally](https://github.com/deepmarket/PLUTO/wiki/Setting-up-deepmarket's-api-backend-for-local-development) guide.
 
+Testing is done using two libraries: Python's builtin `Unittest` for unit testing and `behave` for functional BDD tests.
+
+They can be ran independently
 ```bash
-$ python main.py
+$ python -m  unittest tests/*.py
+
+$ python -m behave tests/features
 ```
 
-#### Team Members:
-* [Susham Yerabolu](mailto:yerabolu@pdx.edu)
-* [Soyoung Kim](mailto:soyoung@pdx.edu)
-* [Sam Gomena](mailto:gomenas@pdx.edu)
-* [Martin Li](mailto:xuanzhe@pdx.edu)
-* [Shraddha Bhise](mailto:sbhise@pdx.edu)
-* [Rohan Patel](mailto:roh4@pdx.edu)
+#### Running the Application:
+
+```bash
+# Make sure you're using python 3.6+!
+$ python main.py
+```

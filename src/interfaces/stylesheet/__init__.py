@@ -1,9 +1,10 @@
 import os
 
+
 from ..util import load_path
 
 def read_stylesheet(file_name):
-    path = load_path(os.getcwd() + "/interfaces/stylesheet/", file_name)
+    path = load_path(os.path.join(os.getcwd(),"src", "interfaces", "stylesheet"), file_name)
     ret = None
     with open(path) as file:
         ret = file.read()

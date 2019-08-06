@@ -23,14 +23,16 @@ Testing is done using two libraries: Python's builtin `Unittest` for unit testin
 
 They can be ran independently
 ```bash
-$ python -m  unittest tests/*.py
+$ python -m  unittest test/*.py
 
-$ python -m behave tests/features
+$ python -m behave test/features
 ```
 
 #### Running the Application:
 
+Note that you must be in the project root directory to run the project.
+
 ```bash
 # Make sure you're using python 3.6+!
-$ python main.py
+$ python src/main.py
 ```

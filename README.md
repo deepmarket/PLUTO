@@ -30,7 +30,9 @@ $ python -m behave tests/features
 
 #### Running the Application:
 
+Note that you must be in the project root directory to run the project.
+
 ```bash
 # Make sure you're using python 3.6+!
-$ python main.py
+$ python src/main.py
 ```

@@ -23,9 +23,9 @@ Testing is done using two libraries: Python's builtin `Unittest` for unit testin
 
 They can be ran independently
 ```bash
-$ python -m  unittest tests/*.py
+$ python -m  unittest test/*.py
 
-$ python -m behave tests/features
+$ python -m behave test/features
 ```
 
 #### Running the Application:

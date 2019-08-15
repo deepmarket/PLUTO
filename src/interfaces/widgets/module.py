@@ -4,9 +4,10 @@
 
 """
 
-from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import QWidget, QComboBox, QCheckBox
 from PyQt5.QtCore import Qt
 
+from ..util import get_children
 from .button import Button, RadioButton
 from .frame import Frame
 from .groupbox import GroupBox
@@ -227,10 +228,84 @@ class SearchInputFrame(BaseInputFrame):
         super().reset()
 
 
+class AttendanceBox(Frame):
+    layout: HorizontalLayout = None
+    button: Button = None
+    frame: Frame = None
+    flag: bool = False
+
+    def __init__(self, widget: QWidget, *args, height: int = 38, **kwargs):
+
+        # lambda func grab if given
+
+        super(AttendanceBox, self).__init__(
+            widget,
+            *args,
+            name="attendance_box",
+            align=(Qt.AlignRight | Qt.AlignVCenter)
+        )
+
+        self.flag = False
+
+        self.layout = HorizontalLayout(self)
+
+        self.button = Button(self, cursor=True)
+        self.layout.addWidget(self.button)
+
+        self.frame = Frame(self)
+        self.layout.addWidget(self.frame)
+
+    def check(self):
+        self.setObjectName("attendance_box")
+        self.button.setText("•")
+        self.flag = True
+
+        # set combo box enabled
+        children = get_children(self.frame, QComboBox)
+        for child in children:
+            child.setEnabled(True)
+
+        # set check box enabled
+        children = get_children(self.frame, QCheckBox)
+        for child in children:
+            child.setEnabled(True)
+
+    def uncheck(self):
+        self.setObjectName("attendance_box_uncheck")
+        self.button.setText("")
+        self.flag = False
+
+        # set combo box disabled
+        children = get_children(self.frame, QComboBox)
+        for child in children:
+            child.setEnabled(False)
+
+        # set check box disabled
+        children = get_children(self.frame, QCheckBox)
+        for child in children:
+            child.setEnabled(False)
+
+    def disable(self):
+        self.setObjectName("attendance_box_disable")
+
+        # set combo box disabled
+        children = get_children(self.frame, QComboBox)
+        for child in children:
+            child.setEnabled(False)
+
+        # set check box disabled
+        children = get_children(self.frame, QCheckBox)
+        for child in children:
+            child.setEnabled(False)
+
+        self.button.setText("")
+        self.button.disable()
+
+
 class PriceBox(GroupBox):
 
     layout: HorizontalLayout = None
-    button: RadioButton = None
+    button: Button = None
     label: Label = None
     input_field: ViewInputFrame = None
 

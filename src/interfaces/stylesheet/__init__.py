@@ -1,10 +1,12 @@
 import os
 
-
 from ..util import load_path
 
+
 def read_stylesheet(file_name):
-    path = load_path(os.path.join(os.getcwd(),"src", "interfaces", "stylesheet"), file_name)
+    path = load_path(
+        os.path.join(os.getcwd(), "src", "interfaces", "stylesheet"), file_name
+    )
     ret = None
     with open(path) as file:
         ret = file.read()
@@ -18,5 +20,7 @@ def read_icon(file_name):
 # stylesheets
 popup_style = read_stylesheet("popup.qss")
 
-resources_add_view_style = read_stylesheet("resources/add_view.qss")
-resources_controller_style = read_stylesheet("resources/controller.qss")
+resources_add_view_style = read_stylesheet(os.path.join("resources", "add_view.qss"))
+resources_controller_style = read_stylesheet(
+    os.path.join("resources", "controller.qss")
+)

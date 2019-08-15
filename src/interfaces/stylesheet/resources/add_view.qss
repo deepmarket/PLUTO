@@ -54,7 +54,7 @@ QFrame#planning_content_frame {
 }
 
 QFrame#attendance_content_frame {
-    min-height: 100px;
+    max-height: 150px;
     background-color: #DEEFF5;
     padding: 25px 20px;
 }
@@ -140,16 +140,20 @@ QFrame#view_input_disable > QLabel {
     color: #6C7E8E;
 }
 
+QFrame#attendance_box > QLabel,
+QFrame#attendance_box_disable > QLabel,
 QGroupBox#price_box > QLabel,
 QGroupBox#price_box_disable > QLabel {
     padding-right: 10px;
     font-size: 13px;
 }
 
+QFrame#attendance_box QLabel,
 QGroupBox#price_box QLabel {
     color: #6C7E8E;
 }
 
+QFrame#attendance_box_disable QLabel,
 QGroupBox#price_box_disable QLabel {
     color: #F2F2F2;
 }
@@ -197,6 +201,16 @@ QPushButton#view_button_disable {
     color: #F2F2F2;
 }
 
+QFrame#attendance_box,
+QFrame#attendance_box_uncheck, 
+QFrame#attendance_box_disable {
+    margin-bottom: 10px;
+    margin-left: 30px;
+}
+
+QFrame#attendance_box > QPushButton,
+QFrame#attendance_box_uncheck > QPushButton,
+QFrame#attendance_box_disable > QPushButton,
 QGroupBox#price_box > QPushButton,
 QGroupBox#price_box_disable > QPushButton {
     border: none;
@@ -209,11 +223,44 @@ QGroupBox#price_box_disable > QPushButton {
     margin-right: 22px;
 }
 
+QFrame#attendance_box > QPushButton,
 QGroupBox#price_box > QPushButton {
     background-color: #FFFFFF;
     color: #6C7E8E;
 }
 
+QFrame#attendance_box_uncheck > QPushButton,
+QFrame#attendance_box_disable > QPushButton,
 QGroupBox#price_box_disable > QPushButton {
     background-color: #C6CDDB;
+    color: #F2F2F2;
+}
+
+QFrame#attendance_box  QComboBox {
+    background-color: #FFFFFF;
+    color: #6C7E8E;
+}
+
+QFrame#attendance_box_uncheck  QComboBox {
+    background-color: #C6CDDB;
+    color: #F2F2F2;
+}
+
+QFrame#attendance_box QCheckBox,
+QFrame#attendance_box_disable QCheckBox,
+QFrame#attendance_box_uncheck QCheckBox {
+    padding-left: 10px;
+    min-width: 40px;
+}
+
+QFrame#attendance_box QCheckBox:checked,
+QFrame#attendance_box QCheckBox:unchecked {
+    color: #6C7E8E;
+}
+
+QFrame#attendance_box_uncheck QCheckBox:checked,
+QFrame#attendance_box_uncheck QCheckBox:unchecked,
+QFrame#attendance_box_disable QCheckBox:checked,
+QFrame#attendance_box_disable QCheckBox:unchecked{
+    color: #F2F2F2;
 }

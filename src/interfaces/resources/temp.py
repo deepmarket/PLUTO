@@ -18,30 +18,30 @@ class Resources(MainView):
         super(Resources, self).__init__(*args, **kwargs)
 
         # variable
-        self.workspace = None                       # widget
-        self.list = None                            # widget
+        self.workspace = None  # widget
+        self.list = None  # widget
 
-        self.workspace_button = None                # button widget
-        self.list_button = None                     # button widget
-        self.stack = None                           # widget layout
+        self.workspace_button = None  # button widget
+        self.list_button = None  # button widget
+        self.stack = None  # widget layout
 
-        self.current_cpu:int = 0                        # number
-        self.current_core:int = 0                       # number
-        self.current_ram:int = 0                        # number
+        self.current_cpu: int = 0  # number
+        self.current_core: int = 0  # number
+        self.current_ram: int = 0  # number
 
         # self.if_verify:bool = False                    # flag
         # self.ip_check:bool = False                     # flag
-        self.machine_name_check:bool = False             # flag
+        self.machine_name_check: bool = False  # flag
         # self.cpu_check:bool = False                    # flag
-        self.cpu_check:bool = True                       # cpu check is disable in this version
-        self.core_check:bool = False                     # flag
-        self.ram_check:bool = False                      # flag
-        self.price_selected:int = 0                     # flag
+        self.cpu_check: bool = True  # cpu check is disable in this version
+        self.core_check: bool = False  # flag
+        self.ram_check: bool = False  # flag
+        self.price_selected: int = 0  # flag
 
-        self.auto_price:int = 0                         # flag
-        self.offering_price:int = 0                     # flag
+        self.auto_price: int = 0  # flag
+        self.offering_price: int = 0  # flag
 
-        self.machines: list = None                         # list
+        self.machines: list = None  # list
 
         self._init_ui()
         self.setStyleSheet(page_style)
@@ -55,11 +55,17 @@ class Resources(MainView):
 
         section_layout = add_layout(self, VERTICAL, b_m=8)
 
-        button_frame, button_layout = add_frame(self, height=35, layout=HORIZONTAL, l_m=40, r_m=40, space=24)
+        button_frame, button_layout = add_frame(
+            self, height=35, layout=HORIZONTAL, l_m=40, r_m=40, space=24
+        )
         section_layout.addWidget(button_frame)
 
-        self.workspace_button = add_button(button_frame, "Add Resources", stylesheet=page_menu_button_active)
-        self.list_button = add_button(button_frame, "Resources List", stylesheet=page_menu_button)
+        self.workspace_button = add_button(
+            button_frame, "Add Resources", stylesheet=page_menu_button_active
+        )
+        self.list_button = add_button(
+            button_frame, "Resources List", stylesheet=page_menu_button
+        )
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         button_layout.addWidget(self.workspace_button)
@@ -83,8 +89,12 @@ class Resources(MainView):
         self.on_verify_button_clicked()
         # self.workspace.change_button.clicked.connect(self.on_change_button_clicked)
         self.workspace.evaluate_button.clicked.connect(self.on_evaluate_button_clicked)
-        self.workspace.auto_price_button.clicked.connect(self.on_auto_price_button_clicked)
-        self.workspace.offering_price_button.clicked.connect(self.on_offering_price_button_clicked)
+        self.workspace.auto_price_button.clicked.connect(
+            self.on_auto_price_button_clicked
+        )
+        self.workspace.offering_price_button.clicked.connect(
+            self.on_offering_price_button_clicked
+        )
         self.workspace.submit_button.clicked.connect(self.on_submit_button_clicked)
 
         # self.workspace.ip_address.editingFinished.connect(self.on_ip_address_edit)
@@ -125,11 +135,17 @@ class Resources(MainView):
 
     # check
     def on_verify_button_clicked(self):
-        self.current_cpu = round(cpu_freq().current/1000, 1)  # Processor's speed in gHz
+        self.current_cpu = round(
+            cpu_freq().current / 1000, 1
+        )  # Processor's speed in gHz
         self.current_core = cpu_count(logical=False)  # Logical cores on the machine
-        self.current_ram = round(virtual_memory().total/(pow(1024, 3)), 1)  # Total installed RAM
+        self.current_ram = round(
+            virtual_memory().total / (pow(1024, 3)), 1
+        )  # Total installed RAM
 
-        self.workspace.enable_machine_config(self.current_cpu, self.current_core, self.current_ram)
+        self.workspace.enable_machine_config(
+            self.current_cpu, self.current_core, self.current_ram
+        )
         self.workspace.enable_planning()
 
     def on_evaluate_button_clicked(self):
@@ -191,7 +207,7 @@ class Resources(MainView):
             "cores": cores,
             "cpus": cpu_gpu,
             "price": price,
-            "status": "ALIVE"
+            "status": "ALIVE",
         }
 
         self._api_call("POST", "/resources", dat=resources_data)
@@ -211,11 +227,13 @@ class Resources(MainView):
             column = self.list.table.columnCount()
 
             # check if row has value
-            if self.list.table.item(row, column-1).text() is not "":
+            if self.list.table.item(row, column - 1).text() is not "":
 
                 # Column 0 holds the name of the resource
-                question = Question(f"Are you sure you want to remove {self.list.table.item(row, 0).text()} "
-                                    f"from your resources? This action cannot be undone.")
+                question = Question(
+                    f"Are you sure you want to remove {self.list.table.item(row, 0).text()} "
+                    f"from your resources? This action cannot be undone."
+                )
 
                 if question.exec_():
                     self._api_call("DELETE", f"/resources/{self.machines[row]['_id']}")
@@ -229,13 +247,19 @@ class Resources(MainView):
             column = self.list.table.columnCount()
 
             # check if row has value
-            if self.list.table.item(row, column-1).text() is not "":
+            if self.list.table.item(row, column - 1).text() is not "":
 
                 # ask if user want to delete rows
-                question = Question(f"Are you sure you want to update {self.list.table.item(row, 0).text()}?")
+                question = Question(
+                    f"Are you sure you want to update {self.list.table.item(row, 0).text()}?"
+                )
 
                 if question.exec_():
-                    self._api_call("PUT", f"/resources/{self.machines[row]['_id']}", self.machines[row])
+                    self._api_call(
+                        "PUT",
+                        f"/resources/{self.machines[row]['_id']}",
+                        self.machines[row],
+                    )
 
     # check
     def on_machine_edit(self):
@@ -271,7 +295,9 @@ class Resources(MainView):
             else:
                 num = int(user_input)
                 if num > self.current_cpu:
-                    self.workspace.planning_hint.setText("Input for GPUs is out of range.")
+                    self.workspace.planning_hint.setText(
+                        "Input for GPUs is out of range."
+                    )
 
                     labels = self.workspace.current_cpu_box.findChildren(QLabel)
                     for label in labels:
@@ -341,7 +367,9 @@ class Resources(MainView):
                 num = float(user_input)
 
                 if num > self.current_ram:
-                    self.workspace.planning_hint.setText("Amount of RAM is out of range.")
+                    self.workspace.planning_hint.setText(
+                        "Amount of RAM is out of range."
+                    )
 
                     labels = self.workspace.current_ram_box.findChildren(QLabel)
                     for label in labels:
@@ -360,7 +388,13 @@ class Resources(MainView):
     # check
     # check if flags are all on, enable evaluate button
     def _check_flag(self):
-        if self.if_verify and self.machine_name_check and self.cpu_check and self.core_check and self.ram_check:
+        if (
+            self.if_verify
+            and self.machine_name_check
+            and self.cpu_check
+            and self.core_check
+            and self.ram_check
+        ):
             self.workspace.enable_evaluate_button()
         else:
             self.workspace.disable_evaluate_button()
@@ -378,7 +412,7 @@ class Resources(MainView):
         from socket import socket, AF_INET, SOCK_DGRAM
 
         # Talk to 8.8.8.8 over https
-        server_and_port = ('8.8.8.8', 443)
+        server_and_port = ("8.8.8.8", 443)
 
         # IPv4 address family and single packet UDP protocol
         sock = socket(AF_INET, SOCK_DGRAM)
@@ -424,13 +458,17 @@ class Resources(MainView):
                             # store remote machine info locally
                             self.machines.append(rsrc)
 
-                            self.list.add_data([rsrc['machine_name'],
-                                                rsrc['ip_address'],
-                                                str(rsrc['cpus']),
-                                                str(rsrc['cores']),
-                                                str(rsrc['ram']),
-                                                str(rsrc['price']),
-                                                rsrc['status']])
+                            self.list.add_data(
+                                [
+                                    rsrc["machine_name"],
+                                    rsrc["ip_address"],
+                                    str(rsrc["cpus"]),
+                                    str(rsrc["cores"]),
+                                    str(rsrc["ram"]),
+                                    str(rsrc["price"]),
+                                    rsrc["status"],
+                                ]
+                            )
                     elif method == "POST":
                         # add data to list
                         self._fetch_resources_data()
@@ -470,33 +508,32 @@ class Resources(MainView):
 
 
 class ResourcesWorkspace(QFrame):
-
     def __init__(self, *args, **kwargs):
         super(QFrame, self).__init__(*args, **kwargs)
 
         # variable
-        self.verification_hint = None               # text widget
-        self.planning_hint = None                   # text widget
+        self.verification_hint = None  # text widget
+        self.planning_hint = None  # text widget
 
-        self.current_cpu_box = None                 # frame widget
-        self.current_core_box = None                # frame widget
-        self.current_ram_box = None                 # frame widget
+        self.current_cpu_box = None  # frame widget
+        self.current_core_box = None  # frame widget
+        self.current_ram_box = None  # frame widget
 
-        self.auto_price_box = None                  # frame widget
-        self.offering_price_box = None              # frame widget
+        self.auto_price_box = None  # frame widget
+        self.offering_price_box = None  # frame widget
 
-        self.ip_address = None                      # input widget
-        self.machine_name = None                    # input widget
-        self.cpu_gpu = None                         # input widget
-        self.cores = None                           # input widget
-        self.ram = None                             # input widget
+        self.ip_address = None  # input widget
+        self.machine_name = None  # input widget
+        self.cpu_gpu = None  # input widget
+        self.cores = None  # input widget
+        self.ram = None  # input widget
 
-        self.verify_button = None                   # button widget
+        self.verify_button = None  # button widget
         # self.change_button = None                   # button widget
-        self.evaluate_button = None                 # button widget
-        self.auto_price_button = None               # button widget
-        self.offering_price_button = None           # button widget
-        self.submit_button = None                   # button widget
+        self.evaluate_button = None  # button widget
+        self.auto_price_button = None  # button widget
+        self.offering_price_button = None  # button widget
+        self.submit_button = None  # button widget
 
         self._init_ui()
         self.setStyleSheet(page_style)
@@ -515,21 +552,32 @@ class ResourcesWorkspace(QFrame):
         line_frame, line_layout = add_frame(section_frame, layout=HORIZONTAL, r_m=3)
         section_layout.addWidget(line_frame)
 
-        title = add_label(line_frame, "Available Resources", name="Page_section_title", align=Qt.AlignVCenter)
+        title = add_label(
+            line_frame,
+            "Available Resources",
+            name="Page_section_title",
+            align=Qt.AlignVCenter,
+        )
         line_layout.addWidget(title)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
         line_layout.addItem(spacer)
 
-        self.verification_hint = add_label(line_frame, "", name="Page_hint", align=Qt.AlignVCenter)
+        self.verification_hint = add_label(
+            line_frame, "", name="Page_hint", align=Qt.AlignVCenter
+        )
         line_layout.addWidget(self.verification_hint)
 
         # --------- line_frame: ip_address, verify_button, change_button ------------
 
-        line_frame, line_layout = add_frame(section_frame, height=30, space=30, layout=HORIZONTAL)
+        line_frame, line_layout = add_frame(
+            section_frame, height=30, space=30, layout=HORIZONTAL
+        )
         section_layout.addWidget(line_frame)
 
-        box, self.ip_address = add_page_input_box(line_frame, "IP Address:", 65, 21, fix_width=False)
+        box, self.ip_address = add_page_input_box(
+            line_frame, "IP Address:", 65, 21, fix_width=False
+        )
         line_layout.addWidget(box)
 
         # self.verify_button = add_button(line_frame, "VERIFY", name="Page_button")
@@ -542,8 +590,9 @@ class ResourcesWorkspace(QFrame):
 
         # --------- begin machine_config ------------
 
-        section_frame, section_layout = add_frame(self, height=108, name="Page_machine_config",
-                                                  t_m=21, b_m=21, l_m=27, r_m=27)
+        section_frame, section_layout = add_frame(
+            self, height=108, name="Page_machine_config", t_m=21, b_m=21, l_m=27, r_m=27
+        )
         window_layout.addWidget(section_frame)
 
         # --------- line_frame: title, spacer ------------
@@ -551,7 +600,12 @@ class ResourcesWorkspace(QFrame):
         line_frame, line_layout = add_frame(section_frame, layout=HORIZONTAL)
         section_layout.addWidget(line_frame)
 
-        title = add_label(line_frame, "Machine Configuration", name="Page_section_title_small", align=Qt.AlignVCenter)
+        title = add_label(
+            line_frame,
+            "Machine Configuration",
+            name="Page_section_title_small",
+            align=Qt.AlignVCenter,
+        )
         line_layout.addWidget(title)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -594,7 +648,12 @@ class ResourcesWorkspace(QFrame):
         line_frame, line_layout = add_frame(section_frame, layout=HORIZONTAL)
         section_layout.addWidget(line_frame)
 
-        title = add_label(line_frame, "Add a Resource", name="Page_section_title", align=Qt.AlignVCenter)
+        title = add_label(
+            line_frame,
+            "Add a Resource",
+            name="Page_section_title",
+            align=Qt.AlignVCenter,
+        )
         line_layout.addWidget(title)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -602,8 +661,14 @@ class ResourcesWorkspace(QFrame):
 
         # --------- sub_section_frame ------------
 
-        sub_section_frame, sub_section_layout = add_frame(section_frame, height=132, name="Page_resource_planning",
-                                                          t_m=27, r_m=32, b_m=27)
+        sub_section_frame, sub_section_layout = add_frame(
+            section_frame,
+            height=132,
+            name="Page_resource_planning",
+            t_m=27,
+            r_m=32,
+            b_m=27,
+        )
         section_layout.addWidget(sub_section_frame)
 
         # --------- line_frame: machine_name, spacer, cpu_gpu, spacer, hint ------------
@@ -611,19 +676,25 @@ class ResourcesWorkspace(QFrame):
         line_frame, line_layout = add_frame(sub_section_frame, layout=HORIZONTAL)
         sub_section_layout.addWidget(line_frame)
 
-        box, self.machine_name = add_page_input_box(line_frame, "Machine Name:", 113, 18, width=285)
+        box, self.machine_name = add_page_input_box(
+            line_frame, "Machine Name:", 113, 18, width=285
+        )
         line_layout.addWidget(box)
 
         spacer = QSpacerItem(30, 0, QSizePolicy.Fixed, QSizePolicy.Minimum)
         line_layout.addItem(spacer)
 
-        box, self.cpu_gpu = add_page_input_box(line_frame, "GPUs #:", 113, 18, width=285)
+        box, self.cpu_gpu = add_page_input_box(
+            line_frame, "GPUs #:", 113, 18, width=285
+        )
         line_layout.addWidget(box)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
         line_layout.addItem(spacer)
 
-        self.planning_hint = add_label(line_frame, "", name="Page_hint_small", align=Qt.AlignVCenter)
+        self.planning_hint = add_label(
+            line_frame, "", name="Page_hint_small", align=Qt.AlignVCenter
+        )
         line_layout.addWidget(self.planning_hint)
 
         # --------- spacer ------------
@@ -664,36 +735,57 @@ class ResourcesWorkspace(QFrame):
         line_frame, line_layout = add_frame(section_frame, layout=HORIZONTAL)
         section_layout.addWidget(line_frame)
 
-        title = add_label(line_frame, "Resource Submission", name="Page_section_title", align=Qt.AlignVCenter)
+        title = add_label(
+            line_frame,
+            "Resource Submission",
+            name="Page_section_title",
+            align=Qt.AlignVCenter,
+        )
         line_layout.addWidget(title)
 
-        self.submission_hint = add_label(line_frame, "", name="Page_hint", align=Qt.AlignVCenter)
+        self.submission_hint = add_label(
+            line_frame, "", name="Page_hint", align=Qt.AlignVCenter
+        )
         line_layout.addWidget(self.submission_hint)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
         line_layout.addItem(spacer)
 
-        sub_section_frame, sub_section_layout = add_frame(section_frame, height=92, name="Page_resource_submission",
-                                                          t_m=27, r_m=29, b_m=27, l_m=29, layout=HORIZONTAL)
+        sub_section_frame, sub_section_layout = add_frame(
+            section_frame,
+            height=92,
+            name="Page_resource_submission",
+            t_m=27,
+            r_m=29,
+            b_m=27,
+            l_m=29,
+            layout=HORIZONTAL,
+        )
         section_layout.addWidget(sub_section_frame)
 
         # --------- auto_price, spacer, offering_price, spacer, submit_button ------------
 
-        frame, self.auto_price_box, self.auto_price_button = add_price_box(section_frame, "Automated Price:")
+        frame, self.auto_price_box, self.auto_price_button = add_price_box(
+            section_frame, "Automated Price:"
+        )
         sub_section_layout.addWidget(frame)
         self.disable_auto_price_box()
 
         spacer = QSpacerItem(37, 0, QSizePolicy.Fixed, QSizePolicy.Minimum)
         sub_section_layout.addItem(spacer)
 
-        frame, self.offering_price_box, self.offering_price_button = add_price_box(section_frame, "Offering Price:")
+        frame, self.offering_price_box, self.offering_price_button = add_price_box(
+            section_frame, "Offering Price:"
+        )
         sub_section_layout.addWidget(frame)
         self.disable_offering_price_box()
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
         sub_section_layout.addItem(spacer)
 
-        self.submit_button = add_button(section_frame, "SUBMIT", stylesheet=Page_submission_submit_disable)
+        self.submit_button = add_button(
+            section_frame, "SUBMIT", stylesheet=Page_submission_submit_disable
+        )
         sub_section_layout.addWidget(self.submit_button)
 
         # --------- end resource_submission, spacer ------------
@@ -865,19 +957,18 @@ class ResourcesWorkspace(QFrame):
 
 
 class ResourcesList(QFrame):
-
     def __init__(self, *args, **kwargs):
         super(QFrame, self).__init__(*args, **kwargs)
 
         # variable
-        self.table = None                   # widget
-        self.search_bar = None              # input widget
-        self.refresh_button = None          # button widget
-        self.remove_button = None           # button widget
-        self.update_button = None           # button widget
-        self.hint = None                    # text widget
+        self.table = None  # widget
+        self.search_bar = None  # input widget
+        self.refresh_button = None  # button widget
+        self.remove_button = None  # button widget
+        self.update_button = None  # button widget
+        self.hint = None  # text widget
 
-        self.current_row:int = 0                # param number
+        self.current_row: int = 0  # param number
 
         self._init_ui()
         self.setStyleSheet(page_style)
@@ -887,26 +978,49 @@ class ResourcesList(QFrame):
 
         # --------- table_workspace ------------
 
-        table_workspace, workspace_layout = add_frame(self, height=102, name="Page_table_workspace", layout=VERTICAL)
+        table_workspace, workspace_layout = add_frame(
+            self, height=102, name="Page_table_workspace", layout=VERTICAL
+        )
         window_layout.addWidget(table_workspace)
 
-        feature, feature_layout = add_frame(table_workspace, height=72, l_m=40, r_m=40, t_m=26, b_m=11, space=32, layout=HORIZONTAL)
+        feature, feature_layout = add_frame(
+            table_workspace,
+            height=72,
+            l_m=40,
+            r_m=40,
+            t_m=26,
+            b_m=11,
+            space=32,
+            layout=HORIZONTAL,
+        )
         workspace_layout.addWidget(feature)
 
-        hint_frame, hint_layout = add_frame(table_workspace, height=30, l_m=40, r_m=40, b_m=5, layout=HORIZONTAL)
+        hint_frame, hint_layout = add_frame(
+            table_workspace, height=30, l_m=40, r_m=40, b_m=5, layout=HORIZONTAL
+        )
         workspace_layout.addWidget(hint_frame)
 
-        self.search_bar = add_input(feature, height=35, name="Page_table_workspace_search",
-                                    hint="Search a machine... (Haven't implemented yet)")
+        self.search_bar = add_input(
+            feature,
+            height=35,
+            name="Page_table_workspace_search",
+            hint="Search a machine... (Haven't implemented yet)",
+        )
         feature_layout.addWidget(self.search_bar)
 
-        self.refresh_button = add_button(feature, "REFRESH", name="Page_table_workspace_button")
+        self.refresh_button = add_button(
+            feature, "REFRESH", name="Page_table_workspace_button"
+        )
         feature_layout.addWidget(self.refresh_button)
 
-        self.remove_button = add_button(feature, "REMOVE", name="Page_table_workspace_button")
+        self.remove_button = add_button(
+            feature, "REMOVE", name="Page_table_workspace_button"
+        )
         feature_layout.addWidget(self.remove_button)
 
-        self.update_button = add_button(feature, "UPDATE", name="Page_table_workspace_button")
+        self.update_button = add_button(
+            feature, "UPDATE", name="Page_table_workspace_button"
+        )
         feature_layout.addWidget(self.update_button)
 
         self.hint = add_label(hint_frame, "", name="Page_hint", align=Qt.AlignVCenter)
@@ -921,7 +1035,15 @@ class ResourcesList(QFrame):
         self.table.setObjectName("Page_table")
         table_layout.addWidget(self.table)
 
-        table_headers = ["Machine Name", "IP Address", "GPUs", "Cores", "Ram (gb)", "Price", "Status"]
+        table_headers = [
+            "Machine Name",
+            "IP Address",
+            "GPUs",
+            "Cores",
+            "Ram (gb)",
+            "Price",
+            "Status",
+        ]
         table_headers_width = [150, 150, 100, 100, 100, 120, 150]
 
         self.table.setColumnCount(len(table_headers))

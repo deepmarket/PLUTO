@@ -10,7 +10,7 @@ def api_is_up(context):
     api = Api()
     domain, port = api.host, api.port
 
-    # domain = Api().host
+    # domain = Api().domain
     # port = Api().port
 
     from requests import get

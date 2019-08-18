@@ -40,7 +40,6 @@ from api import Api
 from uix.util import *
 from dashboard import Dashboard
 from resources import Resources
-from settings import Settings
 from jobs import Jobs
 from uix.popup import Notification, CreditHistory
 
@@ -114,15 +113,10 @@ class App(QMainWindow):
         self.sidebar.dashboard.clicked.connect(self.on_dashboard_clicked)
         self.sidebar.resources.clicked.connect(self.on_resources_clicked)
         self.sidebar.jobs.clicked.connect(self.on_jobs_clicked)
-        self.sidebar.settings.clicked.connect(self.on_settings_clicked)
-
         self.navigation.menu_button.clicked.connect(self.on_menu_clicked)
-
         self.mask.clicked_area.clicked.connect(self.on_mask_clicked)
-
         self.account.credit_history.clicked.connect(self.on_credit_history_clicked)
-        self.account.notifications.clicked.connect(self.on_notification_clicked)
-        self.account.about.clicked.connect(self.on_about_clicked)
+        self.account.notification.clicked.connect(self.on_notification_clicked)
         self.account.logout.clicked.connect(self.on_logout_clicked)
 
     # # mouse graping and window moves
@@ -135,51 +129,47 @@ class App(QMainWindow):
     #     self.move(self.x() + delta.x(), self.y() + delta.y())
     #     self.pos = event.globalPos()
 
-    def on_sidebar_widget_updated(self, widget=None):
-        """
-        This is a helper function that is called *manually* by the `clicked` callback function
-        attached to each of the sidebar widgets.
-
-        Its purpose is to reset each sidebar widgets style to default and manage the
-        widget stack
-
-        :param widget: The clicked on widget that we want to instantiate
-        :return: None
-        """
-
-        # Set all widget to base styles and let clicked callback override them
-        self.sidebar.dashboard.setStyleSheet(app_sidebar_button)
+    # switch tab to dashboard
+    def on_dashboard_clicked(self):
+        # active button
+        self.sidebar.dashboard.setStyleSheet(app_sidebar_button_active)
         self.sidebar.resources.setStyleSheet(app_sidebar_button)
         self.sidebar.jobs.setStyleSheet(app_sidebar_button)
-        self.sidebar.settings.setStyleSheet(app_sidebar_button)
 
-        # Deallocate current widget if it exists
+        # deallocate current widget if they exist
         if self.main_window.stack.count():
             self.main_window.stack.currentWidget().setParent(None)
 
-        if widget is not None:
-            self.main_window.stack_widget = widget()
-            self.main_window.stack.addWidget(self.main_window.stack_widget)
-        else:
-            # Default to dashboard I guess?
-            self.main_window.stack_widget = Dashboard()
-            self.main_window.stack.addWidget(self.main_window.stack_widget)
+        # allocate dashboard object
+        self.main_window.stack_widget = Dashboard()
+        self.main_window.stack.addWidget(self.main_window.stack_widget)
 
-    def on_dashboard_clicked(self):
-        self.on_sidebar_widget_updated(Dashboard)
-        self.sidebar.dashboard.setStyleSheet(app_sidebar_button_active)
-
+    # switch tab to resources
     def on_resources_clicked(self):
-        self.on_sidebar_widget_updated(Resources)
+        self.sidebar.dashboard.setStyleSheet(app_sidebar_button)
         self.sidebar.resources.setStyleSheet(app_sidebar_button_active)
+        self.sidebar.jobs.setStyleSheet(app_sidebar_button)
 
+        # deallocate current widget if they exist
+        if self.main_window.stack.count():
+            self.main_window.stack.currentWidget().setParent(None)
+
+        # allocate resources object
+        self.main_window.stack_widget = Resources()
+        self.main_window.stack.addWidget(self.main_window.stack_widget)
+
+    # switch tab to jobs
     def on_jobs_clicked(self):
-        self.on_sidebar_widget_updated(Jobs)
+        self.sidebar.dashboard.setStyleSheet(app_sidebar_button)
+        self.sidebar.resources.setStyleSheet(app_sidebar_button)
         self.sidebar.jobs.setStyleSheet(app_sidebar_button_active)
 
-    def on_settings_clicked(self):
-        self.on_sidebar_widget_updated(Settings)
-        self.sidebar.settings.setStyleSheet(app_sidebar_button_active)
+        # deallocate current widget if they exist
+        if self.main_window.stack.count():
+            self.main_window.stack.currentWidget().setParent(None)
+
+        self.main_window.stack_widget = Jobs()
+        self.main_window.stack.addWidget(self.main_window.stack_widget)
 
     # open menu
     def on_menu_clicked(self):
@@ -217,12 +207,6 @@ class App(QMainWindow):
         popup = CreditHistory()
         popup.exec_()
 
-    @staticmethod
-    def on_about_clicked():
-        # popup = CreditHistory()
-        # popup.exec_()
-        ...
-
     def on_logout_clicked(self):
         with Api("/auth/logout") as account_api:
             status, res = account_api.post()
@@ -243,10 +227,10 @@ class SideBar(QFrame):
     def __init__(self, *args, **kwargs):
         super(QFrame, self).__init__(*args, **kwargs)
 
-        self.dashboard = None
-        self.resources = None
-        self.jobs = None
-        self.settings = None
+        # variable
+        self.dashboard = None           # button
+        self.resources = None           # button
+        self.jobs = None                # button
 
         self._init_ui()
 
@@ -275,12 +259,9 @@ class SideBar(QFrame):
 
         self.jobs = add_button(button_frame_01, "Jobs", name="jobs", stylesheet=app_sidebar_button)
 
-        self.settings = add_button(button_frame_01, "Settings", name="settings", stylesheet=app_sidebar_button)
-
         button_layout.addWidget(self.dashboard)
         button_layout.addWidget(self.resources)
         button_layout.addWidget(self.jobs)
-        button_layout.addWidget(self.settings)
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
@@ -298,7 +279,7 @@ class Navigation(QFrame):
             status, res = account.get()
 
             if status == 200:
-                self.credits = round(res['account']['credits'], 4)
+                self.credits = round(res['customer']['credits'], 4)
 
             # TODO: This fails if the api returns a token expired error
             # (or anything that isn't a customer object response). Also see Account class with same problem
@@ -376,18 +357,18 @@ class Account(QFrame):
 
             if status == 200:
                 # Insert comma here so we can default to nameless greeting if api fails.
-                self.username = f"{res['account']['firstname'].capitalize()}"
-                self.credits = round(res['account']['credits'], 4)
+                self.username = f"{res['customer']['firstname'].capitalize()}"
+                self.credits = round(res['customer']['credits'], 4)
             # TODO: This should never happen and if it does we should report a fatal error
             else:
                 self.username = "New User"
                 self.credits = 0.0
 
-        self.credit = 15
-        self.credit_history = None
-        self.notifications = None
-        self.setting_button = None
-        self.logout = None
+        self.credit = 15                    # parameter integer
+        self.credit_history = None          # button
+        self.notification = None            # button
+        self.setting_button = None          # button
+        self.logout = None                  # button
 
         self._init_ui()
         self.setStyleSheet(app_style)
@@ -425,12 +406,10 @@ class Account(QFrame):
         button_layout = add_layout(button_frame, VERTICAL, t_m=42, l_m=7, r_m=7, space=18)
 
         self.credit_history = add_button(button_frame, "Credit History", name="App_account_button")
-        self.notifications = add_button(button_frame, "Notifications", name="App_account_button")
-        self.about = add_button(button_frame, "About", name="App_account_button")
+        self.notification = add_button(button_frame, "Notification", name="App_account_button")
 
-        button_layout.addWidget(self.notifications)
         button_layout.addWidget(self.credit_history)
-        button_layout.addWidget(self.about)
+        button_layout.addWidget(self.notification)
 
         # bottom frame
         bottom_frame = QFrame(self)

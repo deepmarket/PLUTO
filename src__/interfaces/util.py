@@ -21,8 +21,8 @@ def load_path(path, _file):
     """
     for p in path.split(os.pathsep):
         candidate = os.path.join(p, _file)
-    if os.path.exists(candidate) and os.path.isfile(candidate):
-        return candidate
+        if os.path.exists(candidate) and os.path.isfile(candidate):
+            return candidate
     return False
 
 

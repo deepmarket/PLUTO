@@ -25,7 +25,7 @@ from ..widgets import (
     VerticalSpacer,
 )
 
-from ..stylesheet.config import RESOURCES_MAX_ROW
+from ..config import RESOURCES_MAX_ROW
 
 
 class ResourcesControllerUI(Frame):

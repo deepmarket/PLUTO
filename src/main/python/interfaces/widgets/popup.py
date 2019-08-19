@@ -3,7 +3,7 @@
     This file present a set of popup widgets.
 
 """
-
+from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QDialog
 
@@ -13,11 +13,9 @@ from .label import Label, Paragraph
 from .layout import HorizontalLayout, VerticalLayout
 from .spacer import VerticalSpacer, HorizontalSpacer
 
-from ..stylesheet import popup_style
-
 
 class BaseDialog(QDialog):
-    def __init__(self, *args, name: str = "", **kwargs):
+    def __init__(self, cxt:ApplicationContext, *args, name: str = "",  **kwargs):
 
         super(BaseDialog, self).__init__(*args, **kwargs)
 
@@ -28,7 +26,7 @@ class BaseDialog(QDialog):
         self.setWindowModality(Qt.ApplicationModal)
 
         # set stylesheet
-        self.setStyleSheet(popup_style)
+        self.setStyleSheet(cxt.popup_style)
 
 
 class Question(BaseDialog):

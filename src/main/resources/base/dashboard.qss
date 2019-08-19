@@ -1,0 +1,83 @@
+#Dashboard_overview {
+    background-color: white;
+}
+
+#Dashboard_greeting {
+    font-family: "Helvetica Neue";
+    font-size: 32px;
+    font-weight: 50;
+    color: #6C7E8E;
+}
+
+#Dashboard_username {
+    font-family: "Helvetica Neue";
+    font-size: 32px;
+    font-weight: 100;
+    color: #6C7E8E;
+}
+
+#Dashboard_description {
+    font-family: "Helvetica Neue";
+    font-size: 14px;
+    font-weight: 250;
+    color: #6C7E8E;
+}
+
+#Dashboard_highlight_description {
+    font-family: "Helvetica Neue";
+    font-size: 14px;
+    font-weight: 500;
+    color: #6C7E8E;
+}
+
+#Dashboard_balance_title {
+    font-family: "Helvetica Neue";
+    font-size: 30px;
+    font-weight: 50;
+    color: #6C7E8E;
+}
+
+#Dashboard_balance {
+    font-family: "Helvetica Neue";
+    font-size: 34px;
+    font-weight: 100;
+    color: #6C7E8E;
+}
+
+#Dashboard_estimated_title {
+    font-family: "Helvetica Neue";
+    font-size: 16px;
+    font-weight: 200;
+    color: #6C7E8E;
+}
+
+#Dashboard_estimated_title_small {
+    font-family: "Helvetica Neue";
+    font-size: 12px;
+    font-weight: 200;
+    color: #6C7E8E;
+}
+
+#Dashboard_estimated {
+    font-family: "Helvetica Neue";
+    font-size: 24px;
+    font-weight: 300;
+    color: #6C7E8E;
+}
+
+#Dashboard_history {
+    background-color: white;
+}
+
+#Dashboard_history_title {
+    font-family: "Helvetica Neue";
+    font-size: 18px;
+    font-weight: 200;
+    color: #6C7E8E;
+}
+
+#Dashboard_history_table {
+    border: none;
+    background-color: #F5F5F5;
+    alternate-background-color: white;
+}

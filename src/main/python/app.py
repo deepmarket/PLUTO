@@ -1,41 +1,4 @@
-"""
-    The following items can be interacted:
-
-    class SideBar:
-
-        self.dashboard = None               # button
-        self.resources = None               # button
-        self.jobs = None                    # button
-
-    class Navigation:
-
-        self.credit = 15                    # input number
-        self.head_img = None                # input string
-        self.menu_button = None             # button
-
-
-    class MainWindow:
-
-        self.stack = None                   # stack layout
-        self.dashboard = None               # section
-        self.resources = None               # section
-        self.jobs = None                    # section
-
-    class Mask:
-
-        self.clicked_area                   # button
-
-    class Account:
-
-        self.head_img = None                # image filename string
-        self.username = "Martin Li"         # parameter string
-        self.credit = 15                    # parameter integer
-        self.credit_history = None          # button
-        self.notification = None            # button
-        self.setting_button = None          # button
-        self.logout = None                  # button
-
-"""
+from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from api import Api
 from uix.util import *
 from dashboard import Dashboard
@@ -43,11 +6,35 @@ from resources import Resources
 from settings import Settings
 from jobs import Jobs
 from uix.popup import Notification, CreditHistory
+from PyQt5.QtCore import pyqtSignal
 
+
+app_sidebar_button = f"""
+    border: None;
+    height: 20px;
+    padding-left: 16px;
+    font-family: "Helvetica Neue";
+    font-size: 13px;
+    font-weight: 400;
+    color: {COLOR_02};
+    text-align: left;
+"""
+
+app_sidebar_button_active = f"""
+    border: None;
+    border-left: 2px solid {COLOR_01};
+    height: 20px;
+    padding-left: 16px;
+    font-family: "Helvetica Neue";
+    font-size: 13px;
+    font-weight: 400;
+    color: {COLOR_01};
+    text-align: left;
+"""
 
 class App(QMainWindow):
-    def __init__(self, logout_signal, *args, **kwargs):
-        super(QMainWindow, self).__init__(*args, **kwargs)
+    def __init__(self, logout_signal:pyqtSignal, cxt:ApplicationContext, *args, **kwargs):
+        super(App, self).__init__(*args, **kwargs)
 
         self.logout_signal = logout_signal
 
@@ -62,9 +49,11 @@ class App(QMainWindow):
         # self.pos = None
         self.animation = None
 
+        self.cxt = cxt
+
         self._init_geometry()
         self._init_ui()
-        self.setStyleSheet(app_style)
+        self.setStyleSheet(self.cxt.app_style)
         # self.show()
 
         self.on_dashboard_clicked()
@@ -158,11 +147,11 @@ class App(QMainWindow):
             self.main_window.stack.currentWidget().setParent(None)
 
         if widget is not None:
-            self.main_window.stack_widget = widget()
+            self.main_window.stack_widget = widget(self.cxt)
             self.main_window.stack.addWidget(self.main_window.stack_widget)
         else:
             # Default to dashboard I guess?
-            self.main_window.stack_widget = Dashboard()
+            self.main_window.stack_widget = Dashboard(self.cxt)
             self.main_window.stack.addWidget(self.main_window.stack_widget)
 
     def on_dashboard_clicked(self):
@@ -208,13 +197,12 @@ class App(QMainWindow):
     # notification popup
     @staticmethod
     def on_notification_clicked():
-        popup = Notification()
+        popup = Notification(self.cxt)
         popup.exec_()
 
     # credit history popup
-    @staticmethod
-    def on_credit_history_clicked():
-        popup = CreditHistory()
+    def on_credit_history_clicked(self):
+        popup = CreditHistory(self.cxt)
         popup.exec_()
 
     @staticmethod

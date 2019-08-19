@@ -1,0 +1,31 @@
+#Notification {
+    border: none;
+    background-color: #F4F8F9;
+}
+
+#Notification_title_frame {
+    background-color: white;
+}
+
+#Notification_title {
+    font-family: "Helvetica Neue";
+    font-size: 17px;
+    font-weight: 100;
+    color: #6C7E8E;
+}
+
+#Notification_button {
+    border: none;
+    background-color: #6C7E8E;
+    height: 27px;
+    width: 180px;
+    font-family: "Helvetica Neue";
+    font-size: 9px;
+    font-weight: 200;
+    color: white;
+}
+
+#Notification_window {
+    border: none;
+    background-color: white;
+}

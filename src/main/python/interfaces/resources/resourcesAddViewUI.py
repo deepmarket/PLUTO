@@ -6,6 +6,7 @@
 """
 
 from abc import ABCMeta, abstractmethod
+from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 from PyQt5.QtWidgets import QFrame, QLineEdit, QLabel, QRadioButton
 from PyQt5.QtCore import pyqtSignal, Qt
@@ -26,7 +27,6 @@ from ..widgets import (
 )
 
 from ..util import get_children
-from ..stylesheet import resources_add_view_style
 
 
 class ResourcesAddViewUI(Frame):
@@ -78,12 +78,12 @@ class ResourcesAddViewUI(Frame):
     price_hint: Label = None
     submit_hint: Label = None
 
-    def __init__(self, signal: pyqtSignal, *args, **kwargs):
+    def __init__(self, signal: pyqtSignal, cxt:ApplicationContext, *args, **kwargs):
         super(ResourcesAddViewUI, self).__init__(*args, name="view", **kwargs)
 
         self.signal = signal
         self._init_ui()
-        self.setStyleSheet(resources_add_view_style)
+        self.setStyleSheet(cxt.add_view_style)
 
         self._to_tech_section()
 

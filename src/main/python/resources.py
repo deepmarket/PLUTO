@@ -6,6 +6,7 @@
 
 """
 
+from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from enum import Enum, auto
 from psutil import cpu_freq, cpu_count, virtual_memory
 
@@ -18,11 +19,11 @@ from interfaces.widgets import Question
 
 class Resources(ResourcesUI):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, cxt:ApplicationContext, *args, **kwargs):
         super(Resources, self).__init__(*args, **kwargs)
 
-        self.controller = ResourcesController(self._to_add_view_signal)
-        self.add_view = ResourcesAddView(self._to_controller_signal)
+        self.controller = ResourcesController(self._to_add_view_signal, cxt)
+        self.add_view = ResourcesAddView(self._to_controller_signal, cxt)
 
         self.set_controller(self.controller)
         self.set_add_view(self.add_view)

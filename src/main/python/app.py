@@ -75,27 +75,27 @@ class App(QMainWindow):
         self.setCentralWidget(window)
 
         # side bar
-        self.sidebar = SideBar(window)
+        self.sidebar = SideBar(window, self.cxt)
         self.sidebar.setFixedSize(sidebar_width, self.height())
         self.sidebar.move(0, 0)
 
         # top navigation
-        self.navigation = Navigation(window)
+        self.navigation = Navigation(window, self.cxt)
         self.navigation.setFixedSize(self.width()-sidebar_width, navigation_height)
         self.navigation.move(sidebar_width, 0)
 
-        self.main_window = MainWindow(window)
+        self.main_window = MainWindow(window, self.cxt)
         self.main_window.setFixedSize(self.width()-sidebar_width, self.height()-navigation_height)
         self.main_window.move(sidebar_width, navigation_height)
 
         # mask & right account bar
-        self.mask = Mask(window)
+        self.mask = Mask(window, self.cxt)
         self.mask.setFixedSize(self.width(), self.height())
         self.mask.move(self.width(), 0)
         self.mask.clicked_area.setFixedSize(self.width(), self.height())
         self.mask.clicked_area.move(0, 0)
 
-        self.account = Account(self.mask)
+        self.account = Account(self.mask, self.cxt)
         self.account.setFixedSize(200, self.height())
         self.account.move(self.mask.width()-200, 0)
 
@@ -225,8 +225,8 @@ class App(QMainWindow):
 
 # Pure UI class, no functionality
 class SideBar(QFrame):
-    def __init__(self, *args, **kwargs):
-        super(QFrame, self).__init__(*args, **kwargs)
+    def __init__(self, parent, cxt:ApplicationContext, *args, **kwargs):
+        super(SideBar, self).__init__(parent, *args, **kwargs)
 
         # variable
         self.dashboard = None           # button
@@ -235,7 +235,7 @@ class SideBar(QFrame):
 
         self._init_ui()
 
-        self.setStyleSheet(app_style)
+        self.setStyleSheet(cxt.app_style)
 
     def _init_ui(self):
         self.setObjectName("App_sidebar")
@@ -276,8 +276,8 @@ class SideBar(QFrame):
 
 # Pure UI class, no functionality
 class Navigation(QFrame):
-    def __init__(self, *args, **kwargs):
-        super(QFrame, self).__init__(*args, **kwargs)
+    def __init__(self, parent, cxt:ApplicationContext, *args, **kwargs):
+        super(Navigation, self).__init__(parent, *args, **kwargs)
 
         with Api("/account") as account:
             status, res = account.get()
@@ -295,7 +295,7 @@ class Navigation(QFrame):
         self.menu_button = None
         self._init_ui()
 
-        self.setStyleSheet(app_style)
+        self.setStyleSheet(cxt.app_style)
 
     def _init_ui(self):
         self.setObjectName("App_navigation")
@@ -322,15 +322,15 @@ class Navigation(QFrame):
 
 # Pure UI class, no functionality
 class MainWindow(QFrame):
-    def __init__(self, *args, **kwargs):
-        super(QFrame, self).__init__(*args, **kwargs)
+    def __init__(self, parent, cxt:ApplicationContext, *args, **kwargs):
+        super(MainWindow, self).__init__(parent, *args, **kwargs)
 
         # variable
         self.stack = None               # stack layout
         self.stack_widget = None        # current widget
 
         self._init_ui()
-        self.setStyleSheet(app_style)
+        self.setStyleSheet(cxt.app_style)
 
     def _init_ui(self):
         self.setObjectName("App_main_window")
@@ -340,10 +340,10 @@ class MainWindow(QFrame):
 
 # Pure UI class, no functionality
 class Mask(QFrame):
-    def __init__(self, *args, **kwargs):
-        super(QFrame, self).__init__(*args, **kwargs)
+    def __init__(self, parent, cxt:ApplicationContext, *args, **kwargs):
+        super(Mask, self).__init__(parent, *args, **kwargs)
 
-        self.setStyleSheet(app_style)
+        self.setStyleSheet(cxt.app_style)
         self.setObjectName("App_mask")
 
         self.clicked_area = add_button(self, name="App_mask_clicked_area", change_cursor=False)
@@ -351,8 +351,8 @@ class Mask(QFrame):
 
 # Pure UI class, no functionality
 class Account(QFrame):
-    def __init__(self, *args, **kwargs):
-        super(QFrame, self).__init__(*args, **kwargs)
+    def __init__(self, parent, cxt:ApplicationContext, *args, **kwargs):
+        super(Account, self).__init__(parent, *args, **kwargs)
 
         self.head_img = None                # image filename string
 
@@ -375,7 +375,7 @@ class Account(QFrame):
         self.logout = None                  # button
 
         self._init_ui()
-        self.setStyleSheet(app_style)
+        self.setStyleSheet(cxt.app_style)
 
     def _init_ui(self):
         self.setObjectName("App_account")

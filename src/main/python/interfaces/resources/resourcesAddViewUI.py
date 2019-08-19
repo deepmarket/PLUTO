@@ -81,9 +81,11 @@ class ResourcesAddViewUI(Frame):
     def __init__(self, signal: pyqtSignal, cxt:ApplicationContext, *args, **kwargs):
         super(ResourcesAddViewUI, self).__init__(*args, name="view", **kwargs)
 
+        self.cxt = cxt
+
         self.signal = signal
         self._init_ui()
-        self.setStyleSheet(cxt.add_view_style)
+        self.setStyleSheet(self.cxt.add_view_style)
 
         self._to_tech_section()
 
@@ -158,7 +160,7 @@ class ResourcesAddViewUI(Frame):
         self.submit_hint.reset()
 
     def reload_stylesheet(self):
-        self.setStyleSheet(resources_add_view_style)
+        self.setStyleSheet(self.cxt.add_view_style)
 
     def _to_tech_section(self):
         self.stack.setCurrentWidget(self.tech_sections)

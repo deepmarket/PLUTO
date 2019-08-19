@@ -50,9 +50,11 @@ class ResourcesControllerUI(Frame):
     def __init__(self, signal: pyqtSignal, cxt:ApplicationContext, *args, **kwargs):
         super(ResourcesControllerUI, self).__init__(*args, name="view", **kwargs)
 
+        self.cxt = cxt
+
         self.signal = signal
         self._init_ui()
-        self.setStyleSheet(cxt.controller_style)
+        self.setStyleSheet(self.cxt.controller_style)
 
     def on_add_button_clicked(self):
         self.signal.emit()

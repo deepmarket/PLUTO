@@ -15,7 +15,7 @@ from .spacer import VerticalSpacer, HorizontalSpacer
 
 
 class BaseDialog(QDialog):
-    def __init__(self, cxt:ApplicationContext, *args, name: str = "",  **kwargs):
+    def __init__(self, cxt:ApplicationContext, name: str = "", *args,  **kwargs):
 
         super(BaseDialog, self).__init__(*args, **kwargs)
 
@@ -34,8 +34,8 @@ class Question(BaseDialog):
     confirm: Button = None
     cancel: Button = None
 
-    def __init__(self, question: str, *args, **kwargs):
-        super(Question, self).__init__(*args, name="question", **kwargs)
+    def __init__(self, question: str, cxt:ApplicationContext, *args, **kwargs):
+        super(Question, self).__init__(cxt, name="question", *args, **kwargs)
 
         window_layout = VerticalLayout(self, t_m=35, b_m=35, l_m=65, r_m=65, space=20)
 

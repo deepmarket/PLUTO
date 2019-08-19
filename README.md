@@ -46,7 +46,7 @@ You should now be running a development version of PLUTO!
 
 #### Developing
 
-Next, you can read the [getting set up to develop locally](https://github.com/deepmarket/PLUTO/wiki/Setting-up-deepmarket's-api-backend-for-local-development) guide.
+It is recommended that you read the [getting set up to develop locally](https://github.com/deepmarket/PLUTO/wiki/Setting-up-deepmarket's-api-backend-for-local-development) guide.
 
 #### Testing
 

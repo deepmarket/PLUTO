@@ -42,6 +42,8 @@
         font-family: "Helvetica Neue";
         font-weight: 300;
         font-size: 14px;
+        color: #6C7E8E;
+        background-color: white;
     }
     
     #Login_hint {

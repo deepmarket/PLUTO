@@ -13,147 +13,6 @@ from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from mainview import MainView
 from uix.util import *
 
-
-page_style = """
-
-    #Page_sub_page {
-        background-color: white;
-    }
-    
-    #Page_machine_config {
-        background-color: #D6EFEF;
-    }
-    
-    #Page_resource_planning {
-        background-color: #F4F8F9;
-    }
-    
-    #Page_resource_submission {
-        background-color: #F4F8F9;
-    }
-    
-    #Page_scheme {
-        background-color: #F4F8F9;
-    }
-    
-    #Page_available_resources {
-        background-color: #D6EFEF;
-    }
-    
-    #Page_job_submission {
-        background-color: #F4F8F9;
-    }
-    
-    #Page_section_title {
-        font-family: "Helvetica Neue";
-        font-size: 20px;
-        font-weight: 100;
-        color: #6C7E8E;
-    }
-    
-    #Page_section_title_small {
-        font-family: "Helvetica Neue";
-        font-size: 16px;
-        font-weight: 300;
-        color: #6C7E8E;
-    }
-    
-    #Page_hint {
-        font-family: "Helvetica Neue";
-        font-size: 12px;
-        font-weight: 300;
-        color: red;
-    }
-    
-    #Page_hint_small {
-        font-family: "Helvetica Neue";
-        font-size: 11px;
-        font-weight: 300;
-        color: red;
-    }
-
-    #Page_input_frame {
-        background-color: white;
-    }
-
-    #Page_input_title {
-        font-family: "Helvetica Neue";
-        font-size: 13px;
-        font-weight: 300;
-        color: #6C7E8E;
-    }
-    
-    #Page_button {
-        border: None;
-        background-color: #6C7E8E;
-        height: 30px;
-        width: 120px;
-        font-family: "Helvetica Neue";
-        font-size: 12px;
-        font-weight: 300;
-        color: white;
-    }
-
-    #Page_available_title {
-        font-family: "Helvetica Neue";
-        font-size: 12px;
-        font-weight: 500;
-        color: #6C7E8E;
-    }
-    
-    #Page_available_label {
-        font-family: "Helvetica Neue";
-        font-size: 11px;
-        font-weight: 500;
-        color: #6C7E8E;
-    }
-    
-    #Page_table_workspace {
-        background-color: white;
-    }
-
-    #Page_table_test {
-        background-color: yellow;
-    }
-    
-    #Page_table_workspace_search {
-        border: None;
-        background-color: #F7F7F7;
-        padding: 0 20px;
-        font-family: "Helvetica Neue";
-        font-size: 13px;
-        font-weight: 200;
-        color: black;
-    }
-    
-    #Page_table_workspace_button {
-        border: None;
-        background-color: #6C7E8E;
-        height: 35px;
-        width: 90px;
-        font-family: "Helvetica Neue";
-        font-size: 13px;
-        font-weight: 200;
-        color: white;
-    }
-    
-    #Page_table {
-        border: none;
-        background-color: white;
-        alternate-background-color: #FAFAFA;
-    }
-    
-    #Page_table QHeaderView::section {
-        border: none;
-        background-color: #6C7E8E;
-        height: 35px;
-        font-family: "Helvetica Neue";
-        font-size:13px;
-        font-weight: 100;
-        color: white;
-    }
-"""
-
 class Settings(MainView):
 
     def __init__(self, cxt:ApplicationContext, *args, **kwargs):
@@ -161,8 +20,9 @@ class Settings(MainView):
 
         self.workspace = None
 
+        self.cxt = cxt
         self._init_ui()
-        self.setStyleSheet(page_style)
+        self.setStyleSheet(self.cxt.settings_style)
 
     def _init_ui(self):
         self.setObjectName("Settings")
@@ -173,18 +33,20 @@ class Settings(MainView):
         section_layout.addWidget(window_frame)
         self.stack = add_layout(window_frame, STACK)
 
-        self.workspace = SettingsWorkspace()
+
+        self.workspace = SettingsWorkspace(window_frame, self.cxt)
 
         self.stack.addWidget(self.workspace)
 
 
 class SettingsWorkspace(QFrame):
 
-    def __init__(self, *args, **kwargs):
-        super(QFrame, self).__init__(*args, **kwargs)
+    def __init__(self, parent, cxt:ApplicationContext, *args, **kwargs):
+        super(QFrame, self).__init__(parent, *args, **kwargs)
 
+        self.cxt = cxt
         self._init_ui()
-        self.setStyleSheet(page_style)
+        self.setStyleSheet(self.cxt.settings_style)
 
     def _init_ui(self):
 

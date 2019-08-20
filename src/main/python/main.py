@@ -50,6 +50,14 @@ class AppContext(ApplicationContext):
     def jobs_style(self):
         return self.load_style("jobs.qss")
 
+    @cached_property
+    def settings_style(self):
+        return self.load_style("settings.qss")
+
+    @cached_property
+    def question_style(self):
+        return self.load_style("question.qss")
+
     # def __init__(self):
     #     popup_style = self.get_resource("popup.qss")
     #     resources_add_view_style = self.get_resource("add_view.qss")

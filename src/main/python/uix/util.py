@@ -446,47 +446,36 @@ def add_price_box(widget, title, box_width=307, box_height=37, space=28):
 
 # check
 # helper function to add widgets in _init_ui() in JobWorkspace() class
-def add_labels(layout, frame, texts, style, alignment):
+def add_labels(layout, frame, texts, name, alignment):
     for text in texts:
-        to_add = add_label(frame, text, stylesheet=style, align=alignment)
+        to_add = add_label(frame, text, name=name, align=alignment)
         layout.addWidget(to_add)
 
 
 # helper function to transition between scheme highlighting in JobWorkspace() class
-def set_frame(widget, num, frame):
-    if widget.select_scheme != num:
-        # find the previous selected frame
-        if widget.select_scheme == 1:
-            prev = widget.scheme_01_frame
-        elif widget.select_scheme == 2:
-            prev = widget.scheme_02_frame
-        elif widget.select_scheme == 3:
-            prev = widget.scheme_03_frame
-        else:
-            prev = widget.scheme_04_frame
-
+def set_frame(widget, curr_scheme):
+    frames = [widget.scheme_01_frame, widget.scheme_02_frame, widget.scheme_03_frame, widget.scheme_04_frame]
+    
+    for frame in frames:
         # set frame to disable stylesheet
-        prev.setStyleSheet(Page_scheme_box_disable)
-
-        # find all QLabel children within the frame
-        labels = prev.findChildren(QLabel)
-
-        # set labels to disable stylesheet
-        for label in labels:
-            label.setStyleSheet(Page_scheme_label_disable)
-
-        # set flag
-        widget.select_scheme = num
-
-        # set frame to active stylesheet
-        frame.setStyleSheet(Page_scheme_box)
+        frame.setObjectName("Page_scheme_box_disable")
 
         # find all QLabel children within the frame
         labels = frame.findChildren(QLabel)
 
-        # set labels to enable stylesheet
+        # set labels to disable stylesheet
         for label in labels:
-            label.setStyleSheet(Page_scheme_label)
+            label.setObjectName("Page_scheme_label_disable")
+            
+    # set frame to active stylesheet
+    curr_scheme.setObjectName("Page_scheme_box")
+
+    # find all QLabel children within the frame
+    labels = curr_scheme.findChildren(QLabel)
+
+    # set labels to enable stylesheet
+    for label in labels:
+        label.setObjectName("Page_scheme_label")
 
 
 # check

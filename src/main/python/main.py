@@ -46,6 +46,10 @@ class AppContext(ApplicationContext):
     def popup_style(self):
         return self.load_style("popup.qss")
 
+    @cached_property
+    def jobs_style(self):
+        return self.load_style("jobs.qss")
+
     # def __init__(self):
     #     popup_style = self.get_resource("popup.qss")
     #     resources_add_view_style = self.get_resource("add_view.qss")

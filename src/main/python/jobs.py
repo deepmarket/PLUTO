@@ -30,359 +30,359 @@ from api import Api
 
 
 
-page_style = """
+# page_style = """
 
-    #Page_sub_page {
-        background-color: white;
-    }
+#     #Page_sub_page {
+#         background-color: white;
+#     }
     
-    #Page_machine_config {
-        background-color: #D6EFEF;
-    }
+#     #Page_machine_config {
+#         background-color: #D6EFEF;
+#     }
     
-    #Page_resource_planning {
-        background-color: #F4F8F9;
-    }
+#     #Page_resource_planning {
+#         background-color: #F4F8F9;
+#     }
     
-    #Page_resource_submission {
-        background-color: #F4F8F9;
-    }
+#     #Page_resource_submission {
+#         background-color: #F4F8F9;
+#     }
     
-    #Page_scheme {
-        background-color: #F4F8F9;
-    }
+#     #Page_scheme {
+#         background-color: #F4F8F9;
+#     }
     
-    #Page_available_resources {
-        background-color: #D6EFEF;
-    }
+#     #Page_available_resources {
+#         background-color: #D6EFEF;
+#     }
     
-    #Page_job_submission {
-        background-color: #F4F8F9;
-    }
+#     #Page_job_submission {
+#         background-color: #F4F8F9;
+#     }
     
-    #Page_section_title {
-        font-family: "Helvetica Neue";
-        font-size: 20px;
-        font-weight: 100;
-        color: #6C7E8E;
-    }
+#     #Page_section_title {
+#         font-family: "Helvetica Neue";
+#         font-size: 20px;
+#         font-weight: 100;
+#         color: #6C7E8E;
+#     }
     
-    #Page_section_title_small {
-        font-family: "Helvetica Neue";
-        font-size: 16px;
-        font-weight: 300;
-        color: #6C7E8E;
-    }
+#     #Page_section_title_small {
+#         font-family: "Helvetica Neue";
+#         font-size: 16px;
+#         font-weight: 300;
+#         color: #6C7E8E;
+#     }
     
-    #Page_hint {
-        font-family: "Helvetica Neue";
-        font-size: 12px;
-        font-weight: 300;
-        color: red;
-    }
+#     #Page_hint {
+#         font-family: "Helvetica Neue";
+#         font-size: 12px;
+#         font-weight: 300;
+#         color: red;
+#     }
     
-    #Page_hint_small {
-        font-family: "Helvetica Neue";
-        font-size: 11px;
-        font-weight: 300;
-        color: red;
-    }
+#     #Page_hint_small {
+#         font-family: "Helvetica Neue";
+#         font-size: 11px;
+#         font-weight: 300;
+#         color: red;
+#     }
 
-    #Page_input_frame {
-        background-color: white;
-    }
+#     #Page_input_frame {
+#         background-color: white;
+#     }
 
-    #Page_input_title {
-        font-family: "Helvetica Neue";
-        font-size: 13px;
-        font-weight: 300;
-        color: #6C7E8E;
-    }
+#     #Page_input_title {
+#         font-family: "Helvetica Neue";
+#         font-size: 13px;
+#         font-weight: 300;
+#         color: #6C7E8E;
+#     }
     
-    #Page_button {
-        border: None;
-        background-color: #6C7E8E;
-        height: 30px;
-        width: 120px;
-        font-family: "Helvetica Neue";
-        font-size: 12px;
-        font-weight: 300;
-        color: white;
-    }
+#     #Page_button {
+#         border: None;
+#         background-color: #6C7E8E;
+#         height: 30px;
+#         width: 120px;
+#         font-family: "Helvetica Neue";
+#         font-size: 12px;
+#         font-weight: 300;
+#         color: white;
+#     }
 
-    #Page_available_title {
-        font-family: "Helvetica Neue";
-        font-size: 12px;
-        font-weight: 500;
-        color: #6C7E8E;
-    }
+#     #Page_available_title {
+#         font-family: "Helvetica Neue";
+#         font-size: 12px;
+#         font-weight: 500;
+#         color: #6C7E8E;
+#     }
     
-    #Page_available_label {
-        font-family: "Helvetica Neue";
-        font-size: 11px;
-        font-weight: 500;
-        color: #6C7E8E;
-    }
+#     #Page_available_label {
+#         font-family: "Helvetica Neue";
+#         font-size: 11px;
+#         font-weight: 500;
+#         color: #6C7E8E;
+#     }
     
-    #Page_table_workspace {
-        background-color: white;
-    }
+#     #Page_table_workspace {
+#         background-color: white;
+#     }
 
-    #Page_table_test {
-        background-color: yellow;
-    }
+#     #Page_table_test {
+#         background-color: yellow;
+#     }
     
-    #Page_table_workspace_search {
-        border: None;
-        background-color: #F7F7F7;
-        padding: 0 20px;
-        font-family: "Helvetica Neue";
-        font-size: 13px;
-        font-weight: 200;
-        color: black;
-    }
+#     #Page_table_workspace_search {
+#         border: None;
+#         background-color: #F7F7F7;
+#         padding: 0 20px;
+#         font-family: "Helvetica Neue";
+#         font-size: 13px;
+#         font-weight: 200;
+#         color: black;
+#     }
     
-    #Page_table_workspace_button {
-        border: None;
-        background-color: #6C7E8E;
-        height: 35px;
-        width: 90px;
-        font-family: "Helvetica Neue";
-        font-size: 13px;
-        font-weight: 200;
-        color: white;
-    }
+#     #Page_table_workspace_button {
+#         border: None;
+#         background-color: #6C7E8E;
+#         height: 35px;
+#         width: 90px;
+#         font-family: "Helvetica Neue";
+#         font-size: 13px;
+#         font-weight: 200;
+#         color: white;
+#     }
     
-    #Page_table {
-        border: none;
-        background-color: white;
-        alternate-background-color: #FAFAFA;
-    }
+#     #Page_table {
+#         border: none;
+#         background-color: white;
+#         alternate-background-color: #FAFAFA;
+#     }
     
-    #Page_table QHeaderView::section {
-        border: none;
-        background-color: #6C7E8E;
-        height: 35px;
-        font-family: "Helvetica Neue";
-        font-size:13px;
-        font-weight: 100;
-        color: white;
-    }
-"""
+#     #Page_table QHeaderView::section {
+#         border: none;
+#         background-color: #6C7E8E;
+#         height: 35px;
+#         font-family: "Helvetica Neue";
+#         font-size:13px;
+#         font-weight: 100;
+#         color: white;
+#     }
+# """
 
-page_menu_button_active = f"""
-    border: None;
-    border-bottom: 2px solid {COLOR_01};
-    width: 95px;
-    height: 27px;
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 200;
-    color: {COLOR_01};
-"""
+# page_menu_button_active = f"""
+#     border: None;
+#     border-bottom: 2px solid {COLOR_01};
+#     width: 95px;
+#     height: 27px;
+#     font-family: "Helvetica Neue";
+#     font-size: 12px;
+#     font-weight: 200;
+#     color: {COLOR_01};
+# """
 
-page_menu_button = """
-    border: None;
-    width: 95px;
-    height: 27px;
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 100;
-    color: #CBCBCB;
-"""
+# page_menu_button = """
+#     border: None;
+#     width: 95px;
+#     height: 27px;
+#     font-family: "Helvetica Neue";
+#     font-size: 12px;
+#     font-weight: 100;
+#     color: #CBCBCB;
+# """
 
-Page_input_ip_input = """
-    border: None;
-    background-color: #F7F7F7;
-    padding: 0 1px;
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 200;
-    color: black;
-"""
+# Page_input_ip_input = """
+#     border: None;
+#     background-color: #F7F7F7;
+#     padding: 0 1px;
+#     font-family: "Helvetica Neue";
+#     font-size: 12px;
+#     font-weight: 200;
+#     color: black;
+# """
 
-Page_input_ip_input_disable = f"""
-    border: None;
-    background-color: {COLOR_08};
-    padding: 0 1px;
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 200;
-    color: {COLOR_09};
-"""
+# Page_input_ip_input_disable = f"""
+#     border: None;
+#     background-color: {COLOR_08};
+#     padding: 0 1px;
+#     font-family: "Helvetica Neue";
+#     font-size: 12px;
+#     font-weight: 200;
+#     color: {COLOR_09};
+# """
 
 
-Page_machine_config_box = """
-    background-color: white;
-"""
+# Page_machine_config_box = """
+#     background-color: white;
+# """
 
-Page_machine_config_box_disable = f"""
-    background-color: {COLOR_08};
-"""
+# Page_machine_config_box_disable = f"""
+#     background-color: {COLOR_08};
+# """
 
-Page_machine_config_label = f"""
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 200;
-    color: {COLOR_01};
-"""
+# Page_machine_config_label = f"""
+#     font-family: "Helvetica Neue";
+#     font-size: 12px;
+#     font-weight: 200;
+#     color: {COLOR_01};
+# """
 
-Page_machine_config_label_red = f"""
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 500;
-    color: red;
-"""
+# Page_machine_config_label_red = f"""
+#     font-family: "Helvetica Neue";
+#     font-size: 12px;
+#     font-weight: 500;
+#     color: red;
+# """
 
-Page_machine_config_label_green = f"""
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 400;
-    color: #95E637;
-"""
+# Page_machine_config_label_green = f"""
+#     font-family: "Helvetica Neue";
+#     font-size: 12px;
+#     font-weight: 400;
+#     color: #95E637;
+# """
 
-Page_machine_config_label_disable = f"""
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 400;
-    color: #F2F2F2;
-"""
+# Page_machine_config_label_disable = f"""
+#     font-family: "Helvetica Neue";
+#     font-size: 12px;
+#     font-weight: 400;
+#     color: #F2F2F2;
+# """
 
-Page_input_input = f"""
-    border: None;
-    background-color: white;
-    padding: 0 1px;
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 200;
-    color: black;
-"""
+# Page_input_input = f"""
+#     border: None;
+#     background-color: white;
+#     padding: 0 1px;
+#     font-family: "Helvetica Neue";
+#     font-size: 12px;
+#     font-weight: 200;
+#     color: black;
+# """
 
-Page_input_input_disable = f"""
-    border: None;
-    background-color: {COLOR_08};
-    padding: 0 1px;
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 200;
-    color: {COLOR_09};
-"""
+# Page_input_input_disable = f"""
+#     border: None;
+#     background-color: {COLOR_08};
+#     padding: 0 1px;
+#     font-family: "Helvetica Neue";
+#     font-size: 12px;
+#     font-weight: 200;
+#     color: {COLOR_09};
+# """
 
-Page_evaluate_button = f"""
-    border: None;
-    background-color: {COLOR_01};
-    height: 30px;
-    width: 120px;
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 300;
-    color: white;   
-"""
+# Page_evaluate_button = f"""
+#     border: None;
+#     background-color: {COLOR_01};
+#     height: 30px;
+#     width: 120px;
+#     font-family: "Helvetica Neue";
+#     font-size: 12px;
+#     font-weight: 300;
+#     color: white;   
+# """
 
-Page_evaluate_button_disable = f"""
-    border: None;
-    background-color: {COLOR_08};
-    height: 30px;
-    width: 120px;
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 300;
-    color: {COLOR_09};
-"""
+# Page_evaluate_button_disable = f"""
+#     border: None;
+#     background-color: {COLOR_08};
+#     height: 30px;
+#     width: 120px;
+#     font-family: "Helvetica Neue";
+#     font-size: 12px;
+#     font-weight: 300;
+#     color: {COLOR_09};
+# """
 
-Page_submission_button = f"""
-    border: none;
-    background-color: white;
-    padding-bottom: 3px;
-    height: 20px;
-    width: 23px;
-    font-size: 20px;
-    color: {COLOR_01};
-"""
+# Page_submission_button = f"""
+#     border: none;
+#     background-color: white;
+#     padding-bottom: 3px;
+#     height: 20px;
+#     width: 23px;
+#     font-size: 20px;
+#     color: {COLOR_01};
+# """
 
-Page_submission_button_disable = f"""
-    border: none;
-    background-color: {COLOR_08};
-    padding-bottom: 3px;
-    height: 20px;
-    width: 23px;
-    font-size: 20px;
-    color: {COLOR_09};
-"""
+# Page_submission_button_disable = f"""
+#     border: none;
+#     background-color: {COLOR_08};
+#     padding-bottom: 3px;
+#     height: 20px;
+#     width: 23px;
+#     font-size: 20px;
+#     color: {COLOR_09};
+# """
 
-Page_submission_box = f"""
-    background-color: white;
-"""
+# Page_submission_box = f"""
+#     background-color: white;
+# """
 
-Page_submission_box_disable = f"""
-    background-color: {COLOR_08};
-"""
+# Page_submission_box_disable = f"""
+#     background-color: {COLOR_08};
+# """
 
-Page_submission_label = f"""
-    font-family: "Helvetica Neue";
-    font-size: 13px;
-    font-weight: 300;
-    color: {COLOR_01};
-"""
+# Page_submission_label = f"""
+#     font-family: "Helvetica Neue";
+#     font-size: 13px;
+#     font-weight: 300;
+#     color: {COLOR_01};
+# """
 
-Page_submission_label_disable = f"""
-    font-family: "Helvetica Neue";
-    font-size: 13px;
-    font-weight: 300;
-    color: {COLOR_09};
-"""
+# Page_submission_label_disable = f"""
+#     font-family: "Helvetica Neue";
+#     font-size: 13px;
+#     font-weight: 300;
+#     color: {COLOR_09};
+# """
 
-Page_submission_submit = f"""
-    border: None;
-    background-color: {COLOR_01};
-    height: 30px;
-    width: 90px;
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 300;
-    color: white;
-"""
+# Page_submission_submit = f"""
+#     border: None;
+#     background-color: {COLOR_01};
+#     height: 30px;
+#     width: 90px;
+#     font-family: "Helvetica Neue";
+#     font-size: 12px;
+#     font-weight: 300;
+#     color: white;
+# """
 
-Page_submission_submit_disable = f"""
-    border: None;
-    background-color: {COLOR_08};
-    height: 30px;
-    width: 90px;
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 300;
-    color: {COLOR_09};
-"""
+# Page_submission_submit_disable = f"""
+#     border: None;
+#     background-color: {COLOR_08};
+#     height: 30px;
+#     width: 90px;
+#     font-family: "Helvetica Neue";
+#     font-size: 12px;
+#     font-weight: 300;
+#     color: {COLOR_09};
+# """
 
-Page_scheme_box = f"""
-    background-color: #82B9B9;
-"""
+# Page_scheme_box = f"""
+#     background-color: #82B9B9;
+# """
 
-Page_scheme_box_disable = f"""
-    background-color: {COLOR_03};
-"""
+# Page_scheme_box_disable = f"""
+#     background-color: {COLOR_03};
+# """
 
-Page_scheme_button_frame = f"""
-    border-color: {COLOR_01};
-    border-width: 1px;        
-    border-style: solid;
+# Page_scheme_button_frame = f"""
+#     border-color: {COLOR_01};
+#     border-width: 1px;        
+#     border-style: solid;
 
-    background-color: white;
-"""
+#     background-color: white;
+# """
 
-Page_scheme_label = f"""
-    font-family: "Helvetica Neue";
-    font-size: 11px;
-    font-weight: 400;
-    color: white;
-"""
+# Page_scheme_label = f"""
+#     font-family: "Helvetica Neue";
+#     font-size: 11px;
+#     font-weight: 400;
+#     color: white;
+# """
 
-Page_scheme_label_disable = f"""
-    font-family: "Helvetica Neue";
-    font-size: 11px;
-    font-weight: 400;
-    color: {COLOR_01};
-"""
+# Page_scheme_label_disable = f"""
+#     font-family: "Helvetica Neue";
+#     font-size: 11px;
+#     font-weight: 400;
+#     color: {COLOR_01};
+# """
 
 
 class Jobs(MainView):
@@ -404,8 +404,10 @@ class Jobs(MainView):
         self.source_check:bool = False               # flag
         self.input_check:bool = False                # flag
 
+        self.cxt = cxt
+
         self._init_ui()
-        self.setStyleSheet(page_style)
+        self.setStyleSheet(self.cxt.jobs_style)
 
         self.on_workspace_clicked()
 
@@ -415,8 +417,8 @@ class Jobs(MainView):
         button_frame, button_layout = add_frame(self, height=35, layout=HORIZONTAL, l_m=40, r_m=40, space=24)
         section_layout.addWidget(button_frame)
 
-        self.workspace_button = add_button(button_frame, "Add Job", stylesheet=page_menu_button_active)
-        self.list_button = add_button(button_frame, "Job Lists", stylesheet=page_menu_button)
+        self.workspace_button = add_button(button_frame, "Add Job", name="page_menu_button_active")
+        self.list_button = add_button(button_frame, "Job Lists", name="page_menu_button")
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         button_layout.addWidget(self.workspace_button)
@@ -427,8 +429,8 @@ class Jobs(MainView):
         section_layout.addWidget(window_frame)
         self.stack = add_layout(window_frame, STACK)
 
-        self.workspace = JobWorkspace()
-        self.list = JobList()
+        self.workspace = JobWorkspace(self.cxt)
+        self.list = JobList(self.cxt)
 
         self.stack.addWidget(self.workspace)
         self.stack.addWidget(self.list)
@@ -443,16 +445,16 @@ class Jobs(MainView):
 
     def on_workspace_clicked(self):
         # set button to enable stylesheet
-        self.workspace_button.setStyleSheet(page_menu_button_active)
-        self.list_button.setStyleSheet(page_menu_button)
+        self.workspace_button.setObjectName("page_menu_button_active")
+        self.list_button.setObjectName("page_menu_button")
         self.stack.setCurrentIndex(0)
 
         self.update_workspace()
 
     def on_list_clicked(self):
         # set button to enable stylesheet
-        self.workspace_button.setStyleSheet(page_menu_button)
-        self.list_button.setStyleSheet(page_menu_button_active)
+        self.workspace_button.setObjectName("page_menu_button")
+        self.list_button.setObjectName("page_menu_button_active")
         self.stack.setCurrentIndex(1)
 
         self._fetch_job_data()
@@ -687,7 +689,7 @@ class Jobs(MainView):
 
 class JobWorkspace(QFrame):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, cxt:ApplicationContext, *args, **kwargs):
         super(QFrame, self).__init__(*args, **kwargs)
 
         # variable
@@ -714,8 +716,9 @@ class JobWorkspace(QFrame):
 
         self.submit_button = None               # button widget
 
+        self.cxt = cxt
         self._init_ui()
-        self.setStyleSheet(page_style)
+        self.setStyleSheet(self.cxt.jobs_style)
 
     def _init_ui(self):
 
@@ -762,49 +765,50 @@ class JobWorkspace(QFrame):
         left_layout.addWidget(title_frame)
 
         titles = ["Time", "CPU:", "GPU:", "Memory:", "Disk Space:"]
-        add_labels(title_layout, title_frame, titles, Page_scheme_label_disable, Qt.AlignRight)
+        add_labels(title_layout, title_frame, titles, "Page_scheme_label_disable", Qt.AlignRight)
 
         # --------- scheme_01_frame ------------
 
-        self.scheme_01_frame, scheme_layout = add_frame(left_frame, width=124, stylesheet=Page_scheme_box,
+        self.scheme_01_frame, scheme_layout = add_frame(left_frame, width=124, name="Page_scheme_box",
                                                         t_m=31, b_m=32, space=16)
+                                                       
         left_layout.addWidget(self.scheme_01_frame)
 
         labels = ["12:00 AM - 5:59 AM", "0 Credit/Hr", "0 Credit/Hr", "0 Credit/Hr", "0 Credit/Hr"]
-        add_labels(scheme_layout, self.scheme_01_frame, labels, Page_scheme_label, Qt.AlignHCenter)
+        add_labels(scheme_layout, self.scheme_01_frame, labels, "Page_scheme_label", Qt.AlignHCenter)
 
         self.scheme_01_frame.mousePressEvent = self.enable_scheme_01_frame
 
         # --------- scheme_02_frame ------------
 
-        self.scheme_02_frame, scheme_layout = add_frame(left_frame, width=124, stylesheet=Page_scheme_box_disable,
+        self.scheme_02_frame, scheme_layout = add_frame(left_frame, width=124, name="Page_scheme_box_disable",
                                                         t_m=31, b_m=32, space=16)
         left_layout.addWidget(self.scheme_02_frame)
 
         labels[0] = "6:00 AM - 11:59 PM"
-        add_labels(scheme_layout, self.scheme_02_frame, labels, Page_scheme_label_disable, Qt.AlignHCenter)
+        add_labels(scheme_layout, self.scheme_02_frame, labels, "Page_scheme_label_disable", Qt.AlignHCenter)
 
         self.scheme_02_frame.mousePressEvent = self.enable_scheme_02_frame
 
         # --------- scheme_03_frame ------------
 
-        self.scheme_03_frame, scheme_layout = add_frame(left_frame, width=124, stylesheet=Page_scheme_box_disable,
+        self.scheme_03_frame, scheme_layout = add_frame(left_frame, width=124, name="Page_scheme_box_disable",
                                                         t_m=31, b_m=32, space=16)
         left_layout.addWidget(self.scheme_03_frame)
 
         labels[0] = "12:00 PM - 5: 59 PM"
-        add_labels(scheme_layout, self.scheme_03_frame, labels, Page_scheme_label_disable, Qt.AlignHCenter)
+        add_labels(scheme_layout, self.scheme_03_frame, labels, "Page_scheme_label_disable", Qt.AlignHCenter)
 
         self.scheme_03_frame.mousePressEvent = self.enable_scheme_03_frame
 
         # --------- scheme_04_frame ------------
 
-        self.scheme_04_frame, scheme_layout = add_frame(left_frame, width=124, stylesheet=Page_scheme_box_disable,
+        self.scheme_04_frame, scheme_layout = add_frame(left_frame, width=124, name="Page_scheme_box_disable",
                                                         t_m=31, b_m=32, space=16)
         left_layout.addWidget(self.scheme_04_frame)
 
         labels[0] = "6:00 PM - 11: 59 PM"
-        add_labels(scheme_layout, self.scheme_04_frame, labels, Page_scheme_label_disable, Qt.AlignHCenter)
+        add_labels(scheme_layout, self.scheme_04_frame, labels, "Page_scheme_label_disable", Qt.AlignHCenter)
 
         self.scheme_04_frame.mousePressEvent = self.enable_scheme_04_frame
 
@@ -870,23 +874,26 @@ class JobWorkspace(QFrame):
         line_frame, line_layout = add_frame(section_frame, layout=HORIZONTAL)
         sub_section_layout.addWidget(line_frame)
 
-        box, self.workers = add_page_input_box(line_frame, "Workers #:", 70, 20, stylesheet=Page_input_input)
+        box, self.workers = add_page_input_box(line_frame, "Workers #:", 70, 20)
+        self.workers.setObjectName("Page_input_input")
         line_layout.addWidget(box)
 
-        box, self.cores = add_page_input_box(line_frame, "Cores #:", 70, 20, stylesheet=Page_input_input)
+        box, self.cores = add_page_input_box(line_frame, "Cores #:", 70, 20)
+        self.cores.setObjectName("Page_input_input")
         line_layout.addWidget(box)
 
-        box, self.memory = add_page_input_box(line_frame, "Memory:", 70, 20, stylesheet=Page_input_input)
+        box, self.memory = add_page_input_box(line_frame, "Memory:", 70, 20)
+        self.memory.setObjectName("Page_input_input")
         line_layout.addWidget(box)
 
         # --------- source_file and input_file ------------
 
-        box, self.source_file = add_page_input_box(line_frame, "Source file:", 70, 20,
-                                                   stylesheet=Page_input_input, fix_width=False)
+        box, self.source_file = add_page_input_box(line_frame, "Source file:", 70, 20, fix_width=False)
+        self.source_file.setObjectName("Page_input_input")
         sub_section_layout.addWidget(box)
 
-        box, self.input_file = add_page_input_box(line_frame, "Input file:", 70, 20,
-                                                  stylesheet=Page_input_input, fix_width=False)
+        box, self.input_file = add_page_input_box(line_frame, "Input file:", 70, 20, fix_width=False)
+        self.input_file.setObjectName("Page_input_input")
         sub_section_layout.addWidget(box)
 
         # --------- spacer ------------
@@ -899,8 +906,8 @@ class JobWorkspace(QFrame):
         line_frame, line_layout = add_frame(section_frame, layout=HORIZONTAL)
         sub_section_layout.addWidget(line_frame)
 
-        box, self.expect_time = add_page_input_box(line_frame, "Estimated\ntime:\n", 70, 20,
-                                                   stylesheet=Page_input_input, hint="(Optional)")
+        box, self.expect_time = add_page_input_box(line_frame, "Estimated\ntime:\n", 70, 20, hint="(Optional)")
+        self.expect_time.setObjectName("Page_input_input")
         line_layout.addWidget(box)
 
         self.submission_hint = add_label(line_frame, "", name="Page_hint", align=Qt.AlignVCenter)
@@ -918,21 +925,29 @@ class JobWorkspace(QFrame):
         window_layout.addItem(spacer)
 
     def enable_scheme_01_frame(self, event):
-        set_frame(self, 1, self.scheme_01_frame)
+        set_frame(self, self.scheme_01_frame)
+        self.setStyleSheet(self.cxt.jobs_style)
+        self.select_scheme = 1
 
     def enable_scheme_02_frame(self, event):
-        set_frame(self, 2, self.scheme_02_frame)
-
+        set_frame(self, self.scheme_02_frame)
+        self.setStyleSheet(self.cxt.jobs_style)
+        self.select_scheme = 2
+        
     def enable_scheme_03_frame(self, event):
-        set_frame(self, 3, self.scheme_03_frame)
+        set_frame(self, self.scheme_03_frame)
+        self.setStyleSheet(self.cxt.jobs_style)
+        self.select_scheme = 3
 
     def enable_scheme_04_frame(self, event):
-        set_frame(self, 4, self.scheme_04_frame)
+        set_frame(self, self.scheme_04_frame)
+        self.setStyleSheet(self.cxt.jobs_style)
+        self.select_scheme = 4
 
 
 class JobList(QFrame):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, cxt:ApplicationContext, *args, **kwargs):
         super(QFrame, self).__init__(*args, **kwargs)
 
         # variable
@@ -944,7 +959,7 @@ class JobList(QFrame):
         self.current_row:int = 0                # param number
 
         self._init_ui()
-        self.setStyleSheet(page_style)
+        self.setStyleSheet(cxt.jobs_style)
 
     def _init_ui(self):
         window_layout = add_layout(self, VERTICAL)

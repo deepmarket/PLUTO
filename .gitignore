@@ -42,6 +42,7 @@
 #########
 venv
 *.psd
+target
 
 # Environment Related #
 #######################

@@ -1,6 +1,7 @@
 
 import unittest
 import os
+from src.main.python.api import Api
 from requests.exceptions import ConnectionError
 
 
@@ -93,9 +94,4 @@ class ApiTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    # note this is pretty bad, not really very happy about it
-    # need to import the api, but due to folder structure, python wont find it :(
-    os.sys.path.append(os.path.join(os.getcwd(), 'src', 'main', 'python'))
-    from api import Api
-    os.sys.path.pop()
     unittest.main()

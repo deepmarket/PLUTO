@@ -1,7 +1,6 @@
 
 from behave import use_step_matcher, given, when, then, step
-
-from mainapp import MainApp
+from src.main.python.mainapp import MainApp
 
 use_step_matcher("re")
 

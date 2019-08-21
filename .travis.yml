@@ -9,7 +9,8 @@ env:
 #  - HEADLESS="true"
 
 install:
-  - pip install -r requirements.txt
+  - pip3 install pipenv
+  - pipenv install
 
 script:
   - python3 -m unittest discover ./src/unit_tests

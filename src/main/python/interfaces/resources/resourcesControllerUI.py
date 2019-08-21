@@ -7,6 +7,7 @@
 
 from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
+from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 from PyQt5.QtCore import pyqtSignal
 
@@ -24,8 +25,7 @@ from ..widgets import (
     VerticalSpacer,
 )
 
-from ..stylesheet import resources_controller_style
-from ..stylesheet.config import RESOURCES_MAX_ROW
+from ..config import RESOURCES_MAX_ROW
 
 
 class ResourcesControllerUI(Frame):
@@ -47,12 +47,14 @@ class ResourcesControllerUI(Frame):
 
     global_hint: Label = None
 
-    def __init__(self, signal: pyqtSignal, *args, **kwargs):
+    def __init__(self, signal: pyqtSignal, cxt:ApplicationContext, *args, **kwargs):
         super(ResourcesControllerUI, self).__init__(*args, name="view", **kwargs)
+
+        self.cxt = cxt
 
         self.signal = signal
         self._init_ui()
-        self.setStyleSheet(resources_controller_style)
+        self.setStyleSheet(self.cxt.controller_style)
 
     def on_add_button_clicked(self):
         self.signal.emit()

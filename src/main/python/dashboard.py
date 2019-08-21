@@ -1,28 +1,4 @@
-"""
-    The following items can be interacted:
-
-    class DashboardOverview:
-
-        self.current_machine = 3            # input number
-        self.panic_machine = 0              # input number
-        self.current_resources = 7          # input number
-        self.finished_resources = 3         # input number
-        self.panic_resources = 1            # input number
-        self.current_jobs = 6               # input number
-        self.finished_jobs = 2              # input number
-        self.panic_jobs = 0                 # input number
-
-    class DashboardPerformance:
-
-        self.profit = 30                    # input number
-        self.cost = 15                      # input number
-
-    class DashboardResourceSpec:
-
-        self.resource_num = None            # param number
-        self.resource_name = None           # list of resource name
-        self.resource_list = None           # list of list resource data
-"""
+from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 from mainview import MainView
 from uix.util import *
@@ -31,7 +7,7 @@ from api import Api
 
 class Dashboard(MainView):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, cxt:ApplicationContext, *args, **kwargs):
         super(QFrame, self).__init__(*args, **kwargs)
 
         # variable
@@ -55,7 +31,7 @@ class Dashboard(MainView):
 
         self.get_dashboard_data()
         self._init_ui()
-        self.setStyleSheet(dashboard_style)
+        self.setStyleSheet(cxt.dashboard_style)
 
     def get_dashboard_data(self):
 

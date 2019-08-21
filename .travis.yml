@@ -9,7 +9,7 @@ env:
 #  - HEADLESS="true"
 
 install:
-  - pip3 install pipenv
+  - python3 -m pip install pipenv
   - pipenv install
 
 script:

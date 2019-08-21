@@ -12,10 +12,10 @@ install:
   - pip install -r requirements.txt
 
 script:
-  - python -m unittest test/test_api.py
+  - python3 -m unittest discover ./src/unit_tests
   # xvfb allows GUI applications to run headlessly and only works on xenial
   # See: https://docs.travis-ci.com/user/gui-and-headless-browsers/#using-the-xvfb-run-wrapper
-  - xvfb-run behave test/features
+  - xvfb-run behave ./src/integration_tests
 
 matrix:
   include:

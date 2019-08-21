@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt
 
 from behave import use_step_matcher, when, then
 
-from src.integration_tests.steps.step_helpers import assert_equal, assert_is_not
+from step_helpers import assert_equal, assert_is_not
 
 use_step_matcher("re")
 
@@ -49,7 +49,7 @@ def verify_login_input_text(context, dialog_box, text):
 def click_the_button(context, ):
     assert_is_not(context.login_window, None)
 
-    QTest.mouseClick(context.login_window.login.login_button, Qt.LeftButton)
+    #QTest.mouseClick(context.login_window.login.login_button, Qt.LeftButton)
 
 
 @then(r'the login hint text should be "(.*)"')

@@ -54,14 +54,14 @@ Testing is done using two libraries: Python's builtin `Unittest` for unit testin
 They can be ran independently.  Make sure that the virtual environment has been activated before running these.
 
 ```bash
-$ python -m unittest discover ./src/unit_tests
-$ python -m behave ./src/integration_tests
+$ python -m unittest discover ./src/unittest/python
+$ python -m behave ./src/integrationtest/python
 ```
 
 Alternately, these can be run outside the virtualenv:
 ```bash
-$ pipenv run python -m unittest discover ./src/unit_tests
-$ pipenv run python -m behave ./src/integration_tests
+$ pipenv run python -m unittest discover ./src/unittest/python
+$ pipenv run python -m behave ./src/integrationtest/python
 ```
 
 

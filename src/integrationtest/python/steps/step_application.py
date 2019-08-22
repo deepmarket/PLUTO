@@ -6,7 +6,7 @@ from resources import Resources
 from jobs import Jobs
 from settings import Settings
 from behave import use_step_matcher, when, then
-from src.integrationtests.python.steps.step_helpers import assert_equal, assert_is_not, assert_is_true, assert_is_not_true
+from src.integrationtest.python.steps.step_helpers import assert_equal, assert_is_not, assert_is_true, assert_is_not_true
 use_step_matcher("re")
 
 

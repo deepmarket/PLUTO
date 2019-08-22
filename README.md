@@ -16,7 +16,6 @@ To check version:
 
 ```bash
 $ python3 --version
-Python 3.6.6
 ```
 
 ## Installing, Testing, Running:
@@ -47,7 +46,6 @@ Use `pipenv` to activate a virtual environment necessary for running this projec
 ```bash
 $ pipenv shell
 ```
-
 
 #### Testing
 

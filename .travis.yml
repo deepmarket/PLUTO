@@ -9,14 +9,15 @@ env:
 #  - HEADLESS="true"
 
 install:
-  - pip3 install pipenv
+  - python -m pip install pipenv
   - pipenv install
 
 script:
-  - python3 -m unittest discover ./src/unit_tests
+  - pipenv shell
+  - python -m unittest discover ./src/unittest/python
   # xvfb allows GUI applications to run headlessly and only works on xenial
   # See: https://docs.travis-ci.com/user/gui-and-headless-browsers/#using-the-xvfb-run-wrapper
-  - xvfb-run behave ./src/integration_tests
+  - xvfb-run behave ./src/integrationtest/python
 
 matrix:
   include:
@@ -25,13 +26,12 @@ matrix:
 
     # Tests Python 3.6 on Ubuntu Trusty
 #    - python: 3.6
-#    - python: 3.7  # as of 8/17.18 3.7 is still being worked on by the travis team
+#    - no 3.7 until pipenv gets up to it
 #      dist: trusty
 #      sudo: true
 
-    # Tests Python 3.6 and 3.7 on Ubuntu Xenial
+    # Tests Python 3.6 on Ubuntu Xenial
     - python: "3.6"
-    - python: "3.7"
       dist: xenial
       sudo: true
 

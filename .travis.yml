@@ -13,11 +13,10 @@ install:
   - pipenv install
 
 script:
-  - pipenv shell
-  - python -m unittest discover ./src/unittest/python
+  - pipenv run python -m unittest discover ./src/unittest/python
   # xvfb allows GUI applications to run headlessly and only works on xenial
   # See: https://docs.travis-ci.com/user/gui-and-headless-browsers/#using-the-xvfb-run-wrapper
-  - xvfb-run behave ./src/integrationtest/python
+  - pipenv run xvfb-run behave ./src/integrationtest/python
 
 matrix:
   include:

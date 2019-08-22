@@ -15,8 +15,7 @@ If you would like to submit changes, please open a pull request. Please read the
 To check version:
 
 ```bash
-$ python3.6 --version
-Python 3.6.6
+$ python3 --version
 ```
 
 ## Installing, Testing, Running:
@@ -25,13 +24,19 @@ Python 3.6.6
 
 First you'll need to install the required dependencies.  We use the `pipenv` package management tool to make managing dependencies easier.  For more info on the tool, see [here](https://docs.pipenv.org/en/latest/basics/).  To install:
 ```bash
-$ python3.6 -m pip install pipenv
+$ python3 -m pip install pipenv
 ```
 
 Then to install dependencies:
 
 ```bash
 $ pipenv install
+```
+
+If you receive an error related to the python binary, try:
+
+```bash
+$ pipenv install --python=$(which python3)
 ```
 
 #### Runtime Environment
@@ -49,15 +54,30 @@ Testing is done using two libraries: Python's builtin `Unittest` for unit testin
 They can be ran independently.  Make sure that the virtual environment has been activated before running these.
 
 ```bash
-$ python -m unittest discover ./src/unittest/python
-
-$ python -m behave ./src/integrationtest/python
+$ python -m unittest discover ./src/unit_tests
+$ python -m behave ./src/integration_tests
 ```
+
+Alternately, these can be run outside the virtualenv:
+```bash
+$ pipenv run python -m unittest discover ./src/unit_tests
+$ pipenv run python -m behave ./src/integration_tests
+```
+
+
 
 #### Running the Application:
 
 Note that you must be in the project root directory to run the project.  We use the [fman](https://build-system.fman.io/manual/) build tool for packaging, so from the root directory, simply: 
+
+Either:
 ```bash
+$ pienv shell
 $ fbs run
+```
+
+or
+```bash
+$ pipenv run fbs run
 ```
 Will spin up a local instance of the project!

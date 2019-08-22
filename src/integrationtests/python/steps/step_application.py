@@ -6,15 +6,12 @@ from resources import Resources
 from jobs import Jobs
 from settings import Settings
 from behave import use_step_matcher, when, then
-from step_helpers import assert_equal, assert_is_not, assert_is_true, assert_is_not_true
-
-from pprint import pprint
+from src.integrationtests.python.steps.step_helpers import assert_equal, assert_is_not, assert_is_true, assert_is_not_true
 use_step_matcher("re")
 
 
 @when(r'I open the application window')
 def open_application(context):
-    pprint(context.__dict__['__app'].__dict__)
     context.app = context.__app.app
     assert_is_not(context.app, None)
 

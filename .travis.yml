@@ -36,12 +36,11 @@ script:
 
 matrix:
     include:
-        # Tests Python 3.6 on Ubuntu Xenial
         - python: "3.6"
           dist: xenial
           sudo: true
-        - python: "3.6"
-          os: osx
-          sudo: true
+        #- python: "3.6"
+        #  os: osx
+        #  sudo: true
 
 

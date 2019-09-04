@@ -39,14 +39,6 @@ class Resources(ResourcesUI):
         self.add_view.reset()
         super()._to_add_view()
 
-        # TODO : remove following codes when submit
-        self.add_view.machine_name.setText("1")
-        self.add_view.cpu_gpu.setText("1")
-        self.add_view.cores.setText("1")
-        self.add_view.ram.setText("1")
-        self.add_view.on_next_page_clicked()
-
-
 class ResourcesController(ResourcesControllerUI):
 
     machines: list = None

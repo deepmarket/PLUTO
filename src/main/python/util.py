@@ -13,22 +13,22 @@ num_regex = re.compile(r"(\d+)")
 # load the ip address from the running machine
 # Reference: https://github.com/yahoo/TensorFlowOnSpark/blob/e2f5cc45f95812d163e75b6ddb9c4661261d3bb0/tensorflowonspark/util.py#L41
 def get_ip_address():
-  """Simple utility to get host IP address."""
-  try:
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    ip_address = s.getsockname()[0]
-  except socket_error as sockerr:
-    if sockerr.errno != errno.ENETUNREACH:
-      raise sockerr
-    ip_address = socket.gethostbyname(socket.getfqdn())
-  finally:
-    s.close()
+    """Simple utility to get host IP address."""
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ip_address = s.getsockname()[0]
+    except socket_error as sockerr:
+        if sockerr.errno != errno.ENETUNREACH:
+            raise sockerr
+        ip_address = socket.gethostbyname(socket.getfqdn())
+    finally:
+        s.close()
 
-  return ip_address
+    return ip_address
 
 
-def config_input_check(text:str, available:int, res:Enum):
+def config_input_check(text: str, available: int, res: Enum):
 
     if not text or not num_regex.match(text):
         return res.EMPTY_ERROR
@@ -42,3 +42,16 @@ def config_input_check(text:str, available:int, res:Enum):
                 return res.SUCCESS
         except ValueError:
             return res.INT_ERROR
+
+
+def get_children(widget, child_type, *args):
+    """
+    Find all matched child widgets belong to the type (or with given object name)
+
+    :param widget: parent widget
+    :param child_type: destinated child widgets type
+    :args: optional, the name that child widgets currently have
+    :return: list of all matched child widgets
+    """
+    # if None, children = []
+    return [child for child in widget.findChildren(child_type, *args)]

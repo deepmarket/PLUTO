@@ -9,6 +9,7 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from enum import Enum, auto
 from psutil import cpu_freq, cpu_count, virtual_memory
+from PyQt5.QtWidgets import QComboBox, QCheckBox
 
 from api import Api
 
@@ -38,10 +39,17 @@ class Resources(ResourcesUI):
         self.add_view.reset()
         super()._to_add_view()
 
+        # TODO : remove following codes when submit
+        self.add_view.machine_name.setText("1")
+        self.add_view.cpu_gpu.setText("1")
+        self.add_view.cores.setText("1")
+        self.add_view.ram.setText("1")
+        self.add_view.on_next_page_clicked()
+
 
 class ResourcesController(ResourcesControllerUI):
 
-    machines : list = None
+    machines: list = None
 
     def __init__(self, *args, **kwargs):
         super(ResourcesController, self).__init__(*args, **kwargs)
@@ -75,7 +83,9 @@ class ResourcesController(ResourcesControllerUI):
                     self.reset()
 
                     # raise success message
-                    self.global_hint.setText(f"Machine {machine_name} has been removed sucessfully.")
+                    self.global_hint.setText(
+                        f"Machine {machine_name} has been removed sucessfully."
+                    )
 
     def on_search_edited(self):
         pass
@@ -87,15 +97,19 @@ class ResourcesController(ResourcesControllerUI):
     def _fetch_resources_data(self):
         self.machines = self._api_get_call("/resources")
         for machine in self.machines:
-            self.table.add([machine["machine_name"],
-                            machine["ip_address"],
-                            str(machine["cpus"]),
-                            str(machine["cores"]),
-                            str(machine["ram"]),
-                            str(machine["price"]),
-                            machine["status"]])
+            self.table.add(
+                [
+                    machine["machine_name"],
+                    machine["ip_address"],
+                    str(machine["cpus"]),
+                    str(machine["cores"]),
+                    str(machine["ram"]),
+                    str(machine["price"]),
+                    machine["status"],
+                ]
+            )
 
-    def _api_get_call(self, endpoint:str):
+    def _api_get_call(self, endpoint: str):
 
         # TODO: move Error to config later on
         class Error:
@@ -117,7 +131,7 @@ class ResourcesController(ResourcesControllerUI):
                 return []
 
     # TODO: combine api call helper function together later on
-    def _api_remove_call(self, endpoint:str):
+    def _api_remove_call(self, endpoint: str):
         # TODO: move Error to config later on
         class Error:
             CONNECT_ERR = "Fail to communicate with server. Please try later."
@@ -137,14 +151,16 @@ class ResourcesController(ResourcesControllerUI):
                 self.global_hint.setText(Error.UNKOWN_ERR)
                 return False
 
+
 class ResourcesAddView(ResourcesAddViewUI):
 
-    available_cpu_gpu               : int = 0
-    available_cores                 : int = 0
-    available_ram                   : int = 0
+    available_cpu_gpu: int = 0
+    available_cores: int = 0
+    available_ram: int = 0
 
-    auto_price                      : int = 0
-    offer_price                     : int = 0
+    rent_type: str = ""
+    auto_price: int = 0
+    offer_price: int = 0
 
     def __init__(self, *args, **kwargs):
         super(ResourcesAddView, self).__init__(*args, **kwargs)
@@ -172,7 +188,7 @@ class ResourcesAddView(ResourcesAddViewUI):
             return
 
         cores = self.cores.text()
-        #TODO: calculated auto price here
+        # TODO: calculated auto price here
         # Amount per (core * worker) / hour
         PRICING_CONSTANT = 0.005
         self.auto_price = float(cores) * PRICING_CONSTANT
@@ -181,6 +197,43 @@ class ResourcesAddView(ResourcesAddViewUI):
         super().on_next_page_clicked()
 
     def on_submit_clicked(self):
+        rent_type = ""
+        rent_start_time = ""
+        rent_end_time = ""
+        rent_duration_days = []
+
+        if self.rent_immediately_box.flag:
+            rent_type = "immediately"
+
+        if self.rent_schedule_box.flag:
+            rent_type = "schedule"
+            children = util.get_children(self.rent_schedule_box, QComboBox)
+
+            rent_start_time = children[0].currentText()
+            rent_end_time = children[1].currentText()
+
+        if self.rent_reserve_box.flag:
+            rent_type = "reserve"
+
+            children = util.get_children(self.rent_reserve_box, QComboBox)
+
+            rent_start_time = children[0].currentText()
+            rent_end_time = children[1].currentText()
+
+            children = util.get_children(self.rent_reserve_box, QCheckBox)
+
+            for child in children:
+                if child.isChecked():
+                    rent_duration_days.append(child.text())
+
+        rent_dat = {
+            "rent_type": rent_type,
+            "rent_start_time": rent_start_time,
+            "rent_end_time": rent_end_time,
+            "rent_duration_days": rent_duration_days,
+        }
+
+        print(rent_dat)
 
         # fetch user input
         machine_name = self.machine_name.text()
@@ -193,7 +246,7 @@ class ResourcesAddView(ResourcesAddViewUI):
         if self.offer_price_box.isChecked():
             price = self.offer_price
         else:
-            price =self.auto_price
+            price = self.auto_price
 
         # pack data
         dat = {
@@ -203,10 +256,9 @@ class ResourcesAddView(ResourcesAddViewUI):
             "cores": cores,
             "ram": ram,
             "price": price,
-            "status": "ALIVE"
+            "status": "ALIVE",
         }
 
-        print(dat)
         # api call
         res = self._api_post_call("/resources", dat)
 
@@ -228,7 +280,6 @@ class ResourcesAddView(ResourcesAddViewUI):
         self.offer_price_box.disable()
         self.reload_stylesheet()
 
-
     def _fetch_ip_address(self):
         # get ip address for local machine
         ip_address = util.get_ip_address()
@@ -244,23 +295,25 @@ class ResourcesAddView(ResourcesAddViewUI):
     def _fetch_machine_config(self):
 
         # Processor's speed in gHz
-        self.available_cpu_gpu = round(cpu_freq().current/1000, 1)
+        self.available_cpu_gpu = round(cpu_freq().current / 1000, 1)
 
         # Logical cores on the machine
         self.available_cores = cpu_count(logical=False)
 
         # Total installed RAM
-        self.available_ram = round(virtual_memory().total/(pow(1024, 3)), 1)
+        self.available_ram = round(virtual_memory().total / (pow(1024, 3)), 1)
 
         self.current_cpu_gpu.setText(f"{self.available_cpu_gpu} GHz")
         self.current_cores.setText(f"{self.available_cores}")
         self.current_ram.setText(f"{self.available_ram} GB")
 
-    def _api_post_call(self, endpoint:str, dat:dict):
+    def _api_post_call(self, endpoint: str, dat: dict):
 
         # TODO: move Error to config later on
         class Error:
-            E11000_ERR = "This IP address is already in use. Please use a different one."
+            E11000_ERR = (
+                "This IP address is already in use. Please use a different one."
+            )
             UNKOWN_ERR = "There was an unknown error from the server. Please try again."
             CONNECT_ERR = "Fail to communicate with server. Please try later."
 
@@ -279,23 +332,26 @@ class ResourcesAddView(ResourcesAddViewUI):
                 if res and "error" in res and "errmsg" in res["error"]:
                     msg = res["error"]["errmsg"]
                     if "E11000" in msg:
-                            msg = Error.E11000_ERR
+                        msg = Error.E11000_ERR
                 else:
                     msg = Error.UNKOWN_ERR
 
                 self.submit_hint.setText(msg)
                 return False
 
-
     def _planning_check(self):
         # clean up hint
         self.reset_hint()
 
         # have to call function individually in order to raise hint
-        if not self._machine_name_check(): return False
-        if not self._cpu_gpu_check(): return False
-        if not self._cores_check(): return False
-        if not self._ram_check(): return False
+        if not self._machine_name_check():
+            return False
+        if not self._cpu_gpu_check():
+            return False
+        if not self._cores_check():
+            return False
+        if not self._ram_check():
+            return False
 
         return True
 

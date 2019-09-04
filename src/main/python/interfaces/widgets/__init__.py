@@ -15,5 +15,6 @@ from .module import (
     ViewInputFrame,
     SearchInputFrame,
     ViewButton,
+    AttendanceBox,
     PriceBox,
 )

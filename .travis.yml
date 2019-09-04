@@ -8,10 +8,11 @@ services:
 cache: pip
 
 env:
-    # Tell Qt not to require bringing up a GUI
-    - QT_QPA_PLATFORM="offscreen"
-    - _API_HOST="localhost"
-    - _API_PORT=8080
+    global:
+        # Tell Qt not to require bringing up a GUI
+        - QT_QPA_PLATFORM="offscreen"
+        - _API_HOST="localhost"
+        - _API_PORT=8080
 
 before_install:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi

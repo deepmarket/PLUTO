@@ -1,12 +1,21 @@
 language: python
 
+services:
+  - docker
+
 cache: pip
 
 env:
   # Tell Qt not to require bringing up a GUI
   - QT_QPA_PLATFORM="offscreen"
-  # This is a workaround baked into the application if the former doesn't work
-#  - HEADLESS="true"
+  - _API_HOST="localhost"
+  - _API_PORT="8080"
+
+before_install:
+    - mkdir -p /tmp/api
+    - git clone https://github.com/deepmarket/api.git /tmp/api
+    - cd /tmp/api && docker-compose up -d --build
+    - cd $TRAVIS_BUILD_DIR
 
 install:
   - python -m pip install pipenv
@@ -20,45 +29,10 @@ script:
 
 matrix:
   include:
-
-# As of 3/6/19 Trusty does not work with PyQt5 in CI
-
-    # Tests Python 3.6 on Ubuntu Trusty
-#    - python: 3.6
-#    - no 3.7 until pipenv gets up to it
-#      dist: trusty
-#      sudo: true
-
     # Tests Python 3.6 on Ubuntu Xenial
     - python: "3.6"
       dist: xenial
       sudo: true
-
-    # MacOs
-    # See https://docs.travis-ci.com/user/reference/osx/#os-x-version for details
-
-#    # 10.11.latest
-#    - os: osx
-#      language: generic
-#      osx_image: xcode8
-#
-#    # 10.12.latest
-#    - os: osx
-#      language: generic
-#      osx_image: xcode9.2
-#
-#    # 10.13.latest
-#    - os: osx
-#      language: generic
-#      osx_image: xcode10
-#
-#
-#  allow_failures:
-#    # 10.10
-#    - os: osx
-#      language: generic
-#      osx_image: xcode6.4
-
 
 # Perform manual install of 3.6 for OS X
 before_install:

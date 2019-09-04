@@ -1,15 +1,17 @@
 language: python
+python:
+    - "3.6" # will be updated when pipenv gets up to 3.7
 
 services:
-  - docker
+    - docker
 
 cache: pip
 
 env:
-  # Tell Qt not to require bringing up a GUI
-  - QT_QPA_PLATFORM="offscreen"
-  - _API_HOST="localhost"
-  - _API_PORT=8080
+    # Tell Qt not to require bringing up a GUI
+    - QT_QPA_PLATFORM="offscreen"
+    - _API_HOST="localhost"
+    - _API_PORT=8080
 
 before_install:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
@@ -22,20 +24,23 @@ before_install:
     - cd $TRAVIS_BUILD_DIR
 
 install:
-  - python -m pip install pipenv
-  - pipenv install
+    - python -m pip install pipenv
+    - pipenv install
 
 script:
-  - pipenv run python -m unittest discover ./src/unittest/python
-  # xvfb allows GUI applications to run headlessly and only works on xenial
-  # See: https://docs.travis-ci.com/user/gui-and-headless-browsers/#using-the-xvfb-run-wrapper
-  - pipenv run xvfb-run behave ./src/integrationtest/python
+    - pipenv run python -m unittest discover ./src/unittest/python
+    # xvfb allows GUI applications to run headlessly and only works on xenial
+    # See: https://docs.travis-ci.com/user/gui-and-headless-browsers/#using-the-xvfb-run-wrapper
+    - pipenv run xvfb-run behave ./src/integrationtest/python
 
 matrix:
-  include:
-    # Tests Python 3.6 on Ubuntu Xenial
-    - python: "3.6"
-      dist: xenial
-      sudo: true
+    include:
+        # Tests Python 3.6 on Ubuntu Xenial
+        - python: "3.6"
+          dist: xenial
+          sudo: true
+        - python: "3.6"
+          os: osx
+          sudo: true
 
 

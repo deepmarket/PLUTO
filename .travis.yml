@@ -1,6 +1,5 @@
 language: python
-python:
-    - "3.6" # will be updated when pipenv gets up to 3.7
+
 cache: pip
 
 env:

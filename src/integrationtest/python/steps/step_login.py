@@ -19,8 +19,8 @@ def open_login_window(context):
 def login(context):
     assert_is_not(context.login_window, None)
 
-    QTest.keyClicks(context.login_window.login.username, "test@test.com")
-    QTest.keyClicks(context.login_window.login.pwd, "testpass")
+    QTest.keyClicks(context.login_window.login.username, "samgomena@gmail.com")
+    QTest.keyClicks(context.login_window.login.pwd, "password")
 
     QTest.mouseClick(context.login_window.login.login_button, Qt.LeftButton)
 

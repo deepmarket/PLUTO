@@ -1,6 +1,6 @@
 
 import unittest
-import os
+from os import environ
 from src.main.python.api import Api
 from requests.exceptions import ConnectionError
 
@@ -25,38 +25,38 @@ class ApiTest(unittest.TestCase):
     def test_credential_store(self):
         from os import path
         if self.server_is_up():
-            with Api('/account') as apiInstance:
+            with Api('/account') as api_instance:
 
-                self.assertTrue(path.exists(apiInstance.store_path), True)
+                self.assertTrue(path.exists(api_instance.store_path), True)
 
     def test_api_host(self):
-        with Api("/endpoint") as apiInstance:
-            self.assertEqual(apiInstance.endpoint, "/endpoint")
+        with Api("/endpoint") as api_instance:
+            self.assertEqual(api_instance.endpoint, "/endpoint")
 
     def test_api_host_environ(self):
         environ_host = "/endpoint"
-        os.environ["_API_HOST"] = environ_host
+        environ["_API_HOST"] = environ_host
 
-        with Api("/another_endpoint") as apiInstance:
-            self.assertEqual(apiInstance.host, environ_host)
+        with Api("/another_endpoint") as api_instance:
+            self.assertEqual(api_instance.host, environ_host)
 
         # Unset environment variable
-        del os.environ["_API_HOST"]
+        del environ["_API_HOST"]
 
     def test_api_port(self):
-        testPort = os.environ.get("_API_PORT", 1234) # TODO - stupid patch for functionality
-        with Api("/endpoint", port=testPort) as apiInstance:
-            self.assertEqual(apiInstance.port, testPort)
+        testPort = environ.get("_API_PORT", 1234) # TODO - stupid patch for functionality
+        with Api("/endpoint", port=testPort) as api_instance:
+            self.assertEqual(api_instance.port, testPort)
 
     def test_api_port_environ(self):
         environ_port = "1234"
-        os.environ["_API_PORT"] = environ_port
+        environ["_API_PORT"] = environ_port
 
-        with Api("/endpoint") as apiInstance:
-            self.assertEqual(apiInstance.port, environ_port)
+        with Api("/endpoint") as api_instance:
+            self.assertEqual(api_instance.port, environ_port)
 
         # Unset environment variable
-        del os.environ["_API_PORT"]
+        del environ["_API_PORT"]
 
     def test_api_endpoint(self):
         with Api() as basic_endpoint:
@@ -69,29 +69,29 @@ class ApiTest(unittest.TestCase):
             self.assertEqual(bad_endpoint.endpoint, "/endpoint")
 
     def test_api_url(self):
-        with Api(host="google.com", port=1234, endpoint="/endpoint") as apiInstance:
-            self.assertEqual(apiInstance.url, "http://google.com:1234/api/v1/endpoint")
+        with Api(host="google.com", port=1234, endpoint="/endpoint") as api_instance:
+            self.assertEqual(api_instance.url, "http://google.com:1234/api/v1/endpoint")
 
     def test_api_enter(self):
-        with Api() as apiInstance:
-            self.assertIsNotNone(apiInstance.store)
+        with Api() as api_instance:
+            self.assertIsNotNone(api_instance.store)
 
     def test_api_get(self):
         # self.assertTrue(self.server_is_up())
-        with Api('/', host='thishostdoesnotexist.com') as apiInstance:
-            self.assertTupleEqual(apiInstance.get(), (None, None))
+        with Api('/', host='thishostdoesnotexist.com') as api_instance:
+            self.assertTupleEqual(api_instance.get(), (None, None))
 
     def test_api_post(self):
-        with Api('/', host='thishostdoesnotexist.com') as apiInstance:
-            self.assertTupleEqual(apiInstance.post(), (None, None))
+        with Api('/', host='thishostdoesnotexist.com') as api_instance:
+            self.assertTupleEqual(api_instance.post(), (None, None))
 
     def test_api_put(self):
-        with Api('/', host='thishostdoesnotexist.com') as apiInstance:
-            self.assertTupleEqual(apiInstance.put(), (None, None))
+        with Api('/', host='thishostdoesnotexist.com') as api_instance:
+            self.assertTupleEqual(api_instance.put(), (None, None))
 
     def test_api_delete(self):
-        with Api('/', host='thishostdoesnotexist.com') as apiInstance:
-            self.assertTupleEqual(apiInstance.delete(), (None, None))
+        with Api('/', host='thishostdoesnotexist.com') as api_instance:
+            self.assertTupleEqual(api_instance.delete(), (None, None))
 
 
 if __name__ == '__main__':

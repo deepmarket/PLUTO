@@ -24,7 +24,7 @@ matrix:
 
     # Tests Python 3.6 on Ubuntu Trusty
 #    - python: 3.6
-#    - no 3.7 until pipenv gets up to it
+#    - no 3.7 until pipenv + fbs get up to it
 #      dist: trusty
 #      sudo: true
 

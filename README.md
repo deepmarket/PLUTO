@@ -58,13 +58,13 @@ $ python -m unittest discover ./src/unittest/python
 $ python -m behave ./src/integrationtest/python
 ```
 
-Alternately, these can be run outside the virtualenv:
+Alternately, these can be run without running `pipenv shell` first:
 ```bash
 $ pipenv run python -m unittest discover ./src/unittest/python
 $ pipenv run python -m behave ./src/integrationtest/python
 ```
 
-
+`pipenv run {cmd}`  will run the subsequent command within the virtual environment defined in the `Pipfile`.
 
 #### Running the Application:
 

@@ -57,6 +57,9 @@ class Login(QDialog):
         self.create.create_button.clicked.connect(self.create_action)
         self.create.to_login_button.clicked.connect(self.to_login)
 
+        self.login.username.setText("test@gmail.com")
+        self.login.pwd.setText("123456")
+        
     def _init_property(self):
         # Graciously borrowed from http://emailregex.com/
         self.email_verification_regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", re.IGNORECASE)

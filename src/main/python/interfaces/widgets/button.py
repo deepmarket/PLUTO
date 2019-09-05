@@ -21,6 +21,10 @@ class Button(QPushButton):
         icon_size: int = 0,
         **kwargs
     ):
+        """
+        :param widget: required. defined the parent widget for this button
+        """
+
         super(Button, self).__init__(widget)
 
         # Set property if given

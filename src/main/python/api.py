@@ -36,7 +36,7 @@ class Api(object):
     # Set store path globally
     store_path = path.abspath(curdir)
 
-    def __init__(self, endpoint: str = "/", host: str = "atlantic.cs.pdx.edu", port: int = 8080, auth: bool = False):
+    def __init__(self, endpoint: str = "/", host: str = "atlantic.cs.pdx.edu", port: int = 8080):
 
         # Override given domain name/port if defined in the environment
         # These are intended to be used for development/testing

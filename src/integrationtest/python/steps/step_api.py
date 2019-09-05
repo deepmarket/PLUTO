@@ -1,4 +1,4 @@
-from src.api import Api
+from src.main.python.api import Api
 
 from behave import use_step_matcher, given, when, then, step
 use_step_matcher("parse")

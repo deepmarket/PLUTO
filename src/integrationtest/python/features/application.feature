@@ -1,7 +1,8 @@
 # Created by sgomena at 9/26/18
 
 Feature: High level application testing
-  # Enter feature description here
+
+    # TODO - setup user existing
 
   Scenario: Verify the application opens to dashboard
     When I spin up the application

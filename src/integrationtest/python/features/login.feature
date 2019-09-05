@@ -2,7 +2,7 @@
 
 Feature: # Verify functionality around logging into the application
    # This includes everything from opening up the 'login' dialog up to just before the main 'application'
-   # window opens. It does not include functionality for creating an account.
+   # window opens.
 
   Scenario: Enter login credentials
     When I spin up the application

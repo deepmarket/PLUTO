@@ -83,6 +83,33 @@ QFrame#view_input_disable > QLabel {
     color: #6C7E8E;
 }
 
+QFrame#controller {
+    background-color: #FFFFFF;
+    min-height: 72px;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-bottom: 5px;
+}
+
+QFrame#table {
+    background-color:#FFFFFF;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    border: none;
+    alternate-background-color: #FAFAFA;
+}
+
+QFrame#search_content_section {
+    border: None;
+    background-color: #F7F7F7;
+    min-height=30,
+    padding: 0 20px;
+    font-size: 13px;
+    font-weight: 200;
+    color: black;
+}
+
 QLabel#section_title {
     font-size: 20px;
     color: #6C7E8E;
@@ -138,12 +165,43 @@ QFrame#view_input_disable > QLineEdit {
     color: #F2F2F2;
 }
 
+QFrame#view_search > QLineEdit,
+QFrame#view_search_disable > QLineEdit {
+    border: none;
+    padding: 0 20px;
+    font-size: 13px;
+}
+
+QFrame#view_search > QLineEdit {
+    background-color: #F7F7F7;
+    color: #6C7E8E;
+    min-height: 30px;
+    font-weight: 200;
+    color: black;
+}
+
+QFrame#view_search_disable > QLineEdit {
+    background-color: #C6CDDB;
+    color: #F2F2F2;
+}
+
+
 QPushButton#view_button,
 QPushButton#view_button_disable {
     border: none;
-    min-width: 115px;
+    min-width: 90px;
     min-height: 30px;
     font-size: 12px;
+}
+
+QPushButton#view_button {
+    background-color: #6C7E8E;
+    color: #FFFFFF;
+}
+
+QPushButton#view_button_disable {
+    background-color: #C6CDDB;
+    color: #F2F2F2;
 }
 
 QPushButton#views_button_active {
@@ -165,12 +223,23 @@ QPushButton#views_button {
     color: #CBCBCB;
 }
 
-QPushButton#view_button {
-    background-color: #6C7E8E;
-    color: #FFFFFF;
+QTableWidget#table_content_section {
+    border: none;
+    background-color: #FFFFFF;
+    alternate-background-color: #FAFAFA;
 }
 
-QPushButton#view_button_disable {
-    background-color: #C6CDDB;
-    color: #F2F2F2;
+QTableWidget#table_content_section QHeaderView::section {
+    border: none;
+    background-color: #6C7E8E;
+    color: #FFFFFF;
+    height: 35px;
+    font-family: "Helvetica Neue";
+    font-size:13px;
+    font-weight: 100;
+}
+
+QTableView::item {
+    font-size: 12px;
+    color: #324352;
 }

@@ -189,7 +189,7 @@ class JobsAddViewUI(Frame):
         line_layout = HorizontalLayout(line_frame)
         content_layout.addWidget(line_frame)
 
-        # --------- workers... ------------
+        # --------- line_frame: workers, cores, memory ------------
 
         self.workers = ViewInputFrame(
             line_frame, title="Workers #:", title_width=70, width=258, fix_width=True, title_align= (Qt.AlignRight | Qt.AlignVCenter)

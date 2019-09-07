@@ -12,7 +12,7 @@ from .button import Button, RadioButton
 from .frame import Frame
 from .groupbox import GroupBox
 from .label import Label
-from .layout import HorizontalLayout
+from .layout import HorizontalLayout, VerticalLayout
 from .lineedit import LineEdit
 from .spacer import HorizontalSpacer
 
@@ -114,6 +114,7 @@ class BaseInputFrame(Frame):
         title: str = "",
         title_width: int = 0,
         title_name: str = "",
+        title_align: Qt = None,
         input_width: int = 0,
         input_name: str = "",
         input_align: Qt = None,
@@ -132,7 +133,7 @@ class BaseInputFrame(Frame):
 
         # title
         self.title = Label(
-            self, width=title_width, text=title, name=title_name, **kwargs
+            self, width=title_width, text=title, name=title_name, align=title_align, **kwargs
         )
         self.layout.addWidget(self.title)
 
@@ -188,14 +189,14 @@ class ViewInputFrame(BaseInputFrame):
         height: int = 30,
         width: int = 285,
         fix_width: bool = False,
+        space:int = 18,
         **kwargs
     ):
         super(ViewInputFrame, self).__init__(
             widget,
             height=height,
-            space=18,
+            space=space,
             name="view_input",
-            align=(Qt.AlignRight | Qt.AlignVCenter),
             **kwargs
         )
 
@@ -354,6 +355,39 @@ class PriceBox(GroupBox):
         self.input_field.setText(str(price))
 
 
+class Scheme(Frame):
+    def __init__(
+        self,
+        widget: QWidget,
+        label: str,
+        event_func,
+        name: str = "",
+        label_name: str = "",
+        **kwargs
+    ):
+        """
+        create a single scheme
+        :param widget: parent widget
+        :param label: time slot
+        :param event_func: trigger function for the mousePress event
+        :param name: optional, given the name for styling
+        :param label_name: optional, given the label name
+        """
+
+        super(Scheme, self).__init__(widget, name=name, **kwargs)
+
+        layout = VerticalLayout(self, space=16)
+
+        infos = [label, "0 Credit/Hr", "0 Credit/Hr", "0 Credit/Hr", "0 Credit/Hr"]
+
+        for info in infos:
+            label = Label(self, text=info, name=label_name, align=Qt.AlignHCenter)
+            layout.addWidget(label)
+
+        self.mousePressEvent = event_func
+
+
+
 class ViewButton(Button):
     def __init__(self, widget: QWidget, **kwargs):
         super(ViewButton, self).__init__(widget, name="view_button", **kwargs)
@@ -365,3 +399,7 @@ class ViewButton(Button):
     def disable(self):
         self.setObjectName("view_button_disable")
         super().disable()
+
+
+
+    

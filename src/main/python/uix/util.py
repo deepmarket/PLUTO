@@ -455,27 +455,27 @@ def add_labels(layout, frame, texts, name, alignment):
 # helper function to transition between scheme highlighting in JobWorkspace() class
 def set_frame(widget, curr_scheme):
     frames = [widget.scheme_01_frame, widget.scheme_02_frame, widget.scheme_03_frame, widget.scheme_04_frame]
-    
+
     for frame in frames:
         # set frame to disable stylesheet
-        frame.setObjectName("Page_scheme_box_disable")
+        frame.setObjectName("scheme_disable")
 
         # find all QLabel children within the frame
         labels = frame.findChildren(QLabel)
 
         # set labels to disable stylesheet
         for label in labels:
-            label.setObjectName("Page_scheme_label_disable")
+            label.setObjectName("scheme_label_disable")
             
     # set frame to active stylesheet
-    curr_scheme.setObjectName("Page_scheme_box")
+    curr_scheme.setObjectName("scheme")
 
     # find all QLabel children within the frame
     labels = curr_scheme.findChildren(QLabel)
 
     # set labels to enable stylesheet
     for label in labels:
-        label.setObjectName("Page_scheme_label")
+        label.setObjectName("scheme_label")
 
 
 # check

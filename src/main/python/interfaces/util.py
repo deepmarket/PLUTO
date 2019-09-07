@@ -7,24 +7,9 @@
 
 import os
 
-from PyQt5.QtWidgets import QLineEdit
+from PyQt5.QtWidgets import QLineEdit, QLabel
 
-
-def load_path(path, _file):
-    """
-    Find a file in a given path string
-    reference: https://github.com/yahoo/TensorFlowOnSpark/blob/e2f5cc45f95812d163e75b6ddb9c4661261d3bb0/tensorflowonspark/util.py#L57
-
-    :param path: base path of the file
-    :param _file: the name of the file, include postfix
-    :return: if exist file, return the path of the file, otherwise, return False
-    """
-    for p in path.split(os.pathsep):
-        candidate = os.path.join(p, _file)
-        if os.path.exists(candidate) and os.path.isfile(candidate):
-            return candidate
-    return False
-
+from PyQt5.QtCore import Qt
 
 def get_children(widget, child_type, *args):
     """
@@ -37,3 +22,35 @@ def get_children(widget, child_type, *args):
     """
     # if None, children = []
     return [child for child in widget.findChildren(child_type, *args)]
+
+
+def switch_scheme(widget, curr_scheme):
+    """
+    Switch the schme highlight when click scheme
+    :param widget: parent widget
+    :param curr_scheme: trigger function for the mousePress event
+    """
+    frames = [widget.scheme_01_frame, widget.scheme_02_frame, widget.scheme_03_frame, widget.scheme_04_frame]
+
+    for frame in frames:
+        # set frame to disable stylesheet
+        frame.setObjectName("scheme_disable")
+
+        # find all QLabel children within the frame
+        labels = get_children(frame, QLabel)
+
+        # set labels to disable stylesheet
+        for label in labels:
+            label.setObjectName("scheme_label_disable")
+            
+    # set frame to active stylesheet
+    curr_scheme.setObjectName("scheme")
+
+    # find all QLabel children within the frame
+    labels = get_children(curr_scheme, QLabel)
+
+    # set labels to enable stylesheet
+    for label in labels:
+        label.setObjectName("scheme_label")
+
+    

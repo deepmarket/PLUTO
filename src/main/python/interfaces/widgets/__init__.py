@@ -17,4 +17,5 @@ from .module import (
     ViewButton,
     AttendanceBox,
     PriceBox,
+    Scheme,
 )

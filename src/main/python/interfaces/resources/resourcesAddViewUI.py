@@ -468,8 +468,6 @@ class ResourcesAddViewUI(Frame):
 
         content_layout = VerticalLayout(content_frame)
 
-        # TODO: fill the implementation here
-
         # Rent immediately
         self.rent_immediately_box = AttendanceBox(self.attendance_section)
 

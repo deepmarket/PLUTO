@@ -7,7 +7,7 @@
 """
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QLayout, QSpacerItem, QSizePolicy
 
 from ..widgets import StackLayout, Frame, VerticalLayout, HorizontalLayout, Label, HorizontalSpacer, Button, VerticalSpacer
 
@@ -22,12 +22,13 @@ class JobsUI(Frame):
     controller_button = None
 
     def __init__(self, cxt:ApplicationContext, *args, **kwargs):
-        super(JobsUI, self).__init__(*args, **kwargs)
+        super(JobsUI, self).__init__(*args, name="views", **kwargs)
 
         self.cxt = cxt
 
         self._init_ui()
         self._stack.setCurrentIndex(0)
+        self.setStyleSheet(self.cxt.jobs_style)
 
 
     def _init_ui(self):
@@ -35,12 +36,12 @@ class JobsUI(Frame):
         window_layout = VerticalLayout(self)
 
         # create buttom frame
-        self.button_frame = Frame(self, name="view_buttons_frame")
+        self.button_frame = Frame(self, name="views_buttons_frame")
         window_layout.addWidget(self.button_frame)
         self._init_button_frame()
 
         # create content frame
-        self.content_frame = Frame(self, name="view_content_frame")
+        self.content_frame = Frame(self)
         window_layout.addWidget(self.content_frame)
         self._stack = StackLayout(self.content_frame)
 
@@ -50,12 +51,12 @@ class JobsUI(Frame):
 
     def _init_button_frame(self):
 
-        layout = HorizontalLayout(self.button_frame, space=15)
+        layout = HorizontalLayout(self.button_frame, space=24)
 
-        self.add_view_button = Button(self.button_frame, text="Add Jobs", name="page_menu_button_active", cursor=True)
+        self.add_view_button = Button(self.button_frame, text="Add Jobs", name="views_button_active", cursor=True)
         layout.addWidget(self.add_view_button)
 
-        self.controller_button = Button(self.button_frame, text="Job Lists", name="page_menu_button", cursor=True)
+        self.controller_button = Button(self.button_frame, text="Job Lists", name="views_button", cursor=True)
         layout.addWidget(self.controller_button)
 
         spacer = HorizontalSpacer()
@@ -70,14 +71,16 @@ class JobsUI(Frame):
 
     # display the widget in the corresponding index, raise error if happened
     def on_add_view_button_clicked(self):
-        self._build_check()
+        # set button to enable stylesheet
+        self.add_view_button.setObjectName("views_button_active")
+        self.controller_button.setObjectName("views_button")
+        self.setStyleSheet(self.cxt.jobs_style)
+        
         self._stack.setCurrentIndex(0)
 
     def on_controller_button_clicked(self):
-        self._build_check()
+        # set button to enable stylesheet
+        self.add_view_button.setObjectName("views_button")
+        self.controller_button.setObjectName("views_button_active")
+        self.setStyleSheet(self.cxt.jobs_style)
         self._stack.setCurrentIndex(1)
-
-    def _build_check(self):
-        self._stack.count() != 2 and print(
-            "Error: either controller/add_view has not been set!"
-        )

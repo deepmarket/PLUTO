@@ -1,349 +1,176 @@
-#Page_sub_page {
-    background-color: white;
-}
-
-#Page_machine_config {
-    background-color: #D6EFEF;
-}
-
-#Page_resource_planning {
-    background-color: #F4F8F9;
-}
-
-#Page_resource_submission {
-    background-color: #F4F8F9;
-}
-
-#Page_scheme {
-    background-color: #F4F8F9;
-}
-
-#Page_available_resources {
-    background-color: #D6EFEF;
-}
-
-#Page_job_submission {
-    background-color: #F4F8F9;
-}
-
-#Page_section_title {
+* {
     font-family: "Helvetica Neue";
+}
+
+#views {
+    padding-bottom: 8px;
+}
+
+QFrame#views_buttons_frame {
+    min-height: 35px;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+#view {
+    background-color: #FFFFFF;
+    padding-left: 45px;
+    padding-right: 45px;
+}
+
+QFrame#section {
+    margin-top: 40px;
+}
+
+QFrame#section_title_frame {
+    padding-bottom: 18px;
+}
+
+QFrame#scheme_content_frame {
+    min-height: 211px;
+}
+
+QFrame#submission_content_frame {
+    background-color: #F4F8F9;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    padding-left: 30px;
+    padding-right: 30px;
+} 
+
+QFrame#left {
+    background-color: #F4F8F9;
+    padding-left: 28px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+QFrame#right {
+    background-color: #D6EFEF;
+    max-width: 170px;
+    padding-top: 37px;
+    padding-bottom: 40px;
+    padding-left: 30px;
+    padding-right:30px;
+}
+
+QFrame#scheme_title,
+QFrame#scheme,
+QFrame#scheme_disable {
+    padding-top: 31px;
+    padding-bottom: 32px;
+}
+
+QFrame#scheme_title {
+    padding-right: 13px;
+}
+
+QFrame#scheme,
+QFrame#scheme_disable {
+    min-width: 124px;
+}
+QFrame#scheme {
+    background-color: #82B9B9;
+}
+
+QFrame#scheme_disable {
+    background-color: #F4F8F9;
+}
+
+QFrame#view_input > QLabel,
+QFrame#view_input_disable > QLabel {
+    font-size: 13px;
+    color: #6C7E8E;
+}
+
+QLabel#section_title {
     font-size: 20px;
-    font-weight: 100;
     color: #6C7E8E;
 }
 
-#Page_section_title_small {
-    font-family: "Helvetica Neue";
-    font-size: 16px;
-    font-weight: 300;
-    color: #6C7E8E;
-}
-
-#Page_hint {
-    font-family: "Helvetica Neue";
+QLabel#section_hint {
     font-size: 12px;
-    font-weight: 300;
-    color: red;
+    color: #FF0000;
 }
 
-#Page_hint_small {
-    font-family: "Helvetica Neue";
+QLabel#scheme_label,
+QLabel#scheme_label_disable {
     font-size: 11px;
-    font-weight: 300;
-    color: red;
+    font-weight: 400;
 }
 
-#Page_input_frame {
-    background-color: white;
+QLabel#scheme_label {
+    color: #FFFFFF;
 }
 
-#Page_input_title {
-    font-family: "Helvetica Neue";
-    font-size: 13px;
-    font-weight: 300;
+QLabel#scheme_label_disable {
     color: #6C7E8E;
 }
 
-#Page_button {
-    border: None;
-    background-color: #6C7E8E;
-    height: 30px;
-    width: 120px;
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 300;
-    color: white;
-}
-
-#Page_available_title {
-    font-family: "Helvetica Neue";
-    font-size: 12px;
+QLabel#available_title,
+QLabel#available_label {
     font-weight: 500;
     color: #6C7E8E;
 }
 
-#Page_available_label {
-    font-family: "Helvetica Neue";
+QLabel#available_title {
+    font-size: 12px;
+}
+
+QLabel#available_label {
     font-size: 11px;
-    font-weight: 500;
-    color: #6C7E8E;
 }
 
-#Page_table_workspace {
-    background-color: white;
-}
-
-#Page_table_test {
-    background-color: yellow;
-}
-
-#Page_table_workspace_search {
-    border: None;
-    background-color: #F7F7F7;
-    padding: 0 20px;
-    font-family: "Helvetica Neue";
-    font-size: 13px;
-    font-weight: 200;
-    color: black;
-}
-
-#Page_table_workspace_button {
-    border: None;
-    background-color: #6C7E8E;
-    height: 35px;
-    width: 90px;
-    font-family: "Helvetica Neue";
-    font-size: 13px;
-    font-weight: 200;
-    color: white;
-}
-
-#Page_table {
+QFrame#view_input > QLineEdit,
+QFrame#view_input_disable > QLineEdit {
     border: none;
-    background-color: white;
-    alternate-background-color: #FAFAFA;
+    padding: 0 2px;
+    font-size: 12px;
 }
 
-#Page_table QHeaderView::section {
+QFrame#view_input > QLineEdit {
+    background-color: #FFFFFF;
+    color: #000000;
+}
+
+QFrame#view_input_disable > QLineEdit {
+    background-color: #C6CDDB;
+    color: #F2F2F2;
+}
+
+QPushButton#view_button,
+QPushButton#view_button_disable {
     border: none;
-    background-color: #6C7E8E;
-    height: 35px;
-    font-family: "Helvetica Neue";
-    font-size:13px;
-    font-weight: 100;
-    color: white;
+    min-width: 115px;
+    min-height: 30px;
+    font-size: 12px;
 }
 
-#page_menu_button_active {
+QPushButton#views_button_active {
     border: None;
     border-bottom: 2px solid #6C7E8E;
-    width: 95px;
-    height: 27px;
-    font-family: "Helvetica Neue";
+    min-width: 95px;
+    min-height: 27px;
     font-size: 12px;
     font-weight: 200;
     color: #6C7E8E;
 }
 
-#page_menu_button {
+QPushButton#views_button {
     border: None;
-    width: 95px;
-    height: 27px;
-    font-family: "Helvetica Neue";
+    min-width: 95px;
+    min-height: 27px;
     font-size: 12px;
     font-weight: 100;
     color: #CBCBCB;
 }
 
-#Page_input_ip_input {
-    border: None;
-    background-color: #F7F7F7;
-    padding: 0 1px;
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 200;
-    color: black;
-}
-
-#Page_input_ip_input_disable {
-    border: None;
-    background-color: #C6CDDB;
-    padding: 0 1px;
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 200;
-    color: #F2F2F2;
-}
-
-#Page_machine_config_box {
-    background-color: white;
-}
-
-#Page_machine_config_box_disable {
-    background-color: #C6CDDB;
-}
-
-#Page_machine_config_label {
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 200;
-    color: #6C7E8E;
-}
-
-#Page_machine_config_label_red {
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 500;
-    color: red;
-}
-
-#Page_machine_config_label_green {
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 400;
-    color: #95E637;
-}
-
-#Page_machine_config_label_disable {
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 400;
-    color: #F2F2F2;
-}
-
-#Page_input_input {
-    border: None;
-    background-color: white;
-    padding: 0 1px;
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 200;
-    color: black;
-}
-
-#Page_input_input_disable {
-    border: None;
-    background-color: #C6CDDB;
-    padding: 0 1px;
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 200;
-    color: #F2F2F2;
-}
-
-#Page_evaluate_button {
-    border: None;
+QPushButton#view_button {
     background-color: #6C7E8E;
-    height: 30px;
-    width: 120px;
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 300;
-    color: white;   
+    color: #FFFFFF;
 }
 
-#Page_evaluate_button_disable {
-    border: None;
+QPushButton#view_button_disable {
     background-color: #C6CDDB;
-    height: 30px;
-    width: 120px;
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 300;
     color: #F2F2F2;
-}
-
-#Page_submission_button {
-    border: none;
-    background-color: white;
-    padding-bottom: 3px;
-    height: 20px;
-    width: 23px;
-    font-size: 20px;
-    color: #6C7E8E;
-}
-
-#Page_submission_button_disable {
-    border: none;
-    background-color: #C6CDDB;
-    padding-bottom: 3px;
-    height: 20px;
-    width: 23px;
-    font-size: 20px;
-    color: #F2F2F2;
-}
-
-#Page_submission_box {
-    background-color: white;
-}
-
-#Page_submission_box_disable {
-    background-color: #C6CDDB;
-}
-
-#Page_submission_label {
-    font-family: "Helvetica Neue";
-    font-size: 13px;
-    font-weight: 300;
-    color: #6C7E8E;
-}
-
-#Page_submission_label_disable {
-    font-family: "Helvetica Neue";
-    font-size: 13px;
-    font-weight: 300;
-    color: #F2F2F2;
-}
-
-#Page_submission_submit {
-    border: None;
-    background-color: #6C7E8E;
-    height: 30px;
-    width: 90px;
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 300;
-    color: white;
-}
-
-#Page_submission_submit_disable {
-    border: None;
-    background-color: #C6CDDB;
-    height: 30px;
-    width: 90px;
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 300;
-    color: #F2F2F2;
-}
-
-#Page_scheme_box {
-    background-color: #82B9B9;
-}
-
-#Page_scheme_box_disable {
-    background-color: #F4F8F9;
-}
-
-#Page_scheme_button_frame {
-    border-color: #6C7E8E;
-    border-width: 1px;        
-    border-style: solid;
-
-    background-color: white;
-}
-
-#Page_scheme_label {
-    font-family: "Helvetica Neue";
-    font-size: 11px;
-    font-weight: 400;
-    color: white;
-}
-
-#Page_scheme_label_disable {
-    font-family: "Helvetica Neue";
-    font-size: 11px;
-    font-weight: 400;
-    color: #6C7E8E;
 }

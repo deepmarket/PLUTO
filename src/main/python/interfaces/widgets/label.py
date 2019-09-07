@@ -13,7 +13,6 @@ from PyQt5.QtGui import QPixmap
 
 from .frame import Frame
 from .layout import VerticalLayout
-from ..util import load_path
 
 
 class Label(QLabel):

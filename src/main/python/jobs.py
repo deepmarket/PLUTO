@@ -1,6 +1,12 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
-from interfaces.resources import JobsUI, JobsAddViewUI, JobsControllerUI
+from mainview import MainView
+from uix.util import *
+from uix.config import *
+from uix.popup import Question
+from api import Api
+
+from interfaces.jobs import JobsUI, JobsAddViewUI, JobsControllerUI
 
 class Jobs(JobsUI):
 
@@ -15,6 +21,7 @@ class Jobs(JobsUI):
         self.set_add_view(self.add_view)
         self.set_controller(self.controller)
 
+        self.on_add_view_button_clicked()
 
 class JobsAddView(JobsAddViewUI):
 

@@ -195,8 +195,7 @@ class App(QMainWindow):
         self.animation.start()
 
     # notification popup
-    @staticmethod
-    def on_notification_clicked():
+    def on_notification_clicked(self):
         popup = Notification(self.cxt)
         popup.exec_()
 

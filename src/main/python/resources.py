@@ -296,7 +296,7 @@ class ResourcesAddView(ResourcesAddViewUI):
         if not self._cpu_gpu_check(): return False
         if not self._cores_check(): return False
         if not self._ram_check(): return False
-
+        
         return True
 
     def _machine_name_check(self):

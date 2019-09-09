@@ -1,8 +1,9 @@
+from abc import ABCMeta, abstractmethod
+
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QLayout, QSpacerItem, QSizePolicy, QLabel
-
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import pyqtSignal, Qt
 
 from ..util import switch_scheme
 
@@ -35,11 +36,11 @@ class JobsAddViewUI(Frame):
     input_file: ViewInputFrame = None               
     expect_time: ViewInputFrame = None              
 
-    def __init__(self, cxt:ApplicationContext, *args, **kwargs):
+    def __init__(self, signal: pyqtSignal, cxt:ApplicationContext, *args, **kwargs):
         super(JobsAddViewUI, self).__init__(*args, name="view", **kwargs)
 
         self.cxt = cxt
-
+        self.signal = signal
         self._init_ui()
         self.setStyleSheet(self.cxt.jobs_style)
 
@@ -65,6 +66,10 @@ class JobsAddViewUI(Frame):
 
     def reload_stylesheet(self):
         self.setStyleSheet(self.cxt.jobs_style)
+
+    @abstractmethod
+    def on_submit_clicked(self):
+        pass
 
     def _init_ui(self):
 
@@ -235,3 +240,5 @@ class JobsAddViewUI(Frame):
 
         self.submit_button = ViewButton(line_frame, text="SUBMIT", cursor=True)
         line_layout.addWidget(self.submit_button)
+
+        self.submit_button.clicked.connect(self.on_submit_clicked)

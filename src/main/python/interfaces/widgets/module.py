@@ -378,15 +378,48 @@ class Scheme(Frame):
 
         layout = VerticalLayout(self, space=16)
 
-        infos = [label, "0 Credit/Hr", "0 Credit/Hr", "0 Credit/Hr", "0 Credit/Hr"]
+        self.time = label
+        self.cpu_price = 0
+        self.gpu_price = 0
+        self.memory_price = 0
+        self.disk_space_price = 0
+        self.unit = "Credit/Hr"
 
-        for info in infos:
-            label = Label(self, text=info, name=label_name, align=Qt.AlignHCenter)
-            layout.addWidget(label)
+        label = Label(self, text=self.time, name=label_name, align=Qt.AlignHCenter)
+        layout.addWidget(label)
+
+        self.cpu = Label(
+            self, text=f"{self.cpu_price} {self.unit}", name=label_name, align=Qt.AlignHCenter
+        )
+        layout.addWidget(self.cpu)
+
+        self.gpu = Label(
+            self, text=f"{self.gpu_price} {self.unit}", name=label_name, align=Qt.AlignHCenter
+        )
+        layout.addWidget(self.gpu)
+
+        self.memory = Label(
+            self, text=f"{self.memory_price} {self.unit}", name=label_name, align=Qt.AlignHCenter
+        )
+        layout.addWidget(self.memory)
+
+        self.disk_space = Label(
+            self, text=f"{self.disk_space_price} {self.unit}", name=label_name, align=Qt.AlignHCenter
+        )
+        layout.addWidget(self.disk_space)
 
         self.mousePressEvent = event_func
 
+    def update_cpu(self, cpu_price):
+        self.cpu_price = cpu_price
+        self.cpu.setText(f"{self.cpu_price} {self.unit}")
 
+    def update_gpu(self, gpu_price):
+        self.gpu_price = gpu_price
+        self.gpu.setText(f"{self.gpu_price} {self.unit}")
+
+    def get_info(self):
+        return [self.time, self.cpu_price, self.gpu_price, self.memory_price, self.disk_space_price]
 
 class ViewButton(Button):
     def __init__(self, widget: QWidget, **kwargs):

@@ -1,5 +1,8 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
+from abc import ABCMeta, abstractmethod
+from PyQt5.QtCore import pyqtSignal
+
 from ..widgets import Frame, VerticalLayout, HorizontalLayout, HorizontalSpacer, ViewButton, SearchInputFrame, Table
 
 from ..config import RESOURCES_MAX_ROW
@@ -11,18 +14,37 @@ class JobsControllerUI(Frame):
     table_section: Frame = None
 
     # variable
-    table = None                   
-    search_bar = None       
-    refresh_button = None          
-    remove_button = None     
+    table: Table = None                   
+    search_bar: SearchInputFrame = None       
+    refresh_button: ViewButton = None          
+    remove_button: ViewButton = None     
 
-    def __init__(self, cxt:ApplicationContext, *args, **kwargs):
+    def __init__(self, signal: pyqtSignal, cxt:ApplicationContext, *args, **kwargs):
         super(JobsControllerUI, self).__init__(*args, **kwargs)
 
         self.cxt = cxt
-
+        self.signal = signal
         self._init_ui()
         self.setStyleSheet(self.cxt.jobs_style)
+
+    def reset(self):
+        # reset input
+        self.search_bar.reset()
+
+        # reset table
+        self.table.reset()
+    
+    @abstractmethod
+    def on_search_edited(self):
+        pass
+
+    @abstractmethod
+    def on_refresh_button_clicked(self):
+        pass
+
+    @abstractmethod
+    def on_remove_button_clicked(self):
+        pass
 
     def _init_ui(self):
         
@@ -75,6 +97,10 @@ class JobsControllerUI(Frame):
             line_frame, text="REMOVE", cursor=True
         )
         line_layout.addWidget(self.remove_button)
+
+        self.search_bar.input_field.textChanged.connect(self.on_search_edited)
+        self.refresh_button.clicked.connect(self.on_refresh_button_clicked)
+        self.remove_button.clicked.connect(self.on_remove_button_clicked)
 
     def _init_table_section(self):
         section_layout = VerticalLayout(self.table_section)

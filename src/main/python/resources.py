@@ -336,15 +336,11 @@ class ResourcesAddView(ResourcesAddViewUI):
         self.reset_hint()
 
         # have to call function individually in order to raise hint
-        if not self._machine_name_check():
-            return False
-        if not self._cpu_gpu_check():
-            return False
-        if not self._cores_check():
-            return False
-        if not self._ram_check():
-            return False
-
+        if not self._machine_name_check(): return False
+        if not self._cpu_gpu_check(): return False
+        if not self._cores_check(): return False
+        if not self._ram_check(): return False
+        
         return True
 
     def _machine_name_check(self):

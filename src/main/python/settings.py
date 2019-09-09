@@ -42,7 +42,7 @@ class Settings(MainView):
 class SettingsWorkspace(QFrame):
 
     def __init__(self, parent, cxt:ApplicationContext, *args, **kwargs):
-        super(QFrame, self).__init__(parent, *args, **kwargs)
+        super(SettingsWorkspace, self).__init__(parent, *args, **kwargs)
 
         self.cxt = cxt
         self._init_ui()

@@ -7,6 +7,7 @@
 """
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
+from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QLayout, QSpacerItem, QSizePolicy
 
 from ..widgets import StackLayout, Frame, VerticalLayout, HorizontalLayout, Label, HorizontalSpacer, Button, VerticalSpacer
@@ -15,6 +16,10 @@ from ..widgets import StackLayout, Frame, VerticalLayout, HorizontalLayout, Labe
 class JobsUI(Frame):
 
     _stack = None
+
+    _to_controller_signal = pyqtSignal()
+    _to_add_view_signal = pyqtSignal()
+
     button_frame : Frame = None
     content_frame : Frame = None
 
@@ -30,7 +35,10 @@ class JobsUI(Frame):
         self._stack.setCurrentIndex(0)
         self.setStyleSheet(self.cxt.jobs_style)
 
-
+        # connect signal
+        self._to_controller_signal.connect(self.on_controller_button_clicked)
+        self._to_add_view_signal.connect(self.on_add_view_button_clicked)
+        
     def _init_ui(self):
         # create layout for interface
         window_layout = VerticalLayout(self)
@@ -76,11 +84,26 @@ class JobsUI(Frame):
         self.controller_button.setObjectName("views_button")
         self.setStyleSheet(self.cxt.jobs_style)
         
-        self._stack.setCurrentIndex(0)
+        self._to_add_view()
 
     def on_controller_button_clicked(self):
         # set button to enable stylesheet
         self.add_view_button.setObjectName("views_button")
         self.controller_button.setObjectName("views_button_active")
         self.setStyleSheet(self.cxt.jobs_style)
+        
+        self._to_controller()
+
+    def _to_controller(self):
+        self._build_check()
         self._stack.setCurrentIndex(1)
+
+    def _to_add_view(self):
+        self._build_check()
+        self._stack.setCurrentIndex(0)
+
+    def _build_check(self):
+        self._stack.count() != 2 and print(
+            "Error: either controller/add_view has not been set!"
+        )
+

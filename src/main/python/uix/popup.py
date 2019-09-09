@@ -164,7 +164,7 @@ class CreditHistory(BaseDialog):
         self._init_geometry()
         self._init_ui()
 
-        self.setStyleSheet(credit_style)
+        self.setStyleSheet(cxt.credit_history_style)
 
     def _init_geometry(self):
         # hide title bar

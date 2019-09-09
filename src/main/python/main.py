@@ -73,9 +73,8 @@ class AppContext(ApplicationContext):
             file_path = self.get_resource(path)
             with open(file_path) as f:
                 return f.read()
-        except FileNotFoundError:
-            err = "%s is not found." % path
-            raise FileNotFoundError(err)
+        except:
+            raise
 
 if __name__ == '__main__':
     from sys import exit, argv

@@ -71,6 +71,26 @@ class JobsAddViewUI(Frame):
     def on_submit_clicked(self):
         pass
 
+    @abstractmethod
+    def on_worker_edit(self):
+        pass
+
+    @abstractmethod
+    def on_core_edit(self):
+        pass
+
+    @abstractmethod
+    def on_memory_edit(self):
+        pass
+
+    @abstractmethod
+    def on_source_edit(self):
+        pass
+    
+    @abstractmethod
+    def on_input_edit(self):
+        pass
+
     def _init_ui(self):
 
         layout = VerticalLayout(self)
@@ -211,6 +231,10 @@ class JobsAddViewUI(Frame):
         )
         line_layout.addWidget(self.memory)
 
+        self.workers.input_field.textChanged.connect(self.on_worker_edit)
+        self.cores.input_field.textChanged.connect(self.on_core_edit)
+        self.memory.input_field.textChanged.connect(self.on_memory_edit)
+
         # --------- source_file and input_file ------------
 
         self.source_file = ViewInputFrame(
@@ -222,7 +246,9 @@ class JobsAddViewUI(Frame):
             content_frame, title="Input file:", title_width=70, title_align= (Qt.AlignRight | Qt.AlignVCenter)
         )
         content_layout.addWidget(self.input_file)
-        
+    
+        self.source_file.input_field.textChanged.connect(self.on_source_edit)
+        self.input_file.input_field.textChanged.connect(self.on_input_edit)
 
         # --------- line_frame: submission_hint, spacer, submit_button ------------
 

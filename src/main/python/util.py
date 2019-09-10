@@ -30,8 +30,11 @@ def get_ip_address():
 
 def config_input_check(text: str, available: int, res: Enum):
 
-    if not text or not num_regex.match(text):
+    if not text:
         return res.EMPTY_ERROR
+
+    if not num_regex.match(text):
+        return res.INT_ERROR
     else:
         try:
             num = int(text)
@@ -40,6 +43,21 @@ def config_input_check(text: str, available: int, res: Enum):
                 return res.RANGE_ERROR
             else:
                 return res.SUCCESS
+        except ValueError:
+            return res.INT_ERROR
+
+def job_input_check(text: int, res: Enum):
+
+    if not text:
+        return res.EMPTY_ERROR
+    
+    if not num_regex.match(text):
+        return res.INT_ERROR
+    else:
+        try:
+            num = int(text)
+
+            return res.SUCCESS
         except ValueError:
             return res.INT_ERROR
 

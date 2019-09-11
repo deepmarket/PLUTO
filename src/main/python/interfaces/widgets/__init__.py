@@ -1,3 +1,4 @@
+from .animation import Animation, MoveAnimation
 from .button import Button, RadioButton
 from .frame import Frame
 from .groupbox import GroupBox

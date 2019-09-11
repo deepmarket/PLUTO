@@ -26,6 +26,9 @@ class Animation(QPropertyAnimation):
 
         super(Animation, self).__init__(widget)
 
+        # set target widget to apply this animation, which is the widget who own it
+        self.setTargetObject(widget)
+
         # Set animation type
         prop and self.setPropertyName(prop)
 

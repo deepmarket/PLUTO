@@ -3,8 +3,28 @@ from uix.stylesheet import *
 from uix.util import *
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from PyQt5.QtCore import pyqtSignal
+# from interfaces.login import LoginUI
 
 
+class Login(LoginUI):
+
+    def __init__(self, login_signal:pyqtSignal, cxt:ApplicationContext, *args, **kwargs):
+        super(Login, self).__init__(*args, **kwargs)
+
+        self.cxt = cxt
+
+        self.login = LoginPage(self._to_create_signal, self.cxt)
+        self.create = CreatePage(self._to_login_signal, self.cxt)
+
+class LoginPage(LoginPageUI):
+    def __init__(self, *args, **kwargs):
+        super(LoginPage, self).__init__(*args, **kwargs)
+
+class CreatePage(CreatePageUI):
+    def __init__(self, *args, **kwargs):
+        super(CreatePage, self).__init__(*args, **kwargs)
+
+"""
 class Login(QDialog):
     def __init__(self, login_signal:pyqtSignal, cxt:ApplicationContext, *args, **kwargs):
         super(Login, self).__init__(*args, **kwargs)
@@ -411,3 +431,4 @@ class CreatePage(QFrame):
         window_layout.addItem(spacer)
         window_layout.addWidget(button_frame)
         window_layout.addWidget(to_login_frame)
+"""

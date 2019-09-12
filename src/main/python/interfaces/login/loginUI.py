@@ -32,13 +32,13 @@ class LoginUI(QDialog):
 
         # connect function
         # self.login.login_button.clicked.connect(self.login_action)
-        # self.login.to_create_button.clicked.connect(self.to_create)
+        self.login.to_create_button.clicked.connect(self.to_create)
 
         self.create = CreatePageUI(self, self._to_login_signal, self.cxt)
 
         # connect function
         # self.create.create_button.clicked.connect(self.create_action)
-        # self.create.to_login_button.clicked.connect(self.to_login)
+        self.create.to_login_button.clicked.connect(self.to_login)
 
         self._init_ui()
         self.setStyleSheet(self.cxt.login_style)

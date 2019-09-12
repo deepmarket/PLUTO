@@ -40,6 +40,23 @@ QFrame#login_input QLabel {
     color: #6C7E8E;
 }
 
+QFrame#create_title_section {
+    min-height: 208px;
+    padding-top: 39px;
+    padding-left: 31px;
+    padding-right: 8px;
+}
+
+QFrame#create_input_section {
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+QFrame#create_button_section {
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
 QLabel#login_title {
     font-size: 35px;
     font-weight: 100;
@@ -51,6 +68,18 @@ QLabel#login_hint {
     font-size: 13px;
     font-weight: 200;
     color: #FF4500;
+}
+
+QLabel#create_title {
+    font-size: 26px;
+    font-weight: 100;
+    color: #6C7E8E;
+}
+
+QLabel#create_prologue {
+    font-size: 13px;
+    font-weight: 200;
+    color: #6C7E8E;
 }
 
 QFrame#login_input QLabel {
@@ -95,28 +124,6 @@ QPushButton#switch_button {
     font-weight: 200;
     color: #2F0FFF;
     height: 47px;
-}
-
-#Login_create_title {
-    font-family: "Helvetica Neue";
-    font-size: 26px;
-    font-weight: 100;
-    color: #6C7E8E;
-}
-
-#Login_prologue {
-    font-family: "Helvetica Neue";
-    font-size: 13px;
-    font-weight: 200;
-    color: #6C7E8E;
-}
-
-#Login_hint {
-    padding-left: 15px;
-    font-family: "Helvetica Neue";
-    font-size: 13px;
-    font-weight: 200;
-    color: #FF4500;
 }
 
 #Login_large_button {

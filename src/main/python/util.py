@@ -8,6 +8,7 @@ from socket import error as socket_error
 
 # regex
 num_regex = re.compile(r"(\d+)")
+email_verification_regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", re.IGNORECASE)
 
 
 # load the ip address from the running machine

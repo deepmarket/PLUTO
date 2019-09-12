@@ -10,6 +10,10 @@ from ..util import switch_scheme
 from ..widgets import StackLayout, Frame, SectionTitleFrame, Label, VerticalLayout, VerticalSpacer, HorizontalLayout, HorizontalSpacer, Scheme, ViewInputFrame, ViewButton
 
 class JobsAddViewUI(Frame):
+    
+     # metaclass for defining abstract base classes
+    __metaclass__ = ABCMeta
+    
     pricing_scheme_section: Frame = None
     job_submission_section: Frame = None
 

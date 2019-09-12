@@ -1,6 +1,6 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta, abstractmethod 
 from PyQt5.QtCore import pyqtSignal
 
 from ..widgets import Frame, VerticalLayout, HorizontalLayout, HorizontalSpacer, ViewButton, SearchInputFrame, Table
@@ -10,6 +10,9 @@ from collections import OrderedDict
 
 class JobsControllerUI(Frame):
 
+    # metaclass for defining abstract base classes
+    __metaclass__ = ABCMeta
+    
     search_section: Frame = None
     table_section: Frame = None
 

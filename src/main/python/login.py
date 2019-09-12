@@ -3,27 +3,79 @@ from uix.stylesheet import *
 from uix.util import *
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from PyQt5.QtCore import pyqtSignal
-# from interfaces.login import LoginUI
+from interfaces.login import LoginUI, LoginPageUI, CreatePageUI
 
 
 class Login(LoginUI):
 
     def __init__(self, login_signal:pyqtSignal, cxt:ApplicationContext, *args, **kwargs):
-        super(Login, self).__init__(*args, **kwargs)
+        super(Login, self).__init__(cxt, *args, **kwargs)
 
         self.cxt = cxt
 
-        self.login = LoginPage(self._to_create_signal, self.cxt)
-        self.create = CreatePage(self._to_login_signal, self.cxt)
+    # pre-check user input before access db
+    def login_action(self):
+        pass
+        """
+        # clear error hint
+        self.login.login_hint.setText("")
 
-class LoginPage(LoginPageUI):
-    def __init__(self, *args, **kwargs):
-        super(LoginPage, self).__init__(*args, **kwargs)
+        username = self.login.username.text()
+        pwd = self.login.pwd.text()
 
-class CreatePage(CreatePageUI):
-    def __init__(self, *args, **kwargs):
-        super(CreatePage, self).__init__(*args, **kwargs)
+        # Both empty
+        if not username and not pwd:
+            self.login.login_hint.setText("Please enter your email and password.")
 
+        # Empty username
+        elif not username and pwd:
+            self.login.login_hint.setText("Please enter your email.")
+
+        # Empty password
+        elif not pwd and username:
+            self.login.login_hint.setText("Please enter your password.")
+
+        # elif not re.match(self.username_regex, username):
+        #     self.login.login_hint.setText("Invalid username. Please login with email address.")
+
+        # otherwise, input check pass
+        else:
+            self.attempt_login(username, pwd)
+        """
+
+    # pre-check user input before access db
+    def create_action(self):
+        pass
+        """
+        # clear error hint
+        self.create.create_hint.setText("")
+
+        first = self.create.first.text()
+        last = self.create.last.text()
+        email = self.create.username.text()
+        pwd = self.create.pwd.text()
+        confirm_pwd = self.create.confirm_pwd.text()
+
+        # First name empty
+        if not first:
+            self.create.create_hint.setText("Must enter a first name.")
+
+        # Last name empty
+        elif not last:
+            self.create.create_hint.setText("Must enter a last name.")
+
+        elif not re.match(self.email_verification_regex, email):
+            self.create.create_hint.setText("Please enter a valid Email address.")
+
+        elif pwd != confirm_pwd:
+            self.create.create_hint.setText("Passwords do not match.")
+
+        # otherwise, check pass
+        else:
+            print(f"Creating account with:\n\tFirst name: '{first}'\n\tLast name: '{last}'\n"
+                  f"\tEmail:'{email}'\n\tPassword: '{pwd}''")
+            self.attempt_create(first, last, email, pwd)
+        """
 """
 class Login(QDialog):
     def __init__(self, login_signal:pyqtSignal, cxt:ApplicationContext, *args, **kwargs):
@@ -431,4 +483,5 @@ class CreatePage(QFrame):
         window_layout.addItem(spacer)
         window_layout.addWidget(button_frame)
         window_layout.addWidget(to_login_frame)
+
 """

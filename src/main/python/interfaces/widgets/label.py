@@ -21,7 +21,7 @@ class Label(QLabel):
         widget: QWidget,
         height: int = 0,
         width: int = 0,
-        text: int = 0,
+        text: str = "",
         name: str = "",
         align: Qt = None,
         stylesheet=None,

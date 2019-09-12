@@ -163,16 +163,15 @@ class BaseInputFrame(Frame):
 
 
 class LoginInputFrame(BaseInputFrame):
-    def __init__(self, widget: QWidget, title_width: int = 160, **kwargs):
+    def __init__(self, widget: QWidget, title_width: int = 150, **kwargs):
         super(LoginInputFrame, self).__init__(
             widget,
             l_m=30,
             r_m=30,
             space=9,
             height=52,
-            name="Login_input_box",
-            title_name="Login_input_title",
-            input_name="Login_input_input",
+            name="login_input",
+            title_width=title_width,
             **kwargs
         )
 

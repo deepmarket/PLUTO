@@ -25,19 +25,14 @@ class LoginUI(QDialog):
         self.setObjectName("dialog")
         self.cxt = cxt
 
-        self._to_login_signal.connect(self.to_login)
-        self._to_create_signal.connect(self.to_create)
-
-        self.login = LoginPageUI(self, self._to_create_signal, self.cxt)
+        self.login = LoginPageUI(self)
+        self.create = CreatePageUI(self)
 
         # connect function
         self.login.login_button.clicked.connect(self.login_action)
-        self.login.to_create_button.clicked.connect(self.to_create)
-
-        self.create = CreatePageUI(self, self._to_login_signal, self.cxt)
-
-        # connect function
         self.create.create_button.clicked.connect(self.create_action)
+
+        self.login.to_create_button.clicked.connect(self.to_create)
         self.create.to_login_button.clicked.connect(self.to_login)
 
         self._init_ui()

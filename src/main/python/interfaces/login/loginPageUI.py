@@ -28,10 +28,8 @@ class LoginPageUI(Frame):
     to_forget_pwd = None           # button
     to_create_button: Button = None        # button
 
-    def __init__(self, widget: QWidget, login_signal: pyqtSignal, cxt:ApplicationContext, *args, **kwargs):
+    def __init__(self, widget: QWidget, *args, **kwargs):
         super(LoginPageUI, self).__init__(widget)
-
-        self.cxt = cxt    
         self._init_ui()
 
     def _init_ui(self):
@@ -113,7 +111,7 @@ class LoginPageUI(Frame):
         self.login_hint = Label(self.button_section, text="", name="login_hint")
         section_layout.addWidget(self.login_hint)
 
-        self.login_button = Button(self.button_section, text="LOG IN", name="action_button")
+        self.login_button = Button(self.button_section, text="LOG IN", name="action_button", cursor=True)
         section_layout.addWidget(self.login_button)
 
     def _init_switch_section(self):

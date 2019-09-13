@@ -36,11 +36,8 @@ class CreatePageUI(Frame):
     create_button: Button = None           # button
     to_login_button: Button = None         # button
 
-    def __init__(self, widget: QWidget, signal: pyqtSignal, cxt:ApplicationContext, *args, **kwargs):
+    def __init__(self, widget: QWidget, *args, **kwargs):
         super(CreatePageUI, self).__init__(widget)
-
-        self.cxt = cxt
-        self.signal = signal
         self._init_ui()
 
     def _init_ui(self):
@@ -131,7 +128,7 @@ class CreatePageUI(Frame):
         section_layout.addWidget(self.create_hint)
 
         self.create_button = Button(
-            self.button_section, text="CREATE ACCOUNT", name="action_button"
+            self.button_section, text="CREATE ACCOUNT", name="action_button", cursor=True
         )
         section_layout.addWidget(self.create_button)
 

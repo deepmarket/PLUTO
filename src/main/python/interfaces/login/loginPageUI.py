@@ -6,12 +6,12 @@ from PyQt5.QtWidgets import QSizePolicy, QWidget
 from ..widgets import (
     Frame, 
     VerticalLayout,
-     HorizontalLayout, 
-     Label, 
-     LoginInputFrame, 
-     VerticalSpacer, 
-     HorizontalSpacer,
-     Button
+    HorizontalLayout, 
+    Label, 
+    LoginInputFrame, 
+    VerticalSpacer, 
+    HorizontalSpacer,
+    Button
 )
 
 class LoginPageUI(Frame):
@@ -20,10 +20,10 @@ class LoginPageUI(Frame):
     login_section: Frame = None
     button_section: Frame = None
 
-    username: str = None                # input string
-    pwd: str = None                     # input string
-    login_button: Button = None            # button
-    login_hint: str = None              # param string
+    username: str = ""                # input string
+    pwd: str = ""                     # input string
+    login_button: Button = ""            # button
+    login_hint: str = ""              # param string
     remember_check = None          # checkbox
     to_forget_pwd = None           # button
     to_create_button: Button = None        # button

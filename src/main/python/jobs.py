@@ -30,7 +30,7 @@ class Jobs(JobsUI):
         self.controller.reset()
         super()._to_controller()
 
-class JobsAddView(JobsAddViewUI):
+class JobsAddView(JobsAddViewUI): 
 
     workers: int = 0
     cores: int = 0

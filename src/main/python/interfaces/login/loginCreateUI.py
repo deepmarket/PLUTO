@@ -14,14 +14,25 @@ from ..widgets import (
      Button
 )
 
-class CreatePageUI(QFrame):
+from ..widgets import (
+    Frame, 
+    VerticalLayout,
+     HorizontalLayout, 
+     Label, 
+     LoginInputFrame, 
+     VerticalSpacer, 
+     HorizontalSpacer,
+     Button
+)
 
-    first: str = None                   # input string
-    last: str = None                    # input string
-    username: str = None                # input string
-    pwd: str = None                     # input string
-    confirm_pwd: str = None             # input string
-    create_hint: str = None             # param string
+class CreatePageUI(Frame):
+
+    first: str = ""                   # input string
+    last: str = ""                    # input string
+    username: str = ""                # input string
+    pwd: str = ""                     # input string
+    confirm_pwd: str = ""             # input string
+    create_hint: str = ""             # param string
     create_button: Button = None           # button
     to_login_button: Button = None         # button
 

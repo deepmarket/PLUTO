@@ -1,7 +1,8 @@
+from fbs_runtime.application_context.PyQt5 import ApplicationContext
+
+from PyQt5.QtCore import pyqtSignal
 from api import Api
 import util as util
-from fbs_runtime.application_context.PyQt5 import ApplicationContext
-from PyQt5.QtCore import pyqtSignal
 from interfaces.login import LoginUI, LoginPageUI, CreatePageUI
 
 
@@ -91,6 +92,8 @@ class Login(LoginUI):
                 "password": pwd
             })
 
+            print(status)
+            
             if (res or status) is None:
                 self.login.login_hint.setText("There was an error connecting to the authentication servers. "
                                               "Please try again in a little while.")

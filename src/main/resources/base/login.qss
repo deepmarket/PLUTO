@@ -125,24 +125,3 @@ QPushButton#switch_button {
     color: #2F0FFF;
     height: 47px;
 }
-
-#Login_large_button {
-    border: none;
-    background-color: #6C7E8E;
-    height: 48px;
-    font-family: "Helvetica Neue";
-    font-size: 16px;
-    font-weight: 100;
-    border-radius: 4px;
-    font-weight: 200;
-    color: white;
-}
-
-#Login_switch_description {
-    background-color: white;
-    padding-right: 10px;
-    font-family: "Helvetica Neue";
-    font-size: 14px;
-    font-weight:200;
-    color: #6C7E8E;
-}

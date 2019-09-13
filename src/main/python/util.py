@@ -62,6 +62,15 @@ def job_input_check(text: int, res: Enum):
         except ValueError:
             return res.INT_ERROR
 
+def email_verification_check(text: str, res: None):
+
+    if not text:
+        return res.INVALID_ERROR
+
+    if not email_verification_regex.match(text):
+        return res.INVALID_ERROR
+
+    return res.SUCCESS
 
 def get_children(widget, child_type, *args):
     """

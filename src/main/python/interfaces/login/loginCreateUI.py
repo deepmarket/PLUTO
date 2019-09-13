@@ -1,7 +1,5 @@
-from api import Api
-from uix.stylesheet import *
-from uix.util import *
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
+
 from PyQt5.QtCore import pyqtSignal, Qt
 from PyQt5.QtWidgets import QSizePolicy, QWidget
 
@@ -118,7 +116,7 @@ class CreatePageUI(QFrame):
 
         section_layout = VerticalLayout(self.button_section, space=10)
 
-        self.create_hint = Label(self.button_section, text="test", name="login_hint")
+        self.create_hint = Label(self.button_section, text="", name="login_hint")
         section_layout.addWidget(self.create_hint)
 
         self.create_button = Button(

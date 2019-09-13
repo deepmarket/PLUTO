@@ -1,6 +1,6 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
-from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtCore import Qt, pyqtSignal, QTimer
 from PyQt5.QtWidgets import QSizePolicy, QWidget
 
 from ..widgets import (
@@ -64,11 +64,32 @@ class LoginPageUI(Frame):
     
     def _init_title_section(self):
 
+        """
         section_layout = VerticalLayout(self.title_section)
+
         label = Label(
             self.title_section, text="Welcome.", name="login_title", align=Qt.AlignCenter
         )
+        
         section_layout.addWidget(label)
+        """
+        self.login_kindly()
+
+    def login_kindly(self):
+        def update_title(title_text: str="Please Sign In."):
+            section_layout = VerticalLayout(self.title_section)
+
+            label = Label(
+                self.title_section, text=title_text, name="login_title", align=Qt.AlignCenter
+            )
+        
+            section_layout.addWidget(label)
+            
+        update_title("Welcome.")
+
+        timer = QTimer()
+        timer.timeout.connect(update_title)
+        timer.start(3500)
 
     def _init_input_section(self):
 
@@ -89,7 +110,7 @@ class LoginPageUI(Frame):
 
         section_layout = VerticalLayout(self.button_section, space=10)
 
-        self.login_hint = Label(self.button_section, text="test", name="login_hint")
+        self.login_hint = Label(self.button_section, text="", name="login_hint")
         section_layout.addWidget(self.login_hint)
 
         self.login_button = Button(self.button_section, text="LOG IN", name="action_button")

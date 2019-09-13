@@ -31,13 +31,13 @@ class LoginUI(QDialog):
         self.login = LoginPageUI(self, self._to_create_signal, self.cxt)
 
         # connect function
-        # self.login.login_button.clicked.connect(self.login_action)
+        self.login.login_button.clicked.connect(self.login_action)
         self.login.to_create_button.clicked.connect(self.to_create)
 
         self.create = CreatePageUI(self, self._to_login_signal, self.cxt)
 
         # connect function
-        # self.create.create_button.clicked.connect(self.create_action)
+        self.create.create_button.clicked.connect(self.create_action)
         self.create.to_login_button.clicked.connect(self.to_login)
 
         self._init_ui()
@@ -69,7 +69,6 @@ class LoginUI(QDialog):
 
     def to_login(self):
         self._build_check()
-        # self.clean_create_page()
 
         login_animation = MoveAnimation(self.login, self.width(), 0, 0, 0)
         create_animation = MoveAnimation(self.create, 0, 0, 0 - self.width(), 0)

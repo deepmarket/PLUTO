@@ -11,8 +11,9 @@ psutil = "*"
 behave = "*"
 fbs = "*"
 black = "*"
-PyQt5 = "*"
+PyQt5 = "==5.9.2"
 SIP = "*"
+pyinstaller = "==3.4"
 
 [requires]
 python_version = "3.6"

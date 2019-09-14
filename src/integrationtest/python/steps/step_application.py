@@ -1,10 +1,12 @@
 
 from PyQt5.QtTest import QTest
 from PyQt5.QtCore import Qt
-
+from dashboard import Dashboard
+from resources import Resources
+from jobs import Jobs
+from settings import Settings
 from behave import use_step_matcher, when, then
-
-from test.steps.step_helpers import assert_equal, assert_is_not, assert_is_true, assert_is_not_true
+from src.integrationtest.python.steps.step_helpers import assert_equal, assert_is_not, assert_is_true, assert_is_not_true
 use_step_matcher("re")
 
 
@@ -23,11 +25,6 @@ def open_main_tab(context, tab):
 
 @then(r'the current tab should be the (dashboard|resources|jobs|settings) tab')
 def verify_main_tab(context, tab):
-    from dashboard import Dashboard
-    from resources import Resources
-    from jobs import Jobs
-    from settings import Settings
-
     check_type = lambda type_: assert_equal(type(context.app.main_window.stack.currentWidget()), type_)
 
     if tab == "dashboard":

@@ -8,19 +8,21 @@
 
 """
 
+from fbs_runtime.application_context.PyQt5 import ApplicationContext
+
 from mainview import MainView
 from uix.util import *
 
-
 class Settings(MainView):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, cxt:ApplicationContext, *args, **kwargs):
         super(Settings, self).__init__(*args, **kwargs)
 
         self.workspace = None
 
+        self.cxt = cxt
         self._init_ui()
-        self.setStyleSheet(page_style)
+        self.setStyleSheet(self.cxt.settings_style)
 
     def _init_ui(self):
         self.setObjectName("Settings")
@@ -31,18 +33,20 @@ class Settings(MainView):
         section_layout.addWidget(window_frame)
         self.stack = add_layout(window_frame, STACK)
 
-        self.workspace = SettingsWorkspace()
+
+        self.workspace = SettingsWorkspace(window_frame, self.cxt)
 
         self.stack.addWidget(self.workspace)
 
 
 class SettingsWorkspace(QFrame):
 
-    def __init__(self, *args, **kwargs):
-        super(QFrame, self).__init__(*args, **kwargs)
+    def __init__(self, parent, cxt:ApplicationContext, *args, **kwargs):
+        super(SettingsWorkspace, self).__init__(parent, *args, **kwargs)
 
+        self.cxt = cxt
         self._init_ui()
-        self.setStyleSheet(page_style)
+        self.setStyleSheet(self.cxt.settings_style)
 
     def _init_ui(self):
 

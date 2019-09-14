@@ -1,7 +1,7 @@
 
 from behave import use_step_matcher, given, when, then, step
-
-from mainapp import MainApp
+from src.main.python.mainapp import MainApp
+from src.main.python.main import AppContext
 
 use_step_matcher("re")
 
@@ -43,7 +43,8 @@ def start_application_execution(context):
         app = QApplication([])
         context._app = app
 
-    __app = MainApp()
+    cxt = AppContext()
+    __app = MainApp(cxt=cxt)
     context.__app = __app
 
 

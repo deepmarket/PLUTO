@@ -1,24 +1,4 @@
-"""
-    The following items can be interacted:
-
-    class JobsWorkspace:
-
-        self.add_jobs = None            # button
-        self.workers = None             # input string
-        self.cores = None               # input number
-        self.memory = None              # input number
-        self.source_file = None         # input string
-        self.input_file = None          # input string
-
-        self.submit_button = None       # button
-        self.refresh_button = None      # button
-        self.hint = None                # button
-
-    class JobsList:
-
-        self.table = None               # section
-        self.current_row = 0            # param number
-"""
+from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 from mainview import MainView
 from uix.util import *
@@ -26,10 +6,9 @@ from uix.config import *
 from uix.popup import Question
 from api import Api
 
-
 class Jobs(MainView):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, cxt:ApplicationContext, *args, **kwargs):
         super(Jobs, self).__init__(*args, **kwargs)
 
         # variable
@@ -46,8 +25,10 @@ class Jobs(MainView):
         self.source_check:bool = False               # flag
         self.input_check:bool = False                # flag
 
+        self.cxt = cxt
+
         self._init_ui()
-        self.setStyleSheet(page_style)
+        self.setStyleSheet(self.cxt.jobs_style)
 
         self.on_workspace_clicked()
 
@@ -57,8 +38,8 @@ class Jobs(MainView):
         button_frame, button_layout = add_frame(self, height=35, layout=HORIZONTAL, l_m=40, r_m=40, space=24)
         section_layout.addWidget(button_frame)
 
-        self.workspace_button = add_button(button_frame, "Add Job", stylesheet=page_menu_button_active)
-        self.list_button = add_button(button_frame, "Job Lists", stylesheet=page_menu_button)
+        self.workspace_button = add_button(button_frame, "Add Job", name="page_menu_button_active")
+        self.list_button = add_button(button_frame, "Job Lists", name="page_menu_button")
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         button_layout.addWidget(self.workspace_button)
@@ -69,8 +50,8 @@ class Jobs(MainView):
         section_layout.addWidget(window_frame)
         self.stack = add_layout(window_frame, STACK)
 
-        self.workspace = JobWorkspace()
-        self.list = JobList()
+        self.workspace = JobWorkspace(self.cxt)
+        self.list = JobList(self.cxt)
 
         self.stack.addWidget(self.workspace)
         self.stack.addWidget(self.list)
@@ -85,16 +66,18 @@ class Jobs(MainView):
 
     def on_workspace_clicked(self):
         # set button to enable stylesheet
-        self.workspace_button.setStyleSheet(page_menu_button_active)
-        self.list_button.setStyleSheet(page_menu_button)
+        self.workspace_button.setObjectName("page_menu_button_active")
+        self.list_button.setObjectName("page_menu_button")
+        self.setStyleSheet(self.cxt.jobs_style)
         self.stack.setCurrentIndex(0)
 
         self.update_workspace()
 
     def on_list_clicked(self):
         # set button to enable stylesheet
-        self.workspace_button.setStyleSheet(page_menu_button)
-        self.list_button.setStyleSheet(page_menu_button_active)
+        self.workspace_button.setObjectName("page_menu_button")
+        self.list_button.setObjectName("page_menu_button_active")
+        self.setStyleSheet(self.cxt.jobs_style)
         self.stack.setCurrentIndex(1)
 
         self._fetch_job_data()
@@ -240,7 +223,7 @@ class Jobs(MainView):
             Do you want to submit this job at the aforementioned rate and time?
         """
 
-        question = Question(question)
+        question = Question(question, self.cxt)
 
         if question.exec_():
 
@@ -282,7 +265,7 @@ class Jobs(MainView):
             column = self.list.table.columnCount()
 
             # ask if user want to delete rows
-            question = Question("Are you sure you want to remove this?")
+            question = Question("Are you sure you want to remove this?", self.cxt)
 
             if question.exec_():
                 job_id = self.list.table.item(row, 0).text()
@@ -329,7 +312,7 @@ class Jobs(MainView):
 
 class JobWorkspace(QFrame):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, cxt:ApplicationContext, *args, **kwargs):
         super(QFrame, self).__init__(*args, **kwargs)
 
         # variable
@@ -356,8 +339,9 @@ class JobWorkspace(QFrame):
 
         self.submit_button = None               # button widget
 
+        self.cxt = cxt
         self._init_ui()
-        self.setStyleSheet(page_style)
+        self.setStyleSheet(self.cxt.jobs_style)
 
     def _init_ui(self):
 
@@ -404,49 +388,50 @@ class JobWorkspace(QFrame):
         left_layout.addWidget(title_frame)
 
         titles = ["Time", "CPU:", "GPU:", "Memory:", "Disk Space:"]
-        add_labels(title_layout, title_frame, titles, Page_scheme_label_disable, Qt.AlignRight)
+        add_labels(title_layout, title_frame, titles, "Page_scheme_label_disable", Qt.AlignRight)
 
         # --------- scheme_01_frame ------------
 
-        self.scheme_01_frame, scheme_layout = add_frame(left_frame, width=124, stylesheet=Page_scheme_box,
+        self.scheme_01_frame, scheme_layout = add_frame(left_frame, width=124, name="Page_scheme_box",
                                                         t_m=31, b_m=32, space=16)
+                                                       
         left_layout.addWidget(self.scheme_01_frame)
 
         labels = ["12:00 AM - 5:59 AM", "0 Credit/Hr", "0 Credit/Hr", "0 Credit/Hr", "0 Credit/Hr"]
-        add_labels(scheme_layout, self.scheme_01_frame, labels, Page_scheme_label, Qt.AlignHCenter)
+        add_labels(scheme_layout, self.scheme_01_frame, labels, "Page_scheme_label", Qt.AlignHCenter)
 
         self.scheme_01_frame.mousePressEvent = self.enable_scheme_01_frame
 
         # --------- scheme_02_frame ------------
 
-        self.scheme_02_frame, scheme_layout = add_frame(left_frame, width=124, stylesheet=Page_scheme_box_disable,
+        self.scheme_02_frame, scheme_layout = add_frame(left_frame, width=124, name="Page_scheme_box_disable",
                                                         t_m=31, b_m=32, space=16)
         left_layout.addWidget(self.scheme_02_frame)
 
         labels[0] = "6:00 AM - 11:59 PM"
-        add_labels(scheme_layout, self.scheme_02_frame, labels, Page_scheme_label_disable, Qt.AlignHCenter)
+        add_labels(scheme_layout, self.scheme_02_frame, labels, "Page_scheme_label_disable", Qt.AlignHCenter)
 
         self.scheme_02_frame.mousePressEvent = self.enable_scheme_02_frame
 
         # --------- scheme_03_frame ------------
 
-        self.scheme_03_frame, scheme_layout = add_frame(left_frame, width=124, stylesheet=Page_scheme_box_disable,
+        self.scheme_03_frame, scheme_layout = add_frame(left_frame, width=124, name="Page_scheme_box_disable",
                                                         t_m=31, b_m=32, space=16)
         left_layout.addWidget(self.scheme_03_frame)
 
         labels[0] = "12:00 PM - 5: 59 PM"
-        add_labels(scheme_layout, self.scheme_03_frame, labels, Page_scheme_label_disable, Qt.AlignHCenter)
+        add_labels(scheme_layout, self.scheme_03_frame, labels, "Page_scheme_label_disable", Qt.AlignHCenter)
 
         self.scheme_03_frame.mousePressEvent = self.enable_scheme_03_frame
 
         # --------- scheme_04_frame ------------
 
-        self.scheme_04_frame, scheme_layout = add_frame(left_frame, width=124, stylesheet=Page_scheme_box_disable,
+        self.scheme_04_frame, scheme_layout = add_frame(left_frame, width=124, name="Page_scheme_box_disable",
                                                         t_m=31, b_m=32, space=16)
         left_layout.addWidget(self.scheme_04_frame)
 
         labels[0] = "6:00 PM - 11: 59 PM"
-        add_labels(scheme_layout, self.scheme_04_frame, labels, Page_scheme_label_disable, Qt.AlignHCenter)
+        add_labels(scheme_layout, self.scheme_04_frame, labels, "Page_scheme_label_disable", Qt.AlignHCenter)
 
         self.scheme_04_frame.mousePressEvent = self.enable_scheme_04_frame
 
@@ -512,23 +497,26 @@ class JobWorkspace(QFrame):
         line_frame, line_layout = add_frame(section_frame, layout=HORIZONTAL)
         sub_section_layout.addWidget(line_frame)
 
-        box, self.workers = add_page_input_box(line_frame, "Workers #:", 70, 20, stylesheet=Page_input_input)
+        box, self.workers = add_page_input_box(line_frame, "Workers #:", 70, 20)
+        self.workers.setObjectName("Page_input_input")
         line_layout.addWidget(box)
 
-        box, self.cores = add_page_input_box(line_frame, "Cores #:", 70, 20, stylesheet=Page_input_input)
+        box, self.cores = add_page_input_box(line_frame, "Cores #:", 70, 20)
+        self.cores.setObjectName("Page_input_input")
         line_layout.addWidget(box)
 
-        box, self.memory = add_page_input_box(line_frame, "Memory:", 70, 20, stylesheet=Page_input_input)
+        box, self.memory = add_page_input_box(line_frame, "Memory:", 70, 20)
+        self.memory.setObjectName("Page_input_input")
         line_layout.addWidget(box)
 
         # --------- source_file and input_file ------------
 
-        box, self.source_file = add_page_input_box(line_frame, "Source file:", 70, 20,
-                                                   stylesheet=Page_input_input, fix_width=False)
+        box, self.source_file = add_page_input_box(line_frame, "Source file:", 70, 20, fix_width=False)
+        self.source_file.setObjectName("Page_input_input")
         sub_section_layout.addWidget(box)
 
-        box, self.input_file = add_page_input_box(line_frame, "Input file:", 70, 20,
-                                                  stylesheet=Page_input_input, fix_width=False)
+        box, self.input_file = add_page_input_box(line_frame, "Input file:", 70, 20, fix_width=False)
+        self.input_file.setObjectName("Page_input_input")
         sub_section_layout.addWidget(box)
 
         # --------- spacer ------------
@@ -541,8 +529,8 @@ class JobWorkspace(QFrame):
         line_frame, line_layout = add_frame(section_frame, layout=HORIZONTAL)
         sub_section_layout.addWidget(line_frame)
 
-        box, self.expect_time = add_page_input_box(line_frame, "Estimated\ntime:\n", 70, 20,
-                                                   stylesheet=Page_input_input, hint="(Optional)")
+        box, self.expect_time = add_page_input_box(line_frame, "Estimated\ntime:\n", 70, 20, hint="(Optional)")
+        self.expect_time.setObjectName("Page_input_input")
         line_layout.addWidget(box)
 
         self.submission_hint = add_label(line_frame, "", name="Page_hint", align=Qt.AlignVCenter)
@@ -560,21 +548,29 @@ class JobWorkspace(QFrame):
         window_layout.addItem(spacer)
 
     def enable_scheme_01_frame(self, event):
-        set_frame(self, 1, self.scheme_01_frame)
+        set_frame(self, self.scheme_01_frame)
+        self.setStyleSheet(self.cxt.jobs_style)
+        self.select_scheme = 1
 
     def enable_scheme_02_frame(self, event):
-        set_frame(self, 2, self.scheme_02_frame)
-
+        set_frame(self, self.scheme_02_frame)
+        self.setStyleSheet(self.cxt.jobs_style)
+        self.select_scheme = 2
+        
     def enable_scheme_03_frame(self, event):
-        set_frame(self, 3, self.scheme_03_frame)
+        set_frame(self, self.scheme_03_frame)
+        self.setStyleSheet(self.cxt.jobs_style)
+        self.select_scheme = 3
 
     def enable_scheme_04_frame(self, event):
-        set_frame(self, 4, self.scheme_04_frame)
+        set_frame(self, self.scheme_04_frame)
+        self.setStyleSheet(self.cxt.jobs_style)
+        self.select_scheme = 4
 
 
 class JobList(QFrame):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, cxt:ApplicationContext, *args, **kwargs):
         super(QFrame, self).__init__(*args, **kwargs)
 
         # variable
@@ -586,7 +582,7 @@ class JobList(QFrame):
         self.current_row:int = 0                # param number
 
         self._init_ui()
-        self.setStyleSheet(page_style)
+        self.setStyleSheet(cxt.jobs_style)
 
     def _init_ui(self):
         window_layout = add_layout(self, VERTICAL)

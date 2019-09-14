@@ -1,38 +1,19 @@
-"""
-    The following items can be interacted:
-
-    LoginPage:
-        self.username = None
-        self.pwd = None
-        self.login_button = None
-        self.login_hint = None
-        self.remember_check = None
-        self.to_forget_pwd = None
-        self.to_create_button = None
-
-    CreatePage:
-        self.first = None
-        self.last = None
-        self.username = None
-        self.pwd = None
-        self.create_hint = None
-        self.create_button = None
-        self.to_login_button = None
-"""
-
 from api import Api
 from uix.stylesheet import *
 from uix.util import *
+from fbs_runtime.application_context.PyQt5 import ApplicationContext
+from PyQt5.QtCore import pyqtSignal
 
 
 class Login(QDialog):
-    def __init__(self, login_signal, *args, **kwargs):
-        super(QDialog, self).__init__(*args, **kwargs)
+    def __init__(self, login_signal:pyqtSignal, cxt:ApplicationContext, *args, **kwargs):
+        super(Login, self).__init__(*args, **kwargs)
 
         self.login_signal = login_signal
 
         self.login = None
         self.create = None
+        self.cxt = cxt
 
         # gui property
         # self.pos = None
@@ -57,7 +38,7 @@ class Login(QDialog):
 
     def _init_ui(self):
         # login page
-        self.login = LoginPage(self)
+        self.login = LoginPage(self, self.cxt)
 
         # set initial position
         self.login.move(0, 0)
@@ -67,7 +48,7 @@ class Login(QDialog):
         self.login.to_create_button.clicked.connect(self.to_create)
 
         # to_create page
-        self.create = CreatePage(self)
+        self.create = CreatePage(self, self.cxt)
 
         # set initial position
         self.create.move(0-self.width(), 0)
@@ -233,8 +214,8 @@ class Login(QDialog):
 
 # Pure UI class, no functionality
 class LoginPage(QFrame):
-    def __init__(self, *args, **kwargs):
-        super(QFrame, self).__init__(*args, **kwargs)
+    def __init__(self, parent, cxt:ApplicationContext, *args, **kwargs):
+        super(QFrame, self).__init__(parent, *args, **kwargs)
 
         # variable
         self.username = None                # input string
@@ -248,7 +229,7 @@ class LoginPage(QFrame):
         self._init_geometry()
         self._init_ui()
 
-        self.setStyleSheet(login_style)
+        self.setStyleSheet(cxt.login_style)
 
     def _init_geometry(self):
 
@@ -330,8 +311,8 @@ class LoginPage(QFrame):
 
 # Pure UI class, no functionality
 class CreatePage(QFrame):
-    def __init__(self, *args, **kwargs):
-        super(QFrame, self).__init__(*args, **kwargs)
+    def __init__(self, parent, cxt:ApplicationContext, *args, **kwargs):
+        super(QFrame, self).__init__(parent, *args, **kwargs)
 
         # variable
         self.first = None                   # input string
@@ -346,7 +327,7 @@ class CreatePage(QFrame):
         self._init_geometry()
         self._init_ui()
 
-        self.setStyleSheet(login_style)
+        self.setStyleSheet(cxt.login_style)
 
     def _init_geometry(self):
 

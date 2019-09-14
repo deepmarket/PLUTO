@@ -5,7 +5,8 @@ from PyQt5.QtCore import Qt
 
 from behave import use_step_matcher, when, then
 
-from test.steps.step_helpers import assert_equal, assert_is_not, assert_is
+from src.integrationtest.python.steps.step_helpers import assert_equal, assert_is_not
+
 use_step_matcher("re")
 
 
@@ -45,7 +46,7 @@ def verify_login_input_text(context, dialog_box, text):
 
 
 @when(r'I click the login button')
-def click_the_button(context, ):
+def click_the_button(context):
     assert_is_not(context.login_window, None)
 
     QTest.mouseClick(context.login_window.login.login_button, Qt.LeftButton)

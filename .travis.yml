@@ -9,28 +9,27 @@ env:
 #  - HEADLESS="true"
 
 install:
-  - pip install -r requirements.txt
+    - python -m pip install pipenv
+    - pipenv install
 
 script:
-  - python -m unittest test/test_api.py
-  # xvfb allows GUI applications to run headlessly and only works on xenial
-  # See: https://docs.travis-ci.com/user/gui-and-headless-browsers/#using-the-xvfb-run-wrapper
-  - xvfb-run behave test/features
+    - pipenv run python -m unittest discover ./src/unittest/python
+    # xvfb allows GUI applications to run headlessly and only works on xenial
+    # See: https://docs.travis-ci.com/user/gui-and-headless-browsers/#using-the-xvfb-run-wrapper
+    - pipenv run xvfb-run behave ./src/integrationtest/python
 
 matrix:
   include:
-
 # As of 3/6/19 Trusty does not work with PyQt5 in CI
 
     # Tests Python 3.6 on Ubuntu Trusty
 #    - python: 3.6
-#    - python: 3.7  # as of 8/17.18 3.7 is still being worked on by the travis team
+#    - no 3.7 until pipenv + fbs get up to it
 #      dist: trusty
 #      sudo: true
 
-    # Tests Python 3.6 and 3.7 on Ubuntu Xenial
+    # Tests Python 3.6 on Ubuntu Xenial
     - python: "3.6"
-    - python: "3.7"
       dist: xenial
       sudo: true
 
@@ -58,7 +57,6 @@ matrix:
 #    - os: osx
 #      language: generic
 #      osx_image: xcode6.4
-
 
 # Perform manual install of 3.6 for OS X
 before_install:

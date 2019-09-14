@@ -1,6 +1,7 @@
 # popup widget
 
 from uix.util import *
+from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 
 # base class
@@ -33,7 +34,7 @@ class BaseDialog(QDialog):
 
 class Question(BaseDialog):
 
-    def __init__(self, question, *args, **kwargs):
+    def __init__(self, question, cxt:ApplicationContext, *args, **kwargs):
         super(Question, self).__init__(*args, **kwargs)
 
         self.question = question
@@ -41,7 +42,7 @@ class Question(BaseDialog):
         self._init_geometry()
         self._init_ui()
 
-        self.setStyleSheet(question_style)
+        self.setStyleSheet(cxt.question_style)
 
     def _init_geometry(self):
         # hide title bar
@@ -87,7 +88,7 @@ class Question(BaseDialog):
 
 class Notification(BaseDialog):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, cxt:ApplicationContext, *args, **kwargs):
         super(Notification, self).__init__(*args, **kwargs)
 
         self.clean = None
@@ -97,7 +98,7 @@ class Notification(BaseDialog):
         self._init_geometry()
         self._init_ui()
 
-        self.setStyleSheet(notification_style)
+        self.setStyleSheet(cxt.notification_style)
 
     def _init_geometry(self):
         # hide title bar
@@ -153,7 +154,7 @@ class Notification(BaseDialog):
 
 class CreditHistory(BaseDialog):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, cxt:ApplicationContext, *args, **kwargs):
         super(CreditHistory, self).__init__(*args, **kwargs)
 
         self.done = None
@@ -163,7 +164,7 @@ class CreditHistory(BaseDialog):
         self._init_geometry()
         self._init_ui()
 
-        self.setStyleSheet(credit_style)
+        self.setStyleSheet(cxt.credit_history_style)
 
     def _init_geometry(self):
         # hide title bar
@@ -201,8 +202,11 @@ class CreditHistory(BaseDialog):
         button_frame.setFixedHeight(33)
         button_layout = add_layout(button_frame, HORIZONTAL, space=20)
 
-        self.cost = add_button(button_frame, "COST", stylesheet=Credit_section_button_active)
-        self.profit = add_button(button_frame, "PROFIT", stylesheet=Credit_section_button)
+        self.cost = add_button(button_frame, "COST")
+        self.cost.setObjectName("Credit_section_button_active")
+
+        self.profit = add_button(button_frame, "PROFIT")
+        self.profit.setObjectName("Credit_section_button")
 
         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
 

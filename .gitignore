@@ -48,3 +48,6 @@ venv
 *.code-workspace
 .vscode
 env
+
+# Compiled Files #
+target/*

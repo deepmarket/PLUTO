@@ -1,0 +1,88 @@
+
+    #Login {
+        border: None;
+        background: #F4F8F9;
+    }
+    
+    #Login_login_title {
+        font-family: "Helvetica Neue";
+        font-size: 35px;
+        font-weight: 100;
+        color: #6C7E8E;
+    }
+    
+    #Login_create_title {
+        font-family: "Helvetica Neue";
+        font-size: 26px;
+        font-weight: 100;
+        color: #6C7E8E;
+    }
+    
+    #Login_prologue {
+        font-family: "Helvetica Neue";
+        font-size: 13px;
+        font-weight: 200;
+        color: #6C7E8E;
+    }
+    
+    #Login_input_box {
+        border: none;
+        background-color: white;
+    }
+    
+    #Login_input_title {
+        font-family: "Helvetica Neue";
+        font-size: 14px;
+        font-weight: 400;
+        color: #6C7E8E;
+    }
+    
+    #Login_input_input {
+        border: none;
+        font-family: "Helvetica Neue";
+        font-weight: 300;
+        font-size: 14px;
+        color: #6C7E8E;
+        background-color: white;
+    }
+    
+    #Login_hint {
+        padding-left: 15px;
+        font-family: "Helvetica Neue";
+        font-size: 13px;
+        font-weight: 200;
+        color: #FF4500;
+    }
+    
+    #Login_large_button {
+        border: none;
+        background-color: #6C7E8E;
+        height: 48px;
+        font-family: "Helvetica Neue";
+        font-size: 16px;
+        font-weight: 100;
+        border-radius: 4px;
+        font-weight: 200;
+        color: white;
+    }
+    
+    #Login_switch_description {
+        background-color: white;
+        padding-right: 10px;
+        font-family: "Helvetica Neue";
+        font-size: 14px;
+        font-weight:200;
+        color: #6C7E8E;
+    }
+    
+    #Login_switch_button {
+        border: None;
+        background-color: white;
+        padding-left: 10px;
+        height: 63px;
+        text-align: left;
+        font-family: "Helvetica Neue";
+        font-size: 14px;
+        font-weight: 200;
+        color: #2F0FFF;
+    }

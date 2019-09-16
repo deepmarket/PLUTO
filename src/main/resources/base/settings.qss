@@ -1,136 +1,83 @@
-#Page_sub_page {
-    background-color: white;
-}
-
-#Page_machine_config {
-    background-color: #D6EFEF;
-}
-
-#Page_resource_planning {
-    background-color: #F4F8F9;
-}
-
-#Page_resource_submission {
-    background-color: #F4F8F9;
-}
-
-#Page_scheme {
-    background-color: #F4F8F9;
-}
-
-#Page_available_resources {
-    background-color: #D6EFEF;
-}
-
-#Page_job_submission {
-    background-color: #F4F8F9;
-}
-
-#Page_section_title {
+* {
     font-family: "Helvetica Neue";
-    font-size: 20px;
-    font-weight: 100;
-    color: #6C7E8E;
 }
 
-#Page_section_title_small {
-    font-family: "Helvetica Neue";
+QFrame#settings {
+    margin: 7px;
+}
+
+QFrame#settings > QFrame {
+    padding: 0 50px;
+}
+
+QFrame#settings QFrame#logo_section {
+    background-color: #FFFFFF;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+QFrame#content_section {
+    background-color: #FFFFFF;
+    margin-top: 7px;
+}
+
+QFrame#content_section > QFrame {
+    padding-top: 25px;
+}
+
+QFrame#button_section {
+    background-color: #FFFFFF;
+    min-height: 75px;
+}
+
+QFrame#section_title_frame {
+    padding-bottom: 18px;
+}
+
+QFrame#temp {
+    background-color: #F5DFDF;
+}
+
+QLabel#section_title {
     font-size: 16px;
-    font-weight: 300;
     color: #6C7E8E;
 }
 
-#Page_hint {
-    font-family: "Helvetica Neue";
+QLabel#section_hint,
+QLabel#submit_hint {
     font-size: 12px;
-    font-weight: 300;
-    color: red;
+    color: #FF0000;
 }
 
-#Page_hint_small {
-    font-family: "Helvetica Neue";
-    font-size: 11px;
-    font-weight: 300;
-    color: red;
-}
-
-#Page_input_frame {
-    background-color: white;
-}
-
-#Page_input_title {
-    font-family: "Helvetica Neue";
-    font-size: 13px;
+QLabel#setting_title {
+    font-size: 35px;
     font-weight: 300;
     color: #6C7E8E;
 }
 
-#Page_button {
-    border: None;
-    background-color: #6C7E8E;
-    height: 30px;
-    width: 120px;
-    font-family: "Helvetica Neue";
+QLabel#setting_version {
+    color: #6C7E8E;
+}
+
+QLabel#link {
+    color: #6C7E8E;
     font-size: 12px;
-    font-weight: 300;
-    color: white;
 }
 
-#Page_available_title {
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 500;
-    color: #6C7E8E;
-}
-
-#Page_available_label {
-    font-family: "Helvetica Neue";
-    font-size: 11px;
-    font-weight: 500;
-    color: #6C7E8E;
-}
-
-#Page_table_workspace {
-    background-color: white;
-}
-
-#Page_table_test {
-    background-color: yellow;
-}
-
-#Page_table_workspace_search {
-    border: None;
-    background-color: #F7F7F7;
-    padding: 0 20px;
-    font-family: "Helvetica Neue";
-    font-size: 13px;
-    font-weight: 200;
-    color: black;
-}
-
-#Page_table_workspace_button {
-    border: None;
-    background-color: #6C7E8E;
-    height: 35px;
-    width: 90px;
-    font-family: "Helvetica Neue";
-    font-size: 13px;
-    font-weight: 200;
-    color: white;
-}
-
-#Page_table {
+QPushButton#view_button,
+QPushButton#view_button_disable {
     border: none;
-    background-color: white;
-    alternate-background-color: #FAFAFA;
+    min-width: 115px;
+    min-height: 30px;
+    font-size: 12px;
 }
 
-#Page_table QHeaderView::section {
-    border: none;
+QPushButton#view_button {
     background-color: #6C7E8E;
-    height: 35px;
-    font-family: "Helvetica Neue";
-    font-size:13px;
-    font-weight: 100;
-    color: white;
+    color: #FFFFFF;
+}
+
+QPushButton#view_button_disable {
+    background-color: #C6CDDB;
+    color: #F2F2F2;
 }

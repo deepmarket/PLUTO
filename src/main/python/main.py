@@ -1,6 +1,7 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from fbs_runtime.application_context import cached_property
 from os import environ
+from PyQt5.Qt import QImage
 
 from mainapp import MainApp
 
@@ -53,6 +54,10 @@ class AppContext(ApplicationContext):
     @cached_property
     def settings_style(self):
         return self.load_style("settings.qss")
+
+    @cached_property
+    def logo(self):
+        return QImage(self.get_resource("logo.png"))
 
     @cached_property
     def question_style(self):

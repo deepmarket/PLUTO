@@ -100,15 +100,34 @@ class Login(LoginUI):
             })
 
             if (res or status) is None:
+                """
+                    App can't connect to server.
+                """
                 self.login.login_hint.setText("There was an error connecting to the authentication servers. "
                                               "Please try again in a little while.")
             elif res.get("auth"):
+                """
+                    Username and password both correct.
+                """
                 self.accept()
                 self.login_signal.emit()
+            elif status == 200 and res.get("auth") == False:
+                """
+                    Username correct but password incorrect.
+                    # TODO: return message weird. In this case, it should return
+                    # 401 as the case below.
+                """
+                self.login.login_hint.setText("Password incorrect, please try again.")
             elif status == 401:
-                self.login.login_hint.setText("The email or password you entered is not recognized.")
+                """
+                    Username incorrect.
+                """
+                self.login.login_hint.setText("The email account entered doesn't exists.")
             # Only other status API will return is an error, so let the user know
             else:
+                """
+                    unexpected error.
+                """
                 self.login.login_hint.setText("There was an unknown error while trying to log in. Please try again.")
 
     def attempt_create(self, first, last, username, pwd):

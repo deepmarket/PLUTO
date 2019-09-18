@@ -1,9 +1,9 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
+from enum import Enum, auto
 
 from api import Api
+from util import job_input_check
 
-import util as util
-from enum import Enum, auto
 from interfaces.jobs import JobsUI, JobsAddViewUI, JobsControllerUI
 from interfaces.widgets import Question
 
@@ -32,14 +32,6 @@ class Jobs(JobsUI):
 
 class JobsAddView(JobsAddViewUI): 
 
-    workers: int = 0
-    cores: int = 0
-    memory: int = 0
-    source_files: str = ""
-    input_files: str = ""
-    expected_time: str = ""
-    price = ""
-
     def __init__(self, *args, **kwargs):
         super(JobsAddView, self).__init__(*args, **kwargs)
 
@@ -49,9 +41,9 @@ class JobsAddView(JobsAddViewUI):
         if not self._submission_check():
             return
 
-        workers = self.workers.text()
-        cores = self.cores.text()
-        memory = self.memory.text()
+        workers_cnt = self.workers.text()
+        cores_cnt = self.cores.text()
+        memory_cnt = self.memory.text()
         source_files = self.source_file.text()
         input_files = self.input_file.text()
         expected_time = self.expect_time.text()
@@ -60,9 +52,9 @@ class JobsAddView(JobsAddViewUI):
 
         dat = {
             "timeslot_id": self.select_scheme-1,
-            "workers": workers,
-            "cores": cores,
-            "memory": memory,
+            "workers": workers_cnt,
+            "cores": cores_cnt,
+            "memory": memory_cnt,
             "source_files": [source_files],
             "input_files": [input_files],
             "price": price,
@@ -144,7 +136,7 @@ class JobsAddView(JobsAddViewUI):
             SUCCESS = auto()
 
         # check if input is acceptable
-        res = util.job_input_check(self.workers.text(), Res)
+        res = job_input_check(self.workers.text(), Res)
 
         if res is not Res.SUCCESS:
             self.submission_hint.setText(res.value)
@@ -163,7 +155,7 @@ class JobsAddView(JobsAddViewUI):
             SUCCESS = auto()
 
         # check if input is acceptable
-        res = util.job_input_check(self.cores.text(), Res)
+        res = job_input_check(self.cores.text(), Res)
 
         if res is not Res.SUCCESS:
             self.submission_hint.setText(res.value)
@@ -183,7 +175,7 @@ class JobsAddView(JobsAddViewUI):
             SUCCESS = auto()
 
         # check if input is acceptable
-        res = util.job_input_check(self.memory.text(), Res)
+        res = job_input_check(self.memory.text(), Res)
 
         if res is not Res.SUCCESS:
             self.submission_hint.setText(res.value)

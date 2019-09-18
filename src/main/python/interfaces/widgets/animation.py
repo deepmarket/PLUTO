@@ -21,7 +21,7 @@ class Animation(QPropertyAnimation):
         :param widget: required. defined the parent widget for this animation
         :param duration: how long the animation runs
         :param prop: animation type, it can be any kind of widget properties. 
-                     reference can be found here, https://doc.qt.io/archives/qt-4.8/qwidget.html
+        reference can be found here, https://doc.qt.io/archives/qt-4.8/qwidget.html
         """
 
         super(Animation, self).__init__(widget)

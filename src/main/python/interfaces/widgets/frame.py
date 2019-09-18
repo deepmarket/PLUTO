@@ -1,9 +1,3 @@
-"""
-
-    This module generate a simple placeholder frame without any contents.
-
-"""
-
 from PyQt5.QtWidgets import QFrame
 
 

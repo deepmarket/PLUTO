@@ -1,9 +1,3 @@
-"""
-
-    This module provide a group box widget
-
-"""
-
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QGroupBox, QWidget
 

@@ -1,10 +1,3 @@
-"""
-
-    This module generate a Qt layout wrapper object to arrange child widgets
-    within a widget to ensure that they make good use of the available space.
-
-"""
-
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLayout, QHBoxLayout, QVBoxLayout, QStackedLayout, QWidget
 

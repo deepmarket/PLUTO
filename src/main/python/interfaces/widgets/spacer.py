@@ -1,9 +1,3 @@
-"""
-
-    This module provides blank space in a layout.
-
-"""
-
 from PyQt5.QtWidgets import QSpacerItem, QSizePolicy
 
 

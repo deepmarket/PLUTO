@@ -1,10 +1,3 @@
-"""
-
-    This file provides a pure GUI interface for resources.
-    This component is controlling interface for resources tab
-
-"""
-
 from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
@@ -29,6 +22,10 @@ from ..config import RESOURCES_MAX_ROW
 
 
 class ResourcesControllerUI(Frame):
+    """
+    This component is controlling interface for resources tab
+    """
+
 
     # metaclass for defining abstract base classes
     __metaclass__ = ABCMeta

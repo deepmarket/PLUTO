@@ -1,9 +1,3 @@
-"""
-
-    This module generate serveral combination frame based object.
-
-"""
-
 from PyQt5.QtWidgets import QWidget, QComboBox, QCheckBox
 from PyQt5.QtCore import Qt
 

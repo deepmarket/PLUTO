@@ -1,16 +1,13 @@
-"""
-
-    This file provides a pure GUI interface for resources.
-    This component is overall UI manager for resources tab.
-
-"""
-
 from PyQt5.QtCore import pyqtSignal
 
 from ..widgets import StackLayout, Frame
 
 
 class ResourcesUI(Frame):
+    """
+    This component is overall UI manager for resources tab.
+    Control the interaction between add_view and controller
+    """
 
     _stack = None
     _to_controller_signal = pyqtSignal()

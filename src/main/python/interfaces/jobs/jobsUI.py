@@ -1,20 +1,6 @@
-"""
-
-    This file provides a pure GUI interface for resources.
-    This component is overall UI manager for resources tab.
-
-"""
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtWidgets import (
-    QFrame,
-    QVBoxLayout,
-    QHBoxLayout,
-    QLayout,
-    QSpacerItem,
-    QSizePolicy,
-)
 
 from ..widgets import (
     StackLayout,
@@ -29,6 +15,9 @@ from ..widgets import (
 
 
 class JobsUI(Frame):
+    """
+    This component is overall UI manager for resources tab.
+    """
 
     _stack = None
 

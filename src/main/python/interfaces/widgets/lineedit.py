@@ -1,9 +1,3 @@
-"""
-
-    This module generate an input field allows user to enter and edit single line of plain text.
-
-"""
-
 from PyQt5.QtWidgets import QLineEdit, QWidget
 from PyQt5.QtCore import Qt
 

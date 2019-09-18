@@ -1,18 +1,7 @@
-"""
-
-    This file provides a pure GUI interface for resources.
-    This component provides a workflow style interface to add current machine to resources pool.
-
-"""
-
 from abc import ABCMeta, abstractmethod
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 from PyQt5.QtWidgets import (
-    QFrame,
-    QLineEdit,
-    QLabel,
-    QRadioButton,
     QComboBox,
     QCheckBox,
 )
@@ -38,6 +27,9 @@ from ..helper import get_children
 
 
 class ResourcesAddViewUI(Frame):
+    """
+    This component provides a workflow style interface to add current machine to resources pool.
+    """
 
     # metaclass for defining abstract base classes
     # Reference can be found here: https://docs.python.org/2/library/abc.html#abc.abstractmethod

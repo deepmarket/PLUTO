@@ -1,6 +1,6 @@
+from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from abc import ABCMeta, abstractmethod
 
-from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 from PyQt5.QtWidgets import (
     QFrame,

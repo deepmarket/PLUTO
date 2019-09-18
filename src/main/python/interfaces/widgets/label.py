@@ -1,10 +1,3 @@
-"""
-
-    This module provides a text/image display.
-    No user interaction functionailty is provided.
-
-"""
-
 import os
 
 from PyQt5.QtCore import Qt

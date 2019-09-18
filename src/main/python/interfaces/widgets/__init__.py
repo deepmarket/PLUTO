@@ -19,5 +19,6 @@ from .module import (
     AttendanceBox,
     PriceBox,
     Scheme,
-    DashboardParamFrame,
+    ParamFrame,
+    EstimateFrame
 )

@@ -96,7 +96,7 @@ class ConfigFrame(BaseTwoLabelFrame):
         self.setObjectName("config_frame")
 
 
-class DashboardParamFrame(Frame):
+class ParamFrame(Frame):
 
     dat: Label = None
 
@@ -110,12 +110,12 @@ class DashboardParamFrame(Frame):
         """
         Dashboard data widget, contain two labels
         dat is the data (i.e. "1")
-        label is the param label (i.e. ""running)
+        label is the param label (i.e. "running")
         :param widget: required. the parent widget for this widget
         :param dat: data content for this widget
         :param label: label for this data
         """
-        super(DashboardParamFrame, self).__init__(widget)
+        super(ParamFrame, self).__init__(widget)
 
         layout = VerticalLayout(self, space=2)
 
@@ -130,6 +130,51 @@ class DashboardParamFrame(Frame):
 
     def get_dat(self):
         return self.dat.text()
+
+
+class EstimateFrame(Frame):
+
+    in_out: str = ""
+    unit: str = "/ Credits"
+    credit: Label = None
+
+    def __init__(
+        self,
+        widget: QWidget,
+        title: str = "",
+        in_out: str = "",
+        credit: str = "",
+    ):
+        """
+        Dashboard estimate widget.
+        :param widget: required. the parent widget for this widget
+        :param title: widget label (i.e. "estimate profit:")
+        :param in_out: "+" or "-"
+        :param credit: credit need to be present (i.e. "15")
+        """
+        super(EstimateFrame, self).__init__(widget)
+
+        layout = VerticalLayout(self, space=2)
+
+        left = Frame(self)
+        left_layout = VerticalLayout(left)
+        layout.add(left)
+
+        title = Label(self, name="dashboard_estimate_title", text=title, align=Qt.AlignLeft)
+        left_layout.addWidget(title)
+
+        subtitle = Label(self, name="dashboard_estimate_subtitle", text="(within next 24 hrs)", align=Qt.AlignLeft)
+        left_layout.addWidget(subtitle)
+
+        self.in_out = in_out
+        credit = Label(self, name="dashboard_estimate_credit", text=f"{self.in_out}{credit}{self.unit}", align=Qt.AlignLeft)
+        layout.addWidget(credit)
+    
+    def set_credit(self, text: str):
+        self.credit.setText(f"{self.in_out}{text}{self.unit}")
+
+    def get_credit(self, text: str):
+        self.credit.text()
 
 
 class BaseInputFrame(Frame):

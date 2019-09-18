@@ -92,7 +92,7 @@ class ResourcesAddViewUI(Frame):
     price_hint: Label = None
     submit_hint: Label = None
 
-    def __init__(self, signal: pyqtSignal, cxt:ApplicationContext, *args, **kwargs):
+    def __init__(self, signal: pyqtSignal, cxt: ApplicationContext, *args, **kwargs):
         super(ResourcesAddViewUI, self).__init__(*args, name="view", **kwargs)
 
         self.cxt = cxt

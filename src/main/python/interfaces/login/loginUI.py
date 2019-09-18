@@ -8,18 +8,19 @@ from PyQt5.QtWidgets import QDialog
 from .loginPageUI import LoginPageUI
 from .loginCreateUI import CreatePageUI
 
+
 class LoginUI(QDialog):
-    
-     # metaclass for defining abstract base classes
+
+    # metaclass for defining abstract base classes
     __metaclass__ = ABCMeta
-    
+
     login: Frame = None
     create: Frame = None
 
     _to_login_signal = pyqtSignal()
     _to_create_signal = pyqtSignal()
 
-    def __init__(self, cxt:ApplicationContext, *args, **kwargs):
+    def __init__(self, cxt: ApplicationContext, *args, **kwargs):
         super(LoginUI, self).__init__(*args, **kwargs)
 
         self.setObjectName("dialog")
@@ -60,7 +61,7 @@ class LoginUI(QDialog):
         self.login.move(0, 0)
 
         # set create initial position
-        self.create.move(0-self.width(), 0)
+        self.create.move(0 - self.width(), 0)
 
     def to_login(self):
         self._build_check()
@@ -75,7 +76,7 @@ class LoginUI(QDialog):
         self._build_check()
 
         login_animation = MoveAnimation(self.login, 0, 0, self.width(), 0)
-        create_animation = MoveAnimation(self.create, 0-self.width(), 0, 0, 0)
+        create_animation = MoveAnimation(self.create, 0 - self.width(), 0, 0, 0)
 
         login_animation.start()
         create_animation.start()

@@ -47,7 +47,7 @@ class ResourcesControllerUI(Frame):
 
     global_hint: Label = None
 
-    def __init__(self, signal: pyqtSignal, cxt:ApplicationContext, *args, **kwargs):
+    def __init__(self, signal: pyqtSignal, cxt: ApplicationContext, *args, **kwargs):
         super(ResourcesControllerUI, self).__init__(*args, name="view", **kwargs)
 
         self.cxt = cxt

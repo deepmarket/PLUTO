@@ -4,14 +4,14 @@ from abc import ABCMeta, abstractmethod
 from PyQt5.Qt import Qt, QPixmap, QLabel
 
 from ..widgets import (
-    Frame, 
-    VerticalLayout, 
-    HorizontalLayout, 
-    Label, 
-    HorizontalSpacer, 
-    VerticalSpacer, 
+    Frame,
+    VerticalLayout,
+    HorizontalLayout,
+    Label,
+    HorizontalSpacer,
+    VerticalSpacer,
     ViewButton,
-    SectionTitleFrame
+    SectionTitleFrame,
 )
 from ..config import VERSION
 
@@ -22,7 +22,7 @@ class SettingsUI(Frame):
     __metaclass__ = ABCMeta
 
     logo_section: Frame = None
-    
+
     content_section: Frame = None
     faq_section: Frame = None
     dashboard_section: Frame = None
@@ -34,7 +34,7 @@ class SettingsUI(Frame):
     save: ViewButton = None
     cancel: ViewButton = None
 
-    def __init__(self, cxt:ApplicationContext, *args, **kwargs):
+    def __init__(self, cxt: ApplicationContext, *args, **kwargs):
         super(SettingsUI, self).__init__(*args, name="settings", **kwargs)
 
         self.cxt = cxt
@@ -68,12 +68,17 @@ class SettingsUI(Frame):
 
         self.save.clicked.connect(self.on_save_button_clicked)
         self.cancel.clicked.connect(self.on_cancel_button_clicked)
-        
+
     def _init_logo_section(self):
 
         section_layout = HorizontalLayout(self.logo_section)
 
-        title = Label(self.logo_section, text="Setting", name="setting_title", align=Qt.AlignVCenter)
+        title = Label(
+            self.logo_section,
+            text="Setting",
+            name="setting_title",
+            align=Qt.AlignVCenter,
+        )
         section_layout.addWidget(title)
 
         spacer = HorizontalSpacer()
@@ -89,8 +94,8 @@ class SettingsUI(Frame):
         logo.setAlignment(Qt.AlignHCenter)
         logo_layout.addWidget(logo)
 
-        #version
-        version= Label(
+        # version
+        version = Label(
             logo_frame, text=f"PLUTO version: v {VERSION}", name="setting_version"
         )
         logo_layout.addWidget(version)
@@ -119,13 +124,11 @@ class SettingsUI(Frame):
 
         section_layout = VerticalLayout(self.faq_section)
 
-        #title_frame
-        title_frame = SectionTitleFrame(
-            self.faq_section, label_one_text="FAQ & Usage"
-        )
+        # title_frame
+        title_frame = SectionTitleFrame(self.faq_section, label_one_text="FAQ & Usage")
         section_layout.addWidget(title_frame)
 
-        #setting_content
+        # setting_content
         content_frame = Frame(self.faq_section)
         content_layout = VerticalLayout(content_frame)
         section_layout.addWidget(content_frame)
@@ -141,16 +144,16 @@ class SettingsUI(Frame):
 
         section_layout = VerticalLayout(self.dashboard_section)
 
-        #title_frame
+        # title_frame
         title_frame = SectionTitleFrame(
             self.dashboard_section, label_one_text="Dashboard Setting"
         )
         section_layout.addWidget(title_frame)
 
-        #content_frame
+        # content_frame
         content_frame = Frame(self.dashboard_section, name="temp")
         content_layout = VerticalLayout(content_frame)
-        section_layout.addWidget(content_frame)    
+        section_layout.addWidget(content_frame)
 
         spacer = VerticalSpacer()
         content_layout.addItem(spacer)
@@ -159,16 +162,16 @@ class SettingsUI(Frame):
 
         section_layout = VerticalLayout(self.resource_section)
 
-        #title_frame
+        # title_frame
         title_frame = SectionTitleFrame(
             self.resource_section, label_one_text="Resource Setting"
         )
         section_layout.addWidget(title_frame)
 
-        #content_frame
+        # content_frame
         content_frame = Frame(self.resource_section, name="temp")
         content_layout = VerticalLayout(content_frame)
-        section_layout.addWidget(content_frame)    
+        section_layout.addWidget(content_frame)
 
         spacer = VerticalSpacer()
         content_layout.addItem(spacer)
@@ -177,16 +180,16 @@ class SettingsUI(Frame):
 
         section_layout = VerticalLayout(self.jobs_section)
 
-        #title_frame
+        # title_frame
         title_frame = SectionTitleFrame(
             self.jobs_section, label_one_text="Jobs Setting"
         )
         section_layout.addWidget(title_frame)
 
-        #content_frame
+        # content_frame
         content_frame = Frame(self.jobs_section, name="temp")
         content_layout = VerticalLayout(content_frame)
-        section_layout.addWidget(content_frame)    
+        section_layout.addWidget(content_frame)
 
         spacer = VerticalSpacer()
         content_layout.addItem(spacer)
@@ -197,9 +200,9 @@ class SettingsUI(Frame):
 
         spacer = HorizontalSpacer()
         section_layout.addItem(spacer)
-        
+
         self.save = ViewButton(self.button_section, text="SAVE", cursor=True)
-        section_layout.addWidget(self.save) 
+        section_layout.addWidget(self.save)
 
         self.cancel = ViewButton(self.button_section, text="CANCEL", cursor=True)
         section_layout.addWidget(self.cancel)

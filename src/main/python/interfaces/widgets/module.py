@@ -29,7 +29,7 @@ class BaseTwoLabelFrame(Frame):
         label_two_name: str = "",
         label_one_text: str = "",
         label_two_text: str = "",
-        **kwargs
+        **kwargs,
     ):
         super(BaseTwoLabelFrame, self).__init__(widget, **kwargs)
 
@@ -69,7 +69,7 @@ class SectionTitleFrame(BaseTwoLabelFrame):
             label_one_name="section_title",
             label_two_name="section_hint",
             align=Qt.AlignVCenter,
-            **kwargs
+            **kwargs,
         )
 
 
@@ -118,7 +118,7 @@ class BaseInputFrame(Frame):
         input_width: int = 0,
         input_name: str = "",
         input_align: Qt = None,
-        **kwargs
+        **kwargs,
     ):
 
         super(BaseInputFrame, self).__init__(widget, **kwargs)
@@ -133,7 +133,12 @@ class BaseInputFrame(Frame):
 
         # title
         self.title = Label(
-            self, width=title_width, text=title, name=title_name, align=title_align, **kwargs
+            self,
+            width=title_width,
+            text=title,
+            name=title_name,
+            align=title_align,
+            **kwargs,
         )
         self.layout.addWidget(self.title)
 
@@ -172,7 +177,7 @@ class LoginInputFrame(BaseInputFrame):
             height=52,
             name="login_input",
             title_width=title_width,
-            **kwargs
+            **kwargs,
         )
 
 
@@ -188,15 +193,11 @@ class ViewInputFrame(BaseInputFrame):
         height: int = 30,
         width: int = 285,
         fix_width: bool = False,
-        space:int = 18,
-        **kwargs
+        space: int = 18,
+        **kwargs,
     ):
         super(ViewInputFrame, self).__init__(
-            widget,
-            height=height,
-            space=space,
-            name="view_input",
-            **kwargs
+            widget, height=height, space=space, name="view_input", **kwargs
         )
 
         if fix_width is True:
@@ -242,7 +243,7 @@ class AttendanceBox(Frame):
             widget,
             *args,
             name="attendance_box",
-            align=(Qt.AlignRight | Qt.AlignVCenter)
+            align=(Qt.AlignRight | Qt.AlignVCenter),
         )
 
         self.flag = False
@@ -362,7 +363,7 @@ class Scheme(Frame):
         event_func,
         name: str = "",
         label_name: str = "",
-        **kwargs
+        **kwargs,
     ):
         """
         create a single scheme
@@ -388,22 +389,34 @@ class Scheme(Frame):
         layout.addWidget(label)
 
         self.cpu = Label(
-            self, text=f"{self.cpu_price} {self.unit}", name=label_name, align=Qt.AlignHCenter
+            self,
+            text=f"{self.cpu_price} {self.unit}",
+            name=label_name,
+            align=Qt.AlignHCenter,
         )
         layout.addWidget(self.cpu)
 
         self.gpu = Label(
-            self, text=f"{self.gpu_price} {self.unit}", name=label_name, align=Qt.AlignHCenter
+            self,
+            text=f"{self.gpu_price} {self.unit}",
+            name=label_name,
+            align=Qt.AlignHCenter,
         )
         layout.addWidget(self.gpu)
 
         self.memory = Label(
-            self, text=f"{self.memory_price} {self.unit}", name=label_name, align=Qt.AlignHCenter
+            self,
+            text=f"{self.memory_price} {self.unit}",
+            name=label_name,
+            align=Qt.AlignHCenter,
         )
         layout.addWidget(self.memory)
 
         self.disk_space = Label(
-            self, text=f"{self.disk_space_price} {self.unit}", name=label_name, align=Qt.AlignHCenter
+            self,
+            text=f"{self.disk_space_price} {self.unit}",
+            name=label_name,
+            align=Qt.AlignHCenter,
         )
         layout.addWidget(self.disk_space)
 
@@ -418,7 +431,14 @@ class Scheme(Frame):
         self.gpu.setText(f"{self.gpu_price} {self.unit}")
 
     def get_info(self):
-        return [self.time, self.cpu_price, self.gpu_price, self.memory_price, self.disk_space_price]
+        return [
+            self.time,
+            self.cpu_price,
+            self.gpu_price,
+            self.memory_price,
+            self.disk_space_price,
+        ]
+
 
 class ViewButton(Button):
     def __init__(self, widget: QWidget, **kwargs):
@@ -431,7 +451,3 @@ class ViewButton(Button):
     def disable(self):
         self.setObjectName("view_button_disable")
         super().disable()
-
-
-
-    

@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import QLineEdit, QLabel
 
 from PyQt5.QtCore import Qt
 
+
 def get_children(widget, child_type, *args):
     """
     Find all matched child widgets belong to the type (or with given object name)
@@ -30,7 +31,12 @@ def switch_scheme(widget, curr_scheme):
     :param widget: parent widget
     :param curr_scheme: trigger function for the mousePress event
     """
-    frames = [widget.scheme_01_frame, widget.scheme_02_frame, widget.scheme_03_frame, widget.scheme_04_frame]
+    frames = [
+        widget.scheme_01_frame,
+        widget.scheme_02_frame,
+        widget.scheme_03_frame,
+        widget.scheme_04_frame,
+    ]
 
     for frame in frames:
         # set frame to disable stylesheet
@@ -42,7 +48,7 @@ def switch_scheme(widget, curr_scheme):
         # set labels to disable stylesheet
         for label in labels:
             label.setObjectName("scheme_label_disable")
-            
+
     # set frame to active stylesheet
     curr_scheme.setObjectName("scheme")
 
@@ -52,5 +58,3 @@ def switch_scheme(widget, curr_scheme):
     # set labels to enable stylesheet
     for label in labels:
         label.setObjectName("scheme_label")
-
-    

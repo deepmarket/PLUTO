@@ -1,4 +1,3 @@
-
 """
 
     This file provides a pure GUI interface for resources.
@@ -8,9 +7,25 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QLayout, QSpacerItem, QSizePolicy
+from PyQt5.QtWidgets import (
+    QFrame,
+    QVBoxLayout,
+    QHBoxLayout,
+    QLayout,
+    QSpacerItem,
+    QSizePolicy,
+)
 
-from ..widgets import StackLayout, Frame, VerticalLayout, HorizontalLayout, Label, HorizontalSpacer, Button, VerticalSpacer
+from ..widgets import (
+    StackLayout,
+    Frame,
+    VerticalLayout,
+    HorizontalLayout,
+    Label,
+    HorizontalSpacer,
+    Button,
+    VerticalSpacer,
+)
 
 
 class JobsUI(Frame):
@@ -20,13 +35,13 @@ class JobsUI(Frame):
     _to_controller_signal = pyqtSignal()
     _to_add_view_signal = pyqtSignal()
 
-    button_frame : Frame = None
-    content_frame : Frame = None
+    button_frame: Frame = None
+    content_frame: Frame = None
 
     add_view_button = None
     controller_button = None
 
-    def __init__(self, cxt:ApplicationContext, *args, **kwargs):
+    def __init__(self, cxt: ApplicationContext, *args, **kwargs):
         super(JobsUI, self).__init__(*args, name="views", **kwargs)
 
         self.cxt = cxt
@@ -38,7 +53,7 @@ class JobsUI(Frame):
         # connect signal
         self._to_controller_signal.connect(self.on_controller_button_clicked)
         self._to_add_view_signal.connect(self.on_add_view_button_clicked)
-        
+
     def _init_ui(self):
         # create layout for interface
         window_layout = VerticalLayout(self)
@@ -61,10 +76,14 @@ class JobsUI(Frame):
 
         layout = HorizontalLayout(self.button_frame, space=24)
 
-        self.add_view_button = Button(self.button_frame, text="Add Jobs", name="views_button_active", cursor=True)
+        self.add_view_button = Button(
+            self.button_frame, text="Add Jobs", name="views_button_active", cursor=True
+        )
         layout.addWidget(self.add_view_button)
 
-        self.controller_button = Button(self.button_frame, text="Job Lists", name="views_button", cursor=True)
+        self.controller_button = Button(
+            self.button_frame, text="Job Lists", name="views_button", cursor=True
+        )
         layout.addWidget(self.controller_button)
 
         spacer = HorizontalSpacer()
@@ -83,7 +102,7 @@ class JobsUI(Frame):
         self.add_view_button.setObjectName("views_button_active")
         self.controller_button.setObjectName("views_button")
         self.setStyleSheet(self.cxt.jobs_style)
-        
+
         self._to_add_view()
 
     def on_controller_button_clicked(self):
@@ -91,7 +110,7 @@ class JobsUI(Frame):
         self.add_view_button.setObjectName("views_button")
         self.controller_button.setObjectName("views_button_active")
         self.setStyleSheet(self.cxt.jobs_style)
-        
+
         self._to_controller()
 
     def _to_controller(self):
@@ -106,4 +125,3 @@ class JobsUI(Frame):
         self._stack.count() != 2 and print(
             "Error: either controller/add_view has not been set!"
         )
-

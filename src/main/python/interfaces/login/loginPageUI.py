@@ -4,15 +4,16 @@ from PyQt5.QtCore import Qt, pyqtSignal, QTimer
 from PyQt5.QtWidgets import QSizePolicy, QWidget
 
 from ..widgets import (
-    Frame, 
+    Frame,
     VerticalLayout,
-    HorizontalLayout, 
-    Label, 
-    LoginInputFrame, 
-    VerticalSpacer, 
+    HorizontalLayout,
+    Label,
+    LoginInputFrame,
+    VerticalSpacer,
     HorizontalSpacer,
-    Button
+    Button,
 )
+
 
 class LoginPageUI(Frame):
 
@@ -20,13 +21,13 @@ class LoginPageUI(Frame):
     login_section: Frame = None
     button_section: Frame = None
 
-    username: str = ""                # input string
-    pwd: str = ""                     # input string
-    login_button: Button = ""            # button
-    login_hint: str = ""              # param string
-    remember_check = None          # checkbox
-    to_forget_pwd = None           # button
-    to_create_button: Button = None        # button
+    username: str = ""  # input string
+    pwd: str = ""  # input string
+    login_button: Button = ""  # button
+    login_hint: str = ""  # param string
+    remember_check = None  # checkbox
+    to_forget_pwd = None  # button
+    to_create_button: Button = None  # button
 
     def __init__(self, widget: QWidget, *args, **kwargs):
         super(LoginPageUI, self).__init__(widget)
@@ -59,7 +60,7 @@ class LoginPageUI(Frame):
         self.switch_section = Frame(self, name="switch_section")
         window_layout.addWidget(self.switch_section)
         self._init_switch_section()
-    
+
     def _init_title_section(self):
 
         """
@@ -74,15 +75,18 @@ class LoginPageUI(Frame):
         self.login_kindly()
 
     def login_kindly(self):
-        def update_title(title_text: str="Please Sign In."):
+        def update_title(title_text: str = "Please Sign In."):
             section_layout = VerticalLayout(self.title_section)
 
             label = Label(
-                self.title_section, text=title_text, name="login_title", align=Qt.AlignCenter
+                self.title_section,
+                text=title_text,
+                name="login_title",
+                align=Qt.AlignCenter,
             )
-        
+
             section_layout.addWidget(label)
-            
+
         update_title("Welcome.")
 
         timer = QTimer()
@@ -92,15 +96,20 @@ class LoginPageUI(Frame):
     def _init_input_section(self):
 
         section_layout = VerticalLayout(self.input_section, space=20)
-        
+
         self.username = LoginInputFrame(
-            self.input_section, title="U S E R N A M E", hint="Enter your email address..."
+            self.input_section,
+            title="U S E R N A M E",
+            hint="Enter your email address...",
         )
 
         section_layout.addWidget(self.username)
-        
+
         self.pwd = LoginInputFrame(
-            self.input_section, title="P A S S W O R D", hint="Enter your password...", echo=True
+            self.input_section,
+            title="P A S S W O R D",
+            hint="Enter your password...",
+            echo=True,
         )
         section_layout.addWidget(self.pwd)
 
@@ -111,7 +120,9 @@ class LoginPageUI(Frame):
         self.login_hint = Label(self.button_section, text="", name="login_hint")
         section_layout.addWidget(self.login_hint)
 
-        self.login_button = Button(self.button_section, text="LOG IN", name="action_button", cursor=True)
+        self.login_button = Button(
+            self.button_section, text="LOG IN", name="action_button", cursor=True
+        )
         section_layout.addWidget(self.login_button)
 
     def _init_switch_section(self):
@@ -119,11 +130,17 @@ class LoginPageUI(Frame):
         section_layout = HorizontalLayout(self.switch_section)
 
         label = Label(
-            self.switch_section, text="Not a Member?", name="switch_label", align=(Qt.AlignRight | Qt.AlignVCenter)
+            self.switch_section,
+            text="Not a Member?",
+            name="switch_label",
+            align=(Qt.AlignRight | Qt.AlignVCenter),
         )
         section_layout.addWidget(label)
 
         self.to_create_button = Button(
-            self.switch_section, text="Create An Account.", name="switch_button", cursor=True
+            self.switch_section,
+            text="Create An Account.",
+            name="switch_button",
+            cursor=True,
         )
         section_layout.addWidget(self.to_create_button)

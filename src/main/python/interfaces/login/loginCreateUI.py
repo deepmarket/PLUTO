@@ -4,37 +4,38 @@ from PyQt5.QtCore import pyqtSignal, Qt
 from PyQt5.QtWidgets import QSizePolicy, QWidget
 
 from ..widgets import (
-    Frame, 
+    Frame,
     VerticalLayout,
-     HorizontalLayout, 
-     Label, 
-     LoginInputFrame, 
-     VerticalSpacer, 
-     HorizontalSpacer,
-     Button
+    HorizontalLayout,
+    Label,
+    LoginInputFrame,
+    VerticalSpacer,
+    HorizontalSpacer,
+    Button,
 )
 
 from ..widgets import (
-    Frame, 
+    Frame,
     VerticalLayout,
-     HorizontalLayout, 
-     Label, 
-     LoginInputFrame, 
-     VerticalSpacer, 
-     HorizontalSpacer,
-     Button
+    HorizontalLayout,
+    Label,
+    LoginInputFrame,
+    VerticalSpacer,
+    HorizontalSpacer,
+    Button,
 )
+
 
 class CreatePageUI(Frame):
 
-    first: str = ""                   # input string
-    last: str = ""                    # input string
-    username: str = ""                # input string
-    pwd: str = ""                     # input string
-    confirm_pwd: str = ""             # input string
-    create_hint: str = ""             # param string
-    create_button: Button = None           # button
-    to_login_button: Button = None         # button
+    first: str = ""  # input string
+    last: str = ""  # input string
+    username: str = ""  # input string
+    pwd: str = ""  # input string
+    confirm_pwd: str = ""  # input string
+    create_hint: str = ""  # param string
+    create_button: Button = None  # button
+    to_login_button: Button = None  # button
 
     def __init__(self, widget: QWidget, *args, **kwargs):
         super(CreatePageUI, self).__init__(widget)
@@ -68,18 +69,19 @@ class CreatePageUI(Frame):
         window_layout.addWidget(self.switch_section)
         self._init_switch_section()
 
-
     def _init_title_section(self):
-        
-        section_layout = VerticalLayout(self.title_section, space= 28)
-        
+
+        section_layout = VerticalLayout(self.title_section, space=28)
+
         title = Label(
             self.title_section, text="Create An Account.", name="create_title"
         )
         section_layout.addWidget(title)
 
         prologue = Label(
-            self.title_section, text="please enter your information.", name="create_prologue"
+            self.title_section,
+            text="please enter your information.",
+            name="create_prologue",
         )
         section_layout.addWidget(prologue)
 
@@ -106,17 +108,25 @@ class CreatePageUI(Frame):
         name_layout.addWidget(self.last)
 
         self.username = LoginInputFrame(
-            self.input_section, title="EMAIL", hint="Please enter an email address as your username..."
+            self.input_section,
+            title="EMAIL",
+            hint="Please enter an email address as your username...",
         )
         section_layout.addWidget(self.username)
 
         self.pwd = LoginInputFrame(
-            self.input_section, title="PASSWORD", hint="Please enter your password...", echo=True
+            self.input_section,
+            title="PASSWORD",
+            hint="Please enter your password...",
+            echo=True,
         )
         section_layout.addWidget(self.pwd)
 
         self.confirm_pwd = LoginInputFrame(
-            self.input_section, title="CONFIRM PASSWORD", hint="Please re-enter your password...", echo=True
+            self.input_section,
+            title="CONFIRM PASSWORD",
+            hint="Please re-enter your password...",
+            echo=True,
         )
         section_layout.addWidget(self.confirm_pwd)
 
@@ -128,7 +138,10 @@ class CreatePageUI(Frame):
         section_layout.addWidget(self.create_hint)
 
         self.create_button = Button(
-            self.button_section, text="CREATE ACCOUNT", name="action_button", cursor=True
+            self.button_section,
+            text="CREATE ACCOUNT",
+            name="action_button",
+            cursor=True,
         )
         section_layout.addWidget(self.create_button)
 
@@ -137,7 +150,10 @@ class CreatePageUI(Frame):
         section_layout = HorizontalLayout(self.switch_section)
 
         label = Label(
-            self.switch_section, text="Already a member?", name="switch_label", align=(Qt.AlignRight | Qt.AlignVCenter)
+            self.switch_section,
+            text="Already a member?",
+            name="switch_label",
+            align=(Qt.AlignRight | Qt.AlignVCenter),
         )
         section_layout.addWidget(label)
 

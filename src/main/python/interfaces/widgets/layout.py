@@ -15,6 +15,17 @@ class Layout(QLayout):
         align: Qt = None,
         **kwargs
     ):
+        """
+        Wrapper object for QLayout
+        :param widget: required. defined the parent widget for this layout
+        :param l_m: optional. left margin
+        :param r_m: optional. right margin
+        :param t_m: optional. top margin
+        :param b_m: optional. button margin
+        :param space: optional. space bettween widget within this layout
+        :param name: optional. object name for this layout
+        :param align: optional. align in this layout. Reference can be found: https://doc.qt.io/archives/qtjambi-4.5.2_01/com/trolltech/qt/core/Qt.AlignmentFlag.html#field_detail
+        """
         super(Layout, self).__init__(widget)
 
         # Set margin and spacing
@@ -27,7 +38,20 @@ class Layout(QLayout):
 
 
 class HorizontalLayout(QHBoxLayout, Layout):
+
     def __init__(self, widget, **kwargs):
+        """
+        Wrapper object for QLayout
+        :param widget: required. defined the parent widget for this layout
+        :param l_m: optional. left margin
+        :param r_m: optional. right margin
+        :param t_m: optional. top margin
+        :param b_m: optional. button margin
+        :param space: optional. space bettween widget within this layout
+        :param name: optional. object name for this layout
+        :param align: optional. align in this layout. Reference can be found: https://doc.qt.io/archives/qtjambi-4.5.2_01/com/trolltech/qt/core/Qt.AlignmentFlag.html#field_detail
+        """
+        
         super(HorizontalLayout, self).__init__(widget, **kwargs)
 
 

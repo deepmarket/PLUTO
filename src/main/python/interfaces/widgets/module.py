@@ -96,6 +96,42 @@ class ConfigFrame(BaseTwoLabelFrame):
         self.setObjectName("config_frame")
 
 
+class DashboardParamFrame(Frame):
+
+    dat: Label = None
+
+    def __init__(
+        self,
+        widget: QWidget,
+        dat: str = "",
+        label: str = "",
+        **kwargs,
+    ):
+        """
+        Dashboard data widget, contain two labels
+        label_one is the data (i.e. "1")
+        label_two is the param label (i.e. ""running)
+        :param widget: required. the parent widget for this widget
+        :param dat: data content for this widget
+        :param label: label for this data
+        """
+        super(DashboardParamFrame, self).__init__(widget)
+
+        layout = VerticalLayout(self, space=5)
+
+        self.dat = Label(self, name="dashboard_param_dat", text=dat)
+        layout.addWidget(self.self.dat)
+
+        label = Label(self, name="dashboard_param_label", text=label)
+        layout.addWidget(label)
+
+    def set_dat(self, text: str):
+        self.dat.setText(text)
+
+    def get_dat(self):
+        return self.dat.text()
+
+
 class BaseInputFrame(Frame):
 
     title: Label = None

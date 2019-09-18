@@ -11,6 +11,14 @@ class Frame(QFrame):
         stylesheet=None,
         **kwargs
     ):
+        """
+        Wrapper object for QFrame.
+        :param: widget: required. the parent widget for the frame.
+        :param: height: optional. given fixed height to the frame.
+        :param: width: optional. given fixed width to the frame.
+        :param: name: optional. object name for the frame.
+        :param: stylesheet: apply a stylesheet for the frame.
+        """
         super(Frame, self).__init__(*args)
 
         # Set size

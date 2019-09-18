@@ -18,10 +18,18 @@ class Animation(QPropertyAnimation):
         end_height: int = 0,
     ):
         """
-        :param widget: required. defined the parent widget for this animation
-        :param duration: how long the animation runs
-        :param prop: animation type, it can be any kind of widget properties. 
-        reference can be found here, https://doc.qt.io/archives/qt-4.8/qwidget.html
+        Wrapper object for QPropertyAnimation.
+        :param widget: required. defined the target widget for this animation
+        :param duration: optional. how long the animation runs
+        :param prop: optional. animation type, it can be any kind of widget properties. reference can be found here, https://doc.qt.io/archives/qt-4.8/qwidget.html
+        :param start_x: optional. target's x-axis value when animation starts
+        :param start_y: optional. target's y-axis value when animation starts
+        :param end_x: optional. target's x-axis value when animation starts
+        :param end_y: optional. target's y-axis value when animation starts
+        :param start_width: optional. target's width when animation starts
+        :param start_height: optional. target's height when animation starts
+        :param end_width: optional. target's width when animation ends
+        :param end_height: optional. target's height when animation ends
         """
 
         super(Animation, self).__init__(widget)
@@ -59,12 +67,11 @@ class MoveAnimation(Animation):
         duration: int = 230,
     ):
         """
-        :param widget: required. defined the parent widget for this animation
-        :param start_x: widget's position at x-axis when start the animation
-        :param start_y: widget's position at y-axis when start the animation
-        :param end_x: widget's position at x-axis when end the animation
-        :param end_y: widget's position at y-axis when end the animation
-        :param duration: optional, how long the animation runs
+        :param start_x: optional. target's x-axis value when animation starts
+        :param start_y: optional. target's y-axis value when animation starts
+        :param end_x: optional. target's x-axis value when animation starts
+        :param end_y: optional. target's y-axis value when animation starts
+        :param duration: optional. how long the animation runs
         """
         super(MoveAnimation, self).__init__(
             widget,

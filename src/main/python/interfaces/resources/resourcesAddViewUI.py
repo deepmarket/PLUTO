@@ -1,10 +1,7 @@
 from abc import ABCMeta, abstractmethod
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
-from PyQt5.QtWidgets import (
-    QComboBox,
-    QCheckBox,
-)
+from PyQt5.QtWidgets import QComboBox, QCheckBox
 from PyQt5.QtCore import pyqtSignal, Qt
 
 from ..widgets import (

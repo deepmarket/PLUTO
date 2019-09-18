@@ -26,7 +26,6 @@ class ResourcesControllerUI(Frame):
     This component is controlling interface for resources tab
     """
 
-
     # metaclass for defining abstract base classes
     __metaclass__ = ABCMeta
 

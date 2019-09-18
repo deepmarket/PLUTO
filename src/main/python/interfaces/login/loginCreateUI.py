@@ -11,7 +11,7 @@ from ..widgets import (
     LoginInputFrame,
     VerticalSpacer,
     HorizontalSpacer,
-    Button
+    Button,
 )
 
 

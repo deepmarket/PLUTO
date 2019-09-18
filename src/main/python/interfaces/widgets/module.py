@@ -109,20 +109,20 @@ class DashboardParamFrame(Frame):
     ):
         """
         Dashboard data widget, contain two labels
-        label_one is the data (i.e. "1")
-        label_two is the param label (i.e. ""running)
+        dat is the data (i.e. "1")
+        label is the param label (i.e. ""running)
         :param widget: required. the parent widget for this widget
         :param dat: data content for this widget
         :param label: label for this data
         """
         super(DashboardParamFrame, self).__init__(widget)
 
-        layout = VerticalLayout(self, space=5)
+        layout = VerticalLayout(self, space=2)
 
-        self.dat = Label(self, name="dashboard_param_dat", text=dat)
-        layout.addWidget(self.self.dat)
+        self.dat = Label(self, name="dashboard_param_dat", text=dat, align=Qt.AlignLeft)
+        layout.addWidget(self.dat)
 
-        label = Label(self, name="dashboard_param_label", text=label)
+        label = Label(self, name="dashboard_param_label", text=label, align=Qt.AlignLeft)
         layout.addWidget(label)
 
     def set_dat(self, text: str):

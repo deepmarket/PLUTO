@@ -1,12 +1,53 @@
-#Dashboard_overview {
-    background-color: white;
+* {
+    font-family: "Helvetica Neue";
 }
 
-#Dashboard_greeting {
-    font-family: "Helvetica Neue";
+QFrame#dashboard {
+    margin: 7px;
+    
+}
+
+QFrame#overview_section {
+    background-color: #FFFFFF;
+    max-height: 300px;
+    padding-top: 45px;
+    padding-bottom: 67px;
+    padding-left: 40px;
+    padding-right: 50px;
+}
+
+QLabel#greeting {
     font-size: 32px;
     font-weight: 50;
     color: #6C7E8E;
+}
+
+QFrame#balance > QLabel {
+    color: #6C7E8E;
+}
+
+QLabel#balance_title {
+    font-size: 30px;
+    font-weight: 900;
+}
+
+QLabel#balance_credit {
+    font-size: 34px;
+}
+
+QLabel#machine_title {
+    color: #6C7E8E;
+    font-size: 18px;
+}
+
+QLabel#dashboard_param_dat {
+    color: #6C7E8E;
+    font-size: 20px;
+}
+
+QLabel#dashboard_param_label {
+    color: #6C7E8E;
+    font-size: 13px;
 }
 
 #Dashboard_username {
@@ -27,20 +68,6 @@
     font-family: "Helvetica Neue";
     font-size: 14px;
     font-weight: 500;
-    color: #6C7E8E;
-}
-
-#Dashboard_balance_title {
-    font-family: "Helvetica Neue";
-    font-size: 30px;
-    font-weight: 50;
-    color: #6C7E8E;
-}
-
-#Dashboard_balance {
-    font-family: "Helvetica Neue";
-    font-size: 34px;
-    font-weight: 100;
     color: #6C7E8E;
 }
 

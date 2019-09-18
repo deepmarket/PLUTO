@@ -11,10 +11,11 @@ num_regex = re.compile(r"(\d+)")
 email_verification_regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", re.IGNORECASE)
 
 
-# load the ip address from the running machine
-# Reference: https://github.com/yahoo/TensorFlowOnSpark/blob/e2f5cc45f95812d163e75b6ddb9c4661261d3bb0/tensorflowonspark/util.py#L41
 def get_ip_address():
-    """Simple utility to get host IP address."""
+    """
+    Simple utility to get host IP address.
+    Reference: https://github.com/yahoo/TensorFlowOnSpark/blob/e2f5cc45f95812d163e75b6ddb9c4661261d3bb0/tensorflowonspark/util.py#L41
+    """
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8", 80))
@@ -47,6 +48,7 @@ def config_input_check(text: str, available: int, res: Enum):
         except ValueError:
             return res.INT_ERROR
 
+
 def job_input_check(text: int, res: Enum):
 
     if not text:
@@ -72,16 +74,3 @@ def email_verification_check(text: str, res: Enum):
         return res.INVALID_ERROR
 
     return res.SUCCESS
-
-
-def get_children(widget, child_type, *args):
-    """
-    Find all matched child widgets belong to the type (or with given object name)
-
-    :param widget: parent widget
-    :param child_type: destinated child widgets type
-    :args: optional, the name that child widgets currently have
-    :return: list of all matched child widgets
-    """
-    # if None, children = []
-    return [child for child in widget.findChildren(child_type, *args)]

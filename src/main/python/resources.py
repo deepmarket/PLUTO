@@ -12,8 +12,9 @@ from psutil import cpu_freq, cpu_count, virtual_memory
 from PyQt5.QtWidgets import QComboBox, QCheckBox
 
 from api import Api
+import util
 
-import util as util
+from interfaces.helper import get_children
 from interfaces.resources import ResourcesUI, ResourcesControllerUI, ResourcesAddViewUI
 from interfaces.widgets import Question
 
@@ -199,7 +200,7 @@ class ResourcesAddView(ResourcesAddViewUI):
 
         if self.rent_schedule_box.flag:
             rent_type = "schedule"
-            children = util.get_children(self.rent_schedule_box, QComboBox)
+            children = get_children(self.rent_schedule_box, QComboBox)
 
             rent_start_time = children[0].currentText()
             rent_end_time = children[1].currentText()
@@ -207,12 +208,12 @@ class ResourcesAddView(ResourcesAddViewUI):
         if self.rent_reserve_box.flag:
             rent_type = "reserve"
 
-            children = util.get_children(self.rent_reserve_box, QComboBox)
+            children = get_children(self.rent_reserve_box, QComboBox)
 
             rent_start_time = children[0].currentText()
             rent_end_time = children[1].currentText()
 
-            children = util.get_children(self.rent_reserve_box, QCheckBox)
+            children = get_children(self.rent_reserve_box, QCheckBox)
 
             for child in children:
                 if child.isChecked():

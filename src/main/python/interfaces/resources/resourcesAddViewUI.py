@@ -34,7 +34,7 @@ from ..widgets import (
     VerticalSpacer,
 )
 
-from ..util import get_children
+from ..helper import get_children
 
 
 class ResourcesAddViewUI(Frame):

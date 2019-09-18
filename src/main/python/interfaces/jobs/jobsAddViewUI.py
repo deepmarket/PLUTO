@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import pyqtSignal, Qt
 
-from ..util import switch_scheme
+from ..helper import switch_scheme
 
 from ..widgets import (
     StackLayout,

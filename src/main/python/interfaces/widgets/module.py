@@ -7,7 +7,7 @@
 from PyQt5.QtWidgets import QWidget, QComboBox, QCheckBox
 from PyQt5.QtCore import Qt
 
-from ..util import get_children
+from ..helper import get_children
 from .button import Button, RadioButton
 from .frame import Frame
 from .groupbox import GroupBox

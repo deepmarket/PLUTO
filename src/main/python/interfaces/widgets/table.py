@@ -5,10 +5,6 @@ from PyQt5.QtWidgets import QTableWidget, QAbstractItemView, QTableWidgetItem, Q
 
 
 class Table(QTableWidget):
-    """
-    This file provide a table widget.
-    """
-
     current_row: int = 0
     count_row: int = 0
     count_column: int = 0
@@ -20,14 +16,18 @@ class Table(QTableWidget):
         header: OrderedDict,
         row_height: int = 0,
         name: str = "",
-        if_vertical: bool = False,
         **kwargs
     ):
         """
-        :param widget: parent widget
-        :param count_row: max row in table
-        :param header: dictionary, key is the column label, value is the column width
+        Wrapper object for QTableWidget.
+        Create table object with horizontal header only
+        :param widget: required. defined the parent widget for table
+        :param count_row: required. the # of row in the table
+        :param header: required. the header label for each column
+        :param row_height: optional. the height for each row (including header)
+        :param name: optional. object for table
         """
+        
         super(Table, self).__init__(widget)
 
         self.count_row = count_row
@@ -49,7 +49,8 @@ class Table(QTableWidget):
         row_height = row_height if row_height else 40
         self.verticalHeader().setDefaultSectionSize(row_height)
 
-        if_vertical is not True and self.verticalHeader().setVisible(False)
+        # disable vertialcal header
+        self.verticalHeader().setVisible(False)
 
         # selected entire row
         self.setSelectionBehavior(QAbstractItemView.SelectRows)
@@ -68,7 +69,10 @@ class Table(QTableWidget):
 
     def add(self, dat: list):
         """
-        :param dat: [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
+        insert a row with given data into table
+        :param dat: required. data that want to be inserted into table
+        i.e. [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
+        :return: this function doesn't return value
         """
 
         if len(dat) > self.count_column:
@@ -94,6 +98,11 @@ class Table(QTableWidget):
         self.current_row += 1
 
     def reset(self):
+        """
+        Clean up all the content in table.
+        Then initialize table and add empty row back to table.
+        :return: this function doesn't return value
+        """
         self.current_row = 0
 
         # remove all existing row
@@ -112,6 +121,10 @@ class Table(QTableWidget):
                 self.item(i, j).setFlags(Qt.NoItemFlags)
 
     def if_select(self):
+        """
+        Check if table have some row that has been selected.
+        :return: -1 for no row has been selected, otherwise, return the row # of selected row
+        """
         model = self.selectionModel()
 
         if model.hasSelection():
@@ -125,6 +138,6 @@ class Table(QTableWidget):
     def get_cell(self, row: int, column: int):
         return self.item(row, column).text()
 
-    # TODO, when implement edit feature, cont work on this function
     def allow_edit(self, row: int):
+        # TODO, when implement edit feature, cont work on this function
         pass

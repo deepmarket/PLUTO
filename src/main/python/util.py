@@ -1,6 +1,7 @@
 import errno
 import re
 import socket
+import datetime
 
 from enum import Enum
 from socket import error as socket_error
@@ -74,3 +75,15 @@ def email_verification_check(text: str, res: Enum):
         return res.INVALID_ERROR
 
     return res.SUCCESS
+
+
+# return a greeting
+def add_greeting():
+    now = datetime.datetime.now()
+
+    if now.hour < 12:
+        return "Good morning"
+    elif 12 <= now.hour < 18:
+        return "Good afternoon"
+    else:
+        return "Good evening"

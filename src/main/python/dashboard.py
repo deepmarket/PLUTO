@@ -1,12 +1,84 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 from interfaces.dashboard import DashboardUI
-
+from util import add_greeting
+from api import Api
 
 class Dashboard(DashboardUI):
+
+    username: str = ""                
+    total_balance: int = 0              
+    # estimated_profit = 0           # param number
+    # estimated_cost = 0             # param number
+    running_machines: int = 0            
+    dead_machine: int = 0              
+    finished_jobs = 0               
+    running_jobs = 0                
+    killed_jobs = 0                  
+
     def __init__(self, cxt:ApplicationContext, *args, **kwargs):
         super(Dashboard, self).__init__(cxt, *args, **kwargs)
 
+        self.update_account()
+
+    def update_account(self):
+
+        # fetch account information
+        self._account_api_get_call()
+
+        # fill greeting
+        greeting = add_greeting() + ", " + self.username
+        self.greeting.setText(greeting)
+
+        # fill total balance credit
+        balance_credit = f"{self.total_balance} credits"
+        self.balance_credit.setText(balance_credit)
+
+        resources_running = f"{self.running_machines}"
+        self.resources_running.set_dat(resources_running)
+
+        resources_dead = f"{self.dead_machine}"
+        self.resources_dead.set_dat(resources_dead)
+
+    def _account_api_get_call(self):
+
+        with Api("/account") as account:
+            status, res = account.get()
+
+            if not res or status != 200:
+                self.username = "."
+                self.total_balance = 0
+            else:
+                # Insert comma here so we can default to nameless greeting if api fails.
+                self.username = res['account']['firstname'].capitalize()
+                self.total_balance = round(res['account']['credits'], 4)
+            
+
+        with Api("/resources") as resources:
+            status, res = resources.get()
+
+            if not res or status != 200:
+                self.running_machines = 0
+                self.dead_machine = 0
+            else:
+            # if status == 200 and isinstance(res, dict) and "resources" in res:
+                for rsrc in res["resources"]:
+                    if str(rsrc['status']) == "ALIVE":
+                        self.running_machines += 1
+                    else:
+                        self.dead_machine += 1
+
+        # with Api("/jobs") as jobs:
+        #     status, res = jobs.get()
+
+        #     if status == 200 and isinstance(res, dict) and "jobs" in res:
+        #         for job in res["jobs"]:
+        #             if str(job['status']) == "FINISHED":
+        #                 self.finished_jobs += 1
+        #             elif str(job['status']) == "RUNNING":
+        #                 self.running_jobs += 1
+        #             else:
+        #                 self.killed_jobs += 1
 # class Dashboard(MainView):
 
 #     def __init__(self, cxt:ApplicationContext, *args, **kwargs):

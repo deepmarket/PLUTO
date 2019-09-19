@@ -25,6 +25,9 @@ class DashboardUI(Frame):
     overview_section: Frame = None
     
     title_section: Frame = None
+    greeting: Label = None
+    balance_credit: Label = None
+
     content_section: Frame = None
 
     machine_section: Frame = None
@@ -86,10 +89,10 @@ class DashboardUI(Frame):
         section_layout = HorizontalLayout(self.title_section)
 
         # --------- greeting ------------
-        greeting = Label(
-            self.title_section, text="Hello", name="greeting"
+        self.greeting = Label(
+            self.title_section, name="greeting"
         )
-        section_layout.addWidget(greeting)
+        section_layout.addWidget(self.greeting)
 
         spacer = HorizontalSpacer()
         section_layout.addItem(spacer)
@@ -104,10 +107,10 @@ class DashboardUI(Frame):
         )
         credit_layout.addWidget(balance_title)
         
-        balance_credit = Label(
-            credit_frame, text="0 credits", name="balance_credit"
+        self.balance_credit = Label(
+            credit_frame, name="balance_credit"
         )
-        credit_layout.addWidget(balance_credit)
+        credit_layout.addWidget(self.balance_credit)
 
     def _init_content_section(self):
 
@@ -145,10 +148,10 @@ class DashboardUI(Frame):
         frame_layout = HorizontalLayout(frame, space=20)
         resource_layout.addWidget(frame)
 
-        self.resources_running = ParamFrame(frame, dat="0", label="running")
+        self.resources_running = ParamFrame(frame, label="running")
         frame_layout.addWidget(self.resources_running)
 
-        self.resources_dead = ParamFrame(frame, dat="0", label="dead")
+        self.resources_dead = ParamFrame(frame, label="dead")
         frame_layout.addWidget(self.resources_dead)
 
         # --------- jobs ------------

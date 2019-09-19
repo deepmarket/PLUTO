@@ -103,7 +103,7 @@ class ParamFrame(Frame):
     def __init__(
         self,
         widget: QWidget,
-        dat: str = "",
+        dat: str = 0,
         label: str = "",
         **kwargs,
     ):

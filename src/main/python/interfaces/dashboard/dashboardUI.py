@@ -171,13 +171,13 @@ class DashboardUI(Frame):
         frame_layout = HorizontalLayout(frame, space=20)
         jobs_layout.addWidget(frame)
 
-        self.jobs_running = ParamFrame(frame, dat="0", label="running")
+        self.jobs_running = ParamFrame(frame, label="running")
         frame_layout.addWidget(self.jobs_running)
 
-        self.jobs_finish = ParamFrame(frame, dat="0", label="finished")
+        self.jobs_finish = ParamFrame(frame, label="finished")
         frame_layout.addWidget(self.jobs_finish)
 
-        self.jobs_kill = ParamFrame(frame, dat="0", label="killed")
+        self.jobs_kill = ParamFrame(frame, label="killed")
         frame_layout.addWidget(self.jobs_kill)
 
     def _init_credit_section(self):

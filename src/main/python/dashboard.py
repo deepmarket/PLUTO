@@ -40,6 +40,15 @@ class Dashboard(DashboardUI):
         resources_dead = f"{self.dead_machine}"
         self.resources_dead.set_dat(resources_dead)
 
+        jobs_running = f"{self.running_jobs}"
+        self.jobs_running.set_dat(jobs_running)
+
+        jobs_finish = f"{self.finished_jobs}"
+        self.jobs_finish.set_dat(jobs_finish)
+
+        jobs_kill = f"{self.killed_jobs}"
+        self.jobs_kill.set_dat(jobs_kill)
+        
     def _account_api_get_call(self):
 
         with Api("/account") as account:
@@ -68,17 +77,22 @@ class Dashboard(DashboardUI):
                     else:
                         self.dead_machine += 1
 
-        # with Api("/jobs") as jobs:
-        #     status, res = jobs.get()
+        with Api("/jobs") as jobs:
+            status, res = jobs.get()
 
-        #     if status == 200 and isinstance(res, dict) and "jobs" in res:
-        #         for job in res["jobs"]:
-        #             if str(job['status']) == "FINISHED":
-        #                 self.finished_jobs += 1
-        #             elif str(job['status']) == "RUNNING":
-        #                 self.running_jobs += 1
-        #             else:
-        #                 self.killed_jobs += 1
+            if not res or status != 200:
+                self.running_jobs = 0
+                self.finished_jobs = 0
+                self.running_jobs = 0
+            else:
+            # if status == 200 and isinstance(res, dict) and "jobs" in res:
+                for job in res["jobs"]:
+                    if str(job['status']) == "FINISHED":
+                        self.finished_jobs += 1
+                    elif str(job['status']) == "RUNNING":
+                        self.running_jobs += 1
+                    else:
+                        self.killed_jobs += 1
 # class Dashboard(MainView):
 
 #     def __init__(self, cxt:ApplicationContext, *args, **kwargs):

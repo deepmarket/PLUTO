@@ -4,16 +4,24 @@
 
 QFrame#dashboard {
     margin: 7px;
-    
 }
 
 QFrame#overview_section {
     background-color: #FFFFFF;
-    max-height: 300px;
+    max-height: 280px;
+    
     padding-top: 45px;
-    padding-bottom: 67px;
+    padding-bottom: 45px;
     padding-left: 40px;
     padding-right: 50px;
+}
+
+QFrame#history_section > QFrame{
+    background-color: #FFFFFF;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 QLabel#greeting {
@@ -42,12 +50,54 @@ QLabel#machine_title {
 
 QLabel#dashboard_param_dat {
     color: #6C7E8E;
-    font-size: 20px;
+    font-size: 25px;
 }
 
 QLabel#dashboard_param_label {
     color: #6C7E8E;
-    font-size: 13px;
+    font-size: 15px;
+}
+
+QLabel#dashboard_estimate_title {
+    font-size: 16px;
+    color: #6C7E8E;
+}
+
+QLabel#dashboard_estimate_subtitle {
+    font-size: 12px;
+    color: #6C7E8E;
+}
+
+QLabel#dashboard_estimate_credit {
+    font-size: 24px;
+    font-weight: 400;
+    color: #6C7E8E;
+}
+
+QLabel#history_title {
+    font-size: 18px;
+    color: #6C7E8E;
+}
+
+QTableWidget#table_content_section {
+    border: none;
+    background-color: #FFFFFF;
+    alternate-background-color: #FAFAFA;
+}
+
+QTableWidget#table_content_section QHeaderView::section {
+    border: none;
+    background-color: #B9CCDD;
+    color: #FFFFFF;
+    height: 35px;
+    font-family: "Helvetica Neue";
+    font-size:13px;
+    font-weight: 100;
+}
+
+QTableView::item {
+    font-size: 12px;
+    color: #324352;
 }
 
 #Dashboard_username {
@@ -68,38 +118,6 @@ QLabel#dashboard_param_label {
     font-family: "Helvetica Neue";
     font-size: 14px;
     font-weight: 500;
-    color: #6C7E8E;
-}
-
-#Dashboard_estimated_title {
-    font-family: "Helvetica Neue";
-    font-size: 16px;
-    font-weight: 200;
-    color: #6C7E8E;
-}
-
-#Dashboard_estimated_title_small {
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 200;
-    color: #6C7E8E;
-}
-
-#Dashboard_estimated {
-    font-family: "Helvetica Neue";
-    font-size: 24px;
-    font-weight: 300;
-    color: #6C7E8E;
-}
-
-#Dashboard_history {
-    background-color: white;
-}
-
-#Dashboard_history_title {
-    font-family: "Helvetica Neue";
-    font-size: 18px;
-    font-weight: 200;
     color: #6C7E8E;
 }
 

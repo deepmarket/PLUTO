@@ -1,7 +1,7 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
-from api import Api
 from PyQt5.Qt import Qt
+from collections import OrderedDict
 
 from ..widgets import (
     Frame,
@@ -12,8 +12,13 @@ from ..widgets import (
     VerticalSpacer,
     ViewButton,
     SectionTitleFrame,
-    DashboardParamFrame,
+    ParamFrame,
+    EstimateFrame,
+    Table,
 )
+
+from ..config import DASHBOARD_MAX_ROW
+
 
 class DashboardUI(Frame):
 
@@ -23,17 +28,25 @@ class DashboardUI(Frame):
     content_section: Frame = None
 
     machine_section: Frame = None
-    resources_running: DashboardParamFrame = None
-    resources_dead: DashboardParamFrame = None
+    resources_running: ParamFrame = None
+    resources_dead: ParamFrame = None
 
     jobs_section: Frame = None
-    jobs_running: DashboardParamFrame = None
-    jobs_finish: DashboardParamFrame = None
-    jobs_kill: DashboardParamFrame = None
+    jobs_running: ParamFrame = None
+    jobs_finish: ParamFrame = None
+    jobs_kill: ParamFrame = None
 
     credit_section: Frame = None
+    estimate_profit: EstimateFrame = None
+    estimate_cost: EstimateFrame = None
 
     history_section: Frame = None
+
+    profit_section: Frame = None
+    profit_table: Table = None
+
+    cost_section: Frame = None
+    cost_table: Table = None
 
     def __init__(self, cxt: ApplicationContext, *args, **kwargs):
         super(DashboardUI, self).__init__(*args, name="dashboard", **kwargs)
@@ -52,23 +65,17 @@ class DashboardUI(Frame):
         window_layout.addWidget(self.overview_section)
         self._init_overview_section()
 
-        spacer = VerticalSpacer()
-        window_layout.addItem(spacer)
-
-        # history_section = Frame(self)
-        # window_layout.addWidget(history_section)
-        # self._init_history_section()
+        self.history_section = Frame(self, name="history_section")
+        window_layout.addWidget(self.history_section)
+        self._init_history_section()
 
     def _init_overview_section(self):
 
-        section_layout = VerticalLayout(self.overview_section)
+        section_layout = VerticalLayout(self.overview_section, space=50)
 
         self.title_section = Frame(self.overview_section)
         section_layout.addWidget(self.title_section)
         self._init_title_section()
-
-        spacer = VerticalSpacer()
-        section_layout.addItem(spacer)
 
         self.content_section = Frame(self.overview_section)
         section_layout.addWidget(self.content_section)
@@ -106,12 +113,12 @@ class DashboardUI(Frame):
 
         section_layout = HorizontalLayout(self.content_section)
 
-        self.machine_section = Frame(self.content_section,)
+        self.machine_section = Frame(self.content_section)
         section_layout.addWidget(self.machine_section)
         self._init_machine_section()
 
         spacer = HorizontalSpacer()
-        section_layout.addWidget(spacer)
+        section_layout.addItem(spacer)
 
         self.credit_section = Frame(self.content_section)
         section_layout.addWidget(self.credit_section)
@@ -119,12 +126,12 @@ class DashboardUI(Frame):
 
     def _init_machine_section(self):
 
-        section_layout = HorizontalLayout(self.machine_section)
+        section_layout = HorizontalLayout(self.machine_section, space=50)
 
         # --------- resource ------------
 
         resource_frame = Frame(self.machine_section)
-        resource_layout = VerticalLayout(resource_frame, space=10)
+        resource_layout = VerticalLayout(resource_frame, space=20)
         section_layout.addWidget(resource_frame)
 
         # --------- title ------------
@@ -135,19 +142,19 @@ class DashboardUI(Frame):
         # --------- resource data ------------
 
         frame = Frame(resource_frame)
-        frame_layout = HorizontalLayout(frame, space=7)
+        frame_layout = HorizontalLayout(frame, space=20)
         resource_layout.addWidget(frame)
 
-        self.resources_running = DashboardParamFrame(frame, dat="0", label="running")
+        self.resources_running = ParamFrame(frame, dat="0", label="running")
         frame_layout.addWidget(self.resources_running)
 
-        self.resources_dead = DashboardParamFrame(frame, dat="0", label="dead")
+        self.resources_dead = ParamFrame(frame, dat="0", label="dead")
         frame_layout.addWidget(self.resources_dead)
 
         # --------- jobs ------------
 
         jobs_frame = Frame(self.machine_section)
-        jobs_layout = VerticalLayout(jobs_frame, space=5)
+        jobs_layout = VerticalLayout(jobs_frame, space=20)
         section_layout.addWidget(jobs_frame)
 
         # --------- title ------------
@@ -158,23 +165,89 @@ class DashboardUI(Frame):
         # --------- jobs data ------------
 
         frame = Frame(jobs_frame)
-        frame_layout = HorizontalLayout(frame, space=7)
+        frame_layout = HorizontalLayout(frame, space=20)
         jobs_layout.addWidget(frame)
 
-        self.jobs_running = DashboardParamFrame(frame, dat="0", label="running")
+        self.jobs_running = ParamFrame(frame, dat="0", label="running")
         frame_layout.addWidget(self.jobs_running)
 
-        self.jobs_finish = DashboardParamFrame(frame, dat="0", label="finished")
+        self.jobs_finish = ParamFrame(frame, dat="0", label="finished")
         frame_layout.addWidget(self.jobs_finish)
 
-        self.jobs_kill = DashboardParamFrame(frame, dat="0", label="killed")
+        self.jobs_kill = ParamFrame(frame, dat="0", label="killed")
         frame_layout.addWidget(self.jobs_kill)
 
     def _init_credit_section(self):
 
-        section_layout = VerticalLayout(self.credit_section)
+        section_layout = VerticalLayout(self.credit_section, space=10)
 
+        self.estimate_profit = EstimateFrame(self.credit_section, title="Estimated profit:", in_out="+", credit="0")
+        section_layout.addWidget(self.estimate_profit)
+
+        self.estimate_cost = EstimateFrame(self.credit_section, title="Estimated cost:", in_out="-", credit="0")
+        section_layout.addWidget(self.estimate_cost)
+
+    def _init_history_section(self):
+
+        section_layout = HorizontalLayout(self.history_section, space=1)
         
+        self.profit_section = Frame(self.history_section)
+        section_layout.addWidget(self.profit_section)
+        self._init_profit_section()
+
+        self.cost_section = Frame(self.history_section)
+        section_layout.addWidget(self.cost_section)
+        self._init_cost_section()
+
+    def _init_profit_section(self):
+
+        section_layout = VerticalLayout(self.profit_section, space=15)
+
+        # --------- title ------------
+
+        title = Label(
+            self.profit_section, text="Past 30 days Profit History", name="history_title"
+        )
+        section_layout.addWidget(title)
+
+        # --------- table ------------
+
+        header = OrderedDict()
+
+        header["ID"] = 130
+        header["Time"] = 180
+        header["Credit"] = 1
+
+        self.profit_table = Table(
+            self.profit_section, DASHBOARD_MAX_ROW, header, name="table_content_section", row_height=30
+        )
+        section_layout.addWidget(self.profit_table)
+
+    def _init_cost_section(self):
+
+        section_layout = VerticalLayout(self.cost_section, space=15)
+
+        # --------- title ------------
+
+        title = Label(
+            self.cost_section, text="Past 30 days Cost History", name="history_title"
+        )
+        section_layout.addWidget(title)
+
+        # --------- table ------------
+
+        header = OrderedDict()
+
+        header["ID"] = 130
+        header["Time"] = 180
+        header["Credit"] = 1
+
+        self.cost_table = Table(
+            self.cost_section, DASHBOARD_MAX_ROW, header, name="table_content_section", row_height=30
+        )
+        section_layout.addWidget(self.cost_table)
+
+
 
 
 

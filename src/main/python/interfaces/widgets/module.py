@@ -135,7 +135,7 @@ class ParamFrame(Frame):
 class EstimateFrame(Frame):
 
     in_out: str = ""
-    unit: str = "/ Credits"
+    unit: str = "Credits"
     credit: Label = None
 
     def __init__(
@@ -154,11 +154,11 @@ class EstimateFrame(Frame):
         """
         super(EstimateFrame, self).__init__(widget)
 
-        layout = VerticalLayout(self, space=2)
+        layout = HorizontalLayout(self, space=30)
 
         left = Frame(self)
         left_layout = VerticalLayout(left)
-        layout.add(left)
+        layout.addWidget(left)
 
         title = Label(self, name="dashboard_estimate_title", text=title, align=Qt.AlignLeft)
         left_layout.addWidget(title)
@@ -167,11 +167,11 @@ class EstimateFrame(Frame):
         left_layout.addWidget(subtitle)
 
         self.in_out = in_out
-        credit = Label(self, name="dashboard_estimate_credit", text=f"{self.in_out}{credit}{self.unit}", align=Qt.AlignLeft)
+        credit = Label(self, name="dashboard_estimate_credit", text=f"{self.in_out} {credit} {self.unit}", align=(Qt.AlignRight|Qt.AlignVCenter))
         layout.addWidget(credit)
     
     def set_credit(self, text: str):
-        self.credit.setText(f"{self.in_out}{text}{self.unit}")
+        self.credit.setText(f"{self.in_out} {text} {self.unit}")
 
     def get_credit(self, text: str):
         self.credit.text()

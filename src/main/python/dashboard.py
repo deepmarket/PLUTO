@@ -8,8 +8,8 @@ class Dashboard(DashboardUI):
 
     username: str = ""                
     total_balance: int = 0              
-    # estimated_profit = 0           # param number
-    # estimated_cost = 0             # param number
+    # estimated_profit: int = 0
+    # estimated_cost: int = 0
     running_machines: int = 0            
     dead_machine: int = 0              
     finished_jobs = 0               

@@ -1,5 +1,7 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
+from abc import ABCMeta, abstractmethod
+
 from PyQt5.Qt import QMainWindow
 
 from PyQt5.QtCore import pyqtSignal
@@ -16,6 +18,9 @@ from ..config import SIDEBAR_WIDTH, NAVIGATION_HEIGHT, ACCOUNT_WIDTH
 
 class AppUI(QMainWindow):
 
+    # metaclass for defining abstract base classes
+    __metaclass__ = ABCMeta
+
     sidebar: AppSidebarUI = None
     navigation: AppNavigationUI = None
     main_window: AppMainWindowUI = None
@@ -31,6 +36,22 @@ class AppUI(QMainWindow):
 
         self._init_ui()
         self.setStyleSheet(self.cxt.app_style)
+
+    @abstractmethod
+    def on_dashboard_clicked(self):
+        pass
+
+    @abstractmethod
+    def on_resources_clicked(self):
+        pass
+
+    @abstractmethod
+    def on_jobs_clicked(self):
+        pass
+
+    @abstractmethod
+    def on_settings_clicked(self):
+        pass
 
     def on_menu_clicked(self):
         """
@@ -53,6 +74,22 @@ class AppUI(QMainWindow):
 
         menu_action.start()
         mask_action.start()
+
+    @abstractmethod
+    def on_credit_history_clicked(self):
+        pass
+    
+    @abstractmethod
+    def on_notification_clicked(self):
+        pass
+
+    @abstractmethod
+    def on_about_clicked(self):
+        pass
+
+    @abstractmethod
+    def on_logout_clicked(self):
+        pass
 
     def _init_ui(self):
 
@@ -86,5 +123,16 @@ class AppUI(QMainWindow):
         self.account.move(self.width(), 0)
 
         # connect function
+        self.sidebar.dashboard.clicked.connect(self.on_dashboard_clicked)
+        self.sidebar.resources.clicked.connect(self.on_resources_clicked)
+        self.sidebar.jobs.clicked.connect(self.on_jobs_clicked)
+        self.sidebar.settings.clicked.connect(self.on_settings_clicked)
+
         self.navigation.menu_button.clicked.connect(self.on_menu_clicked)
+
         self.mask.clicked_area.clicked.connect(self.on_mask_clicked)
+
+        self.account.credit_history.clicked.connect(self.on_credit_history_clicked)
+        self.account.notifications.clicked.connect(self.on_notification_clicked)
+        self.account.about.clicked.connect(self.on_about_clicked)
+        self.account.logout.clicked.connect(self.on_logout_clicked)

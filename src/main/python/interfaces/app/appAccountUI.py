@@ -19,7 +19,7 @@ class AppAccountUI(Frame):
     username: str = ""
     credit: int = 15                    
     credit_history: Button = None          
-    notification: Button = None            
+    notifications: Button = None            
     setting_button: Button = None          
     logout: Button = None                  
 
@@ -84,10 +84,10 @@ class AppAccountUI(Frame):
 
         section_layout = VerticalLayout(self.button_section, space=18)
 
-        self.notification = Button(
+        self.notifications = Button(
             self.button_section, text="Notifications", name="account_button", cursor=True
         )
-        section_layout.addWidget(self.notification)
+        section_layout.addWidget(self.notifications)
 
         self.credit_history = Button(
             self.button_section, text="Credit History", name="account_button", cursor=True

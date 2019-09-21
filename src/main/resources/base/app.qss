@@ -23,10 +23,26 @@ QFrame#mask {
 
 QFrame#account {
     background-color: #FFFFFF;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 QFrame#sidebar_button_frame {
     padding-top: 50px;
+}
+
+QFrame#account_title {
+    border: none;
+    border-bottom: 1px solid #D5D5D5;
+    padding-bottom: 15px;
+}
+
+QFrame#account_button_frame {
+    padding-top: 42px;
+    padding-left: 7px;
+    padding-right: 7px;
 }
 
 QLabel#sidebar_title {
@@ -38,6 +54,18 @@ QLabel#sidebar_title {
 QLabel#navigation_credit {
     font-size: 12px;
     font-weight: 300;
+    color: #505A5F;
+}
+
+QLabel#account_username {
+    font-size: 12px;
+    font-weight: 500;
+    color: #6C7E8E;
+}
+
+QLabel#account_credit {
+    font-size: 11px;
+    font-weight: 100;
     color: #505A5F;
 }
 
@@ -69,41 +97,20 @@ QPushButton#mask_clicked_area {
     border: none;
 }
 
-#App_title_frame {
+QPushButton#account_button {
     border: none;
-    border-bottom: 1px solid #D5D5D5;
-}
-
-#App_account_username {
-    font-family: "Helvetica Neue";
-    font-size: 12px;
-    font-weight: 500;
-    color: #6C7E8E;
-}
-
-#App_account_credit {
-    font-family: "Helvetica Neue";
-    font-size: 11px;
-    font-weight: 100;
-    color: #505A5F;
-}
-
-#App_account_button {
-    border: none;
-    font-family: "Helvetica Neue";
     font-size: 10px;
     font-weight: 200;
     color: #6C7E8E;
     text-align: left;
 }
 
-#App_account_logout {
+QPushButton#account_logout {
     border: none;
     border-radius: 3px;
     background-color: #6C7E8E;
     height: 25px;
     width: 85px;
-    font-family: "Helvetica Neue";
     font-size: 11px;
     font-weight: 200;
     color: white;

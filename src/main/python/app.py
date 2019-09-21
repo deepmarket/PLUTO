@@ -10,6 +10,7 @@ from jobs import Jobs
 from settings import Settings
 
 from interfaces.app.appUI import AppUI
+from interfaces.widgets.popup import Notification
 
 # from interfaces.widgets.popup import Notification, CreditHistory
 
@@ -41,9 +42,6 @@ class App(AppUI):
         with Api("/account") as account:
             status, res = account.get()
 
-            print(status)
-            print(res)
-
             if not res or status != 200:
                 self.username = "."
                 self.total_balance = 0
@@ -69,9 +67,8 @@ class App(AppUI):
         self._sidebar_widget_updated(Settings)
 
     def on_notification_clicked(self):
-        # popup = Notification(self.cxt)
-        # popup.exec_()
-        pass
+        popup = Notification(self.cxt)
+        popup.exec_()
 
     # credit history popup
     def on_credit_history_clicked(self):

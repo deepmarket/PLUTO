@@ -32,10 +32,6 @@ class AppContext(ApplicationContext):
         return self.load_style("credit_history.qss")
 
     @cached_property
-    def notification_style(self):
-        return self.load_style("notification.qss")
-
-    @cached_property
     def add_view_style(self):
         return self.load_style("add_view.qss")
 

@@ -11,29 +11,6 @@ class App(AppUI):
     def __init__(self, logout_signal:pyqtSignal, cxt:ApplicationContext, *args, **kwargs):
         super(App, self).__init__(logout_signal, cxt, *args, **kwargs)
 
-# app_sidebar_button = f"""
-#     border: None;
-#     height: 20px;
-#     padding-left: 16px;
-#     font-family: "Helvetica Neue";
-#     font-size: 13px;
-#     font-weight: 400;
-#     color: {COLOR_02};
-#     text-align: left;
-# """
-
-# app_sidebar_button_active = f"""
-#     border: None;
-#     border-left: 2px solid {COLOR_01};
-#     height: 20px;
-#     padding-left: 16px;
-#     font-family: "Helvetica Neue";
-#     font-size: 13px;
-#     font-weight: 400;
-#     color: {COLOR_01};
-#     text-align: left;
-# """
-
 # class App(QMainWindow):
 #     def __init__(self, logout_signal:pyqtSignal, cxt:ApplicationContext, *args, **kwargs):
 #         super(App, self).__init__(*args, **kwargs)
@@ -225,57 +202,6 @@ class App(AppUI):
 
 
 # # Pure UI class, no functionality
-# class SideBar(QFrame):
-#     def __init__(self, parent, cxt:ApplicationContext, *args, **kwargs):
-#         super(SideBar, self).__init__(parent, *args, **kwargs)
-
-#         # variable
-#         self.dashboard = None           # button
-#         self.resources = None           # button
-#         self.jobs = None                # button
-
-#         self._init_ui()
-
-#         self.setStyleSheet(cxt.app_style)
-
-#     def _init_ui(self):
-#         self.setObjectName("App_sidebar")
-
-#         section_layout = add_layout(self, VERTICAL)
-
-#         # title frame: title, logo
-#         title_frame = QFrame(self)
-#         title_layout = add_layout(title_frame, VERTICAL, t_m=12)
-
-#         title = add_label(title_frame, "PLUTO", name="App_sidebar_title", align=Qt.AlignHCenter)
-
-#         title_layout.addWidget(title)
-
-#         # button frame: dashboard, resources, jobs
-#         button_frame_01 = QFrame(self)
-#         button_layout = add_layout(button_frame_01, VERTICAL, t_m=50, space=18)
-
-#         self.dashboard = add_button(button_frame_01, "Dashboard", name="dashboard",  stylesheet=app_sidebar_button_active)
-
-#         self.resources = add_button(button_frame_01, "Resources", name="resources", stylesheet=app_sidebar_button)
-
-#         self.jobs = add_button(button_frame_01, "Jobs", name="jobs", stylesheet=app_sidebar_button)
-
-#         self.settings = add_button(button_frame_01, "Settings", name="settings", stylesheet=app_sidebar_button)
-
-#         button_layout.addWidget(self.dashboard)
-#         button_layout.addWidget(self.resources)
-#         button_layout.addWidget(self.jobs)
-#         button_layout.addWidget(self.settings)
-
-#         spacer = QSpacerItem(0, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-#         section_layout.addWidget(title_frame)
-#         section_layout.addWidget(button_frame_01)
-#         section_layout.addItem(spacer)
-
-
-# # Pure UI class, no functionality
 # class Navigation(QFrame):
 #     def __init__(self, parent, cxt:ApplicationContext, *args, **kwargs):
 #         super(Navigation, self).__init__(parent, *args, **kwargs)
@@ -298,28 +224,6 @@ class App(AppUI):
 
 #         self.setStyleSheet(cxt.app_style)
 
-#     def _init_ui(self):
-#         self.setObjectName("App_navigation")
-
-#         section_layout = add_layout(self, HORIZONTAL, align=Qt.AlignVCenter, space=16)
-
-#         credit = add_label(self, f"CREDITS: {self.credits}", name="App_navigation_credit")
-
-#         self.menu_button = add_button(self, name="App_navigation_button")
-
-#         width = 17
-
-#         self.menu_button.setIcon(add_menu_icon(width))
-#         self.menu_button.setIconSize(QSize(width, width))
-
-#         spacer_01 = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
-#         spacer_02 = QSpacerItem(18, 0, QSizePolicy.Fixed, QSizePolicy.Minimum)
-
-#         section_layout.addItem(spacer_01)
-#         section_layout.addWidget(credit)
-#         section_layout.addWidget(self.menu_button)
-#         section_layout.addItem(spacer_02)
-
 
 # # Pure UI class, no functionality
 # class MainWindow(QFrame):
@@ -337,17 +241,6 @@ class App(AppUI):
 #         self.setObjectName("App_main_window")
 
 #         self.stack = add_layout(self, STACK)
-
-
-# # Pure UI class, no functionality
-# class Mask(QFrame):
-#     def __init__(self, parent, cxt:ApplicationContext, *args, **kwargs):
-#         super(Mask, self).__init__(parent, *args, **kwargs)
-
-#         self.setStyleSheet(cxt.app_style)
-#         self.setObjectName("App_mask")
-
-#         self.clicked_area = add_button(self, name="App_mask_clicked_area", change_cursor=False)
 
 
 # # Pure UI class, no functionality

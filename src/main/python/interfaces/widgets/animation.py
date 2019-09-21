@@ -41,7 +41,7 @@ class Animation(QPropertyAnimation):
         prop and self.setPropertyName(prop)
 
         # Set duration
-        duration and self.setDuration(duration)
+        self.setDuration(duration)
 
         # Set start value
         start_width = start_width if start_width else widget.width()

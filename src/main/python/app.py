@@ -15,10 +15,42 @@ from interfaces.app.appUI import AppUI
 
 class App(AppUI):
 
+    username: str = ""
+    total_balance: int = 0
+
     def __init__(self, logout_signal:pyqtSignal, cxt:ApplicationContext, *args, **kwargs):
         super(App, self).__init__(logout_signal, cxt, *args, **kwargs)
 
+        self.update_account()
+
         self.on_dashboard_clicked()
+
+    def update_account(self):
+        # fetch account information
+        self._api_get_call()
+
+        # update navigation credit value
+        self.navigation.set_credit(self.total_balance)
+
+        # update account username and credit value
+        self.account.update_info(self.username, self.total_balance)
+
+    def _api_get_call(self):
+
+        # fetch account information
+        with Api("/account") as account:
+            status, res = account.get()
+
+            print(status)
+            print(res)
+
+            if not res or status != 200:
+                self.username = "."
+                self.total_balance = 0
+            else:
+                # Insert comma here so we can default to nameless greeting if api fails.
+                self.username = res['account']['firstname'].capitalize()
+                self.total_balance = round(res['account']['credits'], 4)
 
     def on_dashboard_clicked(self):
         self.sidebar.on_dashboard_clicked()

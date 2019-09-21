@@ -16,8 +16,10 @@ from PyQt5.QtGui import QColor
 
 class AppAccountUI(Frame):            
 
-    username: str = ""
-    credit: int = 15                    
+    credit_prefix: str = "Credits: "
+
+    user: Label = None
+    credit: Label = None                
     credit_history: Button = None          
     notifications: Button = None            
     setting_button: Button = None          
@@ -33,6 +35,10 @@ class AppAccountUI(Frame):
 
         self.setStyleSheet(cxt.app_style)
     
+    def update_info(self, username: str, credits: int):
+        self.user.setText(username)
+        self.credit.setText(f"{self.credit_prefix}{credits}")
+
     def _init_ui(self, width: int, height: int):
 
         self.setFixedSize(width, height)
@@ -67,18 +73,18 @@ class AppAccountUI(Frame):
 
         section_layout = HorizontalLayout(self.title_section)
 
-        user = Label(
-            self.title_section, text="TEST", name="account_username", align=Qt.AlignVCenter
+        self.user = Label(
+            self.title_section, text="ERROR", name="account_username", align=Qt.AlignVCenter
         )
-        section_layout.addWidget(user)
+        section_layout.addWidget(self.user)
 
         spacer = HorizontalSpacer()
         section_layout.addItem(spacer)
 
-        credit = Label(
-            self.title_section, text=f"Credits: {self.credit}", name="account_credit", align=Qt.AlignVCenter
+        self.credit = Label(
+            self.title_section, text=f"{self.credit_prefix}ERROR", name="account_credit", align=Qt.AlignVCenter
         )
-        section_layout.addWidget(credit)
+        section_layout.addWidget(self.credit)
 
     def _init_button_section(self):
 

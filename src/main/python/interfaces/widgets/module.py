@@ -107,7 +107,9 @@ class SectionTitleFrame(BaseTwoLabelFrame):
 
 class ConfigFrame(BaseTwoLabelFrame):
     def __init__(self, widget: QWidget, **kwargs):
+        """
         
+        """
         super(ConfigFrame, self).__init__(
             widget, name="config_frame", align=Qt.AlignVCenter, **kwargs
         )

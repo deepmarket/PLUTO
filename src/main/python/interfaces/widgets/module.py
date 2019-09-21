@@ -1,7 +1,6 @@
-from PyQt5.QtWidgets import QWidget, QComboBox, QCheckBox
 from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QWidget, QComboBox, QCheckBox
 
-from ..helper import get_children
 from .button import Button, RadioButton
 from .frame import Frame
 from .groupbox import GroupBox
@@ -9,6 +8,8 @@ from .label import Label
 from .layout import HorizontalLayout, VerticalLayout
 from .lineedit import LineEdit
 from .spacer import HorizontalSpacer
+
+from ..helper import get_children
 
 
 class BaseTwoLabelFrame(Frame):
@@ -25,6 +26,16 @@ class BaseTwoLabelFrame(Frame):
         label_two_text: str = "",
         **kwargs,
     ):
+        """
+        A frame object contains two label child widget.
+        Base class object, don't use directly on the implementation.
+        :param widget: required. the parent widget for this frame.
+        :param label_one_name: optional. given name to control style for label one
+        :param label_two_name: optional. given name to control style for label two
+        :param label_one_text: optional. the text on label one.
+        :param label_two_text: optional. the text on label two.
+        :param align: optional. label align. Reference can be found: https://doc.qt.io/archives/qtjambi-4.5.2_01/com/trolltech/qt/core/Qt.AlignmentFlag.html#field_detail
+        """
         super(BaseTwoLabelFrame, self).__init__(widget, **kwargs)
 
         kwargs.pop("name", None)
@@ -43,32 +54,60 @@ class BaseTwoLabelFrame(Frame):
         layout.addWidget(self.label_two)
 
     def set_label_one_text(self, text: str):
+        """
+        Set the given text to label one.
+        :return: this function doesn't return value
+        """
         self.label_one.setText(text)
 
     def set_label_two_text(self, text: str):
+        """
+        Set the given text to label two.
+        :return: this function doesn't return value
+        """
         self.label_two.setText(text)
 
     def get_label_one(self):
+        """
+        :return: the label one object, not the text within it.
+        """
         return self.label_one
 
     def get_label_two(self):
+        """
+        :return: the label two object, not the text within it.
+        """
         return self.label_two
 
 
 class SectionTitleFrame(BaseTwoLabelFrame):
-    def __init__(self, widget: QWidget, **kwargs):
+    def __init__(
+        self, 
+        widget: QWidget, 
+        label_one_text: str ="",
+        label_two_text: str ="",
+        ):
+        """
+        Title frame for section.
+        label one used for title, label two used for hint.
+        :param widget: required. the parent widget for this frame
+        :param label_one_text: optional. the text on label one.
+        :param label_two_text: optional. the text on label two.
+        """
         super(SectionTitleFrame, self).__init__(
             widget,
             name="section_title_frame",
             label_one_name="section_title",
             label_two_name="section_hint",
+            label_one_text=label_one_text,
+            label_two_text=label_two_text,
             align=Qt.AlignVCenter,
-            **kwargs,
         )
 
 
 class ConfigFrame(BaseTwoLabelFrame):
     def __init__(self, widget: QWidget, **kwargs):
+        
         super(ConfigFrame, self).__init__(
             widget, name="config_frame", align=Qt.AlignVCenter, **kwargs
         )
@@ -100,13 +139,7 @@ class ParamFrame(Frame):
 
     dat: Label = None
 
-    def __init__(
-        self,
-        widget: QWidget,
-        dat: str = 0,
-        label: str = "",
-        **kwargs,
-    ):
+    def __init__(self, widget: QWidget, dat: str = 0, label: str = "", **kwargs):
         """
         Dashboard data widget, contain two labels
         dat is the data (i.e. "1")
@@ -122,7 +155,9 @@ class ParamFrame(Frame):
         self.dat = Label(self, name="dashboard_param_dat", text=dat, align=Qt.AlignLeft)
         layout.addWidget(self.dat)
 
-        label = Label(self, name="dashboard_param_label", text=label, align=Qt.AlignLeft)
+        label = Label(
+            self, name="dashboard_param_label", text=label, align=Qt.AlignLeft
+        )
         layout.addWidget(label)
 
     def set_dat(self, text: str):
@@ -139,11 +174,7 @@ class EstimateFrame(Frame):
     credit: Label = None
 
     def __init__(
-        self,
-        widget: QWidget,
-        title: str = "",
-        in_out: str = "",
-        credit: str = "",
+        self, widget: QWidget, title: str = "", in_out: str = "", credit: str = ""
     ):
         """
         Dashboard estimate widget.
@@ -160,16 +191,28 @@ class EstimateFrame(Frame):
         left_layout = VerticalLayout(left)
         layout.addWidget(left)
 
-        title = Label(self, name="dashboard_estimate_title", text=title, align=Qt.AlignLeft)
+        title = Label(
+            self, name="dashboard_estimate_title", text=title, align=Qt.AlignLeft
+        )
         left_layout.addWidget(title)
 
-        subtitle = Label(self, name="dashboard_estimate_subtitle", text="(within next 24 hrs)", align=Qt.AlignLeft)
+        subtitle = Label(
+            self,
+            name="dashboard_estimate_subtitle",
+            text="(within next 24 hrs)",
+            align=Qt.AlignLeft,
+        )
         left_layout.addWidget(subtitle)
 
         self.in_out = in_out
-        credit = Label(self, name="dashboard_estimate_credit", text=f"{self.in_out} {credit} {self.unit}", align=(Qt.AlignRight|Qt.AlignVCenter))
+        credit = Label(
+            self,
+            name="dashboard_estimate_credit",
+            text=f"{self.in_out} {credit} {self.unit}",
+            align=(Qt.AlignRight | Qt.AlignVCenter),
+        )
         layout.addWidget(credit)
-    
+
     def set_credit(self, text: str):
         self.credit.setText(f"{self.in_out} {text} {self.unit}")
 

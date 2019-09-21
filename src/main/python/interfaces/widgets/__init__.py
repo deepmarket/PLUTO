@@ -2,7 +2,7 @@ from .animation import Animation, MoveAnimation
 from .button import Button, RadioButton
 from .frame import Frame
 from .groupbox import GroupBox
-from .label import Label, Paragraph #, Image
+from .label import Label, Paragraph  # , Image
 from .layout import HorizontalLayout, VerticalLayout, StackLayout
 from .lineedit import LineEdit
 from .popup import Question
@@ -20,5 +20,5 @@ from .module import (
     PriceBox,
     Scheme,
     ParamFrame,
-    EstimateFrame
+    EstimateFrame,
 )

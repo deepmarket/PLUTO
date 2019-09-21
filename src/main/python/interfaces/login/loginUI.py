@@ -1,10 +1,10 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
-
 from abc import ABCMeta, abstractmethod
 
-from PyQt5.QtCore import pyqtSignal
-from ..widgets import Frame, MoveAnimation
 from PyQt5.QtWidgets import QDialog
+from PyQt5.QtCore import pyqtSignal
+
+from ..widgets import Frame, MoveAnimation
 from .loginPageUI import LoginPageUI
 from .loginCreateUI import CreatePageUI
 

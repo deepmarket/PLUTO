@@ -5,8 +5,9 @@ from uix.util import *
 
 class MainView(QFrame):
     def __init__(self, *args, **kwargs):
-        super(QFrame, self).__init__(*args, **kwargs)
+        super(MainView, self).__init__(*args, **kwargs)
 
+        # TODO: these regex has been moved to util.py, please look at it, and decide if need to clean up these two regex.
         self.num_regex = re.compile(r"(\d+)")
         #  self.num_regex = re.compile(r"(?<![-.])\b[0-9]+\b(?!\.[0-9])")
 
@@ -25,6 +26,8 @@ class MainView(QFrame):
 
     @staticmethod
     def is_float(number):
+        # TODO: after globale check, there's no where has called this function
+        # consider remove it.
         try:
             float(number)
         except ValueError:

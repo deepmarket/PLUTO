@@ -29,12 +29,13 @@ class Spacer(QSpacerItem):
             self.sizePolicy().horizontalPolicy(),
             QSizePolicy.Fixed,
         )
-        width and self.changeSize(
-            width,
-            self.sizeHint().height(),
-            QSizePolicy.Fixed,
-            self.sizePolicy().verticalPolicy(),
-        )
+        if width != 0:
+            self.changeSize(
+                width,
+                self.sizeHint().height(),
+                QSizePolicy.Fixed,
+                self.sizePolicy().verticalPolicy(),
+            )
 
 
 class HorizontalSpacer(Spacer):

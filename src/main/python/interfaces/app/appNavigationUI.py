@@ -21,6 +21,9 @@ class AppNavigationUI(Frame):
 
         self.setStyleSheet(cxt.app_style)
     
+    def set_credit(self, text: str):
+        self.credit.setText(f"{self.credit_prefix}{text}")
+
     def _init_ui(self, width: int, height: int):
 
         self.setFixedSize(width, height)
@@ -30,7 +33,7 @@ class AppNavigationUI(Frame):
         spacer = HorizontalSpacer()
         window_layout.addItem(spacer)
 
-        self.credit = Label(self, text=f"{self.credit_prefix}0.0", name="navigation_credit")
+        self.credit = Label(self, text=f"{self.credit_prefix}ERROR", name="navigation_credit")
         window_layout.addWidget(self.credit)
 
         self.menu_button = Button(

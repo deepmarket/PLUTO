@@ -20,10 +20,42 @@ class AppSidebarUI(Frame):
     def __init__(self, parent, cxt:ApplicationContext, width: int, height: int, *args, **kwargs):
         super(AppSidebarUI, self).__init__(parent, name="sidebar")
 
+        self.cxt = cxt
+
         self._init_ui(width, height)
 
-        self.setStyleSheet(cxt.app_style)
+        self.setStyleSheet(self.cxt.app_style)
     
+    def reload_styleSheet(self):
+        self.setStyleSheet(self.cxt.app_style)
+
+    def on_dashboard_clicked(self):
+        self.reset()
+        self.dashboard.setObjectName("sidebar_button_active")
+        self.reload_styleSheet()
+
+    def on_resources_clicked(self):
+        self.reset()
+        self.resources.setObjectName("sidebar_button_active")
+        self.reload_styleSheet()
+
+    def on_jobs_clicked(self):
+        self.reset()
+        self.jobs.setObjectName("sidebar_button_active")
+        self.reload_styleSheet()
+
+    def on_settings_clicked(self):
+        self.reset()
+        self.settings.setObjectName("sidebar_button_active")
+        self.reload_styleSheet()
+
+    def reset(self):
+        # Set all widget to base styles and let clicked callback override them
+        self.dashboard.setObjectName("sidebar_button")
+        self.resources.setObjectName("sidebar_button")
+        self.jobs.setObjectName("sidebar_button")
+        self.settings.setObjectName("sidebar_button")
+
     def _init_ui(self, width: int, height: int):
 
         self.setFixedSize(width, height)

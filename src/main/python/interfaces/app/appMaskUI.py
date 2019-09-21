@@ -1,18 +1,17 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
-from ..widgets import Frame
+from ..widgets import Frame, Button
 
 class AppMaskUI(Frame):            
 
+    clicked_area: Button = None
+    
     def __init__(self, parent, cxt:ApplicationContext, width: int, height: int, *args, **kwargs):
-        super(AppMaskUI, self).__init__(parent)
-
-        self.width = width
-        self.height = height
-
-        self._init_ui()
+        super(AppMaskUI, self).__init__(parent, name="mask")
 
         self.setStyleSheet(cxt.app_style)
     
-    def _init_ui(self):
+        self.setFixedSize(width, height)
 
-        self.setFixedSize(self.width, self.height)
+        self.clicked_area = Button(self, name="mask_clicked_area")
+        self.clicked_area.setFixedSize(width, height)
+        self.clicked_area.move(0, 0)

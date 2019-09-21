@@ -1,44 +1,72 @@
-#App_sidebar {
+* {
+    font-family: "Helvetica Neue";
+}
+
+QFrame#sidebar {
     background-color: #FEFEFE;
     border-right: 1px solid #E7EEF0;
+    padding-top: 12px;
 }
 
-#App_navigation {
-    background-color: white;
+QFrame#navigation {
+    background-color: #FFFFFF;
 }
 
-#App_main_window {
+QFrame#main_window {
     background-color: #F4F8F9;
 }
 
-#App_mask {
+QFrame#mask {
     background-color: rgba(255, 255, 255, 150);
+    /* background-color: red; */
 }
 
-#App_sidebar_title {
-    font-family: "Helvetica Neue";
+QFrame#account {
+    background-color: #FFFFFF;
+}
+
+QFrame#sidebar_button_frame {
+    padding-top: 50px;
+}
+
+QLabel#sidebar_title {
     font-size: 22px;
     font-weight: 500;
     color: #505A5F;
 }
 
-#App_navigation_button {
-    border: None;
-}
-
-#App_navigation_credit {
-    font-family: "Helvetica Neue";
+QLabel#navigation_credit {
     font-size: 12px;
     font-weight: 300;
     color: #505A5F;
 }
 
-#App_mask_clicked_area {
+QPushButton#sidebar_button_active,
+QPushButton#sidebar_button {
+    border: none;
+    height: 20px;
+    font-size: 13px;
+    padding-left: 16px;
+    text-align: left;
+    font-weight: 400;
+}
+
+QPushButton#sidebar_button_active {
+    border-left: 2px solid #6C7E8E;
+    color: #6C7E8E;
+}
+
+QPushButton#sidebar_button {
+    border-left: none;
+    color: #91A4AD;
+}
+
+QPushButton#navigation_button {
     border: none;
 }
 
-#App_account {
-    background-color: white;
+QPushButton#mask_clicked_area {
+    border: none;
 }
 
 #App_title_frame {

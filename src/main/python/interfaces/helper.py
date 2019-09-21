@@ -9,7 +9,9 @@ import os
 
 from PyQt5.QtWidgets import QLineEdit, QLabel
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QRectF
+
+from PyQt5.QtGui import QPixmap, QIcon, QPainter, QBrush, QColor
 
 
 def get_children(widget, child_type, *args):
@@ -58,3 +60,24 @@ def switch_scheme(widget, curr_scheme):
     # set labels to enable stylesheet
     for label in labels:
         label.setObjectName("scheme_label")
+
+
+# return a menu icon
+def menu_icon(width):
+
+    height = 3
+    pix = QPixmap(width, width)
+    pix.fill(Qt.transparent)
+    painter = QPainter()
+
+    painter.begin(pix)
+
+    painter.setPen(Qt.NoPen)
+    painter.setBrush(QBrush(QColor("#6C7E8E")))
+    painter.drawRect(QRectF(0, 2, width, height))
+    painter.drawRect(QRectF(0, height + 2 * 2, width, height))
+    painter.drawRect(QRectF(0, height * 2 + 3 * 2, width, height))
+
+    painter.end()
+
+    return QIcon(pix)

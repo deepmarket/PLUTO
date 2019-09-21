@@ -1,18 +1,19 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
-from ..widgets import Frame
+from ..widgets import Frame, StackLayout
 
 class AppMainWindowUI(Frame):            
 
+    stack = None               # stack layout
+    stack_widget = None        # current widget
+
     def __init__(self, parent, cxt:ApplicationContext, width: int, height: int, *args, **kwargs):
-        super(AppMainWindowUI, self).__init__(parent)
+        super(AppMainWindowUI, self).__init__(parent, name="main_window")
 
-        self.width = width
-        self.height = height
-
-        self._init_ui()
-
+        # set style sheet
         self.setStyleSheet(cxt.app_style)
-    
-    def _init_ui(self):
 
-        self.setFixedSize(self.width, self.height)
+        # set main window size
+        self.setFixedSize(width, height)
+
+        # initial main window layout
+        self.stack = StackLayout(self)

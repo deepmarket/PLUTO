@@ -10,7 +10,7 @@ from .appMainWindowUI import AppMainWindowUI
 from .appMaskUI import AppMaskUI
 from .appAccountUI import AppAccountUI
 
-from ..widgets import Frame
+from ..widgets import Frame, MoveAnimation
 
 from ..config import SIDEBAR_WIDTH, NAVIGATION_HEIGHT, ACCOUNT_WIDTH
 
@@ -31,6 +31,28 @@ class AppUI(QMainWindow):
 
         self._init_ui()
         self.setStyleSheet(self.cxt.app_style)
+
+    def on_menu_clicked(self):
+        """
+        open menu
+        """
+
+        mask_action = MoveAnimation(self.mask, self.width(), 0, 0, 0, duration=0)
+        menu_action = MoveAnimation(self.account, self.width(), 0, self.width() - ACCOUNT_WIDTH, 0)
+        
+        mask_action.start()
+        menu_action.start()
+
+    def on_mask_clicked(self):
+        """
+        close menu
+        """
+
+        menu_action = MoveAnimation(self.account, self.width()-ACCOUNT_WIDTH, 0, self.width(), 0)
+        mask_action = MoveAnimation(self.mask, 0, 0, self.width(), 0, duration=0)
+
+        menu_action.start()
+        mask_action.start()
 
     def _init_ui(self):
 
@@ -57,9 +79,12 @@ class AppUI(QMainWindow):
 
         # mask
         self.mask = AppMaskUI(window, self.cxt, self.width(), self.height())
-    
         self.mask.move(self.width(), 0)
 
         # account
         self.account = AppAccountUI(window, self.cxt, ACCOUNT_WIDTH, self.height())
-        self.account.move(self.width() - ACCOUNT_WIDTH, 0)
+        self.account.move(self.width(), 0)
+
+        # connect function
+        self.navigation.menu_button.clicked.connect(self.on_menu_clicked)
+        self.mask.clicked_area.clicked.connect(self.on_mask_clicked)

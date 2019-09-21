@@ -30,34 +30,30 @@ QDialog#question QPushButton#confirm {
 QDialog#notification {
     border: none;
     background-color: #F4F8F9;
-    padding-left: 5px;
-    padding-right: 5px;
-    padding-top: 5px;
-    padding-bottom: 5px;
 }
 
 QDialog#notification > QFrame {
     background-color: #FFFFFF;
 }
 
-QDialog#notification QFrame#notification_title_frame {
+QDialog#notification QFrame#title_frame {
     max-height: 100px;
     padding-left: 40px;
     padding-right: 40px;
 }
 
-QDialog#notification QFrame#notification_title_frame QLabel#notification_title {
+QDialog#notification QLabel {
     font-size: 17px;
     font-weight: 100;
     color: #6C7E8E;
 }
 
-QDialog#notification QFrame#notification_title_frame QPushButton#notification_button {
+QDialog#notification QPushButton {
     border: none;
     background-color: #6C7E8E;
     height: 27px;
     width: 180px;
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 200;
     color: #FFFFFF;
 }

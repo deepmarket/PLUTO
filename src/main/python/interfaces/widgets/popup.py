@@ -117,29 +117,25 @@ class Notification(BaseDialog):
         self._init_ui()
 
     def _init_ui(self):
-        section_layout = VerticalLayout(self, space=5)
+        section_layout = VerticalLayout(self, t_m=5, b_m=5, l_m=5, r_m=5, space=5)
 
         # title frame
-        title_frame = Frame(self, name="notification_title_frame")
+        title_frame = Frame(self, name="title_frame")
         title_layout = HorizontalLayout(title_frame, space=1)
         section_layout.addWidget(title_frame)
 
         title = Label(
-            title_frame, text="Notification", name="notification_title", align=Qt.AlignVCenter
+            title_frame, text="Notification", align=Qt.AlignVCenter
         )
         title_layout.addWidget(title)
 
         spacer = HorizontalSpacer()
         title_layout.addItem(spacer)
 
-        self.clean = Button(
-            title_frame, text="CLEAN", name="notification_button"
-        )
+        self.clean = Button(title_frame, text="CLEAN")
         title_layout.addWidget(self.clean)
 
-        self.done = Button(
-            title_frame, text="DONE", name="notification_button"
-        )
+        self.done = Button(title_frame, text="DONE")
         title_layout.addWidget(self.done)
 
         # window frame

@@ -27,7 +27,7 @@ class Table(QTableWidget):
         :param row_height: optional. the height for each row (including header)
         :param name: optional. object for table
         """
-        
+
         super(Table, self).__init__(widget)
 
         self.count_row = count_row
@@ -136,6 +136,11 @@ class Table(QTableWidget):
             return -1
 
     def get_cell(self, row: int, column: int):
+        """
+        :param row: required. row # of the cell
+        :param column: required. column # of the cell
+        :return: the text within the cell. 
+        """
         return self.item(row, column).text()
 
     def allow_edit(self, row: int):

@@ -1,8 +1,8 @@
 import os
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QLabel, QWidget
 from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QLabel, QWidget
 
 from .frame import Frame
 from .layout import VerticalLayout
@@ -43,6 +43,10 @@ class Label(QLabel):
         align and self.setAlignment(align)
 
     def reset(self):
+        """
+        Clean up text within label
+        :return: this function doesn't return value
+        """
         self.setText("")
 
 

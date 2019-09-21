@@ -1,7 +1,6 @@
-from PyQt5.QtWidgets import QWidget, QComboBox, QCheckBox
 from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QWidget, QComboBox, QCheckBox
 
-from ..helper import get_children
 from .button import Button, RadioButton
 from .frame import Frame
 from .groupbox import GroupBox
@@ -9,6 +8,8 @@ from .label import Label
 from .layout import HorizontalLayout, VerticalLayout
 from .lineedit import LineEdit
 from .spacer import HorizontalSpacer
+
+from ..helper import get_children
 
 
 class BaseTwoLabelFrame(Frame):
@@ -100,13 +101,7 @@ class ParamFrame(Frame):
 
     dat: Label = None
 
-    def __init__(
-        self,
-        widget: QWidget,
-        dat: str = 0,
-        label: str = "",
-        **kwargs,
-    ):
+    def __init__(self, widget: QWidget, dat: str = 0, label: str = "", **kwargs):
         """
         Dashboard data widget, contain two labels
         dat is the data (i.e. "1")
@@ -122,7 +117,9 @@ class ParamFrame(Frame):
         self.dat = Label(self, name="dashboard_param_dat", text=dat, align=Qt.AlignLeft)
         layout.addWidget(self.dat)
 
-        label = Label(self, name="dashboard_param_label", text=label, align=Qt.AlignLeft)
+        label = Label(
+            self, name="dashboard_param_label", text=label, align=Qt.AlignLeft
+        )
         layout.addWidget(label)
 
     def set_dat(self, text: str):
@@ -139,11 +136,7 @@ class EstimateFrame(Frame):
     credit: Label = None
 
     def __init__(
-        self,
-        widget: QWidget,
-        title: str = "",
-        in_out: str = "",
-        credit: str = "",
+        self, widget: QWidget, title: str = "", in_out: str = "", credit: str = ""
     ):
         """
         Dashboard estimate widget.
@@ -160,16 +153,28 @@ class EstimateFrame(Frame):
         left_layout = VerticalLayout(left)
         layout.addWidget(left)
 
-        title = Label(self, name="dashboard_estimate_title", text=title, align=Qt.AlignLeft)
+        title = Label(
+            self, name="dashboard_estimate_title", text=title, align=Qt.AlignLeft
+        )
         left_layout.addWidget(title)
 
-        subtitle = Label(self, name="dashboard_estimate_subtitle", text="(within next 24 hrs)", align=Qt.AlignLeft)
+        subtitle = Label(
+            self,
+            name="dashboard_estimate_subtitle",
+            text="(within next 24 hrs)",
+            align=Qt.AlignLeft,
+        )
         left_layout.addWidget(subtitle)
 
         self.in_out = in_out
-        credit = Label(self, name="dashboard_estimate_credit", text=f"{self.in_out} {credit} {self.unit}", align=(Qt.AlignRight|Qt.AlignVCenter))
+        credit = Label(
+            self,
+            name="dashboard_estimate_credit",
+            text=f"{self.in_out} {credit} {self.unit}",
+            align=(Qt.AlignRight | Qt.AlignVCenter),
+        )
         layout.addWidget(credit)
-    
+
     def set_credit(self, text: str):
         self.credit.setText(f"{self.in_out} {text} {self.unit}")
 

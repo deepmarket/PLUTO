@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import QPushButton, QRadioButton, QWidget
-from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QPushButton, QRadioButton, QWidget
 
 
 class Button(QPushButton):

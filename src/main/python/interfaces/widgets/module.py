@@ -26,6 +26,16 @@ class BaseTwoLabelFrame(Frame):
         label_two_text: str = "",
         **kwargs,
     ):
+        """
+        A frame object contains two label child widget.
+        Base class object, don't use directly on the implementation.
+        :param widget: required. the parent widget for this frame.
+        :param label_one_name: optional. given name to control style for label one
+        :param label_two_name: optional. given name to control style for label two
+        :param label_one_text: optional. the text on label one.
+        :param label_two_text: optional. the text on label two.
+        :param align: optional. label align. Reference can be found: https://doc.qt.io/archives/qtjambi-4.5.2_01/com/trolltech/qt/core/Qt.AlignmentFlag.html#field_detail
+        """
         super(BaseTwoLabelFrame, self).__init__(widget, **kwargs)
 
         kwargs.pop("name", None)
@@ -44,32 +54,60 @@ class BaseTwoLabelFrame(Frame):
         layout.addWidget(self.label_two)
 
     def set_label_one_text(self, text: str):
+        """
+        Set the given text to label one.
+        :return: this function doesn't return value
+        """
         self.label_one.setText(text)
 
     def set_label_two_text(self, text: str):
+        """
+        Set the given text to label two.
+        :return: this function doesn't return value
+        """
         self.label_two.setText(text)
 
     def get_label_one(self):
+        """
+        :return: the label one object, not the text within it.
+        """
         return self.label_one
 
     def get_label_two(self):
+        """
+        :return: the label two object, not the text within it.
+        """
         return self.label_two
 
 
 class SectionTitleFrame(BaseTwoLabelFrame):
-    def __init__(self, widget: QWidget, **kwargs):
+    def __init__(
+        self, 
+        widget: QWidget, 
+        label_one_text: str ="",
+        label_two_text: str ="",
+        ):
+        """
+        Title frame for section.
+        label one used for title, label two used for hint.
+        :param widget: required. the parent widget for this frame
+        :param label_one_text: optional. the text on label one.
+        :param label_two_text: optional. the text on label two.
+        """
         super(SectionTitleFrame, self).__init__(
             widget,
             name="section_title_frame",
             label_one_name="section_title",
             label_two_name="section_hint",
+            label_one_text=label_one_text,
+            label_two_text=label_two_text,
             align=Qt.AlignVCenter,
-            **kwargs,
         )
 
 
 class ConfigFrame(BaseTwoLabelFrame):
     def __init__(self, widget: QWidget, **kwargs):
+        
         super(ConfigFrame, self).__init__(
             widget, name="config_frame", align=Qt.AlignVCenter, **kwargs
         )

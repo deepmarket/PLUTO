@@ -4,19 +4,20 @@ from interfaces.dashboard import DashboardUI
 from util import add_greeting
 from api import Api
 
+
 class Dashboard(DashboardUI):
 
-    username: str = ""                
-    total_balance: int = 0              
+    username: str = ""
+    total_balance: int = 0
     # estimated_profit: int = 0
     # estimated_cost: int = 0
-    running_machines: int = 0            
-    dead_machine: int = 0              
-    finished_jobs = 0               
-    running_jobs = 0                
-    killed_jobs = 0                  
+    running_machines: int = 0
+    dead_machine: int = 0
+    finished_jobs = 0
+    running_jobs = 0
+    killed_jobs = 0
 
-    def __init__(self, cxt:ApplicationContext, *args, **kwargs):
+    def __init__(self, cxt: ApplicationContext, *args, **kwargs):
         super(Dashboard, self).__init__(cxt, *args, **kwargs)
 
         self.update_account()
@@ -48,8 +49,7 @@ class Dashboard(DashboardUI):
 
         jobs_kill = f"{self.killed_jobs}"
         self.jobs_kill.set_dat(jobs_kill)
-        
-    
+
     def _api_get_call(self):
 
         # fetch account information
@@ -61,9 +61,9 @@ class Dashboard(DashboardUI):
                 self.total_balance = 0
             else:
                 # Insert comma here so we can default to nameless greeting if api fails.
-                self.username = res['account']['firstname'].capitalize()
-                self.total_balance = round(res['account']['credits'], 4)
-            
+                self.username = res["account"]["firstname"].capitalize()
+                self.total_balance = round(res["account"]["credits"], 4)
+
         # fetch resources information
         with Api("/resources") as resources:
             status, res = resources.get()
@@ -73,7 +73,7 @@ class Dashboard(DashboardUI):
                 self.dead_machine = 0
             else:
                 for rsrc in res["resources"]:
-                    status = str(rsrc['status']).upper()
+                    status = str(rsrc["status"]).upper()
 
                     if status == "ALIVE":
                         self.running_machines += 1
@@ -90,7 +90,7 @@ class Dashboard(DashboardUI):
                 self.running_jobs = 0
             else:
                 for job in res["jobs"]:
-                    status = str(job['status']).upper()
+                    status = str(job["status"]).upper()
 
                     if status == "FINISHED":
                         self.finished_jobs += 1

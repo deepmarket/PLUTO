@@ -101,14 +101,13 @@ class Question(BaseDialog):
         An reject signal would be sent to the outer field.
         Then the dialog close.
         """
-        
+
         self.reject()
         self.close()
 
 
 class Notification(BaseDialog):
-
-    def __init__(self, cxt:ApplicationContext, *args, **kwargs):
+    def __init__(self, cxt: ApplicationContext, *args, **kwargs):
         super(Notification, self).__init__(cxt, name="notification")
 
         self.clean = None
@@ -126,9 +125,7 @@ class Notification(BaseDialog):
         title_layout = HorizontalLayout(title_frame, space=1)
         section_layout.addWidget(title_frame)
 
-        title = Label(
-            title_frame, text="Notification", align=Qt.AlignVCenter
-        )
+        title = Label(title_frame, text="Notification", align=Qt.AlignVCenter)
         title_layout.addWidget(title)
 
         spacer = HorizontalSpacer()
@@ -157,7 +154,7 @@ class CreditHistory(BaseDialog):
     title_section: Frame = None
     window_section: Frame = None
 
-    def __init__(self, cxt:ApplicationContext, *args, **kwargs):
+    def __init__(self, cxt: ApplicationContext, *args, **kwargs):
         super(CreditHistory, self).__init__(cxt, name="credit")
 
         self.done = None
@@ -206,11 +203,14 @@ class CreditHistory(BaseDialog):
         self.window = Frame(self.window_section, name="window")
         window_layout.addWidget(self.window)
 
-
     def _init_title_section(self):
         title_layout = HorizontalLayout(self.title_section)
 
-        title = Label(self.title_section, text="Recent 30 Days Transit Record", align=Qt.AlignVCenter)
+        title = Label(
+            self.title_section,
+            text="Recent 30 Days Transit Record",
+            align=Qt.AlignVCenter,
+        )
         title_layout.addWidget(title)
 
         spacer = HorizontalSpacer()

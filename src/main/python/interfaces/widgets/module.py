@@ -82,11 +82,8 @@ class BaseTwoLabelFrame(Frame):
 
 class SectionTitleFrame(BaseTwoLabelFrame):
     def __init__(
-        self, 
-        widget: QWidget, 
-        label_one_text: str ="",
-        label_two_text: str ="",
-        ):
+        self, widget: QWidget, label_one_text: str = "", label_two_text: str = ""
+    ):
         """
         Title frame for section.
         label one used for title, label two used for hint.

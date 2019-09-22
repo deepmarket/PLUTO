@@ -9,8 +9,9 @@ from interfaces.login import LoginUI, LoginPageUI, CreatePageUI
 
 
 class Login(LoginUI):
-
-    def __init__(self, login_signal:pyqtSignal, cxt:ApplicationContext, *args, **kwargs):
+    def __init__(
+        self, login_signal: pyqtSignal, cxt: ApplicationContext, *args, **kwargs
+    ):
         super(Login, self).__init__(cxt, *args, **kwargs)
 
         self.cxt = cxt
@@ -22,7 +23,7 @@ class Login(LoginUI):
         # class Res(Enum):
         #     INVALID_ERROR = "Please enter a valid Email address."
         #     SUCCESS = auto()
-        
+
         # clear error hint
         self.login.login_hint.setText("")
 
@@ -40,7 +41,7 @@ class Login(LoginUI):
             self.login.login_hint.setText("Please enter your email.")
 
         # elif email_res != Res.SUCCESS:
-            # self.login.login_hint.setText(email_res)
+        # self.login.login_hint.setText(email_res)
 
         # Empty password
         elif not pwd and username:
@@ -52,7 +53,7 @@ class Login(LoginUI):
 
     # pre-check user input before access db
     def create_action(self):
-    
+
         # clear error hint
         self.create.create_hint.setText("")
 
@@ -80,31 +81,32 @@ class Login(LoginUI):
             self.create.create_hint.setText(email_res)
 
         elif not pwd:
-            self.create.create_hint.setText("Must enter a password") 
+            self.create.create_hint.setText("Must enter a password")
 
         elif pwd != confirm_pwd:
             self.create.create_hint.setText("Passwords do not match.")
 
         # otherwise, check pass
         else:
-            print(f"Creating account with:\n\tFirst name: '{first}'\n\tLast name: '{last}'\n"
-                  f"\tEmail:'{email}'\n\tPassword: '{pwd}''")
+            print(
+                f"Creating account with:\n\tFirst name: '{first}'\n\tLast name: '{last}'\n"
+                f"\tEmail:'{email}'\n\tPassword: '{pwd}''"
+            )
             self.attempt_create(first, last, email, pwd)
 
     def attempt_login(self, username, pwd):
 
         with Api("/auth/login") as api:
-            status, res = api.post({
-                "email": username,
-                "password": pwd
-            })
+            status, res = api.post({"email": username, "password": pwd})
 
             if (res or status) is None:
                 """
                     App can't connect to server.
                 """
-                self.login.login_hint.setText("There was an error connecting to the authentication servers. "
-                                              "Please try again in a little while.")
+                self.login.login_hint.setText(
+                    "There was an error connecting to the authentication servers. "
+                    "Please try again in a little while."
+                )
             elif res.get("auth"):
                 """
                     Username and password both correct.
@@ -122,13 +124,17 @@ class Login(LoginUI):
                 """
                     Username incorrect.
                 """
-                self.login.login_hint.setText("The email account entered doesn't exists.")
+                self.login.login_hint.setText(
+                    "The email account entered doesn't exists."
+                )
             # Only other status API will return is an error, so let the user know
             else:
                 """
                     unexpected error.
                 """
-                self.login.login_hint.setText("There was an unknown error while trying to log in. Please try again.")
+                self.login.login_hint.setText(
+                    "There was an unknown error while trying to log in. Please try again."
+                )
 
     def attempt_create(self, first, last, username, pwd):
 
@@ -138,7 +144,7 @@ class Login(LoginUI):
                 "firstname": first,
                 "lastname": last,
                 "email": username,
-                "password": pwd
+                "password": pwd,
             }
 
             status, res = api.post(auth_dict)
@@ -150,7 +156,9 @@ class Login(LoginUI):
                 # timer.start(900)
 
                 # if timer:
-                    # Accept and close parent window
+                # Accept and close parent window
                 self.attempt_login(username, pwd)
             else:
-                self.create.create_hint.setText("That email and password combination is already in use")
+                self.create.create_hint.setText(
+                    "That email and password combination is already in use"
+                )

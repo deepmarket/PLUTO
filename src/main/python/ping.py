@@ -26,7 +26,7 @@ from socket import socket, AF_INET, SOCK_STREAM
 # result = conn.connect_ex(('131.252.209.102', 8080))
 for port in range(80, 60000):
     conn = socket(AF_INET, SOCK_STREAM)
-    result = conn.connect_ex(('localhost', port))
+    result = conn.connect_ex(("localhost", port))
     if result == 0:
         # print("Port is open")
         print(f"Port {port} is open")

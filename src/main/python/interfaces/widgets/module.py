@@ -104,9 +104,6 @@ class SectionTitleFrame(BaseTwoLabelFrame):
 
 class ConfigFrame(BaseTwoLabelFrame):
     def __init__(self, widget: QWidget, **kwargs):
-        """
-        
-        """
         super(ConfigFrame, self).__init__(
             widget, name="config_frame", align=Qt.AlignVCenter, **kwargs
         )
@@ -300,8 +297,8 @@ class LoginInputFrame(BaseInputFrame):
 
 class ViewInputFrame(BaseInputFrame):
     """
-        This widget can be used on all of the subpage,
-        i.e. Job tab, Resources tab etc.
+    This widget can be used on all of the subpage,
+    i.e. Job tab, Resources tab etc.
     """
 
     def __init__(

@@ -1,33 +1,22 @@
-from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from abc import ABCMeta, abstractmethod
+from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
-
-from PyQt5.QtWidgets import (
-    QFrame,
-    QVBoxLayout,
-    QHBoxLayout,
-    QLayout,
-    QSpacerItem,
-    QSizePolicy,
-    QLabel,
-)
 from PyQt5.QtCore import pyqtSignal, Qt
 
-from ..helper import switch_scheme
-
 from ..widgets import (
-    StackLayout,
     Frame,
-    SectionTitleFrame,
-    Label,
-    VerticalLayout,
-    VerticalSpacer,
     HorizontalLayout,
     HorizontalSpacer,
+    Label,
     Scheme,
-    ViewInputFrame,
+    StackLayout,
+    SectionTitleFrame,
+    VerticalLayout,
+    VerticalSpacer,
     ViewButton,
+    ViewInputFrame,
 )
+from ..helper import switch_scheme
 
 
 class JobsAddViewUI(Frame):

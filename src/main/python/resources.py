@@ -1,18 +1,11 @@
-"""
-
-    The interface implemented at this file provide the following features:
-    1. ResourcesWorkspace: Allow user add current machine to resources pool
-    2. ResourcesList: View the existing machines that are lent
-
-"""
-
-from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from enum import Enum, auto
+from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from psutil import cpu_freq, cpu_count, virtual_memory
+
 from PyQt5.QtWidgets import QComboBox, QCheckBox
 
 from api import Api
-import util
+from util import config_input_check, get_ip_address
 
 from interfaces.helper import get_children
 from interfaces.resources import ResourcesUI, ResourcesControllerUI, ResourcesAddViewUI
@@ -275,7 +268,7 @@ class ResourcesAddView(ResourcesAddViewUI):
 
     def _fetch_ip_address(self):
         # get ip address for local machine
-        ip_address = util.get_ip_address()
+        ip_address = get_ip_address()
 
         # insert ip address to input field
         self.ip_address.setText(ip_address)
@@ -369,7 +362,7 @@ class ResourcesAddView(ResourcesAddViewUI):
             SUCCESS = auto()
 
         # check if input is acceptable
-        res = util.config_input_check(self.cpu_gpu.text(), self.available_cpu_gpu, Res)
+        res = config_input_check(self.cpu_gpu.text(), self.available_cpu_gpu, Res)
 
         if res is not Res.SUCCESS:
             self.planning_hint.setText(res.value)
@@ -393,7 +386,7 @@ class ResourcesAddView(ResourcesAddViewUI):
             SUCCESS = auto()
 
         # check if input is acceptable
-        res = util.config_input_check(self.cores.text(), self.available_cores, Res)
+        res = config_input_check(self.cores.text(), self.available_cores, Res)
 
         if res is not Res.SUCCESS:
             self.planning_hint.setText(res.value)
@@ -418,7 +411,7 @@ class ResourcesAddView(ResourcesAddViewUI):
             SUCCESS = auto()
 
         # check if input is acceptable
-        res = util.config_input_check(self.ram.text(), self.available_ram, Res)
+        res = config_input_check(self.ram.text(), self.available_ram, Res)
 
         if res is not Res.SUCCESS:
             self.planning_hint.setText(res.value)

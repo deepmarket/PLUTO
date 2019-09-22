@@ -1,10 +1,11 @@
-from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from enum import Enum, auto
+from fbs_runtime.application_context.PyQt5 import ApplicationContext
+
 from PyQt5.QtCore import pyqtSignal
 
 from api import Api
-
 from util import email_verification_check
+
 from interfaces.login import LoginUI, LoginPageUI, CreatePageUI
 
 

@@ -1,12 +1,13 @@
-from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from abc import ABCMeta, abstractmethod
+from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
-from PyQt5.QtWidgets import QDialog
 from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtWidgets import QDialog
 
-from ..widgets import Frame, MoveAnimation
 from .loginPageUI import LoginPageUI
 from .loginCreateUI import CreatePageUI
+
+from ..widgets import Frame, MoveAnimation
 
 
 class LoginUI(QDialog):
@@ -25,16 +26,6 @@ class LoginUI(QDialog):
 
         self.setObjectName("dialog")
         self.cxt = cxt
-
-        self.login = LoginPageUI(self)
-        self.create = CreatePageUI(self)
-
-        # connect function
-        self.login.login_button.clicked.connect(self.login_action)
-        self.create.create_button.clicked.connect(self.create_action)
-
-        self.login.to_create_button.clicked.connect(self.to_create)
-        self.create.to_login_button.clicked.connect(self.to_login)
 
         self._init_ui()
         self.setStyleSheet(self.cxt.login_style)
@@ -57,11 +48,18 @@ class LoginUI(QDialog):
         # set title name
         self.setWindowTitle("Login")
 
-        # set login initial position
+        self.login = LoginPageUI(self)
         self.login.move(0, 0)
 
-        # set create initial position
+        self.create = CreatePageUI(self)
         self.create.move(0 - self.width(), 0)
+
+        # connect function
+        self.login.login_button.clicked.connect(self.login_action)
+        self.create.create_button.clicked.connect(self.create_action)
+
+        self.login.to_create_button.clicked.connect(self.to_create)
+        self.create.to_login_button.clicked.connect(self.to_login)
 
     def to_login(self):
         self._build_check()

@@ -8,7 +8,7 @@ QFrame#dashboard {
 
 QFrame#overview_section {
     background-color: #FFFFFF;
-    max-height: 280px;
+    max-height: 185px;
     
     padding-top: 45px;
     padding-bottom: 45px;
@@ -45,7 +45,7 @@ QLabel#balance_credit {
 
 QLabel#machine_title {
     color: #6C7E8E;
-    font-size: 18px;
+    font-size: 12px;
 }
 
 QLabel#dashboard_param_dat {

@@ -1,11 +1,10 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
-from PyQt5.Qt import Qt, QSize
+from PyQt5.QtCore import Qt, QSize
 
 from ..widgets import Frame, HorizontalLayout, HorizontalSpacer, Label, Button
-from ..helper import menu_icon
-
 from ..config import MENU_ICON_SIZE
+from ..helper import menu_icon
 
 
 class AppNavigationUI(Frame):

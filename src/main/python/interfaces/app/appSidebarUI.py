@@ -1,6 +1,6 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
-from PyQt5.Qt import Qt
+from PyQt5.QtCore import Qt
 
 from ..widgets import Frame, VerticalLayout, VerticalSpacer, Label, Button
 

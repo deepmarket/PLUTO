@@ -1,5 +1,5 @@
-from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from enum import Enum, auto
+from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 from api import Api
 from util import job_input_check

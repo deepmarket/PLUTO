@@ -34,6 +34,11 @@ def get_ip_address():
 
 
 def config_input_check(text: str, available: int, res: Enum):
+    """
+    Resource machine config input check
+    :param text: required. config input text
+    :param res; required. return message package
+    """
 
     if not text:
         return res.EMPTY_ERROR
@@ -53,6 +58,11 @@ def config_input_check(text: str, available: int, res: Enum):
 
 
 def job_input_check(text: int, res: Enum):
+    """
+    Job input check
+    :param text: required. input text
+    :param res: required. return message package
+    """
 
     if not text:
         return res.EMPTY_ERROR
@@ -69,6 +79,11 @@ def job_input_check(text: int, res: Enum):
 
 
 def email_verification_check(text: str, res: Enum):
+    """
+    Verify if input email is valid
+    :param text: required. email input
+    :param res: required. return message package
+    """
 
     if not text:
         return res.INVALID_ERROR
@@ -79,8 +94,10 @@ def email_verification_check(text: str, res: Enum):
     return res.SUCCESS
 
 
-# return a greeting
 def add_greeting():
+    """
+    :return: a greeting base on real time of the day
+    """
     now = datetime.datetime.now()
 
     if now.hour < 12:

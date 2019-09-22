@@ -1,23 +1,23 @@
 from abc import ABCMeta, abstractmethod
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
-from PyQt5.QtWidgets import QComboBox, QCheckBox
 from PyQt5.QtCore import pyqtSignal, Qt
+from PyQt5.QtWidgets import QComboBox, QCheckBox
 
 from ..widgets import (
-    Frame,
-    SectionTitleFrame,
-    ConfigFrame,
-    ViewInputFrame,
-    ViewButton,
-    Label,
     AttendanceBox,
-    PriceBox,
+    ConfigFrame,
+    Frame,
+    Label,
     HorizontalLayout,
-    VerticalLayout,
-    StackLayout,
     HorizontalSpacer,
+    PriceBox,
+    SectionTitleFrame,
+    StackLayout,
+    VerticalLayout,
     VerticalSpacer,
+    ViewButton,
+    ViewInputFrame,
 )
 
 from ..helper import get_children

@@ -1,17 +1,18 @@
+from abc import ABCMeta, abstractmethod
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
-from abc import ABCMeta, abstractmethod
-from PyQt5.Qt import Qt, QPixmap, QLabel
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import Qt
 
 from ..widgets import (
     Frame,
-    VerticalLayout,
     HorizontalLayout,
-    Label,
     HorizontalSpacer,
+    Label,
+    SectionTitleFrame,
+    VerticalLayout,
     VerticalSpacer,
     ViewButton,
-    SectionTitleFrame,
 )
 from ..config import VERSION
 

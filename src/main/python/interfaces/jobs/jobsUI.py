@@ -3,13 +3,13 @@ from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from PyQt5.QtCore import pyqtSignal
 
 from ..widgets import (
-    StackLayout,
-    Frame,
-    VerticalLayout,
-    HorizontalLayout,
-    Label,
-    HorizontalSpacer,
     Button,
+    Frame,
+    HorizontalLayout,
+    HorizontalSpacer,
+    Label,
+    StackLayout,
+    VerticalLayout,
     VerticalSpacer,
 )
 

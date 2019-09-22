@@ -4,14 +4,14 @@ from PyQt5.QtCore import Qt, pyqtSignal, QTimer
 from PyQt5.QtWidgets import QSizePolicy, QWidget
 
 from ..widgets import (
+    Button,
     Frame,
-    VerticalLayout,
     HorizontalLayout,
+    HorizontalSpacer,
     Label,
     LoginInputFrame,
+    VerticalLayout,
     VerticalSpacer,
-    HorizontalSpacer,
-    Button,
 )
 
 

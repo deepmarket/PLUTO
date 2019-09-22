@@ -1,22 +1,21 @@
+from collections import OrderedDict
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
-from PyQt5.Qt import Qt
-from collections import OrderedDict
+from PyQt5.QtCore import Qt
 
 from ..widgets import (
+    EstimateFrame,
     Frame,
-    VerticalLayout,
     HorizontalLayout,
-    Label,
     HorizontalSpacer,
+    Label,
+    ParamFrame,
+    SectionTitleFrame,
+    Table,
+    VerticalLayout,
     VerticalSpacer,
     ViewButton,
-    SectionTitleFrame,
-    ParamFrame,
-    EstimateFrame,
-    Table,
 )
-
 from ..config import DASHBOARD_MAX_ROW
 
 
@@ -62,7 +61,7 @@ class DashboardUI(Frame):
 
     def _init_ui(self):
 
-        window_layout = VerticalLayout(self, space=5)
+        window_layout = VerticalLayout(self, space=1)
 
         self.overview_section = Frame(self, name="overview_section")
         window_layout.addWidget(self.overview_section)
@@ -74,11 +73,14 @@ class DashboardUI(Frame):
 
     def _init_overview_section(self):
 
-        section_layout = VerticalLayout(self.overview_section, space=50)
+        section_layout = VerticalLayout(self.overview_section)
 
         self.title_section = Frame(self.overview_section)
         section_layout.addWidget(self.title_section)
         self._init_title_section()
+
+        spacer = VerticalSpacer()
+        section_layout.addItem(spacer)
 
         self.content_section = Frame(self.overview_section)
         section_layout.addWidget(self.content_section)
@@ -133,8 +135,11 @@ class DashboardUI(Frame):
         # --------- resource ------------
 
         resource_frame = Frame(self.machine_section)
-        resource_layout = VerticalLayout(resource_frame, space=20)
+        resource_layout = VerticalLayout(resource_frame, space=5)
         section_layout.addWidget(resource_frame)
+
+        spacer = VerticalSpacer()
+        resource_layout.addItem(spacer)
 
         # --------- title ------------
 
@@ -149,17 +154,20 @@ class DashboardUI(Frame):
         frame_layout = HorizontalLayout(frame, space=20)
         resource_layout.addWidget(frame)
 
-        self.resources_running = ParamFrame(frame, label="running")
+        self.resources_running = ParamFrame(frame, label="Running")
         frame_layout.addWidget(self.resources_running)
 
-        self.resources_dead = ParamFrame(frame, label="dead")
+        self.resources_dead = ParamFrame(frame, label="Dead")
         frame_layout.addWidget(self.resources_dead)
 
         # --------- jobs ------------
 
         jobs_frame = Frame(self.machine_section)
-        jobs_layout = VerticalLayout(jobs_frame, space=20)
+        jobs_layout = VerticalLayout(jobs_frame, space=5)
         section_layout.addWidget(jobs_frame)
+
+        spacer = VerticalSpacer()
+        jobs_layout.addItem(spacer)
 
         # --------- title ------------
 
@@ -172,13 +180,13 @@ class DashboardUI(Frame):
         frame_layout = HorizontalLayout(frame, space=20)
         jobs_layout.addWidget(frame)
 
-        self.jobs_running = ParamFrame(frame, label="running")
+        self.jobs_running = ParamFrame(frame, label="Running")
         frame_layout.addWidget(self.jobs_running)
 
-        self.jobs_finish = ParamFrame(frame, label="finished")
+        self.jobs_finish = ParamFrame(frame, label="Finished")
         frame_layout.addWidget(self.jobs_finish)
 
-        self.jobs_kill = ParamFrame(frame, label="killed")
+        self.jobs_kill = ParamFrame(frame, label="Killed")
         frame_layout.addWidget(self.jobs_kill)
 
     def _init_credit_section(self):

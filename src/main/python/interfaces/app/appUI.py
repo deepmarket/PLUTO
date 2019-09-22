@@ -1,10 +1,8 @@
+from abc import ABCMeta, abstractmethod
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
-from abc import ABCMeta, abstractmethod
-
-from PyQt5.Qt import QMainWindow
-
 from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtWidgets import QMainWindow, QDesktopWidget
 
 from .appSidebarUI import AppSidebarUI
 from .appNavigationUI import AppNavigationUI
@@ -13,7 +11,6 @@ from .appMaskUI import AppMaskUI
 from .appAccountUI import AppAccountUI
 
 from ..widgets import Frame, MoveAnimation
-
 from ..config import SIDEBAR_WIDTH, NAVIGATION_HEIGHT, ACCOUNT_WIDTH
 
 
@@ -28,17 +25,39 @@ class AppUI(QMainWindow):
     mask: AppMaskUI = None
     account: AppAccountUI = None
 
-    def __init__(
-        self, logout_signal: pyqtSignal, cxt: ApplicationContext, *args, **kwargs
-    ):
+    def __init__(self, cxt: ApplicationContext, *args, **kwargs):
         super(AppUI, self).__init__(*args, **kwargs)
-
-        self.logout_signal = logout_signal
 
         self.cxt = cxt
 
         self._init_ui()
         self.setStyleSheet(self.cxt.app_style)
+
+    def on_menu_clicked(self):
+        """
+        Open account
+        """
+
+        mask_action = MoveAnimation(self.mask, self.width(), 0, 0, 0, duration=0)
+        menu_action = MoveAnimation(
+            self.account, self.width(), 0, self.width() - ACCOUNT_WIDTH, 0
+        )
+
+        mask_action.start()
+        menu_action.start()
+
+    def on_mask_clicked(self):
+        """
+        Close menu
+        """
+
+        menu_action = MoveAnimation(
+            self.account, self.width() - ACCOUNT_WIDTH, 0, self.width(), 0
+        )
+        mask_action = MoveAnimation(self.mask, 0, 0, self.width(), 0, duration=0)
+
+        menu_action.start()
+        mask_action.start()
 
     @abstractmethod
     def on_dashboard_clicked(self):
@@ -55,32 +74,6 @@ class AppUI(QMainWindow):
     @abstractmethod
     def on_settings_clicked(self):
         pass
-
-    def on_menu_clicked(self):
-        """
-        open menu
-        """
-
-        mask_action = MoveAnimation(self.mask, self.width(), 0, 0, 0, duration=0)
-        menu_action = MoveAnimation(
-            self.account, self.width(), 0, self.width() - ACCOUNT_WIDTH, 0
-        )
-
-        mask_action.start()
-        menu_action.start()
-
-    def on_mask_clicked(self):
-        """
-        close menu
-        """
-
-        menu_action = MoveAnimation(
-            self.account, self.width() - ACCOUNT_WIDTH, 0, self.width(), 0
-        )
-        mask_action = MoveAnimation(self.mask, 0, 0, self.width(), 0, duration=0)
-
-        menu_action.start()
-        mask_action.start()
 
     @abstractmethod
     def on_credit_history_clicked(self):
@@ -105,6 +98,13 @@ class AppUI(QMainWindow):
 
         # set window resize constrains
         self.setFixedSize(1024, 720)
+
+        # centerlize window
+        dw = QDesktopWidget()
+        self.move(
+            dw.availableGeometry().center().x() - self.width() * 0.5,
+            dw.availableGeometry().center().y() - self.height() * 0.5,
+        )
 
         window = Frame(self)
         self.setCentralWidget(window)

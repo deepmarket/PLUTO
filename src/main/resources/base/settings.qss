@@ -18,7 +18,7 @@ QFrame#settings QFrame#logo_section {
 
 QFrame#content_section {
     background-color: #FFFFFF;
-    margin-top: 7px;
+    margin-top: 1px;
 }
 
 QFrame#content_section > QFrame {

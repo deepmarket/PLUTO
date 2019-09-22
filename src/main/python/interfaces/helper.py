@@ -1,16 +1,7 @@
-"""
-
-    This file contains all helper function for ui aspect implementation.
-    Any functional helper function for interactive component can be found at another util.py file.
-
-"""
-
 import os
 
-from PyQt5.QtWidgets import QLineEdit, QLabel
-
 from PyQt5.QtCore import Qt, QRectF
-
+from PyQt5.QtWidgets import QLineEdit, QLabel
 from PyQt5.QtGui import QPixmap, QIcon, QPainter, QBrush, QColor
 
 
@@ -64,6 +55,10 @@ def switch_scheme(widget, curr_scheme):
 
 # return a menu icon
 def menu_icon(width):
+    """
+    Generate menu icon
+    :return: QIcon object, which contains icon logo
+    """
 
     height = 3
     pix = QPixmap(width, width)

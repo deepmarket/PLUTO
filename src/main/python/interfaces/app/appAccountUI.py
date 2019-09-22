@@ -1,18 +1,18 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QColor
+from PyQt5.QtWidgets import QGraphicsDropShadowEffect
+
 from ..widgets import (
-    Frame,
     Button,
-    VerticalLayout,
-    VerticalSpacer,
+    Frame,
     HorizontalLayout,
     HorizontalSpacer,
     Label,
+    VerticalLayout,
+    VerticalSpacer,
 )
-
-from PyQt5.Qt import Qt
-from PyQt5.QtWidgets import QGraphicsDropShadowEffect
-from PyQt5.QtGui import QColor
 
 
 class AppAccountUI(Frame):

@@ -22,8 +22,10 @@ class Frame(QFrame):
         super(Frame, self).__init__(*args)
 
         # Set size
-        height and self.setFixedHeight(height)
-        width and self.setFixedWidth(width)
+        if height != 0:
+            self.setFixedHeight(height)
+        if width != 0:
+            self.setFixedWidth(width)
 
         # Set property if given
         name and self.setObjectName(name)

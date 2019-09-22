@@ -71,11 +71,3 @@ class Paragraph(Frame):
         for text in text_list:
             label = Label(self, text=text, **kwargs)
             layout.addWidget(label)
-
-
-# TODO: disable this class. reconstruct Image class later on
-# class Image(Label):
-#     def __init__(
-#         self, widget: QWidget, img: str, height: int = 0, width: int = 0, **kwargs
-#     ):
-#         super(Image, self).__init__(widget, height=height, width=width, **kwargs)

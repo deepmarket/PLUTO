@@ -6,18 +6,17 @@ from PyQt5.QtCore import pyqtSignal
 
 from ..widgets import (
     Frame,
-    SectionTitleFrame,
-    SearchInputFrame,
-    ViewButton,
-    Label,
-    Table,
-    LineEdit,
     HorizontalLayout,
-    VerticalLayout,
     HorizontalSpacer,
+    Label,
+    LineEdit,
+    SearchInputFrame,
+    SectionTitleFrame,
+    Table,
+    VerticalLayout,
     VerticalSpacer,
+    ViewButton,
 )
-
 from ..config import RESOURCES_MAX_ROW
 
 

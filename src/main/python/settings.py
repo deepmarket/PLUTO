@@ -8,11 +8,9 @@ class Settings(SettingsUI):
         super(Settings, self).__init__(cxt, *args, **kwargs)
 
     def on_save_button_clicked(self):
-
         # TODO: functional implement place here
         pass
 
     def on_cancel_button_clicked(self):
-
         # TODO: functional implement place here
         pass

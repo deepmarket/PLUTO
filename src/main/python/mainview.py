@@ -1,10 +1,12 @@
 from os import path
 
-from uix.util import *
+# from uix.util import *
 
 
 class MainView(QFrame):
     def __init__(self, *args, **kwargs):
+        # TODO: this class is no more in use, no one has been hierarchy
+        # consider to remove it
         super(MainView, self).__init__(*args, **kwargs)
 
         # TODO: these regex has been moved to util.py, please look at it, and decide if need to clean up these two regex.

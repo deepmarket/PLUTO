@@ -10,7 +10,7 @@ from jobs import Jobs
 from settings import Settings
 
 from interfaces.app.appUI import AppUI
-from interfaces.widgets.popup import Notification
+from interfaces.widgets.popup import Notification, CreditHistory
 
 # from interfaces.widgets.popup import Notification, CreditHistory
 
@@ -72,9 +72,8 @@ class App(AppUI):
 
     # credit history popup
     def on_credit_history_clicked(self):
-        # popup = CreditHistory(self.cxt)
-        # popup.exec_()
-        pass
+        popup = CreditHistory(self.cxt)
+        popup.exec_()
 
     @staticmethod
     def on_about_clicked():

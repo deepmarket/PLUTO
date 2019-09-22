@@ -57,3 +57,60 @@ QDialog#notification QPushButton {
     font-weight: 200;
     color: #FFFFFF;
 }
+
+QDialog#credit {
+    border: none;
+    background-color: #F4F8F9;
+}
+
+QDialog#credit QFrame#title_frame {
+    max-height: 100px;
+    padding-left: 40px;
+    padding-right: 40px;
+    background-color: #FFFFFF;
+}
+
+QDialog#credit QFrame#button_frame {
+    max-height: 33px;
+}
+
+QDialog#credit QFrame#window {
+    background-color: #FFFFFF;
+}
+
+QDialog#credit QLabel {
+    font-size: 17px;
+    font-weight: 100;
+    color: #6C7E8E;
+}
+
+QDialog#credit QPushButton {
+    border: none;
+    background-color: #6C7E8E;
+    height: 27px;
+    width: 180px;
+    font-size: 11px;
+    font-weight: 200;
+    color: #FFFFFF;
+}
+
+QDialog#credit QPushButton#button_active {
+    border: none;
+    border-bottom: 2px solid #6C7E8E;
+    background: none;
+    width: 90px;
+    height: 33px;
+    font-size: 11px;
+    font-weight: 100;
+    color: #6C7E8E;
+}
+
+QDialog#credit QPushButton#button {
+    border: none;
+    background: none;
+    width: 90px;
+    height: 33px;
+    font-size: 11px;
+    font-weight: 100;
+    color: #D0DBE0;
+}

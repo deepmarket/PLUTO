@@ -132,10 +132,10 @@ class Notification(BaseDialog):
         spacer = HorizontalSpacer()
         title_layout.addItem(spacer)
 
-        self.clean = Button(title_frame, text="CLEAN")
+        self.clean = Button(title_frame, text="CLEAN", cursor=True)
         title_layout.addWidget(self.clean)
 
-        self.done = Button(title_frame, text="DONE")
+        self.done = Button(title_frame, text="DONE", cursor=True)
         title_layout.addWidget(self.done)
 
         # window frame
@@ -150,79 +150,69 @@ class Notification(BaseDialog):
         self.close()
 
 
-# class CreditHistory(BaseDialog):
+class CreditHistory(BaseDialog):
 
-#     def __init__(self, cxt:ApplicationContext, *args, **kwargs):
-#         super(CreditHistory, self).__init__(*args, **kwargs)
+    title_section: Frame = None
+    window_section: Frame = None
 
-#         self.done = None
-#         self.cost = None
-#         self.profit = None
+    def __init__(self, cxt:ApplicationContext, *args, **kwargs):
+        super(CreditHistory, self).__init__(cxt, name="credit")
 
-#         self._init_geometry()
-#         self._init_ui()
+        self.done = None
+        self.cost = None
+        self.profit = None
 
-#         self.setStyleSheet(cxt.credit_history_style)
+        self.setFixedSize(724, 510)
+        self._init_ui()
 
-#     def _init_geometry(self):
-#         # hide title bar
-#         # self.setWindowFlags(Qt.FramelessWindowHint)
+    def on_done_clicked(self):
+        self.accept()
+        self.close()
 
-#         # widget optimization
-#         self.setWindowModality(Qt.ApplicationModal)
+    def _init_ui(self):
+        section_layout = VerticalLayout(self, t_m=5, b_m=5, l_m=5, r_m=5, space=5)
 
-#         self.setObjectName("Credit")
+        # title
+        self.title_section = Frame(self, name="title_frame")
+        section_layout.addWidget(self.title_section)
+        self._init_title_section()
 
-#         # window size
-#         set_base_geometry(self, 724, 510, fixed=True)
+        # window
+        self.window_section = Frame(self)
+        section_layout.addWidget(self.window_section)
+        self._init_window_section()
 
-#     def _init_ui(self):
-#         section_layout = add_layout(self, VERTICAL)
+        self.done.clicked.connect(self.on_done_clicked)
 
-#         title_frame = QFrame(self)
-#         title_frame.setObjectName("Credit_title_frame")
-#         title_frame.setFixedHeight(100)
-#         title_layout = add_layout(title_frame, HORIZONTAL, l_m=40, r_m=40)
+    def _init_window_section(self):
 
-#         title = add_label(title_frame, "Recent 30 Days Transit Record", name="Credit_title", align=Qt.AlignVCenter)
-#         self.done = add_button(title_frame, "DONE", name="Credit_button")
+        window_layout = VerticalLayout(self.window_section)
 
-#         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        button_frame = Frame(self.window_section, name="button_frame")
+        button_layout = HorizontalLayout(button_frame, space=20)
+        window_layout.addWidget(button_frame)
 
-#         title_layout.addWidget(title)
-#         title_layout.addItem(spacer)
-#         title_layout.addWidget(self.done)
+        self.cost = Button(button_frame, text="COST", name="button_active", cursor=True)
+        button_layout.addWidget(self.cost)
 
-#         window_frame = QFrame(self)
-#         window_layout = add_layout(window_frame, VERTICAL, l_m=5, t_m=5, r_m=5, b_m=5)
+        self.profit = Button(button_frame, text="PROFIT", name="button", cursor=True)
+        button_layout.addWidget(self.profit)
 
-#         button_frame = QFrame(window_frame)
-#         button_frame.setFixedHeight(33)
-#         button_layout = add_layout(button_frame, HORIZONTAL, space=20)
+        spacer = HorizontalSpacer()
+        button_layout.addItem(spacer)
 
-#         self.cost = add_button(button_frame, "COST")
-#         self.cost.setObjectName("Credit_section_button_active")
+        self.window = Frame(self.window_section, name="window")
+        window_layout.addWidget(self.window)
 
-#         self.profit = add_button(button_frame, "PROFIT")
-#         self.profit.setObjectName("Credit_section_button")
 
-#         spacer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Minimum)
+    def _init_title_section(self):
+        title_layout = HorizontalLayout(self.title_section)
 
-#         button_layout.addWidget(self.cost)
-#         button_layout.addWidget(self.profit)
-#         button_layout.addItem(spacer)
+        title = Label(self.title_section, text="Recent 30 Days Transit Record", align=Qt.AlignVCenter)
+        title_layout.addWidget(title)
 
-#         self.window = QFrame(self)
-#         self.window.setObjectName("Credit_window")
+        spacer = HorizontalSpacer()
+        title_layout.addItem(spacer)
 
-#         window_layout.addWidget(button_frame)
-#         window_layout.addWidget(self.window)
-
-#         section_layout.addWidget(title_frame)
-#         section_layout.addWidget(window_frame)
-
-#         self.done.clicked.connect(self.on_done_clicked)
-
-#     def on_done_clicked(self):
-#         self.accept()
-#         self.close()
+        self.done = Button(self.title_section, text="DONE")
+        title_layout.addWidget(self.done)

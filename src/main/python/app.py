@@ -18,7 +18,9 @@ class App(AppUI):
     username: str = ""
     total_balance: int = 0
 
-    def __init__(self, logout_signal:pyqtSignal, cxt:ApplicationContext, *args, **kwargs):
+    def __init__(
+        self, logout_signal: pyqtSignal, cxt: ApplicationContext, *args, **kwargs
+    ):
         super(App, self).__init__(logout_signal, cxt, *args, **kwargs)
 
         self.update_account()
@@ -46,8 +48,8 @@ class App(AppUI):
                 self.total_balance = 0
             else:
                 # Insert comma here so we can default to nameless greeting if api fails.
-                self.username = res['account']['firstname'].capitalize()
-                self.total_balance = round(res['account']['credits'], 4)
+                self.username = res["account"]["firstname"].capitalize()
+                self.total_balance = round(res["account"]["credits"], 4)
 
     def on_dashboard_clicked(self):
         self.sidebar.on_dashboard_clicked()

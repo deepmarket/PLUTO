@@ -16,6 +16,7 @@ from ..widgets import Frame, MoveAnimation
 
 from ..config import SIDEBAR_WIDTH, NAVIGATION_HEIGHT, ACCOUNT_WIDTH
 
+
 class AppUI(QMainWindow):
 
     # metaclass for defining abstract base classes
@@ -27,7 +28,9 @@ class AppUI(QMainWindow):
     mask: AppMaskUI = None
     account: AppAccountUI = None
 
-    def __init__(self, logout_signal:pyqtSignal, cxt:ApplicationContext, *args, **kwargs):
+    def __init__(
+        self, logout_signal: pyqtSignal, cxt: ApplicationContext, *args, **kwargs
+    ):
         super(AppUI, self).__init__(*args, **kwargs)
 
         self.logout_signal = logout_signal
@@ -59,8 +62,10 @@ class AppUI(QMainWindow):
         """
 
         mask_action = MoveAnimation(self.mask, self.width(), 0, 0, 0, duration=0)
-        menu_action = MoveAnimation(self.account, self.width(), 0, self.width() - ACCOUNT_WIDTH, 0)
-        
+        menu_action = MoveAnimation(
+            self.account, self.width(), 0, self.width() - ACCOUNT_WIDTH, 0
+        )
+
         mask_action.start()
         menu_action.start()
 
@@ -69,7 +74,9 @@ class AppUI(QMainWindow):
         close menu
         """
 
-        menu_action = MoveAnimation(self.account, self.width()-ACCOUNT_WIDTH, 0, self.width(), 0)
+        menu_action = MoveAnimation(
+            self.account, self.width() - ACCOUNT_WIDTH, 0, self.width(), 0
+        )
         mask_action = MoveAnimation(self.mask, 0, 0, self.width(), 0, duration=0)
 
         menu_action.start()
@@ -78,7 +85,7 @@ class AppUI(QMainWindow):
     @abstractmethod
     def on_credit_history_clicked(self):
         pass
-    
+
     @abstractmethod
     def on_notification_clicked(self):
         pass
@@ -107,11 +114,18 @@ class AppUI(QMainWindow):
         self.sidebar.move(0, 0)
 
         # navigation
-        self.navigation = AppNavigationUI(window, self.cxt, self.width() - SIDEBAR_WIDTH, NAVIGATION_HEIGHT)
+        self.navigation = AppNavigationUI(
+            window, self.cxt, self.width() - SIDEBAR_WIDTH, NAVIGATION_HEIGHT
+        )
         self.navigation.move(SIDEBAR_WIDTH, 0)
 
         # mainwindow
-        self.main_window = AppMainWindowUI(window, self.cxt, self.width() - SIDEBAR_WIDTH, self.height() - NAVIGATION_HEIGHT)
+        self.main_window = AppMainWindowUI(
+            window,
+            self.cxt,
+            self.width() - SIDEBAR_WIDTH,
+            self.height() - NAVIGATION_HEIGHT,
+        )
         self.main_window.move(SIDEBAR_WIDTH, NAVIGATION_HEIGHT)
 
         # mask

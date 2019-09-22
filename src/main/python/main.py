@@ -10,7 +10,6 @@ from mainapp import MainApp
 
 
 class AppContext(ApplicationContext):
-
     def __init__(self, *args, **kwargs):
         super(AppContext, self).__init__(*args, **kwargs)
         # Save reference to main application so it's not garbage collected
@@ -35,7 +34,7 @@ class AppContext(ApplicationContext):
     @cached_property
     def controller_style(self):
         return self.load_style("controller.qss")
-    
+
     @cached_property
     def popup_style(self):
         return self.load_style("popup.qss")
@@ -67,12 +66,13 @@ class AppContext(ApplicationContext):
         except:
             raise
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     from sys import exit, argv
 
     # Enable headless for testing
-    if environ.get('HEADLESS'):
-        argv += ['-platform', 'minimal']
+    if environ.get("HEADLESS"):
+        argv += ["-platform", "minimal"]
 
     appctxt = AppContext()
     exit_code = appctxt.run()

@@ -23,7 +23,7 @@ from ..config import DASHBOARD_MAX_ROW
 class DashboardUI(Frame):
 
     overview_section: Frame = None
-    
+
     title_section: Frame = None
     greeting: Label = None
     balance_credit: Label = None
@@ -59,7 +59,7 @@ class DashboardUI(Frame):
         # self.get_dashboard_data()
         self._init_ui()
         self.setStyleSheet(self.cxt.dashboard_style)
-        
+
     def _init_ui(self):
 
         window_layout = VerticalLayout(self, space=5)
@@ -89,9 +89,7 @@ class DashboardUI(Frame):
         section_layout = HorizontalLayout(self.title_section)
 
         # --------- greeting ------------
-        self.greeting = Label(
-            self.title_section, name="greeting"
-        )
+        self.greeting = Label(self.title_section, name="greeting")
         section_layout.addWidget(self.greeting)
 
         spacer = HorizontalSpacer()
@@ -103,13 +101,14 @@ class DashboardUI(Frame):
         section_layout.addWidget(credit_frame)
 
         balance_title = Label(
-            credit_frame, text="Total Balance:", name="balance_title", align=Qt.AlignVCenter
+            credit_frame,
+            text="Total Balance:",
+            name="balance_title",
+            align=Qt.AlignVCenter,
         )
         credit_layout.addWidget(balance_title)
-        
-        self.balance_credit = Label(
-            credit_frame, name="balance_credit"
-        )
+
+        self.balance_credit = Label(credit_frame, name="balance_credit")
         credit_layout.addWidget(self.balance_credit)
 
     def _init_content_section(self):
@@ -139,7 +138,9 @@ class DashboardUI(Frame):
 
         # --------- title ------------
 
-        title = Label(resource_frame, text="Resources", name="machine_title", align=Qt.AlignLeft)
+        title = Label(
+            resource_frame, text="Resources", name="machine_title", align=Qt.AlignLeft
+        )
         resource_layout.addWidget(title)
 
         # --------- resource data ------------
@@ -161,7 +162,7 @@ class DashboardUI(Frame):
         section_layout.addWidget(jobs_frame)
 
         # --------- title ------------
-        
+
         title = Label(jobs_frame, text="Jobs", name="machine_title", align=Qt.AlignLeft)
         jobs_layout.addWidget(title)
 
@@ -184,16 +185,20 @@ class DashboardUI(Frame):
 
         section_layout = VerticalLayout(self.credit_section, space=10)
 
-        self.estimate_profit = EstimateFrame(self.credit_section, title="Estimated profit:", in_out="+", credit="0")
+        self.estimate_profit = EstimateFrame(
+            self.credit_section, title="Estimated profit:", in_out="+", credit="0"
+        )
         section_layout.addWidget(self.estimate_profit)
 
-        self.estimate_cost = EstimateFrame(self.credit_section, title="Estimated cost:", in_out="-", credit="0")
+        self.estimate_cost = EstimateFrame(
+            self.credit_section, title="Estimated cost:", in_out="-", credit="0"
+        )
         section_layout.addWidget(self.estimate_cost)
 
     def _init_history_section(self):
 
         section_layout = HorizontalLayout(self.history_section, space=1)
-        
+
         self.profit_section = Frame(self.history_section)
         section_layout.addWidget(self.profit_section)
         self._init_profit_section()
@@ -209,7 +214,9 @@ class DashboardUI(Frame):
         # --------- title ------------
 
         title = Label(
-            self.profit_section, text="Past 30 days Profit History", name="history_title"
+            self.profit_section,
+            text="Past 30 days Profit History",
+            name="history_title",
         )
         section_layout.addWidget(title)
 
@@ -222,7 +229,11 @@ class DashboardUI(Frame):
         header["Credit"] = 1
 
         self.profit_table = Table(
-            self.profit_section, DASHBOARD_MAX_ROW, header, name="table_content_section", row_height=30
+            self.profit_section,
+            DASHBOARD_MAX_ROW,
+            header,
+            name="table_content_section",
+            row_height=30,
         )
         section_layout.addWidget(self.profit_table)
 
@@ -246,13 +257,10 @@ class DashboardUI(Frame):
         header["Credit"] = 1
 
         self.cost_table = Table(
-            self.cost_section, DASHBOARD_MAX_ROW, header, name="table_content_section", row_height=30
+            self.cost_section,
+            DASHBOARD_MAX_ROW,
+            header,
+            name="table_content_section",
+            row_height=30,
         )
         section_layout.addWidget(self.cost_table)
-
-
-
-
-
-
-

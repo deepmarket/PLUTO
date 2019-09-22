@@ -7,9 +7,9 @@ from util import job_input_check
 from interfaces.jobs import JobsUI, JobsAddViewUI, JobsControllerUI
 from interfaces.widgets import Question
 
-class Jobs(JobsUI):
 
-    def __init__(self, cxt:ApplicationContext, *args, **kwargs):
+class Jobs(JobsUI):
+    def __init__(self, cxt: ApplicationContext, *args, **kwargs):
         super(Jobs, self).__init__(cxt, *args, **kwargs)
 
         self.cxt = cxt
@@ -30,14 +30,14 @@ class Jobs(JobsUI):
         self.controller.reset()
         super()._to_controller()
 
-class JobsAddView(JobsAddViewUI): 
 
+class JobsAddView(JobsAddViewUI):
     def __init__(self, *args, **kwargs):
         super(JobsAddView, self).__init__(*args, **kwargs)
 
     # input data format: [job_id, workers, cores, memory, price, status, logs]
     def on_submit_clicked(self):
-        
+
         if not self._submission_check():
             return
 
@@ -51,7 +51,7 @@ class JobsAddView(JobsAddViewUI):
         # price = (float(cores) * float(workers)) * PRICING_CONSTANT
 
         dat = {
-            "timeslot_id": self.select_scheme-1,
+            "timeslot_id": self.select_scheme - 1,
             "workers": workers_cnt,
             "cores": cores_cnt,
             "memory": memory_cnt,
@@ -59,8 +59,8 @@ class JobsAddView(JobsAddViewUI):
             "input_files": [input_files],
             "price": price,
             "expected_time": expected_time,
-            "customer_id": "customer_id"
-         }
+            "customer_id": "customer_id",
+        }
 
         # find the selected frame
         if self.select_scheme == 1:
@@ -74,9 +74,10 @@ class JobsAddView(JobsAddViewUI):
 
         # get text
         text = frame.get_info()
-        
+
         from random import choices
         from string import ascii_uppercase, digits
+
         job_id = "J"
         job_id += "".join(choices(ascii_uppercase + digits, k=6))
 
@@ -102,7 +103,7 @@ class JobsAddView(JobsAddViewUI):
 
     def on_core_edit(self):
         self._on_core_check()
-    
+
     def on_memory_edit(self):
         self._on_memory_check()
 
@@ -118,11 +119,16 @@ class JobsAddView(JobsAddViewUI):
         self.submission_hint.reset()
 
         # have to call function individually in order to raise hint
-        if not self._on_worker_check(): return False
-        if not self._on_core_check(): return False
-        if not self._on_memory_check(): return False
-        if not self._on_source_check(): return False
-        if not self._on_input_check(): return False
+        if not self._on_worker_check():
+            return False
+        if not self._on_core_check():
+            return False
+        if not self._on_memory_check():
+            return False
+        if not self._on_source_check():
+            return False
+        if not self._on_input_check():
+            return False
 
         return True
 
@@ -140,11 +146,11 @@ class JobsAddView(JobsAddViewUI):
 
         if res is not Res.SUCCESS:
             self.submission_hint.setText(res.value)
-            
+
             return False
 
         return True
-    
+
     def _on_core_check(self):
         # clean up hint
         self.submission_hint.reset()
@@ -159,7 +165,7 @@ class JobsAddView(JobsAddViewUI):
 
         if res is not Res.SUCCESS:
             self.submission_hint.setText(res.value)
-            
+
             return False
 
         return True
@@ -179,7 +185,7 @@ class JobsAddView(JobsAddViewUI):
 
         if res is not Res.SUCCESS:
             self.submission_hint.setText(res.value)
-            
+
             return False
 
         return True
@@ -207,17 +213,16 @@ class JobsAddView(JobsAddViewUI):
     def _api_post_call(self, endpoint: str, dat: dict):
         with Api(endpoint) as api:
             status, res = api.post(dat)
-        
+
             if not res:
                 return False
-            
+
             if status == 200:
                 return True
-            
+
 
 class JobsController(JobsControllerUI):
-
-    def __init__(self, *args, ** kwargs):
+    def __init__(self, *args, **kwargs):
         super(JobsController, self).__init__(*args, **kwargs)
 
     def on_search_edited(self):
@@ -227,7 +232,7 @@ class JobsController(JobsControllerUI):
         self.reset()
 
     def on_remove_button_clicked(self):
-        
+
         # check if table has selection
         # if it does, get the row info
         row = self.table.if_select()
@@ -245,9 +250,9 @@ class JobsController(JobsControllerUI):
                 if res:
                     # refresh widget
                     self.reset()
-    
+
     def _api_remove_call(self, endpoint: str):
-        
+
         with Api(endpoint) as api:
             status, res = api.delete()
 
@@ -276,8 +281,8 @@ class JobsController(JobsControllerUI):
                     str(job["source_files"][0] + "..."),
                     str(job["input_files"][0] + "..."),
                     str(job["price"]),
-                    job["status"], 
-                    "-"
+                    job["status"],
+                    "-",
                 ]
             )
 

@@ -20,8 +20,7 @@ from interfaces.widgets import Question
 
 
 class Resources(ResourcesUI):
-
-    def __init__(self, cxt:ApplicationContext, *args, **kwargs):
+    def __init__(self, cxt: ApplicationContext, *args, **kwargs):
         super(Resources, self).__init__(*args, **kwargs)
 
         self.cxt = cxt
@@ -39,6 +38,7 @@ class Resources(ResourcesUI):
     def _to_add_view(self):
         self.add_view.reset()
         super()._to_add_view()
+
 
 class ResourcesController(ResourcesControllerUI):
 
@@ -337,11 +337,15 @@ class ResourcesAddView(ResourcesAddViewUI):
         self.reset_hint()
 
         # have to call function individually in order to raise hint
-        if not self._machine_name_check(): return False
-        if not self._cpu_gpu_check(): return False
-        if not self._cores_check(): return False
-        if not self._ram_check(): return False
-        
+        if not self._machine_name_check():
+            return False
+        if not self._cpu_gpu_check():
+            return False
+        if not self._cores_check():
+            return False
+        if not self._ram_check():
+            return False
+
         return True
 
     def _machine_name_check(self):

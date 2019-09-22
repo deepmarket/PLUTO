@@ -9,7 +9,9 @@ from socket import error as socket_error
 
 # regex
 num_regex = re.compile(r"(\d+)")
-email_verification_regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", re.IGNORECASE)
+email_verification_regex = re.compile(
+    r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", re.IGNORECASE
+)
 
 
 def get_ip_address():
@@ -54,7 +56,7 @@ def job_input_check(text: int, res: Enum):
 
     if not text:
         return res.EMPTY_ERROR
-    
+
     if not num_regex.match(text):
         return res.INT_ERROR
     else:

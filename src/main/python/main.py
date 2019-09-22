@@ -13,6 +13,7 @@ class AppContext(ApplicationContext):
 
     def __init__(self, *args, **kwargs):
         super(AppContext, self).__init__(*args, **kwargs)
+        # Save reference to main application so it's not garbage collected
         self.mainapp = MainApp(self)
 
     @cached_property
@@ -55,14 +56,7 @@ class AppContext(ApplicationContext):
     def question_style(self):
         return self.load_style("question.qss")
 
-    # def __init__(self):
-    #     popup_style = self.get_resource("popup.qss")
-    #     resources_add_view_style = self.get_resource("add_view.qss")
-    #     resources_controller_style = self.get_resource("controller.qss")
-
     def run(self):
-        # Save reference to main application so it's not garbage collected
-        # dont_garbage_collect_me = MainApp(self)
         return self.app.exec_()
 
     def load_style(self, path):
@@ -75,10 +69,6 @@ class AppContext(ApplicationContext):
 
 if __name__ == '__main__':
     from sys import exit, argv
-
-    # check we're in correct directory
-    # if os.path.abspath(os.getcwd()).split(os.sep)[-1] != "PLUTO":
-    #     exit("Must be in the root project directory to run main app!")
 
     # Enable headless for testing
     if environ.get('HEADLESS'):

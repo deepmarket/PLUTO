@@ -82,6 +82,7 @@ class Api(object):
             if res_json.get('token'):
                 self.auth = True
                 self.token = res_json.get('token')
+                self.store.put(self.token)
 
             return res.status_code, res_json
         except (ConnectionError, JSONDecodeError) as err:

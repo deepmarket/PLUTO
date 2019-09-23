@@ -153,7 +153,7 @@ class Jobs(MainView):
         with Api("/pricing")as api:
             status, res = api.get()
 
-            if res.get("success"):
+            if res and res.get("success"):
                 price_dat = res.get("data")
             else:
                 price_dat = []

@@ -78,10 +78,11 @@ class Api(object):
         try:
             res: req.Response = req.post(self.url, payload, headers=self.headers)
             res_json: dict = res.json()
-
             if res_json.get('token'):
                 self.auth = True
                 self.token = res_json.get('token')
+                if 'login' in res_json.get('message', '').lower():
+                    self.store.put(self.token)
 
             return res.status_code, res_json
         except (ConnectionError, JSONDecodeError) as err:

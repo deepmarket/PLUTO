@@ -95,7 +95,7 @@ class ResourcesController(ResourcesControllerUI):
                             str(machine["price"]),
                             machine["status"]])
 
-    def _api_get_call(self, endpoint: str):
+    def _api_get_call(self, endpoint:str):
 
         # TODO: move Error to config later on
         class Error:
@@ -110,14 +110,14 @@ class ResourcesController(ResourcesControllerUI):
                 return []
 
             if status == 200:
-                return res.get("data")
+                return res["resources"]
 
             if status == 500:
                 self.global_hint.setText(Error.UNKOWN_ERR)
                 return []
 
     # TODO: combine api call helper function together later on
-    def _api_remove_call(self, endpoint: str):
+    def _api_remove_call(self, endpoint:str):
         # TODO: move Error to config later on
         class Error:
             CONNECT_ERR = "Fail to communicate with server. Please try later."
@@ -296,7 +296,7 @@ class ResourcesAddView(ResourcesAddViewUI):
         if not self._cpu_gpu_check(): return False
         if not self._cores_check(): return False
         if not self._ram_check(): return False
-
+        
         return True
 
     def _machine_name_check(self):

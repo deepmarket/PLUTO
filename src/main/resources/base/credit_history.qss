@@ -1,0 +1,53 @@
+#Credit {
+    border: none;
+    background-color: #F4F8F9;
+}
+
+#Credit_title_frame {
+    background-color: white;
+}
+
+#Credit_title {
+    font-family: "Helvetica Neue";
+    font-size: 17px;
+    font-weight: 100;
+    color: #6C7E8E;
+}
+
+#Credit_button {
+    border: none;
+    border-radius: 3px;
+    background-color: #6C7E8E;
+    height: 27px;
+    width: 150px;
+    font-family: "Helvetica Neue";
+    font-size: 9px;
+    font-weight: 200;
+    color: white;
+}
+
+#Credit_window {
+    border: none;
+    background-color: white;
+}
+
+#Credit_section_button_active {
+    border: None;
+    border-bottom: 2px solid #6C7E8E;
+    width: 90px;
+    height: 33px;
+    font-family: "Helvetica Neue";
+    font-size: 11px;
+    font-weight: 100;
+    color: #6C7E8E;
+}
+
+#Credit_section_button {
+    border: None;
+    width: 90px;
+    height: 33px;
+    font-family: "Helvetica Neue";
+    font-size: 11px;
+    font-weight: 100;
+    color: #D0DBE0;
+}

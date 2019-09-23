@@ -45,5 +45,9 @@ venv
 
 # Environment Related #
 #######################
+*.code-workspace
 .vscode
 env
+
+# Compiled Files #
+target/*

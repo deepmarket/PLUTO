@@ -231,7 +231,7 @@ class ResourcesAddView(ResourcesAddViewUI):
 
     def _fetch_ip_address(self):
         # get ip address for local machine
-        ip_address = util.get_ip_address()
+        ip_address = util.get_local_ip_address()
 
         # insert ip address to input field
         self.ip_address.setText(ip_address)
@@ -296,7 +296,7 @@ class ResourcesAddView(ResourcesAddViewUI):
         if not self._cpu_gpu_check(): return False
         if not self._cores_check(): return False
         if not self._ram_check(): return False
-        
+
         return True
 
     def _machine_name_check(self):

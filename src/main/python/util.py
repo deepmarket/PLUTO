@@ -44,7 +44,7 @@ def config_input_check(text:str, available:int, res:Enum):
             return res.INT_ERROR
 
 
-def build_docker_container(detached=True, container_path='samgomena/deepshare_worker', version='1.0.1', container_name='deepshare_worker'):
+def build_docker_container(detached=True, container_path='samgomena/deepshare_worker', version='latest', container_name='deepshare_worker'):
     """creates and runs a docker container from:
     https://hub.docker.com/u/samgomena/repository/docker/samgomena/deepshare_worker
     Returns the container ID if successful, False if not

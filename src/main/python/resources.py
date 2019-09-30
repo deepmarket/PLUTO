@@ -16,6 +16,7 @@ from api import Api
 import util as util
 from interfaces.resources import ResourcesUI, ResourcesControllerUI, ResourcesAddViewUI
 from interfaces.widgets import Question
+from PyQt5.QtWidgets import QMessageBox
 
 
 class Resources(ResourcesUI):
@@ -36,8 +37,15 @@ class Resources(ResourcesUI):
         super()._to_controller()
 
     def _to_add_view(self):
-        self.add_view.reset()
-        super()._to_add_view()
+        try:
+            self._docker_initial_check()
+            self.add_view.reset()
+            super()._to_add_view()
+        except DockerException:
+            QMessageBox.about(self, "Information", "Docker is not installed")
+
+    def _docker_initial_check(self):
+        util.check_and_instantiate_docker_client()
 
 
 class ResourcesController(ResourcesControllerUI):
@@ -154,7 +162,6 @@ class ResourcesAddView(ResourcesAddViewUI):
 
         self._fetch_ip_address()
         self._fetch_machine_config()
-        self._docker_initial_check()
 
     def on_machine_name_edit(self):
         self._machine_name_check()
@@ -286,13 +293,6 @@ class ResourcesAddView(ResourcesAddViewUI):
 
                 self.submit_hint.setText(msg)
                 return False
-
-
-    def _docker_initial_check(self):
-        try:
-            util.check_and_instantiate_docker_client()
-        except DockerException as ex:
-            print(ex) # TODO - add notification
 
     def _planning_check(self):
         # clean up hint

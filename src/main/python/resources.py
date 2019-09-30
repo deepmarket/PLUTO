@@ -9,6 +9,7 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from enum import Enum, auto
 from psutil import cpu_freq, cpu_count, virtual_memory
+from docker.errors import DockerException
 
 from api import Api
 
@@ -153,6 +154,7 @@ class ResourcesAddView(ResourcesAddViewUI):
 
         self._fetch_ip_address()
         self._fetch_machine_config()
+        self._docker_initial_check()
 
     def on_machine_name_edit(self):
         self._machine_name_check()
@@ -211,8 +213,8 @@ class ResourcesAddView(ResourcesAddViewUI):
         res = self._api_post_call("/resources", dat)
 
         if res:
-            # TODO: fill helper function to run docker here
-
+            container_id = util.build_docker_container(container_name=dat.get('machine_name', machine_name))
+            print(container_id) # TODO - do something with container ID
             # emit signal, back to controller
             super().on_submit_clicked()
 
@@ -227,7 +229,6 @@ class ResourcesAddView(ResourcesAddViewUI):
 
         self.offer_price_box.disable()
         self.reload_stylesheet()
-
 
     def _fetch_ip_address(self):
         # get ip address for local machine
@@ -286,6 +287,12 @@ class ResourcesAddView(ResourcesAddViewUI):
                 self.submit_hint.setText(msg)
                 return False
 
+
+    def _docker_initial_check(self):
+        try:
+            util.check_and_instantiate_docker_client()
+        except DockerException as ex:
+            print(ex) # TODO - add notification
 
     def _planning_check(self):
         # clean up hint

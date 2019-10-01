@@ -45,7 +45,6 @@ class Label(QLabel):
     def reset(self):
         """
         Set text within label to ""
-        :return: this function doesn't return value
         """
         self.setText("")
 

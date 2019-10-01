@@ -20,7 +20,7 @@ from ..widgets import (
     ViewInputFrame,
 )
 
-from ..helper import get_children
+from ..helper import get_children, get_time, get_weekday
 
 
 class ResourcesAddViewUI(Frame):
@@ -476,68 +476,14 @@ class ResourcesAddViewUI(Frame):
         layout.addWidget(label)
 
         combo_box = QComboBox(self.rent_schedule_box.frame)
-        combo_box.addItems(
-            [
-                "1 AM",
-                "2 AM",
-                "3 AM",
-                "4 AM",
-                "5 AM",
-                "6 AM",
-                "7 AM",
-                "8 AM",
-                "9 AM",
-                "10 AM",
-                "11 AM",
-                "12 AM",
-                "1 PM",
-                "2 PM",
-                "3 PM",
-                "4 PM",
-                "5 PM",
-                "6 PM",
-                "7 PM",
-                "8 PM",
-                "9 PM",
-                "10 PM",
-                "11 PM",
-                "12 PM",
-            ]
-        )
+        combo_box.addItems(get_time())
         layout.addWidget(combo_box)
 
         label = Label(self.rent_schedule_box.frame, text="   to   ")
         layout.addWidget(label)
 
         combo_box = QComboBox(self.rent_schedule_box.frame)
-        combo_box.addItems(
-            [
-                "1 AM",
-                "2 AM",
-                "3 AM",
-                "4 AM",
-                "5 AM",
-                "6 AM",
-                "7 AM",
-                "8 AM",
-                "9 AM",
-                "10 AM",
-                "11 AM",
-                "12 AM",
-                "1 PM",
-                "2 PM",
-                "3 PM",
-                "4 PM",
-                "5 PM",
-                "6 PM",
-                "7 PM",
-                "8 PM",
-                "9 PM",
-                "10 PM",
-                "11 PM",
-                "12 PM",
-            ]
-        )
+        combo_box.addItems(get_time())
         layout.addWidget(combo_box)
 
         spacer = HorizontalSpacer()
@@ -560,68 +506,14 @@ class ResourcesAddViewUI(Frame):
         time_layout.addWidget(label)
 
         combo_box = QComboBox(self.rent_reserve_time_box)
-        combo_box.addItems(
-            [
-                "1 AM",
-                "2 AM",
-                "3 AM",
-                "4 AM",
-                "5 AM",
-                "6 AM",
-                "7 AM",
-                "8 AM",
-                "9 AM",
-                "10 AM",
-                "11 AM",
-                "12 AM",
-                "1 PM",
-                "2 PM",
-                "3 PM",
-                "4 PM",
-                "5 PM",
-                "6 PM",
-                "7 PM",
-                "8 PM",
-                "9 PM",
-                "10 PM",
-                "11 PM",
-                "12 PM",
-            ]
-        )
+        combo_box.addItems(get_time())
         time_layout.addWidget(combo_box)
 
         label = Label(self.rent_reserve_time_box, text="   to   ")
         time_layout.addWidget(label)
 
         combo_box = QComboBox(self.rent_reserve_time_box)
-        combo_box.addItems(
-            [
-                "1 AM",
-                "2 AM",
-                "3 AM",
-                "4 AM",
-                "5 AM",
-                "6 AM",
-                "7 AM",
-                "8 AM",
-                "9 AM",
-                "10 AM",
-                "11 AM",
-                "12 AM",
-                "1 PM",
-                "2 PM",
-                "3 PM",
-                "4 PM",
-                "5 PM",
-                "6 PM",
-                "7 PM",
-                "8 PM",
-                "9 PM",
-                "10 PM",
-                "11 PM",
-                "12 PM",
-            ]
-        )
+        combo_box.addItems(get_time())
         time_layout.addWidget(combo_box)
 
         spacer = HorizontalSpacer()
@@ -636,9 +528,7 @@ class ResourcesAddViewUI(Frame):
         label = Label(self.rent_reserve_day_box, text="on")
         day_layout.addWidget(label)
 
-        days = ["Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun"]
-
-        for day in days:
+        for day in get_weekday():
             check_button = QCheckBox(day)
             day_layout.addWidget(check_button)
 

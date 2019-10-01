@@ -56,14 +56,12 @@ class BaseTwoLabelFrame(Frame):
     def set_label_one_text(self, text: str):
         """
         Set the given text to label one.
-        :return: this function doesn't return value
         """
         self.label_one.setText(text)
 
     def set_label_two_text(self, text: str):
         """
         Set the given text to label two.
-        :return: this function doesn't return value
         """
         self.label_two.setText(text)
 

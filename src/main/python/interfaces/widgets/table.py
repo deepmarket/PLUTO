@@ -72,7 +72,6 @@ class Table(QTableWidget):
         insert a row with given data into table
         :param dat: required. data that want to be inserted into table
         i.e. [machine_name, ip_address, cpu_gpu, cores, ram, price, status]
-        :return: this function doesn't return value
         """
 
         if len(dat) > self.count_column:
@@ -101,7 +100,6 @@ class Table(QTableWidget):
         """
         Clean up all the content in table.
         Then initialize table and add empty row back to table.
-        :return: this function doesn't return value
         """
         self.current_row = 0
 

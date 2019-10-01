@@ -31,8 +31,8 @@ matrix:
     # Tests Python 3.6 on Ubuntu Xenial
     - python: "3.6"
       dist: xenial
-      services:
-        - xvfb
+      # services:
+      #   - xvfb
       sudo: true
 
     # MacOs

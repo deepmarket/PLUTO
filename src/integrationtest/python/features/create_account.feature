@@ -1,6 +1,5 @@
 # Created by sgomena at 6/20/19
-Feature: #Enter feature name here
-  # Enter feature description here
+Feature: Verify account creation
 
   Scenario: Enter New Account Credentials
     When I spin up the application

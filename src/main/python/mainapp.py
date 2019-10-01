@@ -1,14 +1,18 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
+
+from PyQt5.QtCore import QObject, pyqtSignal
+
 from app import App
 from login import Login
-from PyQt5.QtCore import QObject, pyqtSignal
 
 
 class MainApp(QObject):
     login_signal = pyqtSignal()
     logout_signal = pyqtSignal()
 
-    def __init__(self, cxt: ApplicationContext, dont_boot_for_test=True, *args, **kwargs):
+    def __init__(
+        self, cxt: ApplicationContext, dont_boot_for_test=True, *args, **kwargs
+    ):
         super(QObject, self).__init__(*args, **kwargs)
         self.dont_boot_for_test = dont_boot_for_test
         self.login = None
@@ -35,4 +39,3 @@ class MainApp(QObject):
 
     def connect_logout(self):
         self.logout_signal.connect(self.show_login)
-

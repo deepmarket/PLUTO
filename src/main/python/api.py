@@ -60,7 +60,7 @@ class Api(object):
         self.url: str = f"http://{self.host}:{self.port}/api/v1{self.endpoint}"
 
         # self.auth: bool = auth
-        self.auth: bool = ("auth" in self.endpoint)
+        self.auth: bool = (self.endpoint in ("auth/login", "auth/refresh"))
         self.store: CredentialManager = None
         self.token: str = None
         self.headers: dict = {}
@@ -73,13 +73,19 @@ class Api(object):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if self.auth and self.token:
+        pass
+
+    def _set_state(self):
+        if "logout" in self.endpoint:
+            self.store.remove()
+        elif self.token:
             self.store.put(self.token)
 
     def get(self):
 
         try:
             res: req.Response = req.get(self.url, headers=self.headers)
+            self._set_state()
             return res.status_code, res.json()
         except (ConnectionError, JSONDecodeError) as err:
 
@@ -93,8 +99,7 @@ class Api(object):
             if res_json.get('token'):
                 self.auth = True
                 self.token = res_json.get('token')
-                if 'login' in res_json.get('message', '').lower():
-                    self.store.put(self.token)
+            self._set_state()
 
             return res.status_code, res_json
         except (ConnectionError, JSONDecodeError) as err:
@@ -105,6 +110,7 @@ class Api(object):
 
         try:
             res: req.Response = req.put(self.url, payload, headers=self.headers)
+            self._set_state()
             return res.status_code, res.json()
 
         except (ConnectionError, JSONDecodeError) as err:
@@ -115,6 +121,7 @@ class Api(object):
 
         try:
             res: req.Response = req.delete(self.url, headers=self.headers)
+            self._set_state()
             return res.status_code, res.json()
 
         except (ConnectionError, JSONDecodeError) as err:

@@ -213,12 +213,7 @@ class JobsAddView(JobsAddViewUI):
     def _api_post_call(self, endpoint: str, dat: dict):
         with Api(endpoint) as api:
             status, res = api.post(dat)
-
-            if not res:
-                return False
-
-            if status == 200:
-                return True
+            return res and status == 200
 
 
 class JobsController(JobsControllerUI):

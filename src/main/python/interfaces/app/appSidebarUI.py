@@ -23,28 +23,28 @@ class AppSidebarUI(Frame):
 
         self.setStyleSheet(self.cxt.app_style)
 
-    def reload_styleSheet(self):
+    def reload_stylesheet(self):
         self.setStyleSheet(self.cxt.app_style)
 
     def on_dashboard_clicked(self):
         self.reset()
         self.dashboard.setObjectName("sidebar_button_active")
-        self.reload_styleSheet()
+        self.reload_stylesheet()
 
     def on_resources_clicked(self):
         self.reset()
         self.resources.setObjectName("sidebar_button_active")
-        self.reload_styleSheet()
+        self.reload_stylesheet()
 
     def on_jobs_clicked(self):
         self.reset()
         self.jobs.setObjectName("sidebar_button_active")
-        self.reload_styleSheet()
+        self.reload_stylesheet()
 
     def on_settings_clicked(self):
         self.reset()
         self.settings.setObjectName("sidebar_button_active")
-        self.reload_styleSheet()
+        self.reload_stylesheet()
 
     def reset(self):
         # Set all widget to base styles and let clicked callback override them
@@ -60,12 +60,10 @@ class AppSidebarUI(Frame):
         window_layout = VerticalLayout(self)
 
         # title
-
         title = Label(self, text="PLUTO", name="sidebar_title", align=Qt.AlignHCenter)
         window_layout.addWidget(title)
 
         # button frame: dashboard, resources, jobs
-
         button_frame = Frame(self, name="sidebar_button_frame")
         button_layout = VerticalLayout(button_frame, space=18)
         window_layout.addWidget(button_frame)

@@ -126,7 +126,7 @@ class Login(LoginUI):
                     Username incorrect.
                 """
                 self.login.login_hint.setText(
-                    "The email account entered doesn't exists."
+                    "No account exists for this email."
                 )
             # Only other status API will return is an error, so let the user know
             else:

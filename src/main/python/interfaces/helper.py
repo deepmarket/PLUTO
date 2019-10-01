@@ -1,5 +1,3 @@
-import os
-
 from PyQt5.QtCore import Qt, QRectF
 from PyQt5.QtWidgets import QLineEdit, QLabel
 from PyQt5.QtGui import QPixmap, QIcon, QPainter, QBrush, QColor

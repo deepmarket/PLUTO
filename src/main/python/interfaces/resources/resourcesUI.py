@@ -40,6 +40,7 @@ class ResourcesUI(Frame):
         self._stack.setCurrentIndex(1)
 
     def _build_check(self):
-        self._stack.count() != 2 and print(
-            "Error: either controller/add_view has not been set!"
-        )
+        if self._stack.count() != 2:
+            print(
+                "Error: either controller/add_view has not been set!"
+            )

@@ -55,7 +55,6 @@ class DashboardUI(Frame):
 
         self.cxt = cxt
 
-        # self.get_dashboard_data()
         self._init_ui()
         self.setStyleSheet(self.cxt.dashboard_style)
 
@@ -133,7 +132,6 @@ class DashboardUI(Frame):
         section_layout = HorizontalLayout(self.machine_section, space=50)
 
         # --------- resource ------------
-
         resource_frame = Frame(self.machine_section)
         resource_layout = VerticalLayout(resource_frame, space=5)
         section_layout.addWidget(resource_frame)
@@ -142,14 +140,12 @@ class DashboardUI(Frame):
         resource_layout.addItem(spacer)
 
         # --------- title ------------
-
         title = Label(
             resource_frame, text="Resources", name="machine_title", align=Qt.AlignLeft
         )
         resource_layout.addWidget(title)
 
         # --------- resource data ------------
-
         frame = Frame(resource_frame)
         frame_layout = HorizontalLayout(frame, space=20)
         resource_layout.addWidget(frame)
@@ -161,7 +157,6 @@ class DashboardUI(Frame):
         frame_layout.addWidget(self.resources_dead)
 
         # --------- jobs ------------
-
         jobs_frame = Frame(self.machine_section)
         jobs_layout = VerticalLayout(jobs_frame, space=5)
         section_layout.addWidget(jobs_frame)
@@ -170,12 +165,10 @@ class DashboardUI(Frame):
         jobs_layout.addItem(spacer)
 
         # --------- title ------------
-
         title = Label(jobs_frame, text="Jobs", name="machine_title", align=Qt.AlignLeft)
         jobs_layout.addWidget(title)
 
         # --------- jobs data ------------
-
         frame = Frame(jobs_frame)
         frame_layout = HorizontalLayout(frame, space=20)
         jobs_layout.addWidget(frame)
@@ -220,7 +213,6 @@ class DashboardUI(Frame):
         section_layout = VerticalLayout(self.profit_section, space=15)
 
         # --------- title ------------
-
         title = Label(
             self.profit_section,
             text="Past 30 days Profit History",
@@ -229,7 +221,6 @@ class DashboardUI(Frame):
         section_layout.addWidget(title)
 
         # --------- table ------------
-
         header = OrderedDict()
 
         header["ID"] = 130
@@ -250,14 +241,12 @@ class DashboardUI(Frame):
         section_layout = VerticalLayout(self.cost_section, space=15)
 
         # --------- title ------------
-
         title = Label(
             self.cost_section, text="Past 30 days Cost History", name="history_title"
         )
         section_layout.addWidget(title)
 
         # --------- table ------------
-
         header = OrderedDict()
 
         header["ID"] = 130

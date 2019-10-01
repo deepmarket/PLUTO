@@ -114,7 +114,7 @@ class Login(LoginUI):
                 """
                 self.accept()
                 self.login_signal.emit()
-            elif status == 200 and res.get("auth") == False:
+            elif status == 200 and not res.get("auth"):
                 """
                     Username correct but password incorrect.
                     # TODO: return message weird. In this case, it should return

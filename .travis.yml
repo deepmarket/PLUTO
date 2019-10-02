@@ -21,15 +21,7 @@ script:
 
 matrix:
   include:
-# As of 3/6/19 Trusty does not work with PyQt5 in CI
 
-    # Tests Python 3.6 on Ubuntu Trusty
-#    - python: 3.6
-#    - no 3.7 until pipenv + fbs get up to it
-#      dist: trusty
-#      sudo: true
-
-    # Tests Python 3.6 on Ubuntu Xenial
     - python: "3.6"
       dist: xenial
       # services:
@@ -38,8 +30,8 @@ matrix:
 
     - python: "3.6"
       dist: bionic
-      services:
-        xvfb
+#      services:
+#        - xvfb
       sudo: true
 
     # MacOs
@@ -73,4 +65,10 @@ before_install:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]] && ! [[ -x "$(command -v pyenv)" ]]; then brew install pyenv ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pyenv install 3.6.3 ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then PATH="~/.pyenv/versions/3.6.3/bin:$PATH" ; fi
+
+# Taken from https://docs.travis-ci.com/user/gui-and-headless-browsers/#using-xvfb-directly
+before_script:
+    - "export DISPLAY=:99.0"
+    - "sh -e /etc/init.d/xvfb start"
+    - sleep 3 # give xvfb some time to start
 

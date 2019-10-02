@@ -148,5 +148,5 @@ class AppUI(QMainWindow):
 
         self.account.credit_history.clicked.connect(self.on_credit_history_clicked)
         self.account.notifications.clicked.connect(self.on_notification_clicked)
-        self.account.about.clicked.connect(self.on_about_clicked)
+        # self.account.about.clicked.connect(self.on_about_clicked)
         self.account.logout.clicked.connect(self.on_logout_clicked)

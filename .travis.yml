@@ -9,6 +9,7 @@ env:
 #  - HEADLESS="true"
 
 install:
+    - python --version
     - python -m pip install pipenv
     - pipenv install
 
@@ -31,6 +32,12 @@ matrix:
     # Tests Python 3.6 on Ubuntu Xenial
     - python: "3.6"
       dist: xenial
+      sudo: true
+
+    - python: "3.6"
+      dist: bionic
+      services:
+        xvfb
       sudo: true
 
     # MacOs

@@ -20,7 +20,7 @@ from ..widgets import (
     ViewInputFrame,
 )
 
-from ..helper import get_children, get_time, get_weekday
+from ..helper import get_children, time, weekday
 
 
 class ResourcesAddViewUI(Frame):
@@ -476,14 +476,14 @@ class ResourcesAddViewUI(Frame):
         layout.addWidget(label)
 
         combo_box = QComboBox(self.rent_schedule_box.frame)
-        combo_box.addItems(get_time())
+        combo_box.addItems(time)
         layout.addWidget(combo_box)
 
         label = Label(self.rent_schedule_box.frame, text="   to   ")
         layout.addWidget(label)
 
         combo_box = QComboBox(self.rent_schedule_box.frame)
-        combo_box.addItems(get_time())
+        combo_box.addItems(time)
         layout.addWidget(combo_box)
 
         spacer = HorizontalSpacer()
@@ -506,14 +506,14 @@ class ResourcesAddViewUI(Frame):
         time_layout.addWidget(label)
 
         combo_box = QComboBox(self.rent_reserve_time_box)
-        combo_box.addItems(get_time())
+        combo_box.addItems(time)
         time_layout.addWidget(combo_box)
 
         label = Label(self.rent_reserve_time_box, text="   to   ")
         time_layout.addWidget(label)
 
         combo_box = QComboBox(self.rent_reserve_time_box)
-        combo_box.addItems(get_time())
+        combo_box.addItems(time)
         time_layout.addWidget(combo_box)
 
         spacer = HorizontalSpacer()
@@ -528,7 +528,7 @@ class ResourcesAddViewUI(Frame):
         label = Label(self.rent_reserve_day_box, text="on")
         day_layout.addWidget(label)
 
-        for day in get_weekday():
+        for day in weekday:
             check_button = QCheckBox(day)
             day_layout.addWidget(check_button)
 

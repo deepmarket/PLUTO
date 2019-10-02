@@ -2,6 +2,9 @@ from PyQt5.QtCore import Qt, QRectF
 from PyQt5.QtWidgets import QLineEdit, QLabel
 from PyQt5.QtGui import QPixmap, QIcon, QPainter, QBrush, QColor
 
+time =  [f"{i} AM" for i in range(1, 13)] + [f"{i} PM" for i in range(1, 13)]
+weekday = ["Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun"]
+
 
 def get_children(widget, child_type, *args):
     """
@@ -74,14 +77,3 @@ def menu_icon(width):
     painter.end()
 
     return QIcon(pix)
-
-def get_time():
-
-    morning = [f"{i} AM" for i in range(1, 13)]
-    afternoon = [f"{i} PM" for i in range(1, 13)]
-
-    return morning + afternoon
-
-def get_weekday():
-
-    return ["Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun"]

@@ -6,7 +6,7 @@ env:
   # Tell Qt not to require bringing up a GUI
   - QT_QPA_PLATFORM="offscreen"
   # This is a workaround baked into the application if the former doesn't work
-#  - HEADLESS="true"
+  - HEADLESS="true"
 
 install:
     - python --version
@@ -16,8 +16,8 @@ install:
 script:
     - pipenv run python -m unittest discover ./src/unittest/python
     # xvfb allows GUI applications to run headlessly and only works on xenial
-    # See: https://docs.travis-ci.com/user/gui-and-headless-browsers/#using-the-xvfb-run-wrapper
-    - pipenv run xvfb-run behave ./src/integrationtest/python
+    # See: https://docs.travis-ci.com/user/gui-and-headless-browsers/#using-the-xvfb-run-wrapper 
+    - xvfb-run behave ./src/integrationtest/python
 
 matrix:
   include:
@@ -32,6 +32,8 @@ matrix:
     # Tests Python 3.6 on Ubuntu Xenial
     - python: "3.6"
       dist: xenial
+      # services:
+      #   - xvfb
       sudo: true
 
     - python: "3.6"

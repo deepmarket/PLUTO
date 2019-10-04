@@ -2,7 +2,7 @@ from PyQt5.QtCore import Qt, QRectF
 from PyQt5.QtWidgets import QLineEdit, QLabel
 from PyQt5.QtGui import QPixmap, QIcon, QPainter, QBrush, QColor
 
-time =  [f"{i} AM" for i in range(1, 13)] + [f"{i} PM" for i in range(1, 13)]
+time = [f"{i} AM" for i in range(1, 13)] + [f"{i} PM" for i in range(1, 13)]
 weekday = ["Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun"]
 
 

@@ -4,8 +4,8 @@ from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QDialog
 
-from .loginPageUI import LoginPageUI
-from .loginCreateUI import CreatePageUI
+from .login_page_ui import LoginPageUI
+from .login_create_ui import CreatePageUI
 
 from ..widgets import Frame, MoveAnimation
 

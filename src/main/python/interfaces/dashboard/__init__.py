@@ -1,1 +1,1 @@
-from .dashboardUI import DashboardUI
+from .dashboard_ui import DashboardUI

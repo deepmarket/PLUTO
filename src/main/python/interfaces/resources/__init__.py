@@ -1,3 +1,3 @@
-from .resourcesUI import ResourcesUI
-from .resourcesControllerUI import ResourcesControllerUI
-from .resourcesAddViewUI import ResourcesAddViewUI
+from .resources_ui import ResourcesUI
+from .resources_controller_ui import ResourcesControllerUI
+from .resources_add_view_ui import ResourcesAddViewUI

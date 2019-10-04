@@ -1,3 +1,3 @@
-from .jobsUI import JobsUI
-from .jobsAddViewUI import JobsAddViewUI
-from .jobsControllerUI import JobsControllerUI
+from .jobs_ui import JobsUI
+from .jobs_add_view_ui import JobsAddViewUI
+from .jobs_controller_ui import JobsControllerUI

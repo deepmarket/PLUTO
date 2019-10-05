@@ -4,11 +4,11 @@ from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget
 
-from .appSidebarUI import AppSidebarUI
-from .appNavigationUI import AppNavigationUI
-from .appMainWindowUI import AppMainWindowUI
-from .appMaskUI import AppMaskUI
-from .appAccountUI import AppAccountUI
+from .app_sidebar_ui import AppSidebarUI
+from .app_navigation_ui import AppNavigationUI
+from .app_main_window_ui import AppMainWindowUI
+from .app_mask_ui import AppMaskUI
+from .app_account_ui import AppAccountUI
 
 from ..widgets import Frame, MoveAnimation
 from ..config import SIDEBAR_WIDTH, NAVIGATION_HEIGHT, ACCOUNT_WIDTH
@@ -148,5 +148,5 @@ class AppUI(QMainWindow):
 
         self.account.credit_history.clicked.connect(self.on_credit_history_clicked)
         self.account.notifications.clicked.connect(self.on_notification_clicked)
-        self.account.about.clicked.connect(self.on_about_clicked)
+        # self.account.about.clicked.connect(self.on_about_clicked)
         self.account.logout.clicked.connect(self.on_logout_clicked)

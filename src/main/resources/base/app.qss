@@ -58,13 +58,13 @@ QLabel#navigation_credit {
 }
 
 QLabel#account_username {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 500;
     color: #6C7E8E;
 }
 
 QLabel#account_credit {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 100;
     color: #505A5F;
 }
@@ -99,7 +99,7 @@ QPushButton#mask_clicked_area {
 
 QPushButton#account_button {
     border: none;
-    font-size: 10px;
+    font-size: 13px;
     font-weight: 200;
     color: #6C7E8E;
     text-align: left;
@@ -109,9 +109,9 @@ QPushButton#account_logout {
     border: none;
     border-radius: 3px;
     background-color: #6C7E8E;
-    height: 25px;
-    width: 85px;
-    font-size: 11px;
+    height: 30px;
+    width: 90px;
+    font-size: 13px;
     font-weight: 200;
     color: white;
 }

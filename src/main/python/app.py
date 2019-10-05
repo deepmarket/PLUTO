@@ -62,8 +62,8 @@ class App(AppUI):
         popup = CreditHistory(self.cxt)
         popup.exec_()
 
-    def on_about_clicked(self):
-        pass
+    # def on_about_clicked(self):
+    #     pass
 
     def on_logout_clicked(self):
 

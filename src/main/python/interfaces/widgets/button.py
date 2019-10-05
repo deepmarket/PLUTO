@@ -43,14 +43,12 @@ class Button(QPushButton):
     def enable(self):
         """
         Enable button.
-        :return: this function doesn't return value
         """
         self.setEnabled(True)
 
     def disable(self):
         """
         Disable button.
-        :return: this function doesn't return value
         """
         self.setEnabled(False)
 

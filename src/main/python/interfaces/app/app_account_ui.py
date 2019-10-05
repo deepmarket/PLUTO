@@ -116,10 +116,10 @@ class AppAccountUI(Frame):
 
         section_layout.addWidget(self.credit_history)
 
-        self.about = Button(
-            self.button_section, text="About", name="account_button", cursor=True
-        )
-        section_layout.addWidget(self.about)
+        # self.about = Button(
+        #     self.button_section, text="About", name="account_button", cursor=True
+        # )
+        # section_layout.addWidget(self.about)
 
     def _init_logout_section(self):
 

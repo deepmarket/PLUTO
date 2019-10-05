@@ -1,1 +1,1 @@
-from .settingsUI import SettingsUI
+from .settings_ui import SettingsUI

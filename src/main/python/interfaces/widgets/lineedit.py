@@ -44,21 +44,18 @@ class LineEdit(QLineEdit):
     def enable(self):
         """
         Enable input.
-        :return: this function doesn't return value
         """
         self.setEnabled(True)
 
     def disable(self):
         """
         Disable input.
-        :return: this function doesn't return value
         """
         self.setEnabled(False)
 
     def reset(self):
         """
         Clean up input text, remove focus, and enable input.
-        :return: this function doesn't return value
         """
         self.setText("")
         self.clearFocus()

@@ -44,8 +44,7 @@ class Label(QLabel):
 
     def reset(self):
         """
-        Clean up text within label
-        :return: this function doesn't return value
+        Set text within label to ""
         """
         self.setText("")
 

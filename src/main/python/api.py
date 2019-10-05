@@ -11,12 +11,8 @@ class CredentialManager(object):
     def __init__(self, file_path="./"):
 
         self.file_path = file_path
-        if not path.exists(
-            path.join(path.abspath(self.file_path), ".credential_store")
-        ):
-            self.credential_store = path.join(
-                path.abspath(self.file_path), ".credential_store"
-            )
+        if not path.exists(path.join(path.abspath(self.file_path), ".credential_store")):
+            self.credential_store = path.join(path.abspath(self.file_path), ".credential_store")
 
             # Create file
             with open(self.credential_store, "w+"):

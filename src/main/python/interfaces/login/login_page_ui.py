@@ -62,19 +62,6 @@ class LoginPageUI(Frame):
         self._init_switch_section()
 
     def _init_title_section(self):
-
-        """
-        section_layout = VerticalLayout(self.title_section)
-
-        label = Label(
-            self.title_section, text="Welcome.", name="login_title", align=Qt.AlignCenter
-        )
-        
-        section_layout.addWidget(label)
-        """
-        self.login_kindly()
-
-    def login_kindly(self):
         def update_title(title_text: str = "Please Sign In."):
             section_layout = VerticalLayout(self.title_section)
 

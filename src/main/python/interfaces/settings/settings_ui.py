@@ -97,7 +97,7 @@ class SettingsUI(Frame):
 
         # version
         version = Label(
-            logo_frame, text=f"PLUTO version: v {VERSION}", name="setting_version"
+            logo_frame, text=f"PLUTO version: {VERSION}", name="setting_version"
         )
         logo_layout.addWidget(version)
 

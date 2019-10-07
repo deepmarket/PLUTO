@@ -1,6 +1,7 @@
+from os import environ, path
+
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from fbs_runtime.application_context import cached_property
-from os import environ
 
 from PyQt5.QtGui import QImage
 
@@ -58,7 +59,16 @@ class AppContext(ApplicationContext):
 
     @cached_property
     def credential_store(self):
-        return self.get_resource("credential_store")
+        store = None
+        file = ".credential_store"
+        try:
+            store = self.get_resource(file)
+        except FileNotFoundError:
+            # create file
+            with open(path.join(self.get_resource(), file), "w+"):
+                pass
+        finally:        
+            return store if store else self.get_resource(file)
 
     def run(self):
         return self.app.exec_()

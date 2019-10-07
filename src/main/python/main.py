@@ -56,6 +56,10 @@ class AppContext(ApplicationContext):
     def question_style(self):
         return self.load_style("question.qss")
 
+    @cached_property
+    def credential_store(self):
+        return self.get_resource(".credential_store")
+
     def run(self):
         return self.app.exec_()
 

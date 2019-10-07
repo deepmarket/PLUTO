@@ -21,6 +21,7 @@ class Dashboard(DashboardUI):
     def __init__(self, cxt: ApplicationContext, *args, **kwargs):
         super(Dashboard, self).__init__(cxt, *args, **kwargs)
 
+        self.cxt = cxt
         self.update_account()
 
     def update_account(self):
@@ -54,7 +55,7 @@ class Dashboard(DashboardUI):
     def _api_get_call(self):
 
         # fetch account information
-        with Api("/account") as account:
+        with Api(self.cxt, "/account") as account:
             status, res = account.get()
 
             if not res or status != 200:
@@ -66,7 +67,7 @@ class Dashboard(DashboardUI):
                 self.total_balance = round(res["account"]["credits"], 4)
 
         # fetch resources information
-        with Api("/resources") as resources:
+        with Api(self.cxt, "/resources") as resources:
             status, res = resources.get()
 
             if not res or status != 200:
@@ -82,7 +83,7 @@ class Dashboard(DashboardUI):
                         self.dead_machine += 1
 
         # fetch job information
-        with Api("/jobs") as jobs:
+        with Api(self.cxt, "/jobs") as jobs:
             status, res = jobs.get()
 
             if not res or status != 200:

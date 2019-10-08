@@ -1,11 +1,11 @@
 from enum import Enum, auto
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
-from api import Api
-from util import job_input_check
+from src.main.python.api import Api
+from src.main.python.util import job_input_check
 
-from interfaces.jobs import JobsUI, JobsAddViewUI, JobsControllerUI
-from interfaces.widgets import Question
+from src.main.python.interfaces.jobs import JobsUI, JobsAddViewUI, JobsControllerUI
+from src.main.python.interfaces.widgets import Question
 
 
 class Jobs(JobsUI):

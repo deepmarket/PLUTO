@@ -49,8 +49,8 @@ class Dashboard(MainView):
         with Api("/resources") as resources:
             status, res = resources.get()
 
-            if status == 200 and isinstance(res, dict) and "resources" in res:
-                for rsrc in res["resources"]:
+            if status == 200 and isinstance(res, dict) and "data" in res:
+                for rsrc in res["data"]:
                     if str(rsrc['status']) == "ALIVE":
                         self.running_machines += 1
                     else:

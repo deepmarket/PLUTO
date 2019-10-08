@@ -15,7 +15,7 @@ from api import Api
 
 import util as util
 from interfaces.resources import ResourcesUI, ResourcesControllerUI, ResourcesAddViewUI
-from interfaces.widgets import Question
+from interfaces.widgets import Question, ErrorPopup
 from PyQt5.QtWidgets import QMessageBox
 
 
@@ -71,6 +71,7 @@ class ResourcesController(ResourcesControllerUI):
 
         if row != -1:
             machine_name = self.table.get_cell(row, 0)
+            container_id = self.machines[row].get('resource_container_id', '')
 
             question = f"Are you sure you want to remove <u>{machine_name}</u> from your resources?\n"
             question += "** This action cannot be undone. **"
@@ -80,6 +81,12 @@ class ResourcesController(ResourcesControllerUI):
             if dialog.exec_():
                 res = self._api_remove_call(f"/resources/{self.machines[row]['_id']}")
                 if res:
+                    if container_id is not '':
+                        try:
+                            util.destroy_docker_container(container_id)
+                        except DockerException as ex:
+                            popup = ErrorPopup(f"Error deleting the docker container {container_id}", self.cxt)
+                            popup.exec_()
                     # refresh widget
                     self.reset()
 
@@ -102,7 +109,8 @@ class ResourcesController(ResourcesControllerUI):
                             str(machine["cores"]),
                             str(machine["ram"]),
                             str(machine["price"]),
-                            machine["status"]])
+                            machine["status"],
+                            machine['resource_container_id']])
 
     def _api_get_call(self, endpoint:str):
 
@@ -119,7 +127,7 @@ class ResourcesController(ResourcesControllerUI):
                 return []
 
             if status == 200:
-                return res["resources"]
+                return res["data"]
 
             if status == 500:
                 self.global_hint.setText(Error.UNKOWN_ERR)
@@ -204,6 +212,11 @@ class ResourcesAddView(ResourcesAddViewUI):
         else:
             price =self.auto_price
 
+        container_id = util.build_docker_container(container_name=machine_name)
+        if not container_id:
+            popup = ErrorPopup(f"Error spinning up docker container {machine_name}", self.cxt)
+            popup.exec_()
+
         # pack data
         dat = {
             "machine_name": machine_name,
@@ -212,7 +225,8 @@ class ResourcesAddView(ResourcesAddViewUI):
             "cores": cores,
             "ram": ram,
             "price": price,
-            "status": "ALIVE"
+            "status": "ALIVE",
+            "container_id": container_id
         }
 
         print(dat)
@@ -220,10 +234,10 @@ class ResourcesAddView(ResourcesAddViewUI):
         res = self._api_post_call("/resources", dat)
 
         if res:
-            container_id = util.build_docker_container(container_name=dat.get('machine_name', machine_name))
-            print(container_id) # TODO - do something with container ID
             # emit signal, back to controller
             super().on_submit_clicked()
+        else:
+            util.destroy_docker_container(container_id)
 
     def reset(self):
         super().reset()

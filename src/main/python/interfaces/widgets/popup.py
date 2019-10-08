@@ -72,3 +72,33 @@ class Question(BaseDialog):
 
     def get_cancel(self):
         return self.cancel
+
+
+class ErrorPopup(BaseDialog):
+
+    confirm: Button = None
+
+    def __init__(self, notification: str, cxt:ApplicationContext, *args, **kwargs):
+        super(ErrorPopup, self).__init__(cxt, name="error_popup", *args, **kwargs)
+
+        window_layout = VerticalLayout(self, t_m=35, b_m=35, l_m=65, r_m=65, space=20)
+
+        paragraph = notification.split('\n')
+        err_pop = Paragraph(self, paragraph, space=5, align=Qt.AlignLeft)
+        window_layout.addWidget(err_pop)
+
+        button_frame = Frame(self)
+        window_layout.addWidget(button_frame)
+        button_layout = HorizontalLayout(button_frame)
+
+        self.confirm = Button(button_frame, text="DISMISS", name="dismiss")
+        button_layout.addWidget(self.confirm)
+
+        self.confirm.clicked.connect(self.on_confirm_clicked)
+
+    def on_confirm_clicked(self):
+        self.accept()
+        self.close()
+
+    def get_confirm(self):
+        return self.confirm

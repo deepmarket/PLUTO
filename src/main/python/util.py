@@ -53,7 +53,7 @@ def build_docker_container(detached=True, container_path='samgomena/deepshare_wo
     try:
         container = docker_client.containers.run(f'{container_path}:{version}', detach=detached, name=container_name)
     except docker.errors.ContainerError as e:
-        print('error spinning up the continaer! Check docker install')
+        print('error spinning up the container! Check docker install')
         print(e)
         return False
     except docker.errors.APIError as e:
@@ -77,3 +77,15 @@ def check_and_instantiate_docker_client():
         print('unsuccessful instantiation of docker client')
         raise e
     return docker_client
+
+
+def destroy_docker_container(container_id):
+    try:
+        docker_client = docker.from_env()
+        container = docker_client.containers.get(container_id)
+        container.kill()
+        docker_client.containers.prune()
+    except docker.errors.DockerException as e:
+        print(e)
+        print(f'unsuccessful deletion of docker container {container_id}')
+        raise e

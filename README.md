@@ -19,6 +19,8 @@ To check version:
 $ python3 --version
 ```
 
+**Note 2**: Docker is required for this project if you want to add resources to the Deepmarket Network.  To install docker, please follow the docker-mentation [located here](https://docs.docker.com/v17.09/engine/installation/).
+
 ## Installing, Testing, Running:
 
 #### Installation

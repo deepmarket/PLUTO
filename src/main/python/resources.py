@@ -4,12 +4,12 @@ from psutil import cpu_freq, cpu_count, virtual_memory
 
 from PyQt5.QtWidgets import QComboBox, QCheckBox
 
-from src.main.python.api import Api
-from src.main.python.util import config_input_check, get_ip_address
+from api import Api
+from util import config_input_check, get_ip_address
 
-from src.main.python.interfaces.helper import get_children
-from src.main.python.interfaces.resources import ResourcesUI, ResourcesControllerUI, ResourcesAddViewUI
-from src.main.python.interfaces.widgets import Question
+from interfaces.helper import get_children
+from interfaces.resources import ResourcesUI, ResourcesControllerUI, ResourcesAddViewUI
+from interfaces.widgets import Question
 
 
 class Resources(ResourcesUI):

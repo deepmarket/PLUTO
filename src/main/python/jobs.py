@@ -1,11 +1,11 @@
 from enum import Enum, auto
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
-from src.main.python.api import Api
-from src.main.python.util import job_input_check
+from api import Api
+from util import job_input_check
 
-from src.main.python.interfaces.jobs import JobsUI, JobsAddViewUI, JobsControllerUI
-from src.main.python.interfaces.widgets import Question
+from interfaces.jobs import JobsUI, JobsAddViewUI, JobsControllerUI
+from interfaces.widgets import Question
 
 
 class Jobs(JobsUI):
@@ -211,7 +211,7 @@ class JobsAddView(JobsAddViewUI):
         return True
 
     def _api_post_call(self, endpoint: str, dat: dict):
-        with Api(endpoint) as api:
+        with Api(self.cxt, endpoint) as api:
             status, res = api.post(dat)
             return res and status == 200
 
@@ -248,7 +248,7 @@ class JobsController(JobsControllerUI):
 
     def _api_remove_call(self, endpoint: str):
 
-        with Api(endpoint) as api:
+        with Api(self.cxt, endpoint) as api:
             status, res = api.delete()
 
             if not res:
@@ -283,7 +283,7 @@ class JobsController(JobsControllerUI):
 
     def _api_get_call(self, endpoint: str):
 
-        with Api(endpoint) as api:
+        with Api(self.cxt, endpoint) as api:
             status, res = api.get()
 
             if not res:

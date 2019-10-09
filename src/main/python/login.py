@@ -3,10 +3,10 @@ from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 from PyQt5.QtCore import pyqtSignal
 
-from src.main.python.api import Api
-from src.main.python.util import email_verification_check
+from api import Api
+from util import email_verification_check
 
-from src.main.python.interfaces.login import LoginUI, LoginPageUI, CreatePageUI
+from interfaces.login import LoginUI, LoginPageUI, CreatePageUI
 
 
 class Login(LoginUI):

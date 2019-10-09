@@ -2,8 +2,8 @@ from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 from PyQt5.QtCore import QObject, pyqtSignal
 
-from src.main.python.app import App
-from src.main.python.login import Login
+from app import App
+from login import Login
 
 
 class MainApp(QObject):

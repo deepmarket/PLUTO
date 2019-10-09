@@ -2,15 +2,15 @@ from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 from PyQt5.QtCore import pyqtSignal
 
-from src.main.python.api import Api
+from api import Api
 
-from src.main.python.dashboard import Dashboard
-from src.main.python.resources import Resources
-from src.main.python.jobs import Jobs
-from src.main.python.settings import Settings
+from dashboard import Dashboard
+from resources import Resources
+from jobs import Jobs
+from settings import Settings
 
-from src.main.python.interfaces.app import AppUI
-from src.main.python.interfaces.widgets import Notification, CreditHistory
+from interfaces.app import AppUI
+from interfaces.widgets import Notification, CreditHistory
 
 
 class App(AppUI):

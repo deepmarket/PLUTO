@@ -1,9 +1,9 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
-from src.main.python.api import Api
-from src.main.python.util import add_greeting
+from api import Api
+from util import add_greeting
 
-from src.main.python.interfaces.dashboard import DashboardUI
+from interfaces.dashboard import DashboardUI
 
 
 class Dashboard(DashboardUI):

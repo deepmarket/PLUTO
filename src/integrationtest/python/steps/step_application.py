@@ -1,12 +1,12 @@
 
 from PyQt5.QtTest import QTest
 from PyQt5.QtCore import Qt
-from src.main.python.dashboard import Dashboard
-from src.main.python.resources import Resources
-from src.main.python.jobs import Jobs
-from src.main.python.settings import Settings
+from dashboard import Dashboard
+from resources import Resources
+from jobs import Jobs
+from settings import Settings
 from behave import use_step_matcher, when, then
-from src.integrationtest.python.steps.step_helpers import assert_equal, assert_is_not, assert_is_true, assert_is_not_true
+from step_helpers import assert_equal, assert_is_not, assert_is_true, assert_is_not_true
 use_step_matcher("re")
 
 

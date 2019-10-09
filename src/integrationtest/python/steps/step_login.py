@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt
 
 from behave import use_step_matcher, when, then
 
-from src.integrationtest.python.steps.step_helpers import assert_equal, assert_is_not
+from step_helpers import assert_equal, assert_is_not
 
 use_step_matcher("re")
 

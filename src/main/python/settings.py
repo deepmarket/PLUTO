@@ -1,6 +1,6 @@
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
-from src.main.python.interfaces.settings import SettingsUI
+from interfaces.settings import SettingsUI
 
 
 class Settings(SettingsUI):

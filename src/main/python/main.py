@@ -5,7 +5,7 @@ from fbs_runtime.application_context import cached_property
 
 from PyQt5.QtGui import QImage
 
-from src.main.python.mainapp import MainApp
+from mainapp import MainApp
 
 # Removed by sgomena on 1/29/19 after directory structure refactoring
 # sys.path.append(path.join(path.dirname(__file__), '..'))

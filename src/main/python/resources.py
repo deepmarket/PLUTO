@@ -15,7 +15,7 @@ from api import Api
 
 import util as util
 from interfaces.resources import ResourcesUI, ResourcesControllerUI, ResourcesAddViewUI
-from interfaces.widgets import Question, ErrorPopup
+from interfaces.widgets import Question
 from PyQt5.QtWidgets import QMessageBox
 
 
@@ -85,8 +85,7 @@ class ResourcesController(ResourcesControllerUI):
                         try:
                             util.destroy_docker_container(container_id)
                         except DockerException as ex:
-                            popup = ErrorPopup(f"Error deleting the docker container {container_id}", self.cxt)
-                            popup.exec_()
+                            QMessageBox.about(self, "Information", "Unable to remove running docker container! Please kill manually.")
                     # refresh widget
                     self.reset()
 
@@ -103,14 +102,14 @@ class ResourcesController(ResourcesControllerUI):
     def _fetch_resources_data(self):
         self.machines = self._api_get_call("/resources")
         for machine in self.machines:
-            self.table.add([machine["machine_name"],
-                            machine["ip_address"],
-                            str(machine["cpus"]),
-                            str(machine["cores"]),
-                            str(machine["ram"]),
-                            str(machine["price"]),
-                            machine["status"],
-                            machine['resource_container_id']])
+            self.table.add([machine.get('machine_name', 'unknown name'),
+                            machine.get('ip_address', 'unknown ip address'),
+                            str(machine.get('cpus', 'unknown cpu count')),
+                            str(machine.get('cores', 'unknown core count')),
+                            str(machine.get('ram', 'unknown ram')),
+                            str(machine.get('price', 'unknown price')),
+                            machine.get('status', 'unknown status'),
+                            machine.get('resource_container_id', 'unknown container id')])
 
     def _api_get_call(self, endpoint:str):
 
@@ -212,10 +211,9 @@ class ResourcesAddView(ResourcesAddViewUI):
         else:
             price =self.auto_price
 
-        container_id = util.build_docker_container(container_name=machine_name)
+        container_id = util.build_docker_container(memory=ram, cpus=cores)
         if not container_id:
-            popup = ErrorPopup(f"Error spinning up docker container {machine_name}", self.cxt)
-            popup.exec_()
+            QMessageBox.about(self, "Information", "Unable to spin up a docker container!")
 
         # pack data
         dat = {
@@ -288,24 +286,20 @@ class ResourcesAddView(ResourcesAddViewUI):
 
         with Api(endpoint) as api:
             status, res = api.post(dat)
-
             if not res:
                 self.submit_hint.setText(Error.CONNECT_ERR)
                 return False
-
             if status == 200:
                 return True
-
-            if status == 500:
-                msg = ""
-                if res and "error" in res and "errmsg" in res["error"]:
-                    msg = res["error"]["errmsg"]
-                    if "E11000" in msg:
-                            msg = Error.E11000_ERR
-                else:
-                    msg = Error.UNKOWN_ERR
-
+            if (status == 400) or (status == 500):
+                msg = ''
+                for err in res.get('errors', []):
+                    error = Error.E11000_ERR if ('E11000' in err.get('errmsg', '')) else Error.UNKOWN_ERR
+                    msg += error + " "
                 self.submit_hint.setText(msg)
+                return False
+            else:
+                self.submit_hint.setText(Error.UNKOWN_ERR)
                 return False
 
     def _planning_check(self):
@@ -337,7 +331,7 @@ class ResourcesAddView(ResourcesAddViewUI):
         class Res(Enum):
             EMPTY_ERROR = "Please enter number of GPUs."
             RANGE_ERROR = "Input for GPUs is out of range."
-            INT_ERROR = "Please enter an interger input"
+            INT_ERROR = "Please enter an integer input"
             SUCCESS = auto()
 
         # check if input is acceptable
@@ -361,7 +355,7 @@ class ResourcesAddView(ResourcesAddViewUI):
         class Res(Enum):
             EMPTY_ERROR = "Invalid number of cores."
             RANGE_ERROR = "Cores is out of range."
-            INT_ERROR = "Please enter an interger input"
+            INT_ERROR = "Please enter an integer input"
             SUCCESS = auto()
 
         # check if input is acceptable
@@ -386,7 +380,7 @@ class ResourcesAddView(ResourcesAddViewUI):
         class Res(Enum):
             EMPTY_ERROR = "Please enter number of RAM."
             RANGE_ERROR = "Amount of RAM is out of range."
-            INT_ERROR = "Please enter an interger input"
+            INT_ERROR = "Please enter an integer input"
             SUCCESS = auto()
 
         # check if input is acceptable

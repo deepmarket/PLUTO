@@ -1,6 +1,8 @@
 import errno
 import re
 import socket
+from time import sleep
+
 import docker
 
 from enum import Enum
@@ -44,14 +46,15 @@ def config_input_check(text:str, available:int, res:Enum):
             return res.INT_ERROR
 
 
-def build_docker_container(detached=True, container_path='samgomena/deepshare_worker', version='latest', container_name='deepshare_worker'):
+def build_docker_container(detached=True, container_path='samgomena/deepshare_worker', version='latest', memory=None, cpus=None):
     """creates and runs a docker container from:
     https://hub.docker.com/u/samgomena/repository/docker/samgomena/deepshare_worker
     Returns the container ID if successful, False if not
     """
     docker_client = check_and_instantiate_docker_client()
+    memory += "g" # add unit
     try:
-        container = docker_client.containers.run(f'{container_path}:{version}', detach=detached, name=container_name)
+        container = docker_client.containers.run(f'{container_path}:{version}', detach=detached, cpu_count=int(cpus), mem_limit=memory)
     except docker.errors.ContainerError as e:
         print('error spinning up the container! Check docker install')
         print(e)
@@ -63,7 +66,7 @@ def build_docker_container(detached=True, container_path='samgomena/deepshare_wo
         print('something went wrong with docker')
         print(e)
         return False
-    return container.id
+    return container.short_id
 
 
 def check_and_instantiate_docker_client():

@@ -150,13 +150,14 @@ class ResourcesControllerUI(Frame):
 
         header = OrderedDict()
 
-        header["Machine Name"] = 150
-        header["IP Address"] = 180
-        header["GPUs"] = 100
-        header["Cores"] = 100
-        header["Ram (GB)"] = 100
-        header["Price"] = 120
-        header["Status"] = 150
+        header["Machine Name"] = 140
+        header["IP Address"] = 160
+        header["GPUs"] = 60
+        header["Cores"] = 80
+        header["Ram (GB)"] = 80
+        header["Price"] = 110
+        header["Status"] = 120
+        header['Container Id'] = 120
 
         self.table = Table(self.table_view, RESOURCES_MAX_ROW, header, name="table")
         layout.addWidget(self.table)

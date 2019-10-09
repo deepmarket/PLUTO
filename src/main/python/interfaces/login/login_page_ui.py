@@ -21,8 +21,8 @@ class LoginPageUI(Frame):
     login_section: Frame = None
     button_section: Frame = None
 
-    username: str = ""  # input string
-    pwd: str = ""  # input string
+    username: LoginInputFrame = None  # input string
+    pwd: LoginInputFrame = None  # input string
     login_button: Button = ""  # button
     login_hint: str = ""  # param string
     remember_check = None  # checkbox

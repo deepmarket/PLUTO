@@ -1,6 +1,9 @@
+from os import environ, path
+
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from fbs_runtime.application_context import cached_property
-from os import environ
+
+from PyQt5.QtGui import QImage
 
 from mainapp import MainApp
 
@@ -9,7 +12,6 @@ from mainapp import MainApp
 
 
 class AppContext(ApplicationContext):
-
     def __init__(self, *args, **kwargs):
         super(AppContext, self).__init__(*args, **kwargs)
         # Save reference to main application so it's not garbage collected
@@ -28,21 +30,13 @@ class AppContext(ApplicationContext):
         return self.load_style("login.qss")
 
     @cached_property
-    def credit_history_style(self):
-        return self.load_style("credit_history.qss")
-
-    @cached_property
-    def notification_style(self):
-        return self.load_style("notification.qss")
-
-    @cached_property
     def add_view_style(self):
         return self.load_style("add_view.qss")
 
     @cached_property
     def controller_style(self):
         return self.load_style("controller.qss")
-    
+
     @cached_property
     def popup_style(self):
         return self.load_style("popup.qss")
@@ -56,8 +50,25 @@ class AppContext(ApplicationContext):
         return self.load_style("settings.qss")
 
     @cached_property
+    def logo(self):
+        return QImage(self.get_resource("logo.png"))
+
+    @cached_property
     def question_style(self):
         return self.load_style("question.qss")
+
+    @cached_property
+    def credential_store(self):
+        store = None
+        file = ".credential_store"
+        try:
+            store = self.get_resource(file)
+        except FileNotFoundError:
+            # create file
+            with open(path.join(self.get_resource(), file), "w+"):
+                pass
+        finally:        
+            return store if store else self.get_resource(file)
 
     def run(self):
         return self.app.exec_()
@@ -70,12 +81,13 @@ class AppContext(ApplicationContext):
         except:
             raise
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     from sys import exit, argv
 
     # Enable headless for testing
-    if environ.get('HEADLESS'):
-        argv += ['-platform', 'minimal']
+    if environ.get("HEADLESS"):
+        argv += ["-platform", "minimal"]
 
     appctxt = AppContext()
     exit_code = appctxt.run()

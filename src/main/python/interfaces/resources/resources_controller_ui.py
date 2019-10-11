@@ -1,10 +1,3 @@
-"""
-
-    This file provides a pure GUI interface for resources.
-    This component is controlling interface for resources tab
-
-"""
-
 from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
@@ -13,22 +6,24 @@ from PyQt5.QtCore import pyqtSignal
 
 from ..widgets import (
     Frame,
-    SectionTitleFrame,
-    SearchInputFrame,
-    ViewButton,
-    Label,
-    Table,
-    LineEdit,
     HorizontalLayout,
-    VerticalLayout,
     HorizontalSpacer,
+    Label,
+    LineEdit,
+    SearchInputFrame,
+    SectionTitleFrame,
+    Table,
+    VerticalLayout,
     VerticalSpacer,
+    ViewButton,
 )
-
 from ..config import RESOURCES_MAX_ROW
 
 
 class ResourcesControllerUI(Frame):
+    """
+    This component is controlling interface for resources tab
+    """
 
     # metaclass for defining abstract base classes
     __metaclass__ = ABCMeta
@@ -47,7 +42,7 @@ class ResourcesControllerUI(Frame):
 
     global_hint: Label = None
 
-    def __init__(self, signal: pyqtSignal, cxt:ApplicationContext, *args, **kwargs):
+    def __init__(self, signal: pyqtSignal, cxt: ApplicationContext, *args, **kwargs):
         super(ResourcesControllerUI, self).__init__(*args, name="view", **kwargs)
 
         self.cxt = cxt

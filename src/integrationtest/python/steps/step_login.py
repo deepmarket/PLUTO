@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt
 
 from behave import use_step_matcher, when, then
 
-from src.integrationtest.python.steps.step_helpers import assert_equal, assert_is_not
+from step_helpers import assert_equal, assert_is_not
 
 use_step_matcher("re")
 
@@ -19,8 +19,8 @@ def open_login_window(context):
 def login(context):
     assert_is_not(context.login_window, None)
 
-    QTest.keyClicks(context.login_window.login.username, "samgomena@gmail.com")
-    QTest.keyClicks(context.login_window.login.pwd, "password")
+    QTest.keyClicks(context.login_window.login.username.input_field, "samgomena@gmail.com")
+    QTest.keyClicks(context.login_window.login.pwd.input_field, "password")
 
     QTest.mouseClick(context.login_window.login.login_button, Qt.LeftButton)
 
@@ -30,9 +30,9 @@ def enter_login_input_text(context, text, dialog_box):
     assert_is_not(context.login_window, None)
 
     if dialog_box == "username":
-        QTest.keyClicks(context.login_window.login.username, text)
+        QTest.keyClicks(context.login_window.login.username.input_field, text)
     elif dialog_box == "password":
-        QTest.keyClicks(context.login_window.login.pwd, text)
+        QTest.keyClicks(context.login_window.login.pwd.input_field, text)
 
 
 @then(r'the (username|password) input box text should be "(.*)"')

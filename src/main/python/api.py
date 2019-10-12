@@ -1,27 +1,29 @@
+from os import environ, path, curdir, remove
 import requests as req
 
 from json import JSONDecodeError
-from os import environ, path, curdir, remove
-
 from requests.exceptions import ConnectionError
+
+from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 
 class CredentialManager(object):
     # TODO: Consider using something like marshal, shelve, or pickle
-    def __init__(self, file_path="./"):
+    def __init__(self, cxt: ApplicationContext, file_path="./"):
 
-        self.file_path = file_path
-        if not path.exists(path.join(path.abspath(self.file_path), ".credential_store")):
-            self.credential_store = path.join(path.abspath(self.file_path), ".credential_store")
+        self.credential_store = cxt.credential_store
+        # self.file_path = file_path
+        # if not path.exists(path.join(path.abspath(self.file_path), ".credential_store")):
+        #     self.credential_store = path.join(path.abspath(self.file_path), ".credential_store")
 
-            # Create file
-            with open(self.credential_store, "w+"):
-                pass
+        #     # Create file
+        #     with open(self.credential_store, "w+"):
+        #         pass
 
-        else:
-            self.credential_store = path.join(
-                path.abspath(self.file_path), ".credential_store"
-            )
+        # else:
+        #     self.credential_store = path.join(
+        #         path.abspath(self.file_path), ".credential_store"
+        #     )
 
     def put(self, obj):
         with open(self.credential_store, "w+") as store:
@@ -43,7 +45,7 @@ class Api(object):
     store_path = path.abspath(curdir)
 
     def __init__(
-        self, endpoint: str = "/", host: str = "atlantic.cs.pdx.edu", port: int = 8080
+        self, cxt: ApplicationContext, endpoint: str = "/", host: str = "atlantic.cs.pdx.edu", port: int = 8080
     ):
 
         # Override given domain name/port if defined in the environment
@@ -55,6 +57,7 @@ class Api(object):
 
         self.url: str = f"http://{self.host}:{self.port}/api/v1{self.endpoint}"
 
+        self.cxt = cxt
         # self.auth: bool = auth
         self.auth: bool = (self.endpoint in ("auth/login", "auth/refresh"))
         self.store: CredentialManager = None
@@ -62,7 +65,7 @@ class Api(object):
         self.headers: dict = {}
 
     def __enter__(self):
-        self.store = CredentialManager(self.store_path)
+        self.store = CredentialManager(self.cxt, self.store_path)
         self.token = self.store.get()
         self.headers = {"X-access-token": self.token}
 

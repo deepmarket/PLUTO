@@ -211,7 +211,7 @@ class JobsAddView(JobsAddViewUI):
         return True
 
     def _api_post_call(self, endpoint: str, dat: dict):
-        with Api(endpoint) as api:
+        with Api(self.cxt, endpoint) as api:
             status, res = api.post(dat)
             return res and status == 200
 
@@ -248,7 +248,7 @@ class JobsController(JobsControllerUI):
 
     def _api_remove_call(self, endpoint: str):
 
-        with Api(endpoint) as api:
+        with Api(self.cxt, endpoint) as api:
             status, res = api.delete()
 
             if not res:
@@ -283,7 +283,7 @@ class JobsController(JobsControllerUI):
 
     def _api_get_call(self, endpoint: str):
 
-        with Api(endpoint) as api:
+        with Api(self.cxt, endpoint) as api:
             status, res = api.get()
 
             if not res:

@@ -19,6 +19,8 @@ class App(AppUI):
     ):
         super(App, self).__init__(cxt, *args, **kwargs)
 
+        self.cxt = cxt
+
         self.username = ""
         self.total_balance = 0
 
@@ -67,7 +69,7 @@ class App(AppUI):
 
     def on_logout_clicked(self):
 
-        with Api("/auth/logout") as account_api:
+        with Api(self.cxt, "/auth/logout") as account_api:
             status, res = account_api.post()
 
             if status == 200:
@@ -103,7 +105,7 @@ class App(AppUI):
     def _api_get_call(self):
 
         # fetch account information
-        with Api("/account") as account:
+        with Api(self.cxt, "/account") as account:
             status, res = account.get()
 
             if not res or status != 200:

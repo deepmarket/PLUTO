@@ -97,7 +97,7 @@ class Login(LoginUI):
 
     def attempt_login(self, username, pwd):
 
-        with Api("/auth/login") as api:
+        with Api(self.cxt, "/auth/login") as api:
             status, res = api.post({"email": username, "password": pwd})
 
             if (res or status) is None:
@@ -139,7 +139,7 @@ class Login(LoginUI):
 
     def attempt_create(self, first, last, username, pwd):
 
-        with Api("/account") as api:
+        with Api(self.cxt, "/account") as api:
 
             auth_dict = {
                 "firstname": first,

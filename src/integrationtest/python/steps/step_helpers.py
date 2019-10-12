@@ -1,7 +1,7 @@
 
 from behave import use_step_matcher, given, when, then, step
-from src.main.python.mainapp import MainApp
-from src.main.python.main import AppContext
+from mainapp import MainApp
+from main import AppContext
 
 use_step_matcher("re")
 

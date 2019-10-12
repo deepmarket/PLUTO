@@ -102,7 +102,7 @@ class ResourcesController(ResourcesControllerUI):
             CONNECT_ERR = "Fail to communicate with server. Please try later."
             UNKOWN_ERR = "There was an unknown error from the server. Please try again."
 
-        with Api(endpoint) as api:
+        with Api(self.cxt, endpoint) as api:
             status, res = api.get()
 
             if not res:
@@ -123,7 +123,7 @@ class ResourcesController(ResourcesControllerUI):
             CONNECT_ERR = "Fail to communicate with server. Please try later."
             UNKOWN_ERR = "There was an unknown error from the server. Please try again."
 
-        with Api(endpoint) as api:
+        with Api(self.cxt, endpoint) as api:
             status, res = api.delete()
 
             if not res:
@@ -303,7 +303,7 @@ class ResourcesAddView(ResourcesAddViewUI):
             UNKOWN_ERR = "There was an unknown error from the server. Please try again."
             CONNECT_ERR = "Fail to communicate with server. Please try later."
 
-        with Api(endpoint) as api:
+        with Api(self.cxt, endpoint) as api:
             status, res = api.post(dat)
 
             if not res:

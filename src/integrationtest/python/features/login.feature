@@ -38,7 +38,15 @@ Feature: # Verify functionality around logging into the application
       And I enter "test_user@test_email.com" in the username input box
       And I enter "test_password" in the password input box
       And I click the login button
-    Then the login hint text should be "The email or password you entered is not recognized."
+    Then the login hint text should be "No account exists for this email."
+
+  Scenario: Verify incorrect credentials hint
+    When I spin up the application
+      And I open the login window
+      And I enter "test@gmail.com" in the username input box
+      And I enter "test_password" in the password input box
+      And I click the login button
+    Then the login hint text should be "Password incorrect, please try again."
 
   Scenario: Verify correct credentials hint
     When I spin up the application

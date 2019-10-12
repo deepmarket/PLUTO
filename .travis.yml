@@ -6,32 +6,27 @@ env:
   # Tell Qt not to require bringing up a GUI
   - QT_QPA_PLATFORM="offscreen"
   # This is a workaround baked into the application if the former doesn't work
-  - HEADLESS="true"
+#  - HEADLESS="true"
 
 install:
-    - python --version
     - python -m pip install pipenv
     - pipenv install
 
 script:
     - pipenv run python -m unittest discover ./src/unittest/python
     # xvfb allows GUI applications to run headlessly and only works on xenial
-    # See: https://docs.travis-ci.com/user/gui-and-headless-browsers/#using-the-xvfb-run-wrapper 
-    - xvfb-run behave ./src/integrationtest/python
+    # See: https://docs.travis-ci.com/user/gui-and-headless-browsers/#using-the-xvfb-run-wrapper
+    - pipenv run xvfb-run behave ./src/integrationtest/python
 
 matrix:
   include:
 
     - python: "3.6"
       dist: xenial
-      # services:
-      #   - xvfb
       sudo: true
 
     - python: "3.6"
       dist: bionic
-#      services:
-#        - xvfb
       sudo: true
 
     # MacOs
@@ -66,9 +61,6 @@ before_install:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pyenv install 3.6.3 ; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then PATH="~/.pyenv/versions/3.6.3/bin:$PATH" ; fi
 
-# Taken from https://docs.travis-ci.com/user/gui-and-headless-browsers/#using-xvfb-directly
-before_script:
-    - "export DISPLAY=:99.0"
-    - "sh -e /etc/init.d/xvfb start"
-    - sleep 3 # give xvfb some time to start
+
+
 

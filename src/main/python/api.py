@@ -41,7 +41,7 @@ class Api(object):
     store_path = path.abspath(curdir)
 
     def __init__(
-        self, cxt: ApplicationContext, endpoint: str = "/", host: str = "atlantic.cs.pdx.edu", port: int = 8080
+        self, cxt: ApplicationContext, endpoint: str = "/", host: str = "localhost", port: int = 8080
     ):
 
         # Override given domain name/port if defined in the environment

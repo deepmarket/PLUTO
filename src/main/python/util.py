@@ -63,8 +63,9 @@ def build_docker_container(detached=True, container_path='samgomena/deepshare_wo
     """
     docker_client = check_and_instantiate_docker_client()
     memory += "g" # add unit
+    nano_cpus = int(cpus) * (10**9)
     try:
-        container = docker_client.containers.run(f'{container_path}:{version}', detach=detached, cpu_count=int(cpus), mem_limit=memory)
+        container = docker_client.containers.run(f'{container_path}:{version}', detach=detached, nano_cpus=nano_cpus, mem_limit=memory)
     except docker.errors.ContainerError as e:
         print('error spinning up the container! Check docker install')
         print(e)

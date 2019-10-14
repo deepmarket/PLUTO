@@ -1,12 +1,6 @@
-"""
-
-    This module generate a QPushButton object.
-
-"""
-
-from PyQt5.QtWidgets import QPushButton, QRadioButton, QWidget
-from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QPushButton, QRadioButton, QWidget
 
 
 class Button(QPushButton):
@@ -21,6 +15,17 @@ class Button(QPushButton):
         icon_size: int = 0,
         **kwargs
     ):
+        """
+        Wrapper object for QPushButton.
+        :param widget: required. defined the parent widget for this button
+        :param text: optional. label text on the button
+        :param name: optional. object name for the button
+        :param cursor: optional. whether change cursor style when hover button
+        :param stylesheet: optional. given stylesheet to the button
+        :param icon: optional. set icon to button. Reference: https://www.tutorialspoint.com/pyqt/pyqt_qpushbutton_widget.htm
+        :param icon_size: optional. the size of the icon given to the button.
+        """
+
         super(Button, self).__init__(widget)
 
         # Set property if given
@@ -36,14 +41,25 @@ class Button(QPushButton):
                 self.setIconSize(QSize(icon_size, icon_size))
 
     def enable(self):
+        """
+        Enable button.
+        """
         self.setEnabled(True)
 
     def disable(self):
+        """
+        Disable button.
+        """
         self.setEnabled(False)
 
 
 class RadioButton(QRadioButton):
     def __init__(self, widget: QWidget, *args, name: str = "", **kwargs):
+        """
+        Wrapper object for QRadioButton.
+        :param: widget: required. the parent widget for this button.
+        :param: name: optional. object name for this button.
+        """
         super(RadioButton, self).__init__(widget, *args)
 
         # Set property if given

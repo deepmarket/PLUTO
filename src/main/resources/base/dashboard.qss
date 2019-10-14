@@ -1,83 +1,101 @@
-#Dashboard_overview {
-    background-color: white;
+* {
+    font-family: "Helvetica Neue";
 }
 
-#Dashboard_greeting {
-    font-family: "Helvetica Neue";
+QFrame#dashboard {
+    margin: 7px;
+}
+
+QFrame#overview_section {
+    background-color: #FFFFFF;
+    max-height: 185px;
+    
+    padding-top: 45px;
+    padding-bottom: 45px;
+    padding-left: 40px;
+    padding-right: 50px;
+}
+
+QFrame#history_section > QFrame{
+    background-color: #FFFFFF;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+QLabel#greeting {
     font-size: 32px;
     font-weight: 50;
     color: #6C7E8E;
 }
 
-#Dashboard_username {
-    font-family: "Helvetica Neue";
-    font-size: 32px;
-    font-weight: 100;
+QFrame#balance > QLabel {
     color: #6C7E8E;
 }
 
-#Dashboard_description {
-    font-family: "Helvetica Neue";
-    font-size: 14px;
-    font-weight: 250;
-    color: #6C7E8E;
-}
-
-#Dashboard_highlight_description {
-    font-family: "Helvetica Neue";
-    font-size: 14px;
-    font-weight: 500;
-    color: #6C7E8E;
-}
-
-#Dashboard_balance_title {
-    font-family: "Helvetica Neue";
+QLabel#balance_title {
     font-size: 30px;
-    font-weight: 50;
-    color: #6C7E8E;
+    font-weight: 900;
 }
 
-#Dashboard_balance {
-    font-family: "Helvetica Neue";
+QLabel#balance_credit {
     font-size: 34px;
-    font-weight: 100;
-    color: #6C7E8E;
 }
 
-#Dashboard_estimated_title {
-    font-family: "Helvetica Neue";
-    font-size: 16px;
-    font-weight: 200;
+QLabel#machine_title {
     color: #6C7E8E;
-}
-
-#Dashboard_estimated_title_small {
-    font-family: "Helvetica Neue";
     font-size: 12px;
-    font-weight: 200;
+}
+
+QLabel#dashboard_param_dat {
+    color: #6C7E8E;
+    font-size: 25px;
+}
+
+QLabel#dashboard_param_label {
+    color: #6C7E8E;
+    font-size: 15px;
+}
+
+QLabel#dashboard_estimate_title {
+    font-size: 16px;
     color: #6C7E8E;
 }
 
-#Dashboard_estimated {
-    font-family: "Helvetica Neue";
+QLabel#dashboard_estimate_subtitle {
+    font-size: 12px;
+    color: #6C7E8E;
+}
+
+QLabel#dashboard_estimate_credit {
     font-size: 24px;
-    font-weight: 300;
+    font-weight: 400;
     color: #6C7E8E;
 }
 
-#Dashboard_history {
-    background-color: white;
-}
-
-#Dashboard_history_title {
-    font-family: "Helvetica Neue";
+QLabel#history_title {
     font-size: 18px;
-    font-weight: 200;
     color: #6C7E8E;
 }
 
-#Dashboard_history_table {
+QTableWidget#table_content_section {
     border: none;
-    background-color: #F5F5F5;
-    alternate-background-color: white;
+    background-color: #FFFFFF;
+    alternate-background-color: #FAFAFA;
+}
+
+QTableWidget#table_content_section QHeaderView::section {
+    border: none;
+    background-color: #B9CCDD;
+    color: #FFFFFF;
+    height: 35px;
+    font-family: "Helvetica Neue";
+    font-size:13px;
+    font-weight: 100;
+}
+
+QTableView::item {
+    font-size: 12px;
+    color: #324352;
 }

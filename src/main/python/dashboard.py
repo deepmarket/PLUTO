@@ -74,7 +74,7 @@ class Dashboard(DashboardUI):
                 self.running_machines = 0
                 self.dead_machine = 0
             else:
-                for rsrc in res["resources"]:
+                for rsrc in res["data"]:
                     status = str(rsrc["status"]).upper()
 
                     if status == "ALIVE":

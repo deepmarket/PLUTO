@@ -153,9 +153,10 @@ QGroupBox#price_box QLabel {
     color: #6C7E8E;
 }
 
+QFrame#attendance_box_uncheck QLabel,
 QFrame#attendance_box_disable QLabel,
 QGroupBox#price_box_disable QLabel {
-    color: #F2F2F2;
+    color: #B0BBC5;
 }
 
 QFrame#view_input > QLineEdit,
@@ -262,5 +263,5 @@ QFrame#attendance_box_uncheck QCheckBox:checked,
 QFrame#attendance_box_uncheck QCheckBox:unchecked,
 QFrame#attendance_box_disable QCheckBox:checked,
 QFrame#attendance_box_disable QCheckBox:unchecked{
-    color: #F2F2F2;
+    color: #B0BBC5;
 }

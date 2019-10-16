@@ -110,7 +110,7 @@ class ResourcesController(ResourcesControllerUI):
                 return []
 
             if status == 200:
-                return res["resources"]
+                return res["data"]
 
             if status == 500:
                 self.global_hint.setText(Error.UNKOWN_ERR)

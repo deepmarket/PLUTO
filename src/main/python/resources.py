@@ -39,7 +39,7 @@ class Resources(ResourcesUI):
             QMessageBox.about(self, "Information", "Docker is not installed")
 
     def _docker_initial_check(self):
-        util.check_and_instantiate_docker_client()
+        util.docker_client()
 
 
 class ResourcesController(ResourcesControllerUI):

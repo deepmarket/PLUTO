@@ -61,11 +61,11 @@ def spin_up_docker_container(detached=True, container_path='samgomena/deepshare_
     https://hub.docker.com/u/samgomena/repository/docker/samgomena/deepshare_worker
     Returns the container ID if successful, False if not
     """
-    docker_client = check_and_instantiate_docker_client()
+    docker_clt = docker_client()
     memory += "g" # add unit
     nano_cpus = int(cpus) * (10**9)
     try:
-        container = docker_client.containers.run(f'{container_path}:{version}', detach=detached, nano_cpus=nano_cpus, mem_limit=memory)
+        container = docker_clt.containers.run(f'{container_path}:{version}', detach=detached, nano_cpus=nano_cpus, mem_limit=memory)
     except docker.errors.ContainerError as e:
         print('error spinning up the container! Check docker install')
         print(e)
@@ -80,25 +80,25 @@ def spin_up_docker_container(detached=True, container_path='samgomena/deepshare_
     return container.short_id
 
 
-def check_and_instantiate_docker_client():
+def docker_client():
     """Return a docker client or raise exception. Called at startup to make
     Sure that docker is configured correctly. Called on-demand for returning
     Docker client"""
     try:
-        docker_client = docker.from_env()
+        docker_clt = docker.from_env()
     except docker.errors.DockerException as e:
         print(e)
         print('unsuccessful instantiation of docker client')
         raise e
-    return docker_client
+    return docker_clt
 
 
 def destroy_docker_container(container_id):
     try:
-        docker_client = docker.from_env()
-        container = docker_client.containers.get(container_id)
+        docker_clt = docker.from_env()
+        container = docker_clt.containers.get(container_id)
         container.kill()
-        docker_client.containers.prune()
+        docker_clt.containers.prune()
     except docker.errors.DockerException as e:
         print(e)
         print(f'unsuccessful deletion of docker container {container_id}')

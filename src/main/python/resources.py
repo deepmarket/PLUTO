@@ -75,11 +75,11 @@ class ResourcesController(ResourcesControllerUI):
             if dialog.exec_():
                 res = self._api_remove_call(f"/resources/{self.machines[row]['_id']}")
                 if res:
-                    if container_id is not '':
+                    if container_id:
                         try:
                             util.destroy_docker_container(container_id)
                         except DockerException as ex:
-                            QMessageBox.about(self, "Information", "Unable to remove running docker container! Please kill manually.")
+                            QMessageBox.about(self, "Information", f"Unable to remove running docker container! Please kill manually with:\ndocker stop {container_id}")
                     # refresh widget
                     self.reset()
 
@@ -246,7 +246,7 @@ class ResourcesAddView(ResourcesAddViewUI):
         else:
             price = self.auto_price
 
-        container_id = util.build_docker_container(memory=ram, cpus=cores)
+        container_id = util.spin_up_docker_container(memory=ram, cpus=cores)
         if not container_id:
             QMessageBox.about(self, "Information", "Unable to spin up a docker container!")
 

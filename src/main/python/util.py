@@ -3,6 +3,7 @@ import re
 import socket
 import docker
 import datetime
+from requests.exceptions import ConnectionError as RequestsConnectionError
 
 from enum import Enum
 from socket import error as socket_error
@@ -73,7 +74,7 @@ def spin_up_docker_container(detached=True, container_path='samgomena/deepshare_
     except docker.errors.APIError as e:
         print('error talking to docker server API, try again later')
         return False
-    except docker.errors.DockerException as e:
+    except (docker.errors.DockerException, RequestsConnectionError) as e:
         print('something went wrong with docker')
         print(e)
         return False
@@ -86,10 +87,11 @@ def docker_client():
     Docker client"""
     try:
         docker_clt = docker.from_env()
-    except docker.errors.DockerException as e:
+        docker_clt.ping()
+    except (docker.errors.DockerException, RequestsConnectionError) as e:
         print(e)
         print('unsuccessful instantiation of docker client')
-        raise e
+        raise docker.errors.DockerException
     return docker_clt
 
 
@@ -99,10 +101,10 @@ def destroy_docker_container(container_id):
         container = docker_clt.containers.get(container_id)
         container.kill()
         docker_clt.containers.prune()
-    except docker.errors.DockerException as e:
+    except (docker.errors.DockerException, RequestsConnectionError) as e:
         print(e)
         print(f'unsuccessful deletion of docker container {container_id}')
-        raise e
+        raise docker.errors.DockerException
 
 
 def job_input_check(text: int, res: Enum):

@@ -74,7 +74,7 @@ def spin_up_docker_container(detached=True, container_path='samgomena/deepshare_
     except docker.errors.APIError as e:
         print('error talking to docker server API, try again later')
         return False
-    except docker.errors.DockerException as e:
+    except (docker.errors.DockerException, RequestsConnectionError) as e:
         print('something went wrong with docker')
         print(e)
         return False
@@ -101,10 +101,10 @@ def destroy_docker_container(container_id):
         container = docker_clt.containers.get(container_id)
         container.kill()
         docker_clt.containers.prune()
-    except docker.errors.DockerException as e:
+    except (docker.errors.DockerException, RequestsConnectionError) as e:
         print(e)
         print(f'unsuccessful deletion of docker container {container_id}')
-        raise e
+        raise docker.errors.DockerException
 
 
 def job_input_check(text: int, res: Enum):

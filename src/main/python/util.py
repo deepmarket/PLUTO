@@ -3,6 +3,7 @@ import re
 import socket
 import docker
 import datetime
+import requests
 
 from enum import Enum
 from socket import error as socket_error
@@ -87,7 +88,8 @@ def docker_client():
     try:
         docker_clt = docker.from_env()
         docker_clt.ping()
-    except (docker.errors.DockerException, ConnectionError) as e:
+        raise ConnectionError
+    except (docker.errors.DockerException, requests.exceptions.ConnectionError) as e:
         print(e)
         print('unsuccessful instantiation of docker client')
         raise docker.errors.DockerException

@@ -24,7 +24,9 @@ $ python --version
 
 #### Docker
 
-Docker is required for this project if you want to add resources to the Deepmarket Network.  To install docker, please follow the docker-mentation [located here](https://docs.docker.com/v17.09/engine/installation/).
+Docker is required for this project if you want to add resources to the Deepmarket Network.  To install docker, please follow the docker-mentation [located here](https://docs.docker.com/v17.09/engine/installation/).  
+To verify that your installation of docker is running correctly, please confirm that the [docker daemon](https://docs.docker.com/config/daemon/) 
+is running.  Basically, if running `docker run hello-world` [from the command line](https://hub.docker.com/_/hello-world) does not throw an error, you should be ready.
 
 ## Installing, Testing, Running:
 

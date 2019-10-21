@@ -88,7 +88,6 @@ def docker_client():
     try:
         docker_clt = docker.from_env()
         docker_clt.ping()
-        raise ConnectionError
     except (docker.errors.DockerException, requests.exceptions.ConnectionError) as e:
         print(e)
         print('unsuccessful instantiation of docker client')

@@ -380,7 +380,7 @@ class ResourcesAddView(ResourcesAddViewUI):
 
         # set error message
         class Res(Enum):
-            EMPTY_ERROR = "Invalid number of cores."
+            EMPTY_ERROR = "Please enter number of cores."
             RANGE_ERROR = "Cores is out of range."
             INT_ERROR = "Please enter an interger input"
             SUCCESS = auto()

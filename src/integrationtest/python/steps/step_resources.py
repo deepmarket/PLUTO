@@ -47,7 +47,7 @@ def verify_planing_input_text(context, text):
     assert_equal(context.resources_window.add_view.planning_hint.text(), text)
 
 @when(r'I enter "(.*)" in the (machine name|GPUs|Cores|RAM) input box')
-def enter_login_input_text(context, text, dialog_box):
+def enter_planning_input_text(context, text, dialog_box):
     assert_is_not(context.resources_window.add_view.tech_sections, None)
 
     if dialog_box == "machine name":
@@ -61,15 +61,29 @@ def enter_login_input_text(context, text, dialog_box):
 
 
 @then(r'the (machine name|GPUs|Cores|RAM) input box text should be "(.*)"')
-def verify_login_input_text(context, dialog_box, text):
+def verify_planning_input_text(context, dialog_box, text):
     assert_is_not(context.resources_window.add_view.tech_sections, None)
 
     if dialog_box == "machine name":
         assert_equal(context.resources_window.add_view.machine_name.text(), text)
     elif dialog_box == "GPUs":
         assert_equal(context.resources_window.add_view.cpu_gpu.text(), text)
+        # assert_equal(context.resources_window.add_view.current_cpu_gpu.objectName(), "config_frame_green")
     elif dialog_box == "Cores":
         assert_equal(context.resources_window.add_view.cores.text(), text)
     elif dialog_box == "RAM":
         assert_equal(context.resources_window.add_view.ram.text(), text)
+    
+@then(r'the (Compute|Cores|RAM) config box in machine configuration section should be (Green|Red)')
+def verify_valid_machine_input(context, dialog_box, color):
+    assert_is_not(context.resources_window.add_view.tech_sections, None)
+
+    color = "config_frame_green" if color == "Green" else "config_frame_red"
+    
+    if dialog_box == "Compute":
+        assert_equal(context.resources_window.add_view.current_cpu_gpu.objectName(), color)
+    elif dialog_box == "Cores":
+        assert_equal(context.resources_window.add_view.current_cores.objectName(), color)
+    elif dialog_box == "RAM":
+        assert_equal(context.resources_window.add_view.current_ram.objectName(), color)
     

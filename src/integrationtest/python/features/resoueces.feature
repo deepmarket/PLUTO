@@ -30,7 +30,7 @@ Feature: # Verify functionality on resources tab
       And I click on the Cancel button
     Then the window will switch to controller page
 
-  Scenario: Click on Next Button
+  Scenario: Click on Next Button Without Enter Anything
     When I spin up the application
       And I open the login window
       And I login in to the application
@@ -108,3 +108,89 @@ Feature: # Verify functionality on resources tab
       And I enter "1" in the Cores input box
       And I click on the Next button
     Then the planning hint text should be "Please enter number of RAM."
+
+  Scenario: Valid GPUs input
+    When I spin up the application
+      And I open the login window
+      And I login in to the application
+      And I open the application window
+      And I click on the resources tab
+      And I click on the Add button
+      And I enter "1" in the GPUs input box
+    Then the GPUs input box text should be "1"
+      And the planning hint text should be ""
+      And the Compute config box in machine configuration section should be Green
+
+  Scenario: Invalid GPUs input
+    When I spin up the application
+      And I open the login window
+      And I login in to the application
+      And I open the application window
+      And I click on the resources tab
+      And I click on the Add button
+      And I enter "10000" in the GPUs input box
+    Then the GPUs input box text should be "10000"
+      And the planning hint text should be "Input for GPUs is out of range."
+      And the Compute config box in machine configuration section should be Red
+
+  Scenario: Valid Cores input
+    When I spin up the application
+      And I open the login window
+      And I login in to the application
+      And I open the application window
+      And I click on the resources tab
+      And I click on the Add button
+      And I enter "1" in the Cores input box
+    Then the Cores input box text should be "1"
+      And the planning hint text should be ""
+      And the Cores config box in machine configuration section should be Green
+
+  Scenario: Invalid Cores input
+    When I spin up the application
+      And I open the login window
+      And I login in to the application
+      And I open the application window
+      And I click on the resources tab
+      And I click on the Add button
+      And I enter "10000" in the Cores input box
+    Then the Cores input box text should be "10000"
+      And the planning hint text should be "Cores is out of range."
+      And the Cores config box in machine configuration section should be Red
+
+  Scenario: Valid RAM input
+    When I spin up the application
+      And I open the login window
+      And I login in to the application
+      And I open the application window
+      And I click on the resources tab
+      And I click on the Add button
+      And I enter "1" in the RAM input box
+    Then the RAM input box text should be "1"
+      And the planning hint text should be ""
+      And the RAM config box in machine configuration section should be Green
+
+  Scenario: Invalid RAM input
+    When I spin up the application
+      And I open the login window
+      And I login in to the application
+      And I open the application window
+      And I click on the resources tab
+      And I click on the Add button
+      And I enter "10000" in the RAM input box
+    Then the RAM input box text should be "10000"
+      And the planning hint text should be "Amount of RAM is out of range."
+      And the RAM config box in machine configuration section should be Red
+
+  Scenario: Enter machine configuration 
+    When I spin up the application
+      And I open the login window
+      And I login in to the application
+      And I open the application window
+      And I click on the resources tab
+      And I click on the Add button
+      And I enter "test machine" in the machine name input box
+      And I enter "1" in the GPUs input box
+      And I enter "1" in the Cores input box
+      And I enter "1" in the RAM input box
+      And I click on the Next button
+    Then the window will switch to next page

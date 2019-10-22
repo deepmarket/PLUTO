@@ -8,8 +8,11 @@ This project is in active development and is being maintained by the [team membe
 If you would like to submit changes, please open a pull request. Please read the [getting set up to develop locally](https://github.com/deepmarket/PLUTO/wiki/Setting-up-deepmarket's-api-backend-for-local-development) guide.
 
 
+### Prerequisites 
 
-**Note**: This project requires Python 3.6. Make sure python 3.6 is installed before attempting any of this!
+#### Python
+
+This project requires Python 3.6. Make sure python3.6 is installed before attempting any of this!
 
 [Installer](https://www.python.org/downloads/release/python-366/)
 
@@ -18,6 +21,12 @@ To check version:
 ```bash
 $ python --version
 ```
+
+#### Docker
+
+Docker is required for this project if you want to add resources to the Deepmarket Network.  To install docker, please follow the docker-mentation [located here](https://docs.docker.com/v17.09/engine/installation/).  
+To verify that your installation of docker is running correctly, please confirm that the [docker daemon](https://docs.docker.com/config/daemon/) 
+is running.  Basically, if running `docker run hello-world` [from the command line](https://hub.docker.com/_/hello-world) does not throw an error, you should be ready.
 
 ## Installing, Testing, Running:
 

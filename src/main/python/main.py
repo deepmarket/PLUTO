@@ -59,16 +59,16 @@ class AppContext(ApplicationContext):
 
     @cached_property
     def credential_store(self):
-        store = None
-        file = ".credential_store"
+        store_name: str = "store"
         try:
-            store = self.get_resource(file)
+            store: str = self.get_resource(store_name)
         except FileNotFoundError:
-            # create file
-            with open(path.join(self.get_resource(), file), "w+"):
-                pass
-        finally:        
-            return store if store else self.get_resource(file)
+            # TODO: At this point we cannot create the file so we'll need to handle this somehow
+            store: str = "store"
+            pass
+
+        finally:
+            return store
 
     def run(self):
         return self.app.exec_()

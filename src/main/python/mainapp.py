@@ -21,7 +21,7 @@ class MainApp(QObject):
 
         self.cxt = cxt
 
-        with Api("/auth/refresh") as api:
+        with Api(self.cxt, "/auth/refresh") as api:
             status, res = api.post()
             if status == 200:
                 self.show_app()

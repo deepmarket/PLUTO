@@ -9,40 +9,26 @@ from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 class CredentialManager(object):
     # TODO: Consider using something like marshal, shelve, or pickle
-    def __init__(self, cxt: ApplicationContext, file_path="./"):
+    def __init__(self, cxt: ApplicationContext):
 
-        self.credential_store = cxt.credential_store
-        # self.file_path = file_path
-        # if not path.exists(path.join(path.abspath(self.file_path), ".credential_store")):
-        #     self.credential_store = path.join(path.abspath(self.file_path), ".credential_store")
-
-        #     # Create file
-        #     with open(self.credential_store, "w+"):
-        #         pass
-
-        # else:
-        #     self.credential_store = path.join(
-        #         path.abspath(self.file_path), ".credential_store"
-        #     )
+        self.store = cxt.credential_store
 
     def put(self, obj):
-        with open(self.credential_store, "w+") as store:
+        with open(self.store, "w+") as store:
             # store.write(dumps(obj))
             store.write(obj)
 
     def get(self):
-        with open(self.credential_store, "r+") as store:
+        with open(self.store, "r+") as store:
             # store = loads(store.read())
             return store.read()
 
     def remove(self):
         from os import remove
-        remove(self.credential_store)
+        remove(self.store)
 
 
 class Api(object):
-    # Set store path globally
-    store_path = path.abspath(curdir)
 
     def __init__(
         self, cxt: ApplicationContext, endpoint: str = "/", host: str = "atlantic.cs.pdx.edu", port: int = 8080
@@ -65,7 +51,7 @@ class Api(object):
         self.headers: dict = {}
 
     def __enter__(self):
-        self.store = CredentialManager(self.cxt, self.store_path)
+        self.store = CredentialManager(self.cxt)
         self.token = self.store.get()
         self.headers = {"X-access-token": self.token}
 
@@ -90,8 +76,10 @@ class Api(object):
 
             return None, None
 
-    def post(self, payload: dict = {}):
+    def post(self, payload=None):
 
+        if payload is None:
+            payload = {}
         try:
             res: req.Response = req.post(self.url, payload, headers=self.headers)
             res_json: dict = res.json()
@@ -105,8 +93,10 @@ class Api(object):
 
             return None, None
 
-    def put(self, payload: dict = {}):
+    def put(self, payload=None):
 
+        if payload is None:
+            payload = {}
         try:
             res: req.Response = req.put(self.url, payload, headers=self.headers)
             self._set_state()

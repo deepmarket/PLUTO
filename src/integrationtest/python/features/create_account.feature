@@ -2,6 +2,6 @@
 Feature: Verify account creation
 
   Scenario: Enter New Account Credentials
+    Given the user is logged out of the application
     When I spin up the application
       And I open the login window
-      And I click the create an account button

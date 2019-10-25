@@ -1,7 +1,10 @@
 
 from behave import use_step_matcher, given, when, then, step
+
+from api import Api
 from mainapp import MainApp
 from main import AppContext
+
 
 use_step_matcher("re")
 
@@ -23,7 +26,7 @@ def assert_not_equal(lhs, rhs):
 
 
 def assert_is(lhs, rhs):
-    assert lhs is rhs, f"'{lhs}' is '{rhs}'"
+    assert lhs is rhs, f"'{lhs}' is '{rhs}' "
 
 
 def assert_is_not(lhs, rhs):
@@ -36,6 +39,11 @@ def api_is_up(context):
     environ['HEADLESS'] = True
 
 
+@given(r'the user is logged out of the application')
+def ensure_user_is_logged_out(context):
+    context.ensure_logout = True
+
+
 @when(r'I spin up the application')
 def start_application_execution(context):
     from PyQt5.QtWidgets import QApplication
@@ -44,6 +52,10 @@ def start_application_execution(context):
         context._app = app
 
     cxt = AppContext()
+    if context.ensure_logout:
+        with Api(cxt, "logout") as api_logout:
+            api_logout.get()
+
     __app = MainApp(cxt=cxt)
     context.__app = __app
 

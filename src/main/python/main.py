@@ -61,6 +61,7 @@ class AppContext(ApplicationContext):
     def credential_store(self):
         store_name: str = "store"
         try:
+            # Get abs path to the store; platform independent
             store: str = self.get_resource(store_name)
         except FileNotFoundError:
             # TODO: At this point we cannot create the file so we'll need to handle this somehow

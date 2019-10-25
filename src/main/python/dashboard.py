@@ -69,15 +69,9 @@ class Dashboard(DashboardUI):
         # fetch resources information
         with Api(self.cxt, "/resources") as resources:
             status, res = resources.get()
-
-            if not res or status != 200:
-                self.running_machines = 0
-                self.dead_machine = 0
-            else:
-                for rsrc in res["resources"]:
-                    status = str(rsrc["status"]).upper()
-
-                    if status == "ALIVE":
+            if status == 200 and isinstance(res, dict) and "data" in res:
+                for rsrc in res["data"]:
+                    if str(rsrc['status']) == "ALIVE":
                         self.running_machines += 1
                     else:
                         self.dead_machine += 1

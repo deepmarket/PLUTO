@@ -1,7 +1,7 @@
 from os import environ, path, curdir, remove
 import requests as req
 
-from json import JSONDecodeError
+from json import loads, dumps, JSONDecodeError
 from requests.exceptions import ConnectionError
 
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
@@ -11,21 +11,32 @@ class CredentialManager(object):
     # TODO: Consider using something like marshal, shelve, or pickle
     def __init__(self, cxt: ApplicationContext):
 
-        self.store = cxt.credential_store
+        self.store_path = cxt.credential_store
+        with open(self.store_path, "r") as store:
+            self.store = loads(dumps(store.read()))
 
-    def put(self, obj):
-        with open(self.store, "w+") as store:
-            # store.write(dumps(obj))
-            store.write(obj)
+    def put(self, obj: dict):
+        self.store.update(**obj)
+        with open(self.store_path, "w+") as store:
+            store.write(
+                dumps(self.store)
+            )
 
-    def get(self):
-        with open(self.store, "r+") as store:
-            # store = loads(store.read())
-            return store.read()
+    def get(self, attr: str = ""):
+        with open(self.store_path, "r") as store:
+            self.store = loads(store.read())
 
-    def remove(self):
-        from os import remove
-        remove(self.store)
+        if attr:
+            return self.store.get(attr)
+        else:
+            return self.store
+
+    def cleanup_token(self):
+        self.store.update({"token": ""})
+        with open(self.store_path, "w+") as store:
+            store.write(
+                dumps(self.store)
+            )
 
 
 class Api(object):
@@ -52,22 +63,22 @@ class Api(object):
 
     def __enter__(self):
         self.store = CredentialManager(self.cxt)
-        self.token = self.store.get()
+        self.token = self.store.get("token")
         self.headers = {"X-access-token": self.token}
 
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
+        if "logout" in self.endpoint:
+            self.store.cleanup_token()
 
     def _set_state(self):
-        if "logout" in self.endpoint:
-            self.store.remove()
-        elif self.token:
-            self.store.put(self.token)
+        if self.token:
+            self.store.put({
+                "token": self.token
+            })
 
     def get(self):
-
         try:
             res: req.Response = req.get(self.url, headers=self.headers)
             self._set_state()

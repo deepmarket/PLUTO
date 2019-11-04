@@ -362,7 +362,7 @@ class AttendanceBox(Frame):
 
         self.layout = HorizontalLayout(self)
 
-        self.button = Button(self, cursor=True)
+        self.button = Button(self, cursor=True, text="•")
         self.layout.addWidget(self.button)
 
         self.frame = Frame(self)
@@ -370,7 +370,6 @@ class AttendanceBox(Frame):
 
     def check(self):
         self.setObjectName("attendance_box")
-        self.button.setText("•")
         self.flag = True
 
         # set combo box enabled
@@ -385,7 +384,6 @@ class AttendanceBox(Frame):
 
     def uncheck(self):
         self.setObjectName("attendance_box_uncheck")
-        self.button.setText("")
         self.flag = False
 
         # set combo box disabled

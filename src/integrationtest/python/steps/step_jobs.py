@@ -15,6 +15,7 @@ def open_resources(context):
     check_type = lambda type_: assert_equal(type(context.app.main_window.stack.currentWidget()), type_)
     assert_is_not(check_type(Jobs), True)
 
+"""
 @when(r'I click on the (Add Jobs|Job Lists) button')
 def add_jobs(context, button):
     context.jobs_window = context.app.main_window.stack.currentWidget()
@@ -30,3 +31,4 @@ def verify_button(context, page):
         assert_equal(type(context.jobs_window._stack.currentWidget()), JobsAddView)
     elif page == "job lists":
         assert_equal(type(context.jobs_window._stack.currentWidget()), JobsController)
+"""

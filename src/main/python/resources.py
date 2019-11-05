@@ -1,15 +1,17 @@
 from enum import Enum, auto
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from psutil import cpu_freq, cpu_count, virtual_memory
+from docker.errors import DockerException
 
 from PyQt5.QtWidgets import QComboBox, QCheckBox
 
 from api import Api
-from util import config_input_check, get_ip_address
+import util
 
 from interfaces.helper import get_children
 from interfaces.resources import ResourcesUI, ResourcesControllerUI, ResourcesAddViewUI
 from interfaces.widgets import Question
+from PyQt5.QtWidgets import QMessageBox
 
 
 class Resources(ResourcesUI):
@@ -29,8 +31,15 @@ class Resources(ResourcesUI):
         super()._to_controller()
 
     def _to_add_view(self):
-        self.add_view.reset()
-        super()._to_add_view()
+        try:
+            self._docker_initial_check()
+            self.add_view.reset()
+            super()._to_add_view()
+        except DockerException:
+            QMessageBox.about(self, "Information", "Docker is not installed")
+
+    def _docker_initial_check(self):
+        util.docker_client()
 
 
 class ResourcesController(ResourcesControllerUI):
@@ -56,6 +65,7 @@ class ResourcesController(ResourcesControllerUI):
 
         if row != -1:
             machine_name = self.table.get_cell(row, 0)
+            container_id = self.machines[row].get('resource_container_id', '')
 
             question = f"Are you sure you want to remove <u>{machine_name}</u> from your resources?\n"
             question += "** This action cannot be undone. **"
@@ -65,6 +75,11 @@ class ResourcesController(ResourcesControllerUI):
             if dialog.exec_():
                 res = self._api_remove_call(f"/resources/{self.machines[row]['_id']}")
                 if res:
+                    if container_id:
+                        try:
+                            util.destroy_docker_container(container_id)
+                        except DockerException as ex:
+                            QMessageBox.about(self, "Information", f"Unable to remove running docker container! Please kill manually with:\ndocker stop {container_id}")
                     # refresh widget
                     self.reset()
 
@@ -83,20 +98,17 @@ class ResourcesController(ResourcesControllerUI):
     def _fetch_resources_data(self):
         self.machines = self._api_get_call("/resources")
         for machine in self.machines:
-            self.table.add(
-                [
-                    machine["machine_name"],
-                    machine["ip_address"],
-                    str(machine["cpus"]),
-                    str(machine["cores"]),
-                    str(machine["ram"]),
-                    str(machine["price"]),
-                    machine["status"],
-                ]
-            )
+            self.table.add([machine.get('machine_name', 'unknown name'),
+                            machine.get('ip_address', 'unknown ip address'),
+                            str(machine.get('cpus', 'unknown cpu count')),
+                            str(machine.get('cores', 'unknown core count')),
+                            str(machine.get('ram', 'unknown ram')),
+                            str(machine.get('price', 'unknown price')),
+                            machine.get('status', 'unknown status'),
+                            machine.get('resource_container_id', 'unknown container id')])
 
-    def _api_get_call(self, endpoint: str):
 
+    def _api_get_call(self, endpoint:str):
         # TODO: move Error to config later on
         class Error:
             CONNECT_ERR = "Fail to communicate with server. Please try later."
@@ -234,6 +246,10 @@ class ResourcesAddView(ResourcesAddViewUI):
         else:
             price = self.auto_price
 
+        container_id = util.spin_up_docker_container(memory=ram, cpus=cores)
+        if not container_id:
+            QMessageBox.about(self, "Information", "Unable to spin up a docker container!")
+
         # pack data
         dat = {
             "machine_name": machine_name,
@@ -243,16 +259,17 @@ class ResourcesAddView(ResourcesAddViewUI):
             "ram": ram,
             "price": price,
             "status": "ALIVE",
+            "container_id": container_id
         }
 
         # api call
         res = self._api_post_call("/resources", dat)
 
         if res:
-            # TODO: fill helper function to run docker here
-
             # emit signal, back to controller
             super().on_submit_clicked()
+        else:
+            util.destroy_docker_container(container_id)
 
     def reset(self):
         super().reset()
@@ -268,7 +285,7 @@ class ResourcesAddView(ResourcesAddViewUI):
 
     def _fetch_ip_address(self):
         # get ip address for local machine
-        ip_address = get_ip_address()
+        ip_address = util.get_ip_address()
 
         # insert ip address to input field
         self.ip_address.setText(ip_address)
@@ -305,40 +322,32 @@ class ResourcesAddView(ResourcesAddViewUI):
 
         with Api(self.cxt, endpoint) as api:
             status, res = api.post(dat)
-
             if not res:
                 self.submit_hint.setText(Error.CONNECT_ERR)
                 return False
-
             if status == 200:
                 return True
-
-            if status == 500:
-                msg = ""
-                if res and "error" in res and "errmsg" in res["error"]:
-                    msg = res["error"]["errmsg"]
-                    if "E11000" in msg:
-                        msg = Error.E11000_ERR
-                else:
-                    msg = Error.UNKOWN_ERR
-
+            if (status == 400) or (status == 500):
+                msg = ''
+                for err in res.get('errors', []):
+                    error = Error.E11000_ERR if ('E11000' in err.get('errmsg', '')) else Error.UNKOWN_ERR
+                    msg += error + " "
                 self.submit_hint.setText(msg)
                 return False
+            else:
+                self.submit_hint.setText(Error.UNKOWN_ERR)
+                return False
+
 
     def _planning_check(self):
         # clean up hint
         self.reset_hint()
 
         # have to call function individually in order to raise hint
-        if not self._machine_name_check():
-            return False
-        if not self._cpu_gpu_check():
-            return False
-        if not self._cores_check():
-            return False
-        if not self._ram_check():
-            return False
-
+        if not self._machine_name_check(): return False
+        if not self._cpu_gpu_check(): return False
+        if not self._cores_check(): return False
+        if not self._ram_check(): return False
         return True
 
     def _machine_name_check(self):
@@ -358,11 +367,11 @@ class ResourcesAddView(ResourcesAddViewUI):
         class Res(Enum):
             EMPTY_ERROR = "Please enter number of GPUs."
             RANGE_ERROR = "Input for GPUs is out of range."
-            INT_ERROR = "Please enter an interger input"
+            INT_ERROR = "Please enter an integer input"
             SUCCESS = auto()
 
         # check if input is acceptable
-        res = config_input_check(self.cpu_gpu.text(), self.available_cpu_gpu, Res)
+        res = util.config_input_check(self.cpu_gpu.text(), self.available_cpu_gpu, Res)
 
         if res is not Res.SUCCESS:
             self.planning_hint.setText(res.value)
@@ -382,11 +391,11 @@ class ResourcesAddView(ResourcesAddViewUI):
         class Res(Enum):
             EMPTY_ERROR = "Please enter number of cores."
             RANGE_ERROR = "Cores is out of range."
-            INT_ERROR = "Please enter an interger input"
+            INT_ERROR = "Please enter an integer input"
             SUCCESS = auto()
 
         # check if input is acceptable
-        res = config_input_check(self.cores.text(), self.available_cores, Res)
+        res = util.config_input_check(self.cores.text(), self.available_cores, Res)
 
         if res is not Res.SUCCESS:
             self.planning_hint.setText(res.value)
@@ -407,11 +416,11 @@ class ResourcesAddView(ResourcesAddViewUI):
         class Res(Enum):
             EMPTY_ERROR = "Please enter number of RAM."
             RANGE_ERROR = "Amount of RAM is out of range."
-            INT_ERROR = "Please enter an interger input"
+            INT_ERROR = "Please enter an integer input"
             SUCCESS = auto()
 
         # check if input is acceptable
-        res = config_input_check(self.ram.text(), self.available_ram, Res)
+        res = util.config_input_check(self.ram.text(), self.available_ram, Res)
 
         if res is not Res.SUCCESS:
             self.planning_hint.setText(res.value)

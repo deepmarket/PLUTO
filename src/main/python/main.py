@@ -31,11 +31,11 @@ class AppContext(ApplicationContext):
 
     @cached_property
     def add_view_style(self):
-        return self.load_style("add_view.qss")
+        return self.load_style("resources_add_view.qss")
 
     @cached_property
     def controller_style(self):
-        return self.load_style("controller.qss")
+        return self.load_style("resources_controller.qss")
 
     @cached_property
     def popup_style(self):

@@ -20,13 +20,6 @@ QFrame#view_buttons_frame {
     padding: 0 30px;
 }
 
-QFrame#buttons_frame {
-    background-color: #FFFFFF;
-    margin-bottom: 1px;
-    min-height: 130px;
-    padding: 0 30px;
-}
-
 QFrame#view_table_frame {
     background-color:#FFFFFF;
 }

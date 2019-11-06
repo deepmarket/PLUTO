@@ -1,8 +1,4 @@
 
-* {
-    font-family: "Helvetica Neue";
-}
-
 #dialog {
     border: None;
     background: #F4F8F9;

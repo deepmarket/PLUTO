@@ -2,7 +2,8 @@ from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import Qt, pyqtSignal
+
 
 from ..widgets import (
     Frame,
@@ -13,6 +14,7 @@ from ..widgets import (
     Table,
     VerticalLayout,
     ViewButton,
+    Button,
     Label,
 )
 from ..config import JOBS_MAX_ROW
@@ -47,9 +49,9 @@ class JobsControllerUI(Frame):
 
         self.signal = signal
         self._init_ui()
-        self.setStyleSheet(self.cxt.controller_style)
+        # self.setStyleSheet(self.cxt.controller_style)
 
-        # self.setStyleSheet(self.cxt.jobs_style)
+        self.setStyleSheet(self.cxt.jobs_style)
 
     def on_add_button_clicked(self):
         self.signal.emit()
@@ -129,6 +131,18 @@ class JobsControllerUI(Frame):
 
         layout = VerticalLayout(self.running_section)
 
+        # --------- title frame ------------
+        self.title_section = Frame(self.running_section, name="running_jobs_table_title")
+        title_layout = HorizontalLayout(self.title_section)
+        layout.addWidget(self.title_section)
+        
+        title = Label(
+            self.running_section,
+            text="Running Jobs",
+            name="running_jobs_title_content"
+        )
+        title_layout.addWidget(title)
+
         # --------- running jobs table ------------
 
         header = OrderedDict()
@@ -140,7 +154,7 @@ class JobsControllerUI(Frame):
             header, 
             header_visible=False, 
             row_height=90,
-            name="table",
+            name="running_jobs_table",
         )
         
         layout.addWidget(self.running_jobs_table)
@@ -148,6 +162,44 @@ class JobsControllerUI(Frame):
     def _init_finished_section(self):
 
         layout = VerticalLayout(self.finished_section)
+
+        # --------- title frame ------------
+        self.title_section = Frame(self.finished_section, name="finished_jobs_table_title")
+        layout.addWidget(self.title_section)
+
+        # --------- left title frame ------------
+
+        title_layout = HorizontalLayout(self.title_section)
+
+        self.content_section = Frame(self.title_section)
+        content_layout = VerticalLayout(self.content_section)
+
+        title_layout.addWidget(self.content_section)
+
+        first_line = Label(
+            self.running_section,
+            text="Finished Jobs",
+            name="finished_jobs_title_content",
+        )
+        content_layout.addWidget(first_line)
+
+        second_line = Label(
+            self.running_section,
+            text="(within last week)",
+            name="finished_jobs_title_content",
+        )
+        content_layout.addWidget(second_line)
+
+        # --------- right title frame ------------
+
+        self.history_button = Button(
+            self.title_section, 
+            text="More History Jobs",
+            name="finished_jobs_title_button",
+            cursor=True, 
+            underline=True,
+        )
+        title_layout.addWidget(self.history_button)
 
         # --------- finished jobs table ------------
 
@@ -160,7 +212,7 @@ class JobsControllerUI(Frame):
             header,
             header_visible=False, 
             row_height=90,
-            name="table",
+            name="finished_jobs_table",
         )
         
         layout.addWidget(self.finished_jobs_table)

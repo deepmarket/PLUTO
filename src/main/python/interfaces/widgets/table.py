@@ -14,6 +14,7 @@ class Table(QTableWidget):
         widget: QWidget,
         count_row: int,
         header: OrderedDict,
+        header_visible: bool = True,
         row_height: int = 0,
         name: str = "",
         **kwargs
@@ -41,6 +42,8 @@ class Table(QTableWidget):
         for i, width in enumerate(header.values()):
             self.setColumnWidth(i, width)
         self.horizontalHeader().setStretchLastSection(True)
+
+        not header_visible and self.horizontalHeader().hide()
 
         # set name
         name and self.setObjectName(name)

@@ -8,6 +8,7 @@ from ..widgets import (
     Frame,
     HorizontalLayout,
     HorizontalSpacer,
+    VerticalSpacer,
     SearchInputFrame,
     Table,
     VerticalLayout,
@@ -31,14 +32,11 @@ class JobsControllerUI(Frame):
     add: ViewButton = None
     refresh: ViewButton = None
 
-    table: Table = None
-
     running_section: Frame = None
     running_jobs_table: Table = None
 
     finished_section: Frame = None
     finished_jobs_table: Table = None
-
 
     global_hint: Label = None
 
@@ -52,6 +50,24 @@ class JobsControllerUI(Frame):
         self.setStyleSheet(self.cxt.controller_style)
 
         # self.setStyleSheet(self.cxt.jobs_style)
+
+    def on_add_button_clicked(self):
+        self.signal.emit()
+
+    @abstractmethod
+    def on_refresh_button_clicked(self):
+        pass
+
+    def reset(self):
+        # reset table
+        self.running_jobs_table.reset()
+        self.finished_jobs_table.reset()
+
+        # reset hint
+        self.reset_hint()
+
+    def reset_hint(self):
+        self.global_hint.reset()
 
     def _init_ui(self):
 
@@ -94,8 +110,8 @@ class JobsControllerUI(Frame):
         spacer = HorizontalSpacer()
         layout.addItem(spacer)
 
-        # self.add.clicked.connect(self.on_add_button_clicked)
-        # self.refresh.clicked.connect(self.on_refresh_button_clicked)
+        self.add.clicked.connect(self.on_add_button_clicked)
+        self.refresh.clicked.connect(self.on_refresh_button_clicked)
 
     def _init_table_view(self):
 
@@ -116,11 +132,13 @@ class JobsControllerUI(Frame):
         # --------- running jobs table ------------
 
         header = OrderedDict()
-        header["Running Jobs"] = 140
+        header[""] = 0
+
         self.running_jobs_table = Table(
             self.running_section, 
             JOBS_MAX_ROW, 
             header, 
+            header_visible=False, 
             row_height=90,
             name="table",
         )
@@ -134,11 +152,13 @@ class JobsControllerUI(Frame):
         # --------- finished jobs table ------------
 
         header = OrderedDict()
-        header["Finished Jobs"] = 140
+        header[""] = 0
+
         self.finished_jobs_table = Table(
             self.running_section, 
             JOBS_MAX_ROW, 
-            header, 
+            header,
+            header_visible=False, 
             row_height=90,
             name="table",
         )

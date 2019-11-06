@@ -36,6 +36,43 @@ class JobsController(JobsControllerUI):
     def __init__(self, *args, **kwargs):
         super(JobsController, self).__init__(*args, **kwargs)
 
+    def on_refresh_button_clicked(self):
+        self.reset()
+
+    def reset(self):
+        super().reset()
+        self._fetch_job_data()
+
+    def _fetch_job_data(self):
+        self.jobs = self._api_get_call("/jobs")
+        for job in self.jobs:
+            self.table.add(
+                [
+                    job["_id"],
+                    job["workers"],
+                    job["cores"],
+                    job["memory"],
+                    str(job["source_files"][0] + "..."),
+                    str(job["input_files"][0] + "..."),
+                    str(job["price"]),
+                    job["status"],
+                    "-",
+                ]
+            )
+
+    def _api_get_call(self, endpoint: str):
+
+        with Api(self.cxt, endpoint) as api:
+            status, res = api.get()
+
+            if not res:
+                return []
+
+            if status == 200:
+                return res["jobs"]
+
+            if status == 500:
+                return []
 
 # class JobsAddView(JobsAddViewUI):
 #     def __init__(self, *args, **kwargs):

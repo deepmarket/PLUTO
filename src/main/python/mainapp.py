@@ -3,6 +3,7 @@ from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from PyQt5.QtCore import QObject, pyqtSignal
 
 from app import App
+from api import Api
 from login import Login
 
 
@@ -20,7 +21,13 @@ class MainApp(QObject):
 
         self.cxt = cxt
 
-        self.show_login()
+        with Api(self.cxt, "/auth/refresh") as api:
+            status, res = api.post()
+            if status == 200:
+                self.show_app()
+            else:
+                self.show_login()
+
         self.connect_login()
         self.connect_logout()
 

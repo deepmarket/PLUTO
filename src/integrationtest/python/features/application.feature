@@ -5,6 +5,7 @@ Feature: High level application testing
     # TODO - setup user existing
 
   Scenario: Verify the application opens to dashboard
+    Given the user is logged out of the application
     When I spin up the application
       And I open the login window
       And I login in to the application
@@ -13,6 +14,7 @@ Feature: High level application testing
     Then the current tab should be the dashboard tab
 
   Scenario Outline: Verify the application stands up
+    Given the user is logged out of the application
     When I spin up the application
       And I open the login window
       And I login in to the application
@@ -28,6 +30,7 @@ Feature: High level application testing
       | settings  |
 
   Scenario: Verify can logout and login again
+    Given the user is logged out of the application
     When I spin up the application
       And I open the login window
       And I login in to the application

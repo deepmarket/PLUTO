@@ -37,6 +37,15 @@ def verify_main_tab(context, tab):
         check_type(Settings)
 
 
+@then(r'the current view should be the (workspace|list) view')
+def verify_click_resources_list_view(context, tab):
+
+    if tab == "workspace":
+        assert_equal(context.app.main_window.stack.currentIndex(), 0)
+    elif tab == "list":
+        assert_equal(context.app.main_window.stack.currentIndex(), 1)
+
+
 @when(r'I logout of the application')
 def logout_of_application(context):
     QTest.mouseClick(context.app.navigation.menu_button, Qt.LeftButton)

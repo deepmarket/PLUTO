@@ -112,7 +112,8 @@ class ResourcesController(ResourcesControllerUI):
         # TODO: move Error to config later on
         class Error:
             CONNECT_ERR = "Fail to communicate with server. Please try later."
-            UNKOWN_ERR = "There was an unknown error from the server. Please try again."
+            INTERNAL_ERR = "There was an internal error on the server. Please try again."
+            UNKNOWN_ERR = "There was an unknown error from the server. Please try again."
 
         with Api(self.cxt, endpoint) as api:
             status, res = api.get()
@@ -125,8 +126,12 @@ class ResourcesController(ResourcesControllerUI):
                 return res["data"]
 
             if status == 500:
-                self.global_hint.setText(Error.UNKOWN_ERR)
+                self.global_hint.setText(Error.INTERNAL_ERR)
                 return []
+
+        # If all else fails, show error and return
+        self.global_hint.setText(Error.UNKNOWN_ERR)
+        return []
 
     # TODO: combine api call helper function together later on
     def _api_remove_call(self, endpoint: str):

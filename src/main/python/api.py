@@ -1,7 +1,7 @@
 from os import environ, path, curdir, remove
 import requests as req
 
-from json import JSONDecodeError
+from json import loads, dumps, JSONDecodeError
 from requests.exceptions import ConnectionError
 
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
@@ -9,36 +9,37 @@ from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 class CredentialManager(object):
     # TODO: Consider using something like marshal, shelve, or pickle
-    def __init__(self, cxt: ApplicationContext, file_path="./"):
+    def __init__(self, cxt: ApplicationContext):
 
-        self.credential_store = cxt.credential_store
-        # self.file_path = file_path
-        # if not path.exists(path.join(path.abspath(self.file_path), ".credential_store")):
-        #     self.credential_store = path.join(path.abspath(self.file_path), ".credential_store")
+        self.store_path = cxt.credential_store
+        with open(self.store_path, "r") as store:
+            self.store = loads(dumps(store.read()))
 
-        #     # Create file
-        #     with open(self.credential_store, "w+"):
-        #         pass
+    def put(self, obj: dict):
+        self.store.update(**obj)
+        with open(self.store_path, "w+") as store:
+            store.write(
+                dumps(self.store)
+            )
 
-        # else:
-        #     self.credential_store = path.join(
-        #         path.abspath(self.file_path), ".credential_store"
-        #     )
+    def get(self, attr: str = ""):
+        with open(self.store_path, "r") as store:
+            self.store = loads(store.read())
 
-    def put(self, obj):
-        with open(self.credential_store, "w+") as store:
-            # store.write(dumps(obj))
-            store.write(obj)
+        if attr:
+            return self.store.get(attr)
+        else:
+            return self.store
 
-    def get(self):
-        with open(self.credential_store, "r+") as store:
-            # store = loads(store.read())
-            return store.read()
+    def cleanup_token(self):
+        self.store.update({"token": ""})
+        with open(self.store_path, "w+") as store:
+            store.write(
+                dumps(self.store)
+            )
 
 
 class Api(object):
-    # Set store path globally
-    store_path = path.abspath(curdir)
 
     def __init__(
         self, cxt: ApplicationContext, endpoint: str = "/", host: str = "atlantic.cs.pdx.edu", port: int = 8080
@@ -55,51 +56,61 @@ class Api(object):
 
         self.cxt = cxt
         # self.auth: bool = auth
-        self.auth: bool = ("auth" in self.endpoint)
+        self.auth: bool = (self.endpoint in ("auth/login", "auth/refresh"))
         self.store: CredentialManager = None
         self.token: str = None
         self.headers: dict = {}
 
     def __enter__(self):
-        self.store = CredentialManager(self.cxt, self.store_path)
-        self.token = self.store.get()
+        self.store = CredentialManager(self.cxt)
+        self.token = self.store.get("token")
         self.headers = {"X-access-token": self.token}
 
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if self.auth and self.token:
-            self.store.put(self.token)
+        if "logout" in self.endpoint:
+            self.store.cleanup_token()
+
+    def _set_state(self):
+        if self.token:
+            self.store.put({
+                "token": self.token
+            })
 
     def get(self):
-
         try:
             res: req.Response = req.get(self.url, headers=self.headers)
+            self._set_state()
             return res.status_code, res.json()
         except (ConnectionError, JSONDecodeError) as err:
 
             return None, None
 
-    def post(self, payload: dict = {}):
+    def post(self, payload=None):
 
+        if payload is None:
+            payload = {}
         try:
             res: req.Response = req.post(self.url, payload, headers=self.headers)
             res_json: dict = res.json()
             if res_json.get('token'):
                 self.auth = True
                 self.token = res_json.get('token')
-                if 'login' in res_json.get('message', '').lower():
-                    self.store.put(self.token)
+            self._set_state()
 
             return res.status_code, res_json
         except (ConnectionError, JSONDecodeError) as err:
 
             return None, None
 
-    def put(self, payload: dict = {}):
+    def put(self, payload=None):
 
+        if payload is None:
+            payload = {}
         try:
             res: req.Response = req.put(self.url, payload, headers=self.headers)
+            self._set_state()
             return res.status_code, res.json()
 
         except (ConnectionError, JSONDecodeError) as err:
@@ -110,6 +121,7 @@ class Api(object):
 
         try:
             res: req.Response = req.delete(self.url, headers=self.headers)
+            self._set_state()
             return res.status_code, res.json()
 
         except (ConnectionError, JSONDecodeError) as err:

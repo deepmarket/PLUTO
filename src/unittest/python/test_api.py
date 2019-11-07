@@ -3,12 +3,11 @@ import unittest
 from sys import path as sys_path
 from os import path as os_path
 sys_path.append(os_path.join("src", "main", "python"))
-    
+
 from os import environ
 from requests.exceptions import ConnectionError
 from api import Api
 from main import AppContext
-
 
 
 class ApiTest(unittest.TestCase):
@@ -26,7 +25,7 @@ class ApiTest(unittest.TestCase):
         port = Api(cxt).port
 
         from requests import get
-        
+
         try:
             status_request = str(get(f"http://{domain}:{port}/api/v1/").text.encode('utf-8')).lower()
         except ConnectionError:
@@ -42,7 +41,7 @@ class ApiTest(unittest.TestCase):
         if self.server_is_up():
             with Api(cxt, '/account') as api_instance:
 
-                self.assertTrue(path.exists(api_instance.store_path), True)
+                self.assertIsNotNone(api_instance.store)
 
     def test_api_host(self):
         cxt = AppContext()
@@ -132,5 +131,5 @@ class ApiTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    
+
     unittest.main()

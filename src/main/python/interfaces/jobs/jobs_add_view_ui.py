@@ -14,11 +14,49 @@ from ..widgets import (
     VerticalLayout,
     VerticalSpacer,
     ViewButton,
+    Button,
     ViewInputFrame,
 )
 from ..helper import switch_scheme
 
 class JobsAddViewUI(Frame):
+    """
+    This component provides a workflow style interface to add current machine to job pool.
+    """
+
+    # metaclass for defining abstract base classes
+    # Reference can be found here: https://docs.python.org/2/library/abc.html#abc.abstractmethod
+    __metaclass__ = ABCMeta
+
+    signal: pyqtSignal = None
+
+    title_view: Frame = None
+    stack_view: Frame = None
+    stack: StackLayout = None
+    button_view: Frame = None
+
+    tech_sections: Frame = None
+    eco_sections: Frame = None
+
+    cancel: ViewButton = None
+    back: ViewButton = None
+    next_page: ViewButton = None
+    submit: ViewButton = None
+
+    global_hint: Label = None
+    details_hint: Label = None
+
+    details_section: Frame = None
+
+    plan_section: Frame = None
+    hint_button: Button = None
+
+    # variable
+    job_name: ViewInputFrame = None
+    workers: ViewInputFrame = None
+    cores: ViewInputFrame = None
+    memory: ViewInputFrame = None
+
     def __init__(self, signal: pyqtSignal, cxt: ApplicationContext, *args, **kwargs):
         super(JobsAddViewUI, self).__init__(*args, name="view", **kwargs)
 
@@ -26,7 +64,32 @@ class JobsAddViewUI(Frame):
 
         self.signal = signal
         self._init_ui()
-        self.setStyleSheet(self.cxt.add_view_style)
+        self._to_tech_section()
+        self.setStyleSheet(self.cxt.jobs_add_view_style)
+
+    def on_cancel_clicked(self):
+        self.signal.emit()
+
+    def on_back_clicked(self):
+        self._to_tech_section()
+
+    def on_next_page_clicked(self):
+        # self._to_eco_section()
+        pass
+
+    def on_submit_clicked(self):
+        # self.signal.emit()
+        pass
+
+    def _to_tech_section(self):
+        self.stack.setCurrentWidget(self.tech_sections)
+
+        self.next_page.setVisible(True)
+        self.submit.setVisible(False)
+        self.back.setVisible(False)
+
+    def reset_hint(self):
+        self.global_hint.reset()
 
     def _init_ui(self):
 
@@ -36,13 +99,13 @@ class JobsAddViewUI(Frame):
         window_layout.addWidget(self.title_view)
         self._init_title_view()
 
-        # self.stack_view = Frame(self, name="view_stack_frame")
-        # window_layout.addWidget(self.stack_view)
-        # self._init_stack_view()
+        self.stack_view = Frame(self, name="view_stack_frame")
+        window_layout.addWidget(self.stack_view)
+        self._init_stack_view()
 
-        # self.button_view = Frame(self, name="view_buttons_frame")
-        # window_layout.addWidget(self.button_view)
-        # self._init_button_view()
+        self.button_view = Frame(self, name="view_buttons_frame")
+        window_layout.addWidget(self.button_view)
+        self._init_button_view()
 
     def _init_title_view(self):
 
@@ -57,6 +120,126 @@ class JobsAddViewUI(Frame):
         self.global_hint = Label(self.title_view, name="section_hint")
         layout.addWidget(self.global_hint)
 
+    def _init_stack_view(self):
+
+        self.stack = StackLayout(self.stack_view)
+
+        self.tech_sections = Frame(self.stack_view)
+        self.stack.insertWidget(0, self.tech_sections)
+
+        # self.eco_sections = Frame(self.stack_view)
+        # self.stack.insertWidget(1, self.eco_sections)
+
+        self._init_tech_sections()
+        # self._init_eco_sections()    
+
+    def _init_button_view(self):
+
+        layout = HorizontalLayout(self.button_view, space=15)
+
+        self.cancel = ViewButton(self.button_view, text="CANCEL", cursor=True)
+        layout.addWidget(self.cancel)
+
+        spacer = HorizontalSpacer()
+        layout.addItem(spacer)
+
+        self.back = ViewButton(self.button_view, text="BACK", cursor=True)
+        layout.addWidget(self.back)
+
+        self.next_page = ViewButton(self.button_view, text="NEXT", cursor=True)
+        layout.addWidget(self.next_page)
+
+        self.submit = ViewButton(self.button_view, text="SUBMIT", cursor=True)
+        layout.addWidget(self.submit)
+
+        # --------- binding event to function ---------
+
+        self.cancel.clicked.connect(self.on_cancel_clicked)
+        self.back.clicked.connect(self.on_back_clicked)
+        self.next_page.clicked.connect(self.on_next_page_clicked)
+        self.submit.clicked.connect(self.on_submit_clicked)
+
+    def _init_tech_sections(self):
+        sections_layout = VerticalLayout(self.tech_sections)
+
+        self.details_section = Frame(self.tech_sections, name="section")
+        sections_layout.addWidget(self.details_section)
+        self._init_details_section()
+
+        spacer = VerticalSpacer()
+        sections_layout.addItem(spacer)
+
+    def _init_details_section(self):
+        section_layout = VerticalLayout(self.details_section)
+
+        # title frame
+        title_frame = SectionTitleFrame(
+            self.details_section, label_one_text="Jobs Detail"
+        )
+
+        section_layout.addWidget(title_frame)
+        self.details_hint = title_frame.get_label_two()
+
+        # frame: two line frame contains inputs
+        content_frame = Frame(self.details_section, name="details_content_frame")
+        section_layout.addWidget(content_frame)
+
+        content_layout = VerticalLayout(content_frame, space=18)
+
+        # line_frame: job_name, workers
+        line_frame = Frame(content_frame)
+        content_layout.addWidget(line_frame)
+        line_layout = HorizontalLayout(line_frame)
+
+        self.job_name = ViewInputFrame(
+            line_frame, title="Job Name:", title_width=113, fix_width=True
+        )
+        line_layout.addWidget(self.job_name)
+
+        self.workers = ViewInputFrame(
+            line_frame, title="Workers #:", title_width=113, fix_width=True
+        )
+        line_layout.addWidget(self.workers)
+
+        # line_frame: memory, cores
+        line_frame = Frame(content_frame)
+        content_layout.addWidget(line_frame)
+        line_layout = HorizontalLayout(line_frame)
+
+        self.memory = ViewInputFrame(
+            line_frame, title="Memory:", title_width=113, fix_width=True
+        )
+        line_layout.addWidget(self.memory)
+
+        self.cores = ViewInputFrame(
+            line_frame, title="Cores #:", title_width=113, fix_width=True
+        )
+        line_layout.addWidget(self.cores)
+
+        # plan section
+        self.plan_section = Frame(self.tech_sections, name="plan_content_frame")
+        section_layout.addWidget(self.plan_section)
+        self._init_plan_section()
+
+    def _init_plan_section(self):
+        section_layout = HorizontalLayout(self.plan_section)
+
+        content = Label(self.plan_section, text="You are choosing: ", name="plan_label")
+        section_layout.addWidget(content)
+
+        plan = Label(self.plan_section, text="small model", name="plan_label")
+        section_layout.addWidget(plan)
+
+        spacer = HorizontalSpacer()
+        section_layout.addItem(spacer)
+
+        self.hint_button = Button(
+            self.details_section, 
+            text="What is Model?",
+            name="hint_button", 
+            cursor=True,
+        )
+        section_layout.addWidget(self.hint_button)
 
 # class JobsAddViewUI(Frame):
 

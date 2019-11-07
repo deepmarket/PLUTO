@@ -42,9 +42,13 @@ class AppContext(ApplicationContext):
         return self.load_style("popup.qss")
 
     @cached_property
-    def jobs_style(self):
-        return self.load_style("jobs.qss")
-
+    def jobs_controller_style(self):
+        return self.load_style("jobs_controller.qss")
+    
+    @cached_property
+    def jobs_add_view_style(self):
+        return self.load_style("jobs_add_view.qss")
+    
     @cached_property
     def settings_style(self):
         return self.load_style("settings.qss")

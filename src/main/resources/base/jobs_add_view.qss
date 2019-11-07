@@ -1,0 +1,123 @@
+* {
+    font-family: "Helvetica Neue";
+}
+
+#view {
+    margin: 7px;
+}
+
+#view > QFrame {
+    padding: 0 50px;
+}
+
+QFrame#view_title_frame {
+    background-color: #FFFFFF;
+    min-height: 45px;
+    margin-bottom: 1px;
+    padding: 0 30px;
+}
+
+QFrame#view_stack_frame {
+    background-color: #FFFFFF;
+}
+
+QFrame#view_buttons_frame {
+    background-color: #FFFFFF;
+    padding-bottom: 10px;
+    min-height: 75px;
+}
+
+QFrame#section {
+    margin-top: 40px;
+}
+
+QFrame#details_content_frame {
+    min-height: 78px;
+    background-color: #E8F3F7;
+    padding: 27px 32px;
+}
+
+QFrame#plan_content_frame {
+    min-height: 22px;
+
+    background-color: #d6edf5;
+    padding: 4px 32px;
+}
+
+QFrame#view_input > QLabel,
+QFrame#view_input_disable > QLabel {
+    font-size: 13px;
+    color: #6C7E8E;
+}
+
+QFrame#view_input > QLineEdit,
+QFrame#view_input_disable > QLineEdit {
+    border: none;
+    padding: 0 2px;
+    font-size: 12px;
+}
+
+QFrame#view_input > QLineEdit {
+    background-color: #FFFFFF;
+    color: #000000;
+}
+
+QFrame#view_input_disable > QLineEdit {
+    background-color: #C6CDDB;
+    color: #F2F2F2;
+}
+
+QLabel#section_title {
+    font-size: 16px;
+    color: #6C7E8E;
+}
+
+QLabel#plan_label {
+    font-size: 14px;
+    color: #6C7E8E;
+}
+
+QLabel#section_hint,
+QLabel#submit_hint {
+    font-size: 12px;
+    color: #FF0000;
+}
+
+QLabel#view_title {
+    font-size: 19px;
+    color: #6C7E8E;
+}
+
+QLabel#section_hint,
+QLabel#submit_hint {
+    font-size: 12px;
+    color: #FF0000;
+}
+
+QPushButton#view_button,
+QPushButton#view_button_disable {
+    border: none;
+    min-width: 115px;
+    min-height: 30px;
+    font-size: 12px;
+}
+
+QPushButton#view_button {
+    background-color: #6C7E8E;
+    color: #FFFFFF;
+}
+
+QPushButton#view_button_disable {
+    background-color: #C6CDDB;
+    color: #F2F2F2;
+}
+
+QLabel#submit_hint {
+    margin-bottom: 40px;
+}
+
+QPushButton#hint_button {
+    border: none;
+    color: #559de0;
+    text-decoration: underline;
+}

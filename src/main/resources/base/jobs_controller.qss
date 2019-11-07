@@ -32,6 +32,8 @@ QFrame#finished_jobs_table_title {
     color: #FFFFFF;
     background-color: #B9CCDD;
 
+    padding-left: 10px;
+    padding-right: 10px;
     min-height: 50px;
 }
 
@@ -48,21 +50,22 @@ QLabel#section_hint {
 QLabel#running_jobs_title_content,
 QLabel#finished_jobs_title_content {
     color: #FFFFFF;
-    margin-left: 7px;
 }
 
 QLabel#running_jobs_title_content {
-    font-size: 20px;
-
+    font-size: 18px;
 }
 QLabel#finished_jobs_title_content {
-    font-size: 16px;
+    font-size: 15px;
+    max-height: 10px;
+    line-height: 1px;
 }
 
 QPushButton#finished_jobs_title_button {
     color: #FFFFFF;
     border: none;
     text-decoration: underline;
+    text-align: right;
 }
 
 QPushButton#view_button,

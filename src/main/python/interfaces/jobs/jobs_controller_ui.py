@@ -16,6 +16,7 @@ from ..widgets import (
     ViewButton,
     Button,
     Label,
+    Paragraph,
 )
 from ..config import JOBS_MAX_ROW
 
@@ -51,7 +52,7 @@ class JobsControllerUI(Frame):
         self._init_ui()
         # self.setStyleSheet(self.cxt.controller_style)
 
-        self.setStyleSheet(self.cxt.jobs_style)
+        self.setStyleSheet(self.cxt.jobs_controller_style)
 
     def on_add_button_clicked(self):
         self.signal.emit()
@@ -135,7 +136,7 @@ class JobsControllerUI(Frame):
         self.title_section = Frame(self.running_section, name="running_jobs_table_title")
         title_layout = HorizontalLayout(self.title_section)
         layout.addWidget(self.title_section)
-        
+
         title = Label(
             self.running_section,
             text="Running Jobs",
@@ -171,24 +172,13 @@ class JobsControllerUI(Frame):
 
         title_layout = HorizontalLayout(self.title_section)
 
-        self.content_section = Frame(self.title_section)
-        content_layout = VerticalLayout(self.content_section)
-
-        title_layout.addWidget(self.content_section)
-
-        first_line = Label(
-            self.running_section,
-            text="Finished Jobs",
-            name="finished_jobs_title_content",
+        title = Paragraph(
+            self.finished_section, 
+            text_list=["Finished Jobs", "(within last week)"], 
+            name="finished_jobs_title_content", 
+            height=15,
         )
-        content_layout.addWidget(first_line)
-
-        second_line = Label(
-            self.running_section,
-            text="(within last week)",
-            name="finished_jobs_title_content",
-        )
-        content_layout.addWidget(second_line)
+        title_layout.addWidget(title)
 
         # --------- right title frame ------------
 
@@ -197,7 +187,6 @@ class JobsControllerUI(Frame):
             text="More History Jobs",
             name="finished_jobs_title_button",
             cursor=True, 
-            underline=True,
         )
         title_layout.addWidget(self.history_button)
 

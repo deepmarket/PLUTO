@@ -37,6 +37,7 @@ class CredentialManager(object):
 
 
 class Api(object):
+    # Test Comment
     # Set store path globally
     store_path = path.abspath(curdir)
 

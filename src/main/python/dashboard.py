@@ -29,32 +29,40 @@ class Dashboard(DashboardUI):
         # fetch account information
         self._api_get_call()
 
-        # fill greeting
+        # Append greeting message
         greeting = add_greeting() + ", " + self.username
         self.greeting.setText(greeting)
 
-        # fill total balance credit
+        # # Append total balance credit
         balance_credit = f"{self.total_balance} credits"
         self.balance_credit.setText(balance_credit)
 
+        # Append total running resources
         resources_running = f"{self.running_machines}"
         self.resources_running.set_dat(resources_running)
 
+        # Append count of dead machines
         resources_dead = f"{self.dead_machine}"
         self.resources_dead.set_dat(resources_dead)
 
+        # Append count of running jobs
         jobs_running = f"{self.running_jobs}"
         self.jobs_running.set_dat(jobs_running)
 
+        # Append count of running jobs
         jobs_finish = f"{self.finished_jobs}"
         self.jobs_finish.set_dat(jobs_finish)
 
+        # Append count of killed jobs
         jobs_kill = f"{self.killed_jobs}"
         self.jobs_kill.set_dat(jobs_kill)
 
     def _api_get_call(self):
-
-        # fetch account information
+        '''
+        This function fetches account, resources and job
+        information.
+        :return:
+        '''
         with Api(self.cxt, "/account") as account:
             status, res = account.get()
 

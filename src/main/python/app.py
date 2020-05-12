@@ -30,6 +30,12 @@ class App(AppUI):
         self.on_dashboard_clicked()
 
     def update_account(self):
+        '''
+        This function is called
+        when user performs an
+        update operation. 
+        :return:
+        '''
         # fetch account information
         self._api_get_call()
 
@@ -40,27 +46,63 @@ class App(AppUI):
         self.account.update_info(self.username, self.total_balance)
 
     def on_dashboard_clicked(self):
+        '''
+        An event-based function,
+        triggered when clicked
+        on Dashboard tab.
+        :return:
+        '''
         self.sidebar.on_dashboard_clicked()
         self._sidebar_widget_updated(Dashboard)
 
     def on_resources_clicked(self):
+        '''
+        An event-based function,
+        triggered when clicked
+        on Resources tab.
+        :return:
+        '''
         self.sidebar.on_resources_clicked()
         self._sidebar_widget_updated(Resources)
 
     def on_jobs_clicked(self):
+        '''
+        An event-based function,
+        triggered when clicked
+        on Jobs tab.
+        :return:
+        '''
         self.sidebar.on_jobs_clicked()
         self._sidebar_widget_updated(Jobs)
 
     def on_settings_clicked(self):
+        '''
+        An event-based function,
+        triggered when clicked
+        on Settings button.
+        :return:
+        '''
         self.sidebar.on_settings_clicked()
         self._sidebar_widget_updated(Settings)
 
     def on_notification_clicked(self):
+        '''
+        An event-based function,
+        triggered when clicked
+        on Notification button.
+        :return:
+        '''
         popup = Notification(self.cxt)
         popup.exec_()
 
     # credit history popup
     def on_credit_history_clicked(self):
+        '''
+        An event-based function,
+        triggered when clicked
+        on Credit History.
+        :return:
+        '''
         popup = CreditHistory(self.cxt)
         popup.exec_()
 
@@ -68,6 +110,12 @@ class App(AppUI):
     #     pass
 
     def on_logout_clicked(self):
+        '''
+        An event-based function,
+        triggered when clicked
+        on Logout button.
+        :return:
+        '''
 
         with Api(self.cxt, "/auth/logout") as account_api:
             status, res = account_api.post()
@@ -103,7 +151,12 @@ class App(AppUI):
         # notification popup
 
     def _api_get_call(self):
-
+        '''
+        This a helper function,
+        used to fetch the user's account
+        information.
+        :return:
+        '''
         # fetch account information
         with Api(self.cxt, "/account") as account:
             status, res = account.get()

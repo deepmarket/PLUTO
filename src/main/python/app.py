@@ -33,7 +33,7 @@ class App(AppUI):
         '''
         This function is called
         when user performs an
-        update operation. 
+        update operation.
         :return:
         '''
         # fetch account information

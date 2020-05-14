@@ -39,10 +39,25 @@ class AppAccountUI(Frame):
         self.setStyleSheet(cxt.app_style)
 
     def update_info(self, username: str, credits: int):
+        """
+        Update user info
+        in user and credit text boxes
+        :param username:
+        :param credits:
+        :return:
+        """
         self.user.setText(username)
         self.credit.setText(f"{self.credit_prefix}{credits}")
 
     def _init_ui(self, width: int, height: int):
+        """
+        Initialize user interface
+        and add widgets for title,
+        buttons and log out sections.
+        :param width:
+        :param height:
+        :return:
+        """
 
         self.setFixedSize(width, height)
 
@@ -73,7 +88,11 @@ class AppAccountUI(Frame):
         self._init_logout_section()
 
     def _init_title_section(self):
-
+        """
+        Initialize the title section to
+        display user information.
+        :return:
+        """
         section_layout = HorizontalLayout(self.title_section)
 
         self.user = Label(
@@ -96,6 +115,12 @@ class AppAccountUI(Frame):
         section_layout.addWidget(self.credit)
 
     def _init_button_section(self):
+        """
+        Initialize the button section
+        with buttons for Notifications
+        and Credit History.
+        :return:
+        """
 
         section_layout = VerticalLayout(self.button_section, space=18)
 
@@ -122,6 +147,11 @@ class AppAccountUI(Frame):
         # section_layout.addWidget(self.about)
 
     def _init_logout_section(self):
+        '''
+        Intialize logout section
+        with Logout button.
+        :return:
+        '''
 
         section_layout = HorizontalLayout(self.logout_section)
 

@@ -11,6 +11,17 @@ class AppMainWindowUI(Frame):
     def __init__(
         self, parent, cxt: ApplicationContext, width: int, height: int, *args, **kwargs
     ):
+        """
+        This function initializes the application's main window.
+        It sets the stylesheet, window size and main window layout.
+
+        :param parent:
+        :param cxt:
+        :param width:
+        :param height:
+        :param args:
+        :param kwargs:
+        """
         super(AppMainWindowUI, self).__init__(parent, name="main_window")
 
         # set style sheet

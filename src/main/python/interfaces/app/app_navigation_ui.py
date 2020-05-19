@@ -8,6 +8,10 @@ from ..helper import menu_icon
 
 
 class AppNavigationUI(Frame):
+    """
+    This file initializes the UI for
+    Application Navigation.
+    """
 
     credit: Label = None
     credit_prefix: str = "CREDITS: "
@@ -24,9 +28,22 @@ class AppNavigationUI(Frame):
         self.setStyleSheet(cxt.app_style)
 
     def set_credit(self, text: str):
+        """
+        This function sets text for Credit
+        :param text:
+        :return:
+        """
         self.credit.setText(f"{self.credit_prefix}{text}")
 
     def _init_ui(self, width: int, height: int):
+        """
+        This function initializes the navigation UI
+        Sets the width, height and specified in the input.
+        Creates and adds navigation button.
+        :param width:
+        :param height:
+        :return:
+        """
 
         self.setFixedSize(width, height)
 

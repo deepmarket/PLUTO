@@ -12,8 +12,10 @@ class AppMaskUI(Frame):
     ):
         super(AppMaskUI, self).__init__(parent, name="mask")
 
+        # set style sheet
         self.setStyleSheet(cxt.app_style)
 
+        # set main window size
         self.setFixedSize(width, height)
 
         self.clicked_area = Button(self, name="mask_clicked_area")

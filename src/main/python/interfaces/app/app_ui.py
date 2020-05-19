@@ -35,7 +35,7 @@ class AppUI(QMainWindow):
 
     def on_menu_clicked(self):
         """
-        Open account
+        This function loads Accounts UI.
         """
 
         mask_action = MoveAnimation(self.mask, self.width(), 0, 0, 0, duration=0)
@@ -48,7 +48,7 @@ class AppUI(QMainWindow):
 
     def on_mask_clicked(self):
         """
-        Close menu
+        This function closes menu.
         """
 
         menu_action = MoveAnimation(
@@ -92,6 +92,13 @@ class AppUI(QMainWindow):
         pass
 
     def _init_ui(self):
+        """
+        This function initializes the UI for
+        application.
+        In turn initializes the UI for Sidebar, Navigation,
+        Main Window, Account.
+        :return:
+        """
 
         # set window init size
         self.resize(1024, 720)
@@ -99,7 +106,7 @@ class AppUI(QMainWindow):
         # set window resize constrains
         self.setFixedSize(1024, 720)
 
-        # centerlize window
+        # centralize window
         dw = QDesktopWidget()
         self.move(
             dw.availableGeometry().center().x() - self.width() * 0.5,
@@ -119,7 +126,7 @@ class AppUI(QMainWindow):
         )
         self.navigation.move(SIDEBAR_WIDTH, 0)
 
-        # mainwindow
+        # main window
         self.main_window = AppMainWindowUI(
             window,
             self.cxt,

@@ -40,7 +40,7 @@ class AppAccountUI(Frame):
 
     def update_info(self, username: str, credits: int):
         """
-        Update user info
+        This function updates user info
         in user and credit text boxes
         :param username:
         :param credits:
@@ -51,8 +51,8 @@ class AppAccountUI(Frame):
 
     def _init_ui(self, width: int, height: int):
         """
-        Initialize user interface
-        and add widgets for title,
+        This function initializes user interface
+        and adds widgets for title,
         buttons and log out sections.
         :param width:
         :param height:
@@ -89,7 +89,7 @@ class AppAccountUI(Frame):
 
     def _init_title_section(self):
         """
-        Initialize the title section to
+        This function initializes the title section to
         display user information.
         :return:
         """
@@ -116,7 +116,7 @@ class AppAccountUI(Frame):
 
     def _init_button_section(self):
         """
-        Initialize the button section
+        This function initialize the button section
         with buttons for Notifications
         and Credit History.
         :return:
@@ -148,7 +148,7 @@ class AppAccountUI(Frame):
 
     def _init_logout_section(self):
         '''
-        Intialize logout section
+        This function intializes the logout section
         with Logout button.
         :return:
         '''

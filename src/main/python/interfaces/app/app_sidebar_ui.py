@@ -24,36 +24,76 @@ class AppSidebarUI(Frame):
         self.setStyleSheet(self.cxt.app_style)
 
     def reload_stylesheet(self):
+        """
+        This function resets the app's style sheet
+        :return:
+        """
         self.setStyleSheet(self.cxt.app_style)
 
     def on_dashboard_clicked(self):
+        """
+        This event is called on the click of Dashboard button.
+        Changes the style of Dashboard button to reflect
+        its active status.
+        :return:
+        """
         self.reset()
         self.dashboard.setObjectName("sidebar_button_active")
         self.reload_stylesheet()
 
     def on_resources_clicked(self):
+        """
+        This event is called on click of Resources button.
+        Changes the style of Resources button to reflect
+        its active status.
+        :return:
+        """
         self.reset()
         self.resources.setObjectName("sidebar_button_active")
         self.reload_stylesheet()
 
     def on_jobs_clicked(self):
+        """
+        This event is called on click of Jobs button.
+        Changes the style of Jobs button to reflect
+        its active status.
+        :return:
+        """
         self.reset()
         self.jobs.setObjectName("sidebar_button_active")
         self.reload_stylesheet()
 
     def on_settings_clicked(self):
+        """
+        This event is called on click of Settings button.
+        Changes the style of Settings button to reflect
+        its active status.
+        :return:
+        """
         self.reset()
         self.settings.setObjectName("sidebar_button_active")
         self.reload_stylesheet()
 
     def reset(self):
-        # Set all widget to base styles and let clicked callback override them
+        """
+        This functions sets all widget to base styles
+        and let clicked callback override them
+        :return:
+        """
         self.dashboard.setObjectName("sidebar_button")
         self.resources.setObjectName("sidebar_button")
         self.jobs.setObjectName("sidebar_button")
         self.settings.setObjectName("sidebar_button")
 
     def _init_ui(self, width: int, height: int):
+        """
+        This function initializes the sidebar UI.
+        It adds buttons for dashboard, resources,
+        jobs and settings.
+        :param width:
+        :param height:
+        :return:
+        """
 
         self.setFixedSize(width, height)
 

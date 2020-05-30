@@ -59,6 +59,11 @@ class DashboardUI(Frame):
         self.setStyleSheet(self.cxt.dashboard_style)
 
     def _init_ui(self):
+        '''
+        This function calls functions to initialize the History
+        and Overview sections for Dashboard.
+        :return:
+        '''
 
         window_layout = VerticalLayout(self, space=1)
 
@@ -71,6 +76,11 @@ class DashboardUI(Frame):
         self._init_history_section()
 
     def _init_overview_section(self):
+        '''
+        This function initializes the UI for overview section.
+        Adds the Title and Content widgets.
+        :return:
+        '''
 
         section_layout = VerticalLayout(self.overview_section)
 
@@ -86,6 +96,12 @@ class DashboardUI(Frame):
         self._init_content_section()
 
     def _init_title_section(self):
+        '''
+        Initializes the Title section with Greeting message
+        and also initializes the Balance Credit section.
+
+        :return:
+        '''
 
         section_layout = HorizontalLayout(self.title_section)
 
@@ -113,6 +129,11 @@ class DashboardUI(Frame):
         credit_layout.addWidget(self.balance_credit)
 
     def _init_content_section(self):
+        '''
+        This function initializes Content Section.
+        Adds Machine and Credit section.
+        :return:
+        '''
 
         section_layout = HorizontalLayout(self.content_section)
 
@@ -128,6 +149,13 @@ class DashboardUI(Frame):
         self._init_credit_section()
 
     def _init_machine_section(self):
+        '''
+        This section initializes machine section.
+        Displays Resource, Title, Resource data, jobs, title and
+        jobs data.
+
+        :return:
+        '''
 
         section_layout = HorizontalLayout(self.machine_section, space=50)
 
@@ -183,6 +211,11 @@ class DashboardUI(Frame):
         frame_layout.addWidget(self.jobs_kill)
 
     def _init_credit_section(self):
+        '''
+        This function initializes Credit Section.
+        Displays Estimated profit and Cost.
+        :return:
+        '''
 
         section_layout = VerticalLayout(self.credit_section, space=10)
 
@@ -197,6 +230,10 @@ class DashboardUI(Frame):
         section_layout.addWidget(self.estimate_cost)
 
     def _init_history_section(self):
+        '''
+        This function initializes History section.
+        :return:
+        '''
 
         section_layout = HorizontalLayout(self.history_section, space=1)
 
@@ -209,6 +246,11 @@ class DashboardUI(Frame):
         self._init_cost_section()
 
     def _init_profit_section(self):
+        '''
+        This function initializes profit section.
+        Displays past 30 days Profit history.
+        :return:
+        '''
 
         section_layout = VerticalLayout(self.profit_section, space=15)
 
@@ -237,6 +279,11 @@ class DashboardUI(Frame):
         section_layout.addWidget(self.profit_table)
 
     def _init_cost_section(self):
+        '''
+        This function initializes the Cost section.
+        Adds Cost Table to the UI.
+        :return:
+        '''
 
         section_layout = VerticalLayout(self.cost_section, space=15)
 
